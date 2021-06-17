@@ -23,6 +23,11 @@ In very early development. Things will break!
 ## Resources
 * https://talonvoice.com
 
+## Installation
+    npm install -g vsce
+
+    vsce package
+
 ## Command server
 Requires command server.
 * https://marketplace.visualstudio.com/items?itemName=pokey.command-server
