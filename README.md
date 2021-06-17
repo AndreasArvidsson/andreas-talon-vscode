@@ -11,7 +11,8 @@ In very early development. Things will break!
 * andreas.formatDocument()    
     Format/auto indent talon files
 
-### Jump search 
+### Jump
+Automatically highligts all wors on the current line. 
 * andreas.jumpSearch(pattern: str)    
     Search and highlight all occurrences of the pattern in the editor.
 * andreas.jumpCancel()    
