@@ -1,0 +1,30 @@
+{
+	"name": "andreas-talon",
+    "displayName": "Andreas talon",
+	"description": "VSCode extension used by Talon Voice",
+	"version": "1.0.0",
+    "publisher": "andreas-arvidsson",
+    "license": "MIT",
+    "main": "./src/extension.js",
+    "repository": {
+		"type": "git",
+		"url": "https://github.com/AndreasArvidsson/vscode-talon-extension"
+	},
+    "categories": [
+		"Other"
+	],
+    "engines": {
+		"vscode": "^1.53.0"
+	},
+    "activationEvents": [
+        "*"
+	],
+    "extensionKind": [
+		"ui"
+	],
+    "contributes": {},
+	"scripts": {
+        "build": "vsce package"
+    },
+	"devDependencies": {}
+}
