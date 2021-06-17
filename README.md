@@ -26,7 +26,7 @@ Automatically highligts all words on the current line.
 
     vsce package
 
-## Requirements
+## Dependencies
 * [Command server](https://marketplace.visualstudio.com/items?itemName=pokey.command-server)
 
 ## Resources
