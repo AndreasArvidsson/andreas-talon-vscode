@@ -12,7 +12,7 @@ In very early development. Things will break!
     Format/auto indent talon files
 
 ### Jump
-Automatically highligts all wors on the current line. 
+Automatically highligts all words on the current line. 
 * andreas.jumpSearch(pattern: str)    
     Search and highlight all occurrences of the pattern in the editor.
 * andreas.jumpCancel()    
