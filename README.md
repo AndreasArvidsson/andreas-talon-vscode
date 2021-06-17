@@ -21,15 +21,13 @@ Automatically highligts all words on the current line.
     Perform action on the specified key. With optional value for some actions.    
     actions: go, before, after, select, delete, extend, replace
 
-## Resources
-* https://talonvoice.com
-
 ## Installation
     npm install -g vsce
 
     vsce package
 
-## Command server
-Requires command server.
-* https://marketplace.visualstudio.com/items?itemName=pokey.command-server
-* https://github.com/pokey/command-server
+## Requirements
+* [Command server](https://marketplace.visualstudio.com/items?itemName=pokey.command-server)
+
+## Resources
+* [Talon Voice](https://talonvoice.com)
