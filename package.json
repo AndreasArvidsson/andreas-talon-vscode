@@ -1,30 +1,41 @@
 {
 	"name": "andreas-talon",
-    "displayName": "Andreas talon",
+	"displayName": "Andreas talon",
 	"description": "VSCode extension used by Talon Voice",
 	"version": "1.0.0",
-    "publisher": "andreas-arvidsson",
-    "license": "MIT",
-    "main": "./src/extension.js",
-    "repository": {
+	"publisher": "andreas-arvidsson",
+	"license": "MIT",
+	"main": "./src/extension.js",
+	"repository": {
 		"type": "git",
 		"url": "https://github.com/AndreasArvidsson/vscode-talon-extension"
 	},
-    "categories": [
+	"categories": [
 		"Other"
 	],
-    "engines": {
+	"engines": {
 		"vscode": "^1.53.0"
 	},
-    "activationEvents": [
-        "*"
+	"activationEvents": [
+		"*"
 	],
-    "extensionKind": [
+	"extensionKind": [
 		"ui"
 	],
-    "contributes": {},
+	"contributes": {
+		"configuration": {
+			"title": "Andreas Talon",
+			"properties": {
+				"andreas-talon.enableJump": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enable or disable jump functionality"
+				}
+			}
+		}
+	},
 	"scripts": {
-        "build": "vsce package"
-    },
+		"build": "vsce package"
+	},
 	"devDependencies": {}
 }

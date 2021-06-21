@@ -5,17 +5,24 @@ const formatDocument = require("./format-document");
 const jump = require("./jump/jump");
 
 const activate = (context) => {
-    jump.init();
-
     context.subscriptions.push(
         vscode.commands.registerCommand("andreas.selectTo", selectTo),
         vscode.commands.registerCommand("andreas.lineMiddle", lineMiddle),
         vscode.commands.registerCommand("andreas.formatDocument", formatDocument),
-
-        vscode.commands.registerCommand("andreas.jumpSearch", jump.search),
-        vscode.commands.registerCommand("andreas.jumpCancel", jump.cancel),
-        vscode.commands.registerCommand("andreas.jumpAction", jump.action)
     );
+
+    const enableJump = vscode.workspace
+        .getConfiguration("andreas-talon")
+        .get("enableJump");
+
+    if (enableJump) {
+        jump.init();
+        context.subscriptions.push(
+            vscode.commands.registerCommand("andreas.jumpSearch", jump.search),
+            vscode.commands.registerCommand("andreas.jumpCancel", jump.cancel),
+            vscode.commands.registerCommand("andreas.jumpAction", jump.action)
+        )
+    }
 };
 
 const deactivate = () => { };
