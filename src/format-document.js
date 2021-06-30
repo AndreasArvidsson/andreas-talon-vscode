@@ -12,7 +12,7 @@ module.exports = () => {
 
         //  Lines are either totaly left or one tab in
         if (line.startsWith(" ") || line.startsWith("\t")) {
-            line = "\t" + line.trim();
+            line = "    " + line.trim();
         }
         else {
             line = line.trim();
@@ -21,7 +21,7 @@ module.exports = () => {
 
         //  Ignore comments, indented lines or tags
         if (line.startsWith("#")
-            || line.startsWith("\t")
+            || line.startsWith(" ")
             || line.startsWith("tag()")) {
             continue;
         }
