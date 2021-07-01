@@ -10,29 +10,25 @@
 		"type": "git",
 		"url": "https://github.com/AndreasArvidsson/vscode-talon-extension"
 	},
-	"categories": [
-		"Other"
-	],
 	"engines": {
 		"vscode": "^1.53.0"
 	},
+	"extensionKind": [
+		"workspace"
+	],
+	"categories": [
+		"Other"
+	],
 	"activationEvents": [
 		"*"
 	],
-	"extensionKind": [
-		"ui"
-	],
 	"contributes": {
-		"configuration": {
-			"title": "Andreas Talon",
-			"properties": {
-				"andreas-talon.enableJump": {
-					"type": "boolean",
-					"default": true,
-					"description": "Enable or disable jump functionality"
-				}
+		"commands": [
+			{
+				"command": "andreas.lineMiddle",
+				"title": "Move cursor to middle of line"
 			}
-		}
+		]
 	},
 	"scripts": {
 		"build": "vsce package"
