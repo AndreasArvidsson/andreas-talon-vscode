@@ -7,23 +7,19 @@ module.exports = {
 };
 
 const scrollHalfPage = (mult) => {
-    const editor  = vscode.window.activeTextEditor;
-    range = getVisibleRange();
-    pageSize = range.end.line - range.start.line;
-    halfSize = pageSize / 2;
+    const editor = vscode.window.activeTextEditor;
+    visibleRange = getVisibleRange();
+    const halfSize = (visibleRange.end.line - visibleRange.start.line) / 2;
     const startLine = clamp(
-        range.start.line + halfSize * mult,
+        Math.round(visibleRange.start.line + halfSize * mult),
         0,
         editor.document.lineCount - 1
     );
     const newRange = new vscode.Range(
-        startLine,
-        range.start.character,
-        startLine + pageSize,
-        range.end.character
+        startLine, 0, startLine, 0
     );
-    editor.revealRange(newRange);
+    editor.revealRange(newRange, vscode.TextEditorRevealType.AtTop);
 }
 
-const clamp = (value, min, max) => 
-    value < min ? min: value > max ? max : value;
+const clamp = (value, min, max) =>
+    value < min ? min : value > max ? max : value;
