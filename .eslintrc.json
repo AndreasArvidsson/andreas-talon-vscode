@@ -13,7 +13,7 @@
         "@typescript-eslint/semi": "warn",
         "curly": "warn",
         "eqeqeq": [
-            "warn",
+            "error",
             "always",
             {
                 "null": "never"

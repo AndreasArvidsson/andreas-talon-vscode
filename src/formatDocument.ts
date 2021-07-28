@@ -6,6 +6,7 @@ export default () => {
     let toDo = [];
     let bodyIndex = 0;
     let length = 0;
+
     for (let i = 0; i < editor.document.lineCount; ++i) {
         let line = editor.document.lineAt(i).text;
 
@@ -36,7 +37,7 @@ export default () => {
 
         // Ignore lines without 2 parts
         const index = line.indexOf(":");
-        if (index < 0 || index == line.length - 1) {
+        if (index < 0 || index === line.length - 1) {
             continue;
         }
 
@@ -54,13 +55,20 @@ export default () => {
         lines[l.i] = left + l.right;
     }
 
+    const originalText = editor.document.getText();
+    const newText = lines.join("\n");
+
+    if (originalText === newText) {
+        return;
+    }
+
     const lastLine = editor.document.lineAt(editor.document.lineCount - 1);
     const lastPos = lastLine.range.end;
 
     editor.edit((editBuilder) => {
         editBuilder.replace(
             new Range(0, 0, lastPos.line, lastPos.character),
-            lines.join("\n")
+            newText
         );
     });
 };
