@@ -1,7 +1,7 @@
-const vscode = require("vscode");
+import { window, Selection, Position } from "vscode";
 
-module.exports = (lineNumber) => {
-    const editor = vscode.window.activeTextEditor;
+export default (lineNumber: number) => {
+    const editor = window.activeTextEditor!;
     --lineNumber;
     const position = editor.selection.active;
     if (position.line === lineNumber) {
@@ -9,8 +9,8 @@ module.exports = (lineNumber) => {
     }
     const character = lineNumber > position.line
         ? 1000 : 0;
-    editor.selection = new vscode.Selection(
+    editor.selection = new Selection(
         position,
-        new vscode.Position(lineNumber, character)
+        new Position(lineNumber, character)
     );
 };

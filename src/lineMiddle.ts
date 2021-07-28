@@ -1,7 +1,7 @@
-const vscode = require("vscode");
+import { window, Selection } from "vscode";
 
-module.exports = () => {
-    const editor = vscode.window.activeTextEditor;
+export default () => {
+    const editor = window.activeTextEditor!;
     const pos = editor.selection.active;
     const text = editor.document.lineAt(pos.line).text;
     const trimText = text.trim();
@@ -9,13 +9,10 @@ module.exports = () => {
     if (trimText) {
         start = text.indexOf(trimText[0]);
         end = start + trimText.length;
-    }
-    else {
+    } else {
         start = 0;
         end = text.length;
     }
     const middle = Math.floor((start + end) / 2);
-    editor.selection = new vscode.Selection(
-        pos.line, middle, pos.line, middle
-    );
+    editor.selection = new Selection(pos.line, middle, pos.line, middle);
 };

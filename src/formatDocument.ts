@@ -1,9 +1,8 @@
-const vscode = require("vscode");
-const applyEdit = require("./util/apply-edit");
+import { window, Range } from "vscode";
 
-module.exports = () => {
-    const editor = vscode.window.activeTextEditor;
-    const lines = [];
+export default () => {
+    const editor = window.activeTextEditor!;
+    const lines: string[] = [];
     let toDo = [];
     let bodyIndex = 0;
     let length = 0;
@@ -13,16 +12,17 @@ module.exports = () => {
         //  Lines are either totaly left or one tab in
         if (line.startsWith(" ") || line.startsWith("\t")) {
             line = "    " + line.trim();
-        }
-        else {
+        } else {
             line = line.trim();
         }
         lines[i] = line;
 
         //  Ignore comments, indented lines or tags
-        if (line.startsWith("#")
-            || line.startsWith(" ")
-            || line.startsWith("tag()")) {
+        if (
+            line.startsWith("#") ||
+            line.startsWith(" ") ||
+            line.startsWith("tag()")
+        ) {
             continue;
         }
 
@@ -42,7 +42,7 @@ module.exports = () => {
 
         const left = line.slice(0, index).trim();
         const right = line.slice(index + 1).trim();
-        length = Math.max(length, left.length)
+        length = Math.max(length, left.length);
         toDo.push({ i, left, right });
     }
 
@@ -57,8 +57,10 @@ module.exports = () => {
     const lastLine = editor.document.lineAt(editor.document.lineCount - 1);
     const lastPos = lastLine.range.end;
 
-    applyEdit(vscode.TextEdit.replace(
-        new vscode.Range(0, 0, lastPos.line, lastPos.character),
-        lines.join("\n")
-    ));
+    editor.edit((editBuilder) => {
+        editBuilder.replace(
+            new Range(0, 0, lastPos.line, lastPos.character),
+            lines.join("\n")
+        );
+    });
 };
