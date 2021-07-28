@@ -56,7 +56,7 @@ export default () => {
     }
 
     const originalText = editor.document.getText();
-    const newText = lines.join("\n");
+    const newText = lines.join("\r\n");
 
     if (originalText === newText) {
         return;
