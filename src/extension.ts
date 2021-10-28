@@ -3,11 +3,16 @@ import selectTo from "./selectTo";
 import lineMiddle from "./lineMiddle";
 import formatDocument from "./formatDocument";
 import constructorName from "./constructorName";
+import git from "./git";
 
 export const activate = async (context: ExtensionContext) => {
     const parseTreeExtension = extensions.getExtension("pokey.parse-tree");
     if (!parseTreeExtension) {
         throw new Error("Depends on pokey.parse-tree extension");
+    }
+    const gitExtension = extensions.getExtension("vscode.git")?.exports;
+    if (!gitExtension) {
+        throw new Error("Depends on vscode.git extension");
     }
     const { getNodeAtLocation } = await parseTreeExtension.activate();
 
@@ -17,6 +22,9 @@ export const activate = async (context: ExtensionContext) => {
         commands.registerCommand("andreas.formatDocument", formatDocument),
         commands.registerCommand("andreas.constructorName", () =>
             constructorName(getNodeAtLocation)
+        ),
+        commands.registerCommand("andreas.git.getURL", () =>
+            git.getURL(gitExtension)
         )
     );
 };
