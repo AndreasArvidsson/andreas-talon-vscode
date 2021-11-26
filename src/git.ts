@@ -2,7 +2,7 @@ import { window } from "vscode";
 import { GitExtension, Repository, API } from "./typings/git";
 
 export default {
-    getURL: (gitExtension: GitExtension) => {
+    getURL: (gitExtension: GitExtension, lineNumber: boolean) => {
         const api = gitExtension.getAPI(1);
         const filePath = window.activeTextEditor?.document.uri.path;
         if (!filePath) {
@@ -19,7 +19,8 @@ export default {
         }
         const repoPath = repository.rootUri.path;
         const path = filePath.substring(repoPath.length + 1);
-        return toWebPage(remote, branch, path);
+        const url = toWebPage(remote, branch, path);
+        return lineNumber ? addLineNumber(url) : url;
     }
 };
 
@@ -56,4 +57,10 @@ function remoteToWebPage(remote: string) {
         remote = remote.substr(0, remote.length - 4);
     }
     return remote;
+}
+
+function addLineNumber(url: string) {
+    const editor = window.activeTextEditor!;
+    const line = editor.selection.active.line;
+    return `${url}#L${line}`;
 }

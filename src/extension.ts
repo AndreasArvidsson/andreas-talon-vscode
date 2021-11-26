@@ -23,8 +23,8 @@ export const activate = async (context: ExtensionContext) => {
         commands.registerCommand("andreas.constructorName", () =>
             constructorName(getNodeAtLocation)
         ),
-        commands.registerCommand("andreas.git.getURL", () =>
-            git.getURL(gitExtension)
+        commands.registerCommand("andreas.git.getURL", (lineNumber: boolean) =>
+            git.getURL(gitExtension, lineNumber)
         )
     );
 };
