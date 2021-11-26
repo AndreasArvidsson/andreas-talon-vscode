@@ -61,6 +61,6 @@ function remoteToWebPage(remote: string) {
 
 function addLineNumber(url: string) {
     const editor = window.activeTextEditor!;
-    const line = editor.selection.active.line;
+    const line = editor.selection.active.line + 1;
     return `${url}#L${line}`;
 }
