@@ -3,7 +3,7 @@ import selectTo from "./selectTo";
 import lineMiddle from "./lineMiddle";
 import formatDocument from "./formatDocument";
 import constructorName from "./constructorName";
-import executeCommands from "./executeCommands";
+import { executeCommands, printCommands } from "./commands";
 import getSelectedText from "./getSelectedText";
 import git from "./git";
 
@@ -23,6 +23,7 @@ export const activate = async (context: ExtensionContext) => {
         commands.registerCommand("andreas.lineMiddle", lineMiddle),
         commands.registerCommand("andreas.formatDocument", formatDocument),
         commands.registerCommand("andreas.executeCommands", executeCommands),
+        commands.registerCommand("andreas.printCommands", printCommands),
         commands.registerCommand("andreas.getSelectedText", getSelectedText),
         commands.registerCommand("andreas.constructorName", () =>
             constructorName(getNodeAtLocation)
