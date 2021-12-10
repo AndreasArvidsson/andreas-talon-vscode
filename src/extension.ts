@@ -5,6 +5,7 @@ import formatDocument from "./formatDocument";
 import constructorName from "./constructorName";
 import { executeCommands, printCommands } from "./commands";
 import getSelectedText from "./getSelectedText";
+import { increment, decrement } from "./numbers";
 import git from "./git";
 
 export const activate = async (context: ExtensionContext) => {
@@ -25,6 +26,8 @@ export const activate = async (context: ExtensionContext) => {
         commands.registerCommand("andreas.executeCommands", executeCommands),
         commands.registerCommand("andreas.printCommands", printCommands),
         commands.registerCommand("andreas.getSelectedText", getSelectedText),
+        commands.registerCommand("andreas.increment", increment),
+        commands.registerCommand("andreas.decrement", decrement),
         commands.registerCommand("andreas.constructorName", () =>
             constructorName(getNodeAtLocation)
         ),
@@ -34,4 +37,4 @@ export const activate = async (context: ExtensionContext) => {
     );
 };
 
-export const deactivate = () => { };
+export const deactivate = () => {};
