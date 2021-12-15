@@ -10,15 +10,19 @@ export default () => {
     for (let i = 0; i < editor.document.lineCount; ++i) {
         let line = editor.document.lineAt(i).text;
 
-        //  Lines are either totaly left or one tab in
-        if (line.startsWith(" ") || line.startsWith("\t")) {
+        // Make sure a line doesn't contain just white spaces
+        if (!line.trim()) {
+            line = "";
+        }
+        // Lines are either totaly left or one tab in
+        else if (line.startsWith(" ") || line.startsWith("\t")) {
             line = "    " + line.trim();
         } else {
             line = line.trim();
         }
         lines[i] = line;
 
-        //  Ignore comments, indented lines or tags
+        // Ignore comments, indented lines or tags
         if (
             line.startsWith("#") ||
             line.startsWith(" ") ||
