@@ -17,15 +17,19 @@ export default {
         if (!remote || !branch) {
             return null;
         }
+        const platform = getPlatform(remote);
+        if (!platform) {
+            return null;
+        }
         const repoPath = repository.rootUri.path;
         const path = filePath.substring(repoPath.length + 1);
-        const url = toWebPage(remote, branch, path);
-        return lineNumber ? addLineNumber(url) : url;
-    }
+        const url = toWebPage(platform, remote, branch, path);
+        return lineNumber ? addLineNumber(platform, url) : url;
+    },
 };
 
 const getRepository = (api: API, filePath: string) =>
-    api.repositories.find(r => filePath.startsWith(r.rootUri.path));
+    api.repositories.find((r) => filePath.startsWith(r.rootUri.path));
 
 function getRemote(repository: Repository) {
     for (const remote of repository.state.remotes) {
@@ -43,24 +47,50 @@ function getBranch(repository: Repository) {
     return repository.state.HEAD?.name;
 }
 
-function toWebPage(remote: string, branch: string, filePath: string) {
-    return `${remoteToWebPage(remote)}/blob/${branch}/${filePath}`;
+function toWebPage(
+    platform: Platform,
+    remote: string,
+    branch: string,
+    filePath: string
+) {
+    const host = remoteToWebPage(remote);
+    switch (platform) {
+        case "github":
+            return `${host}/blob/${branch}/${filePath}`;
+        case "bitbucket":
+            return `${host}/src/${branch}/${filePath}`;
+    }
 }
 
 function remoteToWebPage(remote: string) {
     if (remote.startsWith("git@")) {
-        remote = remote
-            .replace(":", "/")
-            .replace("git@", "https://");
+        remote = remote.replace(":", "/").replace("git@", "https://");
     }
     if (remote.endsWith(".git")) {
-        remote = remote.substr(0, remote.length - 4);
+        remote = remote.substring(0, remote.length - 4);
     }
     return remote;
 }
 
-function addLineNumber(url: string) {
+function addLineNumber(platform: Platform, url: string) {
     const editor = window.activeTextEditor!;
     const line = editor.selection.active.line + 1;
-    return `${url}#L${line}`;
+    switch (platform) {
+        case "github":
+            return `${url}#L${line}`;
+        case "bitbucket":
+            return `${url}#lines-${line}`;
+    }
 }
+
+function getPlatform(remote: string): Platform | null {
+    if (remote.includes("github.com")) {
+        return "github";
+    }
+    if (remote.includes("bitbucket.org")) {
+        return "bitbucket";
+    }
+    return null;
+}
+
+type Platform = "github" | "bitbucket";
