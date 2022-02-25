@@ -23,7 +23,8 @@ export default {
         }
         const repoPath = repository.rootUri.path;
         const path = filePath.substring(repoPath.length + 1);
-        const url = toWebPage(platform, remote, branch, path);
+        const commit = repository.state.HEAD?.commit;
+        const url = toWebPage(platform, remote, branch, path, commit);
         return lineNumber ? addLineNumber(platform, url) : url;
     },
 };
@@ -32,7 +33,11 @@ const getRepository = (api: API, filePath: string) =>
     api.repositories.find((r) => filePath.startsWith(r.rootUri.path));
 
 function getRemote(repository: Repository) {
+    const name = repository.state.HEAD?.upstream?.remote;
     for (const remote of repository.state.remotes) {
+        if (remote.name !== name) {
+            continue;
+        }
         if (remote.fetchUrl) {
             return remote.fetchUrl;
         }
@@ -51,14 +56,16 @@ function toWebPage(
     platform: Platform,
     remote: string,
     branch: string,
-    filePath: string
+    filePath: string,
+    commit?: string
 ) {
     const host = remoteToWebPage(remote);
+    const commitOrBranch = commit ?? branch;
     switch (platform) {
         case "github":
-            return `${host}/blob/${branch}/${filePath}`;
+            return `${host}/blob/${commitOrBranch}/${filePath}`;
         case "bitbucket":
-            return `${host}/src/${branch}/${filePath}`;
+            return `${host}/src/${commitOrBranch}/${filePath}`;
     }
 }
 
