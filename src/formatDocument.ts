@@ -40,7 +40,7 @@ export default () => {
         }
 
         // Ignore lines without 2 parts
-        const index = line.indexOf(":");
+        const index = line.lastIndexOf(":");
         if (index < 0 || index === line.length - 1) {
             continue;
         }
