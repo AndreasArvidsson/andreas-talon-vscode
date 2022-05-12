@@ -7,6 +7,7 @@ import { executeCommands, printCommands } from "./commands";
 import getSelectedText from "./getSelectedText";
 import { increment, decrement } from "./numbers";
 import git from "./git";
+import { openEditorAtIndex } from "./tabs";
 
 export const activate = async (context: ExtensionContext) => {
     const parseTreeExtension = extensions.getExtension("pokey.parse-tree");
@@ -33,7 +34,8 @@ export const activate = async (context: ExtensionContext) => {
         ),
         commands.registerCommand("andreas.git.getURL", (lineNumber: boolean) =>
             git.getURL(gitExtension, lineNumber)
-        )
+        ),
+        commands.registerCommand("andreas.openEditorAtIndex", openEditorAtIndex)
     );
 };
 
