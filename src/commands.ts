@@ -12,9 +12,9 @@ export async function executeCommands(args: Args) {
 
 export async function printCommands() {
     let commandList = await commands.getCommands();
-    commandList = commandList.filter(c => !c.startsWith("_"));
+    commandList = commandList.filter((c) => !c.startsWith("_"));
     commandList.sort();
-    commandList.forEach(c => {
+    commandList.forEach((c) => {
         console.log(c);
     });
 }

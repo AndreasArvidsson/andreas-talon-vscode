@@ -2,7 +2,7 @@ import { window, Selection } from "vscode";
 
 export default () => {
     const editor = window.activeTextEditor!;
-    editor.selections = editor.selections.map(selection => {
+    editor.selections = editor.selections.map((selection) => {
         const line = editor.document.lineAt(selection.active.line);
         let start, end;
         if (line.isEmptyOrWhitespace) {

@@ -7,8 +7,7 @@ export default (lineNumber: number) => {
     if (position.line === lineNumber) {
         return;
     }
-    const character = lineNumber > position.line
-        ? 1000 : 0;
+    const character = lineNumber > position.line ? 1000 : 0;
     editor.selection = new Selection(
         position,
         new Position(lineNumber, character)
