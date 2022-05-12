@@ -40,7 +40,7 @@ export default () => {
         }
 
         // Ignore lines without 2 parts
-        const index = line.lastIndexOf(":");
+        const index = getColonIndex(line);
         if (index < 0 || index === line.length - 1) {
             continue;
         }
@@ -60,7 +60,7 @@ export default () => {
     }
 
     const originalText = editor.document.getText();
-    const newText = lines.join("\r\n");
+    const newText = lines.join("\n");
 
     if (originalText === newText) {
         return;
@@ -75,4 +75,26 @@ export default () => {
             newText
         );
     });
+};
+
+// Find the colon separating commands and their implementation
+const getColonIndex = (line: string): number => {
+    const parts = line.matchAll(/[():]/g);
+    let inParen = false;
+    for (const m of parts) {
+        const char = m[0];
+        switch (m[0]) {
+            case "(":
+                inParen = true;
+                break;
+            case ")":
+                inParen = false;
+                break;
+            case ":":
+                if (!inParen && m.index != null) {
+                    return m.index;
+                }
+        }
+    }
+    return -1;
 };
