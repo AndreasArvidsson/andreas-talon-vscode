@@ -1,26 +1,16 @@
-import { window } from "vscode";
-import { GitExtension, Repository, API } from "./typings/git";
+import { TextDocument, window } from "vscode";
+import { API, GitExtension, Repository } from "./typings/git";
 
 export default {
     getURL: (gitExtension: GitExtension, lineNumber: boolean) => {
         const api = gitExtension.getAPI(1);
-        const filePath = window.activeTextEditor?.document.uri.path;
-        if (!filePath) {
-            return null;
-        }
+        const document = getDocument();
+        const filePath = getFilePath(document);
         const repository = getRepository(api, filePath);
-        if (!repository) {
-            return null;
-        }
+        validateUnchangedDocument(document, repository);
         const remote = getRemote(repository);
         const branch = getBranch(repository);
-        if (!remote || !branch) {
-            return null;
-        }
         const platform = getPlatform(remote);
-        if (!platform) {
-            return null;
-        }
         const repoPath = repository.rootUri.path;
         const path = filePath.substring(repoPath.length + 1);
         const commit = repository.state.HEAD?.commit;
@@ -29,8 +19,48 @@ export default {
     },
 };
 
-const getRepository = (api: API, filePath: string) =>
-    api.repositories.find((r) => filePath.startsWith(r.rootUri.path));
+function getDocument() {
+    const document = window.activeTextEditor?.document;
+    if (!document) {
+        throw Error("Can't find text document");
+    }
+    return document;
+}
+
+function getFilePath(document: TextDocument) {
+    const path = document.uri.path;
+    if (!path) {
+        throw Error("Can't find file path");
+    }
+    return path;
+}
+
+function validateUnchangedDocument(
+    document: TextDocument,
+    repository: Repository
+) {
+    const changes = [
+        ...repository.state.workingTreeChanges,
+        ...repository.state.indexChanges,
+        ...repository.state.mergeChanges,
+    ];
+    const change = !!changes.find(
+        (change) => change.uri.path === document.uri.path
+    );
+    if (change) {
+        throw Error("Uncommitted git changes");
+    }
+}
+
+const getRepository = (api: API, filePath: string) => {
+    const repository = api.repositories.find((r) =>
+        filePath.startsWith(r.rootUri.path)
+    );
+    if (!repository) {
+        throw Error("Can't find git repository");
+    }
+    return repository;
+};
 
 function getRemote(repository: Repository) {
     const name = repository.state.HEAD?.upstream?.remote;
@@ -45,11 +75,15 @@ function getRemote(repository: Repository) {
             return remote.pushUrl;
         }
     }
-    return null;
+    throw Error("Can't find git remote");
 }
 
 function getBranch(repository: Repository) {
-    return repository.state.HEAD?.name;
+    const branch = repository.state.HEAD?.name;
+    if (!branch) {
+        throw Error("Can't find git branch");
+    }
+    return branch;
 }
 
 function toWebPage(
@@ -90,14 +124,14 @@ function addLineNumber(platform: Platform, url: string) {
     }
 }
 
-function getPlatform(remote: string): Platform | null {
+function getPlatform(remote: string): Platform {
     if (remote.includes("github.com")) {
         return "github";
     }
     if (remote.includes("bitbucket.org")) {
         return "bitbucket";
     }
-    return null;
+    throw Error("Can't find git platform");
 }
 
 type Platform = "github" | "bitbucket";

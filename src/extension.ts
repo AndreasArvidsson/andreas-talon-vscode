@@ -1,4 +1,10 @@
-import { ExtensionContext, extensions, commands } from "vscode";
+import {
+    ExtensionContext,
+    extensions,
+    commands,
+    Disposable,
+    window,
+} from "vscode";
 import selectTo from "./selectTo";
 import lineMiddle from "./lineMiddle";
 import formatDocument from "./formatDocument";
@@ -12,30 +18,45 @@ import { openEditorAtIndex } from "./tabs";
 export const activate = async (context: ExtensionContext) => {
     const parseTreeExtension = extensions.getExtension("pokey.parse-tree");
     if (!parseTreeExtension) {
-        throw new Error("Depends on pokey.parse-tree extension");
+        throw Error("Depends on pokey.parse-tree extension");
     }
     const gitExtension = extensions.getExtension("vscode.git")?.exports;
     if (!gitExtension) {
-        throw new Error("Depends on vscode.git extension");
+        throw Error("Depends on vscode.git extension");
     }
     const { getNodeAtLocation } = await parseTreeExtension.activate();
 
+    const registerCommand = (
+        command: string,
+        callback: (...args: any[]) => any
+    ) => {
+        return commands.registerCommand(command, (...args: any[]) => {
+            try {
+                return callback(...args);
+            } catch (ex) {
+                const err = ex as Error;
+                window.showErrorMessage(err.message);
+                console.error(err.stack);
+            }
+        });
+    };
+
     context.subscriptions.push(
-        commands.registerCommand("andreas.selectTo", selectTo),
-        commands.registerCommand("andreas.lineMiddle", lineMiddle),
-        commands.registerCommand("andreas.formatDocument", formatDocument),
-        commands.registerCommand("andreas.executeCommands", executeCommands),
-        commands.registerCommand("andreas.printCommands", printCommands),
-        commands.registerCommand("andreas.getSelectedText", getSelectedText),
-        commands.registerCommand("andreas.increment", increment),
-        commands.registerCommand("andreas.decrement", decrement),
-        commands.registerCommand("andreas.constructorName", () =>
+        registerCommand("andreas.selectTo", selectTo),
+        registerCommand("andreas.lineMiddle", lineMiddle),
+        registerCommand("andreas.formatDocument", formatDocument),
+        registerCommand("andreas.executeCommands", executeCommands),
+        registerCommand("andreas.printCommands", printCommands),
+        registerCommand("andreas.getSelectedText", getSelectedText),
+        registerCommand("andreas.increment", increment),
+        registerCommand("andreas.decrement", decrement),
+        registerCommand("andreas.constructorName", () =>
             constructorName(getNodeAtLocation)
         ),
-        commands.registerCommand("andreas.git.getURL", (lineNumber: boolean) =>
+        registerCommand("andreas.git.getURL", (lineNumber: boolean) =>
             git.getURL(gitExtension, lineNumber)
         ),
-        commands.registerCommand("andreas.openEditorAtIndex", openEditorAtIndex)
+        registerCommand("andreas.openEditorAtIndex", openEditorAtIndex)
     );
 };
 

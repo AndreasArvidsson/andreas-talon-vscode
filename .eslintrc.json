@@ -19,7 +19,7 @@
                 "null": "never"
             }
         ],
-        "no-throw-literal": "warn",
+        "no-throw-literal": "error",
         "semi": "off"
     }
 }
