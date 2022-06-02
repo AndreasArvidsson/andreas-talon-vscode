@@ -24,6 +24,9 @@ function getDocument() {
     if (!document) {
         throw Error("Can't find text document");
     }
+    if (document.isDirty) {
+        throw Error("Document contains unsaved changes");
+    }
     return document;
 }
 
