@@ -115,12 +115,18 @@ function remoteToWebPage(remote: string) {
 
 function addLineNumber(platform: Platform, url: string) {
     const editor = window.activeTextEditor!;
-    const line = editor.selection.active.line + 1;
+    const { isSingleLine } = editor.selection;
+    const startLine = editor.selection.start.line + 1;
+    const endLine = editor.selection.end.line + 1;
     switch (platform) {
         case "github":
-            return `${url}#L${line}`;
+            return isSingleLine
+                ? `${url}#L${startLine}`
+                : `${url}#L${startLine}-L${endLine}`;
         case "bitbucket":
-            return `${url}#lines-${line}`;
+            return isSingleLine
+                ? `${url}#lines-${startLine}`
+                : `${url}#lines-${startLine}:${endLine}`;
     }
 }
 
