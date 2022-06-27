@@ -1,18 +1,13 @@
-import {
-    ExtensionContext,
-    extensions,
-    commands,
-    Disposable,
-    window,
-} from "vscode";
-import selectTo from "./selectTo";
-import lineMiddle from "./lineMiddle";
-import formatDocument from "./formatDocument";
-import constructorName from "./constructorName";
+import { commands, ExtensionContext, extensions, window } from "vscode";
 import { executeCommands, printCommands } from "./commands";
+import constructorName from "./constructorName";
+import { getFilename } from "./files";
+import formatDocument from "./formatDocument";
 import getSelectedText from "./getSelectedText";
-import { increment, decrement } from "./numbers";
 import git from "./git";
+import lineMiddle from "./lineMiddle";
+import { decrement, increment } from "./numbers";
+import selectTo from "./selectTo";
 import { openEditorAtIndex } from "./tabs";
 
 export const activate = async (context: ExtensionContext) => {
@@ -30,7 +25,8 @@ export const activate = async (context: ExtensionContext) => {
         command: string,
         callback: (...args: any[]) => any
     ) => {
-        return commands.registerCommand(command, (...args: any[]) => {
+        const fullCommand = `andreas.${command}`;
+        return commands.registerCommand(fullCommand, (...args: any[]) => {
             try {
                 return callback(...args);
             } catch (ex) {
@@ -42,21 +38,22 @@ export const activate = async (context: ExtensionContext) => {
     };
 
     context.subscriptions.push(
-        registerCommand("andreas.selectTo", selectTo),
-        registerCommand("andreas.lineMiddle", lineMiddle),
-        registerCommand("andreas.formatDocument", formatDocument),
-        registerCommand("andreas.executeCommands", executeCommands),
-        registerCommand("andreas.printCommands", printCommands),
-        registerCommand("andreas.getSelectedText", getSelectedText),
-        registerCommand("andreas.increment", increment),
-        registerCommand("andreas.decrement", decrement),
-        registerCommand("andreas.constructorName", () =>
+        registerCommand("selectTo", selectTo),
+        registerCommand("lineMiddle", lineMiddle),
+        registerCommand("formatDocument", formatDocument),
+        registerCommand("executeCommands", executeCommands),
+        registerCommand("printCommands", printCommands),
+        registerCommand("getSelectedText", getSelectedText),
+        registerCommand("increment", increment),
+        registerCommand("decrement", decrement),
+        registerCommand("openEditorAtIndex", openEditorAtIndex),
+        registerCommand("getFileName", getFilename),
+        registerCommand("getConstructorName", () =>
             constructorName(getNodeAtLocation)
         ),
-        registerCommand("andreas.git.getURL", (lineNumber: boolean) =>
+        registerCommand("git.getURL", (lineNumber: boolean) =>
             git.getURL(gitExtension, lineNumber)
-        ),
-        registerCommand("andreas.openEditorAtIndex", openEditorAtIndex)
+        )
     );
 };
 
