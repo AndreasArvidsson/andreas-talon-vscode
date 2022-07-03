@@ -1,10 +1,10 @@
 import { window, Range, TextEditor, EndOfLine } from "vscode";
 
-const columnWidth = 24;
+const columnWidth = 28;
 
 export default () => {
     const editor = window.activeTextEditor!;
-    const indentation = getIndentation(editor);
+    const editorIndentation = getIndentation(editor);
     const lines = getLines(editor);
     const startOfBodyLine = lines.findIndex((line) => line.startsWith("-"));
     const result: string[] = [];
@@ -34,35 +34,41 @@ export default () => {
         }
 
         // Lines are either totaly left or one tab in
-        const indent = isIndented ? indentation : "";
+        const indent = isIndented ? editorIndentation : "";
 
-        // Commented line
-        if (line.startsWith("#")) {
+        // Commented or indented lines are not modified
+        if (line.startsWith("#") || isIndented) {
             result.push(indent + line);
             return;
         }
 
         const colonIndex = getColonIndex(line);
 
-        // "without a colon. Probably a multiline body.
+        // Without a colon. Probably a multiline body.
         if (colonIndex < 0) {
             result.push(indent + line);
             return;
         }
 
-        const left = indent + line.slice(0, colonIndex).trim() + ": ";
+        const left = indent + line.slice(0, colonIndex).trim();
         const right = line.slice(colonIndex + 1).trim();
         const isHeader = index < startOfBodyLine;
         const isTag = line.startsWith("tag()");
 
-        // Command that should NOT have padding or multiline command without right hand side
-        if (isHeader || isTag || !right) {
-            result.push(left + right);
+        // Without a right hand side. Probably rule for a multiline command.
+        if (!right) {
+            result.push(left + ":");
+            return;
+        }
+
+        // Command that should NOT have padding
+        if (isHeader || isTag) {
+            result.push(left + ": " + right);
             return;
         }
 
         // Command that should have whitespace padding between left and right
-        result.push(left.padEnd(columnWidth) + right);
+        result.push((left + ": ").padEnd(columnWidth) + right);
     });
 
     // Document ends with an empty line
