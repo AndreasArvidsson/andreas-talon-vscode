@@ -1,10 +1,10 @@
 import { window, Range, TextEditor, EndOfLine } from "vscode";
 
-const indentation = "    ";
 const columnWidth = 24;
 
 export default () => {
     const editor = window.activeTextEditor!;
+    const indentation = getIndentation(editor);
     const lines = getLines(editor);
     const startOfBodyLine = lines.findIndex((line) => line.startsWith("-"));
     const result: string[] = [];
@@ -117,6 +117,12 @@ const getColonIndex = (line: string): number => {
     }
     return -1;
 };
+
+function getIndentation(editor: TextEditor): string {
+    return new Array(editor.options.tabSize ?? 4)
+        .fill(editor.options.insertSpaces ? " " : "\t")
+        .join("");
+}
 
 function getEOL(editor: TextEditor): string {
     return editor.document.eol === EndOfLine.LF ? "\n" : "\r\n";
