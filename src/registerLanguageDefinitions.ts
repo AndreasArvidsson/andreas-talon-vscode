@@ -17,54 +17,50 @@ import * as path from "path";
 async function searchInPythonFile(
     fsPath: string,
     regex: RegExp
-): Promise<DefinitionLink | null> {
+): Promise<DefinitionLink[]> {
     const content = await fs.readFile(fsPath, { encoding: "utf-8" });
     const matches = [...content.matchAll(regex)];
-    const match = matches[0];
-    if (!match) {
-        return null;
-    }
-    const leadingConentLines = content.slice(0, match.index!).split("\n");
-    const line = leadingConentLines.length - 1;
-    const indentationLength =
-        leadingConentLines[leadingConentLines.length - 1].length;
-    const matchLines = match[0].split("\n");
-
-    return {
-        targetUri: Uri.file(fsPath),
-        // This is just the function name
-        targetSelectionRange: new Range(
-            line,
-            indentationLength + match[1].length,
-            line,
-            indentationLength + match[1].length + match[2].length
-        ),
-        // This is the entire function signature
-        targetRange: new Range(
-            line,
-            indentationLength,
-            line + matchLines.length - 1,
-            (matchLines.length === 1 ? indentationLength : 0) +
-                matchLines[matchLines.length - 1].length
-        ),
-    };
+    return matches.map((match) => {
+        const leadingLines = content.slice(0, match.index!).split("\n");
+        const line = leadingLines.length - 1;
+        const indentationLength = leadingLines[leadingLines.length - 1].length;
+        const matchLines = match[0].split("\n");
+        return {
+            targetUri: Uri.file(fsPath),
+            // This is just the function name
+            targetSelectionRange: new Range(
+                line,
+                indentationLength + match[1].length,
+                line,
+                indentationLength + match[1].length + match[2].length
+            ),
+            // This is the entire function signature
+            targetRange: new Range(
+                line,
+                indentationLength,
+                line + matchLines.length - 1,
+                (matchLines.length === 1 ? indentationLength : 0) +
+                    matchLines[matchLines.length - 1].length
+            ),
+        };
+    });
 }
 
-async function searchInDirectory(fsPath: string, regex: RegExp) {
+async function searchInDirectory(
+    fsPath: string,
+    regex: RegExp
+): Promise<DefinitionLink[]> {
     const files = await fs.readdir(fsPath);
-    for (const file of files) {
-        const result = await searchInPath(path.join(fsPath, file), regex);
-        if (result) {
-            return result;
-        }
-    }
-    return null;
+    const definitions = await Promise.all(
+        files.map((file) => searchInPath(path.join(fsPath, file), regex))
+    );
+    return definitions.flat();
 }
 
 async function searchInPath(
     fsPath: string,
     regex: RegExp
-): Promise<DefinitionLink | null> {
+): Promise<DefinitionLink[]> {
     if (fsPath.endsWith(".py")) {
         return searchInPythonFile(fsPath, regex);
     }
@@ -75,7 +71,7 @@ async function searchInPath(
         return searchInDirectory(fsPath, regex);
     }
 
-    return null;
+    return [];
 }
 
 const talonDefinitionProvider = {
@@ -99,13 +95,8 @@ const talonDefinitionProvider = {
             `(def\\s*)(${text})\\s*\\([\\s\\S]*?\\)\\s*:`,
             "g"
         );
-        const location = await searchInPath(folder.uri.fsPath, regex);
 
-        if (!location) {
-            return [];
-        }
-
-        return [location];
+        return searchInPath(folder.uri.fsPath, regex);
     },
 };
 
