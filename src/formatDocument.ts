@@ -1,81 +1,100 @@
-import { window, Range } from "vscode";
+import { window, Range, TextEditor, EndOfLine } from "vscode";
+
+const indentation = "    ";
+const columnWidth = 24;
 
 export default () => {
     const editor = window.activeTextEditor!;
-    const lines: string[] = [];
-    let toDo = [];
-    let bodyIndex = 0;
-    let length = 0;
+    const lines = getLines(editor);
+    const startOfBodyLine = lines.findIndex((line) => line.startsWith("-"));
+    const result: string[] = [];
+    let trailingEmptyLine = false;
 
-    for (let i = 0; i < editor.document.lineCount; ++i) {
-        let line = editor.document.lineAt(i).text;
+    lines.forEach((line, index) => {
+        const isIndented = line.startsWith(" ") || line.startsWith("\t");
 
-        // Make sure a line doesn't contain just white spaces
-        if (!line.trim()) {
-            line = "";
-        }
-        // Lines are either totaly left or one tab in
-        else if (line.startsWith(" ") || line.startsWith("\t")) {
-            line = "    " + line.trim();
+        line = line.trim();
+
+        // Empty line
+        if (!line) {
+            // Only add a single trailing empty line
+            if (!trailingEmptyLine) {
+                result.push("");
+            }
+            trailingEmptyLine = true;
+            return;
         } else {
-            line = line.trim();
-        }
-        lines[i] = line;
-
-        // Ignore comments, indented lines or tags
-        if (
-            line.startsWith("#") ||
-            line.startsWith(" ") ||
-            line.startsWith("tag()")
-        ) {
-            continue;
+            trailingEmptyLine = false;
         }
 
-        // Start of body, ignore all above
+        // Header divider
         if (line.startsWith("-")) {
-            bodyIndex = i + 1;
-            length = 0;
-            toDo = [];
-            continue;
+            result.push(line);
+            return;
         }
 
-        // Ignore lines without 2 parts
-        const index = getColonIndex(line);
-        if (index < 0 || index === line.length - 1) {
-            continue;
+        // Lines are either totaly left or one tab in
+        const indent = isIndented ? indentation : "";
+
+        // Commented line
+        if (line.startsWith("#")) {
+            result.push(indent + line);
+            return;
         }
 
-        const left = line.slice(0, index).trim();
-        const right = line.slice(index + 1).trim();
-        length = Math.max(length, left.length);
-        toDo.push({ i, left, right });
-    }
+        const colonIndex = getColonIndex(line);
 
-    // Add a little space betwee left and right
-    length += 4;
-    for (const l of toDo) {
-        let left = l.left + ":";
-        left = left.padEnd(length);
-        lines[l.i] = left + l.right;
+        // "without a colon. Probably a multiline body.
+        if (colonIndex < 0) {
+            result.push(indent + line);
+            return;
+        }
+
+        const left = indent + line.slice(0, colonIndex).trim() + ": ";
+        const right = line.slice(colonIndex + 1).trim();
+        const isHeader = index < startOfBodyLine;
+        const isTag = line.startsWith("tag()");
+
+        // Command that should NOT have padding or multiline command without right hand side
+        if (isHeader || isTag || !right) {
+            result.push(left + right);
+            return;
+        }
+
+        // Command that should have whitespace padding between left and right
+        result.push(left.padEnd(columnWidth) + right);
+    });
+
+    // Document ends with an empty line
+    if (!trailingEmptyLine) {
+        result.push("");
     }
 
     const originalText = editor.document.getText();
-    const newText = lines.join("\n");
+    const newText = result.join(getEOL(editor));
 
     if (originalText === newText) {
         return;
     }
 
-    const lastLine = editor.document.lineAt(editor.document.lineCount - 1);
-    const lastPos = lastLine.range.end;
-
     editor.edit((editBuilder) => {
         editBuilder.replace(
-            new Range(0, 0, lastPos.line, lastPos.character),
+            new Range(
+                editor.document.lineAt(0).range.start,
+                editor.document.lineAt(editor.document.lineCount - 1).range.end
+            ),
             newText
         );
     });
 };
+
+function getLines(editor: TextEditor): string[] {
+    const lines: string[] = [];
+    for (let i = 0; i < editor.document.lineCount; ++i) {
+        lines.push(editor.document.lineAt(i).text);
+    }
+    return lines;
+}
 
 // Find the colon separating commands and their implementation
 const getColonIndex = (line: string): number => {
@@ -98,3 +117,7 @@ const getColonIndex = (line: string): number => {
     }
     return -1;
 };
+
+function getEOL(editor: TextEditor): string {
+    return editor.document.eol === EndOfLine.LF ? "\n" : "\r\n";
+}
