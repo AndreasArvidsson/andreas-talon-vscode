@@ -92,7 +92,7 @@ const talonDefinitionProvider = {
         const { range, text } = wordAtPosition;
 
         const regex = new RegExp(
-            `(def\\s*)(${text})\\s*\\([\\s\\S]*?\\)\\s*:`,
+            `(def\\s*)(${text})\\s*\\([\\s\\S]*?\\)[\\s\\S]*?:`,
             "g"
         );
 
