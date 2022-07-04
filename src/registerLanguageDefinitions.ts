@@ -35,6 +35,7 @@ async function provideDefinition(
 
     const actionRegex = new RegExp(`${NS}${wordText}\\(${ALL}\\)`, "g");
     const captureRegex = new RegExp(`<${NS}${wordText}>`, "g");
+    const listRegex = new RegExp(`{${NS}${wordText}}`, "g");
 
     // Test for Talon action or capture
     if (
@@ -46,14 +47,22 @@ async function provideDefinition(
                 `(def\\s*)(${wordText})\\s*\\(${ALL}\\)${ALL}:`,
                 "g"
             ),
-            callback: pythonFunctionCallback,
+            callback: extractionCallback,
+        };
+    }
+
+    // Test for Talon list
+    else if (testWordAtPosition(position, lineText, listRegex)) {
+        scope = {
+            regex: new RegExp(`(\\w+\\.lists\\["${NS})(${wordText})"\\]`, "g"),
+            callback: extractionCallback,
         };
     }
 
     return scope != null ? searchInDirectory(folder.uri.fsPath, scope) : [];
 }
 
-function pythonFunctionCallback(
+function extractionCallback(
     uri: Uri,
     matches: RegExpMatchArray[],
     fileContent: string
