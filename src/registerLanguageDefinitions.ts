@@ -14,19 +14,57 @@ import {
 import { promises as fs } from "fs";
 import * as path from "path";
 
-async function searchInPythonFile(
-    fsPath: string,
-    regex: RegExp
-): Promise<DefinitionLink[]> {
-    const content = await fs.readFile(fsPath, { encoding: "utf-8" });
-    const matches = [...content.matchAll(regex)];
+const NS = "\\w*\\.?";
+const ALL = "[\\s\\S]*?";
+
+async function provideDefinition(
+    document: TextDocument,
+    position: Position,
+    token: CancellationToken
+): Promise<Definition | DefinitionLink[]> {
+    const folder = workspace.getWorkspaceFolder(document.uri);
+    if (!folder) {
+        return [];
+    }
+    const wordAtPosition = getWordAtPosition(document, position);
+    if (!wordAtPosition) {
+        return [];
+    }
+    const { wordText, lineText } = wordAtPosition;
+    let scope: SearchScope | null = null;
+
+    const actionRegex = new RegExp(`${NS}${wordText}\\(${ALL}\\)`, "g");
+    const captureRegex = new RegExp(`<${NS}${wordText}>`, "g");
+
+    // Test for Talon action or capture
+    if (
+        testWordAtPosition(position, lineText, actionRegex) ||
+        testWordAtPosition(position, lineText, captureRegex)
+    ) {
+        scope = {
+            regex: new RegExp(
+                `(def\\s*)(${wordText})\\s*\\(${ALL}\\)${ALL}:`,
+                "g"
+            ),
+            callback: pythonFunctionCallback,
+        };
+    }
+
+    return scope != null ? searchInDirectory(folder.uri.fsPath, scope) : [];
+}
+
+function pythonFunctionCallback(
+    uri: Uri,
+    matches: RegExpMatchArray[],
+    fileContent: string
+): DefinitionLink[] {
     return matches.map((match) => {
-        const leadingLines = content.slice(0, match.index!).split("\n");
+        const leadingLines = fileContent.slice(0, match.index!).split("\n");
         const line = leadingLines.length - 1;
         const indentationLength = leadingLines[leadingLines.length - 1].length;
         const matchLines = match[0].split("\n");
         return {
-            targetUri: Uri.file(fsPath),
+            targetUri: uri,
             // This is just the function name
             targetSelectionRange: new Range(
                 line,
@@ -46,87 +84,77 @@ async function searchInPythonFile(
     });
 }
 
-async function searchInDirectory(
-    fsPath: string,
+function testWordAtPosition(
+    position: Position,
+    lineText: string,
     regex: RegExp
-): Promise<DefinitionLink[]> {
-    const files = await fs.readdir(fsPath);
-    const definitions = await Promise.all(
-        files.map((file) => searchInPath(path.join(fsPath, file), regex))
+) {
+    return !!Array.from(lineText.matchAll(regex)).find(
+        (match) =>
+            position.character >= match.index! &&
+            position.character <= match.index! + match[0].length
     );
-    return definitions.flat();
+}
+
+function getWordAtPosition(document: TextDocument, position: Position) {
+    const wordRange = document.getWordRangeAtPosition(position);
+    if (!wordRange || wordRange.isEmpty || !wordRange.isSingleLine) {
+        return null;
+    }
+    const wordText = document.getText(wordRange);
+    const lineText = document.lineAt(position).text;
+    return { wordText, lineText };
+}
+
+interface SearchScope {
+    regex: RegExp;
+    callback: (
+        uri: Uri,
+        matches: RegExpMatchArray[],
+        fileContent: string
+    ) => DefinitionLink[];
 }
 
 async function searchInPath(
     fsPath: string,
-    regex: RegExp
+    searchScope: SearchScope
 ): Promise<DefinitionLink[]> {
     if (fsPath.endsWith(".py")) {
-        return searchInPythonFile(fsPath, regex);
+        return searchInPythonFile(fsPath, searchScope);
     }
-
     const fileStats = await fs.stat(fsPath);
-
-    if (fileStats.isDirectory()) {
-        return searchInDirectory(fsPath, regex);
-    }
-
-    return [];
+    return fileStats.isDirectory()
+        ? searchInDirectory(fsPath, searchScope)
+        : [];
 }
 
-const talonDefinitionProvider = {
-    provideDefinition: async function (
-        document: TextDocument,
-        position: Position,
-        token: CancellationToken
-    ): Promise<Definition | DefinitionLink[]> {
-        const wordAtPosition = getWordAtPosition(document, position);
-        if (!wordAtPosition) {
-            return [];
-        }
-        const folder = workspace.getWorkspaceFolder(document.uri);
-        if (!folder) {
-            return [];
-        }
+async function searchInDirectory(
+    fsPath: string,
+    searchScope: SearchScope
+): Promise<DefinitionLink[]> {
+    const files = await fs.readdir(fsPath);
+    const definitions = await Promise.all(
+        files.map((file) => searchInPath(path.join(fsPath, file), searchScope))
+    );
+    return definitions.flat();
+}
 
-        const { range, text } = wordAtPosition;
-
-        const regex = new RegExp(
-            `(def\\s*)(${text})\\s*\\([\\s\\S]*?\\)[\\s\\S]*?:`,
-            "g"
-        );
-
-        return searchInPath(folder.uri.fsPath, regex);
-    },
-};
-
-function getWordAtPosition(document: TextDocument, position: Position) {
-    const range = document.getWordRangeAtPosition(position);
-    if (!range || range.isEmpty || !range.isSingleLine) {
-        return;
-    }
-    const text = document.getText(range);
-    const lineText = document.lineAt(position).text;
-    const regex = new RegExp(`\\w+\\.${text}\\(.*\\)`, "g");
-    const matches = [...lineText.matchAll(regex)];
-    const match = matches[0];
-
-    if (
-        !match ||
-        position.character < match.index! ||
-        position.character > match.index! + match[0].length
-    ) {
-        return;
-    }
-
-    return { text, range };
+async function searchInPythonFile(
+    fsPath: string,
+    searchScope: SearchScope
+): Promise<DefinitionLink[]> {
+    const { regex, callback } = searchScope;
+    const fileContent = await fs.readFile(fsPath, { encoding: "utf-8" });
+    const uri = Uri.file(fsPath);
+    const matches = Array.from(fileContent.matchAll(regex));
+    return matches.length ? callback(uri, matches, fileContent) : [];
 }
 
 export function registerLanguageDefinitions() {
     return Disposable.from(
         languages.registerDefinitionProvider(
             { language: "talon" },
-            talonDefinitionProvider
+            { provideDefinition }
         )
     );
 }
