@@ -13,6 +13,7 @@ import {
 } from "vscode";
 import { promises as fs } from "fs";
 import * as path from "path";
+import { compile as gitignoreCompiler } from "gitignore-parser";
 
 // Match namespace
 const NS = "\\w*\\.?";
@@ -30,11 +31,11 @@ async function provideDefinitionTalon(
     position: Position,
     token: CancellationToken
 ): Promise<Definition | DefinitionLink[]> {
-    const positionAndFolder = getPositionAndFolder(document, position);
-    if (!positionAndFolder) {
+    const positionAndWorkspace = getPositionAndWorkspace(document, position);
+    if (!positionAndWorkspace) {
         return [];
     }
-    const { wordText, lineText, folderPath } = positionAndFolder;
+    const { wordText, lineText, workspacePath } = positionAndWorkspace;
     let scope: SearchScope | null = null;
 
     const actionRegex = new RegExp(`${NS}${wordText}\\(${ANY}\\)`, "g");
@@ -49,6 +50,7 @@ async function provideDefinitionTalon(
         scope = {
             regex: createPythonFunctionRegex(wordText),
             callback: extractionCallback,
+            gitIgnore: await getGitIgnore(workspacePath),
         };
     }
 
@@ -57,10 +59,11 @@ async function provideDefinitionTalon(
         scope = {
             regex: new RegExp(`(\\w+\\.lists\\["${NS})(${wordText})"\\]`, "g"),
             callback: extractionCallback,
+            gitIgnore: await getGitIgnore(workspacePath),
         };
     }
 
-    return scope != null ? searchInDirectory(folderPath, scope) : [];
+    return scope != null ? searchInDirectory(scope, workspacePath, "") : [];
 }
 
 async function provideDefinitionPython(
@@ -68,11 +71,11 @@ async function provideDefinitionPython(
     position: Position,
     token: CancellationToken
 ): Promise<Definition | DefinitionLink[]> {
-    const positionAndFolder = getPositionAndFolder(document, position);
+    const positionAndFolder = getPositionAndWorkspace(document, position);
     if (!positionAndFolder) {
         return [];
     }
-    const { wordText, lineText, folderPath } = positionAndFolder;
+    const { wordText, lineText, workspacePath } = positionAndFolder;
     let scope: SearchScope | null = null;
 
     const actionRegex = new RegExp(
@@ -85,10 +88,11 @@ async function provideDefinitionPython(
         scope = {
             regex: createPythonFunctionRegex(wordText),
             callback: extractionCallback,
+            gitIgnore: await getGitIgnore(workspacePath),
         };
     }
 
-    return scope != null ? searchInDirectory(folderPath, scope) : [];
+    return scope != null ? searchInDirectory(scope, workspacePath, "") : [];
 }
 
 function extractionCallback(
@@ -122,16 +126,27 @@ function extractionCallback(
     });
 }
 
-function getPositionAndFolder(document: TextDocument, position: Position) {
-    const folder = workspace.getWorkspaceFolder(document.uri);
-    if (!folder) {
+async function getGitIgnore(folderPath: string) {
+    try {
+        const gitignorePath = path.join(folderPath, ".gitignore");
+        const gitignoreContent = await fs.readFile(gitignorePath, "utf8");
+        const gitignore = gitignoreCompiler(gitignoreContent);
+        return gitignore.denies;
+    } catch (error) {
+        return (input: string) => false;
+    }
+}
+
+function getPositionAndWorkspace(document: TextDocument, position: Position) {
+    const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
+    if (!workspaceFolder) {
         return null;
     }
     const wordAtPosition = getWordAtPosition(document, position);
     if (!wordAtPosition) {
         return null;
     }
-    return { ...wordAtPosition, folderPath: folder.uri.fsPath };
+    return { ...wordAtPosition, workspacePath: workspaceFolder.uri.fsPath };
 }
 
 function testWordAtPosition(
@@ -158,6 +173,7 @@ function getWordAtPosition(document: TextDocument, position: Position) {
 
 interface SearchScope {
     regex: RegExp;
+    gitIgnore: (path: string) => boolean;
     callback: (
         uri: Uri,
         matches: RegExpMatchArray[],
@@ -166,32 +182,54 @@ interface SearchScope {
 }
 
 async function searchInPath(
-    fsPath: string,
-    searchScope: SearchScope
+    searchScope: SearchScope,
+    absolutePath: string,
+    relativePath: string,
+    filename: string
 ): Promise<DefinitionLink[]> {
-    if (fsPath.endsWith(".py")) {
-        return searchInPythonFile(fsPath, searchScope);
+    // Filenames starting with `.` are ignored by talon.
+    if (filename.startsWith(".") || searchScope.gitIgnore(relativePath)) {
+        return [];
     }
-    const fileStats = await fs.stat(fsPath);
+
+    // Python file. Parse for content.
+    if (relativePath.endsWith(".py")) {
+        return parsePythonFile(searchScope, absolutePath);
+    }
+
+    // Files with unrelated file endings. Just ignore.
+    if (/\.\w+$/.test(relativePath)) {
+        return [];
+    }
+
+    const fileStats = await fs.stat(absolutePath);
     return fileStats.isDirectory()
-        ? searchInDirectory(fsPath, searchScope)
+        ? searchInDirectory(searchScope, absolutePath, relativePath)
         : [];
 }
 
 async function searchInDirectory(
-    fsPath: string,
-    searchScope: SearchScope
+    searchScope: SearchScope,
+    absolutePath: string,
+    relativePath: string
 ): Promise<DefinitionLink[]> {
-    const files = await fs.readdir(fsPath);
+    const files = await fs.readdir(absolutePath);
     const definitions = await Promise.all(
-        files.map((file) => searchInPath(path.join(fsPath, file), searchScope))
+        files.map((filename) =>
+            searchInPath(
+                searchScope,
+                path.join(absolutePath, filename),
+                path.join(relativePath, filename),
+                filename
+            )
+        )
     );
     return definitions.flat();
 }
 
-async function searchInPythonFile(
-    fsPath: string,
-    searchScope: SearchScope
+async function parsePythonFile(
+    searchScope: SearchScope,
+    fsPath: string
 ): Promise<DefinitionLink[]> {
     const { regex, callback } = searchScope;
     const fileContent = await fs.readFile(fsPath, { encoding: "utf-8" });
