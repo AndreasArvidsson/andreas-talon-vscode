@@ -21,20 +21,20 @@ const ANY = "[\\s\\S]*?";
 // Match whitespace
 const WS = "\\s*";
 
-async function provideDefinition(
+function createPythonFunctionRegex(name: string) {
+    return new RegExp(`(def${WS})(${name})${WS}\\(${ANY}\\)${ANY}:`, "g");
+}
+
+async function provideDefinitionTalon(
     document: TextDocument,
     position: Position,
     token: CancellationToken
 ): Promise<Definition | DefinitionLink[]> {
-    const folder = workspace.getWorkspaceFolder(document.uri);
-    if (!folder) {
+    const positionAndFolder = getPositionAndFolder(document, position);
+    if (!positionAndFolder) {
         return [];
     }
-    const wordAtPosition = getWordAtPosition(document, position);
-    if (!wordAtPosition) {
-        return [];
-    }
-    const { wordText, lineText } = wordAtPosition;
+    const { wordText, lineText, folderPath } = positionAndFolder;
     let scope: SearchScope | null = null;
 
     const actionRegex = new RegExp(`${NS}${wordText}\\(${ANY}\\)`, "g");
@@ -47,10 +47,7 @@ async function provideDefinition(
         testWordAtPosition(position, lineText, captureRegex)
     ) {
         scope = {
-            regex: new RegExp(
-                `(def${WS})(${wordText})${WS}\\(${ANY}\\)${ANY}:`,
-                "g"
-            ),
+            regex: createPythonFunctionRegex(wordText),
             callback: extractionCallback,
         };
     }
@@ -63,7 +60,35 @@ async function provideDefinition(
         };
     }
 
-    return scope != null ? searchInDirectory(folder.uri.fsPath, scope) : [];
+    return scope != null ? searchInDirectory(folderPath, scope) : [];
+}
+
+async function provideDefinitionPython(
+    document: TextDocument,
+    position: Position,
+    token: CancellationToken
+): Promise<Definition | DefinitionLink[]> {
+    const positionAndFolder = getPositionAndFolder(document, position);
+    if (!positionAndFolder) {
+        return [];
+    }
+    const { wordText, lineText, folderPath } = positionAndFolder;
+    let scope: SearchScope | null = null;
+
+    const actionRegex = new RegExp(
+        `actions\\.${NS}${wordText}\\(${ANY}\\)`,
+        "g"
+    );
+
+    // Test for Talon action
+    if (testWordAtPosition(position, lineText, actionRegex)) {
+        scope = {
+            regex: createPythonFunctionRegex(wordText),
+            callback: extractionCallback,
+        };
+    }
+
+    return scope != null ? searchInDirectory(folderPath, scope) : [];
 }
 
 function extractionCallback(
@@ -95,6 +120,18 @@ function extractionCallback(
             ),
         };
     });
+}
+
+function getPositionAndFolder(document: TextDocument, position: Position) {
+    const folder = workspace.getWorkspaceFolder(document.uri);
+    if (!folder) {
+        return null;
+    }
+    const wordAtPosition = getWordAtPosition(document, position);
+    if (!wordAtPosition) {
+        return null;
+    }
+    return { ...wordAtPosition, folderPath: folder.uri.fsPath };
 }
 
 function testWordAtPosition(
@@ -167,7 +204,11 @@ export function registerLanguageDefinitions() {
     return Disposable.from(
         languages.registerDefinitionProvider(
             { language: "talon" },
-            { provideDefinition }
+            { provideDefinition: provideDefinitionTalon }
+        ),
+        languages.registerDefinitionProvider(
+            { language: "python" },
+            { provideDefinition: provideDefinitionPython }
         )
     );
 }
