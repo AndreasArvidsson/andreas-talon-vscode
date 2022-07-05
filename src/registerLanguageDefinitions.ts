@@ -187,7 +187,7 @@ async function searchInPath(
     relativePath: string,
     filename: string
 ): Promise<DefinitionLink[]> {
-    // Filenames starting with `.` are ignored by talon.
+    // Filenames starting with `.` are ignored by Talon.
     if (filename.startsWith(".") || searchScope.gitIgnore(relativePath)) {
         return [];
     }
@@ -229,13 +229,16 @@ async function searchInDirectory(
 
 async function parsePythonFile(
     searchScope: SearchScope,
-    fsPath: string
+    absolutePath: string
 ): Promise<DefinitionLink[]> {
     const { regex, callback } = searchScope;
-    const fileContent = await fs.readFile(fsPath, { encoding: "utf-8" });
-    const uri = Uri.file(fsPath);
+    const fileContent = await fs.readFile(absolutePath, { encoding: "utf-8" });
     const matches = Array.from(fileContent.matchAll(regex));
-    return matches.length ? callback(uri, matches, fileContent) : [];
+    if (!matches.length) {
+        return [];
+    }
+    const uri = Uri.file(absolutePath);
+    return callback(uri, matches, fileContent);
 }
 
 export function registerLanguageDefinitions() {
