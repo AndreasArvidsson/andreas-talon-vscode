@@ -1,10 +1,4 @@
-import {
-    commands,
-    ExtensionContext,
-    extensions,
-    languages,
-    window,
-} from "vscode";
+import { commands, ExtensionContext, extensions, window } from "vscode";
 import { executeCommands, printCommands } from "./commands";
 import constructorName from "./constructorName";
 import { getFilename } from "./files";
@@ -16,6 +10,7 @@ import { decrement, increment } from "./numbers";
 import { registerLanguageDefinitions } from "./registerLanguageDefinitions";
 import selectTo from "./selectTo";
 import { openEditorAtIndex } from "./tabs";
+import undoUntilNotDirty from "./undoUntilNotDirty";
 
 export const activate = async (context: ExtensionContext) => {
     const parseTreeExtension = extensions.getExtension("pokey.parse-tree");
@@ -56,6 +51,7 @@ export const activate = async (context: ExtensionContext) => {
         registerCommand("decrement", decrement),
         registerCommand("openEditorAtIndex", openEditorAtIndex),
         registerCommand("getFileName", getFilename),
+        registerCommand("undoUntilNotDirty", undoUntilNotDirty),
         registerCommand("getConstructorName", () =>
             constructorName(getNodeAtLocation)
         ),
