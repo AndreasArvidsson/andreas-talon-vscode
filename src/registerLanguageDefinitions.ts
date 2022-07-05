@@ -14,8 +14,12 @@ import {
 import { promises as fs } from "fs";
 import * as path from "path";
 
+// Match namespace
 const NS = "\\w*\\.?";
-const ALL = "[\\s\\S]*?";
+// Match any, non-greedy
+const ANY = "[\\s\\S]*?";
+// Match whitespace
+const WS = "\\s*";
 
 async function provideDefinition(
     document: TextDocument,
@@ -33,7 +37,7 @@ async function provideDefinition(
     const { wordText, lineText } = wordAtPosition;
     let scope: SearchScope | null = null;
 
-    const actionRegex = new RegExp(`${NS}${wordText}\\(${ALL}\\)`, "g");
+    const actionRegex = new RegExp(`${NS}${wordText}\\(${ANY}\\)`, "g");
     const captureRegex = new RegExp(`<${NS}${wordText}>`, "g");
     const listRegex = new RegExp(`{${NS}${wordText}}`, "g");
 
@@ -44,7 +48,7 @@ async function provideDefinition(
     ) {
         scope = {
             regex: new RegExp(
-                `(def\\s*)(${wordText})\\s*\\(${ALL}\\)${ALL}:`,
+                `(def${WS})(${wordText})${WS}\\(${ANY}\\)${ANY}:`,
                 "g"
             ),
             callback: extractionCallback,
