@@ -33,6 +33,10 @@ In constant development. Things will break!
 -   `andreas.getGitURL(lineNumber: boolean): string`  
     Get URL to Git repository webpage. Optionally include selected line numbers.
 
+## Talon language definitions
+
+Adds definitions for Talon actions, lists and captures.
+
 ## Build
 
 ```bash
