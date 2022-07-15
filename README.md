@@ -1,33 +1,49 @@
 # VSCode extension used by Talon Voice
-VSCode extension used by my talon scripts.
 
-In very early development. Things will break!
+VSCode extension used by my personal [Talon scripts](https://github.com/AndreasArvidsson/andreas-talon).
 
-## Features
-* andreas.selectTo(line: int)    
-    Select from current location to specified line.
-* andreas.lineMiddle()    
-    Move curser to middle of the current line
-* andreas.formatDocument()    
-    Format/auto indent talon files
+In constant development. Things will break!
 
-### Jump
-Automatically highligts all words on the current line. 
-* andreas.jumpSearch(pattern: str)    
-    Search and highlight all occurrences of the pattern in the editor.
-* andreas.jumpCancel()    
-    Cancel search and remove all highlights.
-* andreas.jumoAction(action: str, key: str, value: str)    
-    Perform action on the specified key. With optional value for some actions.    
-    actions: go, before, after, select, delete, extend, replace
+## Commands
 
-## Installation
-    npm install -g vsce
+-   `andreas.selectTo(line: number)`  
+     Select from current location to specified line.
+-   `andreas.lineMiddle()`  
+     Move curser to middle of the current line.
+-   `andreas.formatDocument()`  
+     Format/auto indent talon files.
+-   `andreas.executeCommands(commands: string[])`  
+    Sequentially execute multiple commands. Useful for keybindings.
+-   `andreas.printCommands()`  
+     Print available commands.
+-   `andreas.getSelectedText(): string`  
+    Get selected text. Multiple selections are joined with new line.
+-   `andreas.increment()`  
+    Increment selected number.
+-   `andreas.decrement()`  
+    Decrement selected number.
+-   `andreas.openEditorAtIndex(index: number)`  
+    Open editor/tab at given index. Negative indices are counted from the back.
+-   `andreas.getFileName(): string`  
+    Get file name of active editor.
+-   `andreas.undoUntilNotDirty()`  
+    Undo until the document is not dirty. Same as closing and reopening the document without saving changes.
+-   `andreas.getClassName(): string`  
+    Get class name. Useful for inserting constructor in C++/Java.
+-   `andreas.getGitURL(lineNumber: boolean): string`  
+    Get URL to Git repository webpage. Optionally include selected line numbers.
 
-    vsce package
+## Build
+
+```bash
+$ npm install -g vsce
+$ vsce package
+```
 
 ## Dependencies
-* [Command server](https://marketplace.visualstudio.com/items?itemName=pokey.command-server)
+
+-   [Command server](https://marketplace.visualstudio.com/items?itemName=pokey.command-server)
 
 ## Resources
-* [Talon Voice](https://talonvoice.com)
+
+-   [Talon Voice](https://talonvoice.com)

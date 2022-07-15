@@ -1,6 +1,6 @@
 import { commands, ExtensionContext, extensions, window } from "vscode";
 import { executeCommands, printCommands } from "./commands";
-import constructorName from "./constructorName";
+import getClassName from "./getClassName";
 import { getFilename } from "./files";
 import formatDocument from "./formatDocument";
 import getSelectedText from "./getSelectedText";
@@ -52,10 +52,8 @@ export const activate = async (context: ExtensionContext) => {
         registerCommand("openEditorAtIndex", openEditorAtIndex),
         registerCommand("getFileName", getFilename),
         registerCommand("undoUntilNotDirty", undoUntilNotDirty),
-        registerCommand("getConstructorName", () =>
-            constructorName(getNodeAtLocation)
-        ),
-        registerCommand("git.getURL", (lineNumber: boolean) =>
+        registerCommand("getClassName", () => getClassName(getNodeAtLocation)),
+        registerCommand("getGitURL", (lineNumber: boolean) =>
             git.getURL(gitExtension, lineNumber)
         )
     );
