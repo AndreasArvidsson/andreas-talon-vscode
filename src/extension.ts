@@ -1,13 +1,13 @@
 import { commands, ExtensionContext, extensions, window } from "vscode";
 import { executeCommands, printCommands } from "./commands";
-import getClassName from "./getClassName";
 import { getFilename } from "./files";
-import formatDocument from "./formatDocument";
+import getClassName from "./getClassName";
 import getSelectedText from "./getSelectedText";
 import git from "./git";
 import lineMiddle from "./lineMiddle";
 import { decrement, increment } from "./numbers";
 import { registerLanguageDefinitions } from "./registerLanguageDefinitions";
+import { registerLanguageFormatter } from "./registerLanguageFormatter";
 import selectTo from "./selectTo";
 import { openEditorAtIndex } from "./tabs";
 import undoUntilNotDirty from "./undoUntilNotDirty";
@@ -41,9 +41,9 @@ export const activate = async (context: ExtensionContext) => {
 
     context.subscriptions.push(
         registerLanguageDefinitions(),
+        registerLanguageFormatter(),
         registerCommand("selectTo", selectTo),
         registerCommand("lineMiddle", lineMiddle),
-        registerCommand("formatDocument", formatDocument),
         registerCommand("executeCommands", executeCommands),
         registerCommand("printCommands", printCommands),
         registerCommand("getSelectedText", getSelectedText),

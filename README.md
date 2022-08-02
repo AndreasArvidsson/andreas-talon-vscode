@@ -10,8 +10,6 @@ In constant development. Things will break!
      Select from current location to specified line.
 -   `andreas.lineMiddle()`  
      Move curser to middle of the current line.
--   `andreas.formatDocument()`  
-     Format/auto indent talon files.
 -   `andreas.executeCommands(commands: string[])`  
     Sequentially execute multiple commands. Useful for keybindings.
 -   `andreas.printCommands()`  
@@ -33,9 +31,10 @@ In constant development. Things will break!
 -   `andreas.getGitURL(lineNumber: boolean): string`  
     Get URL to Git repository webpage. Optionally include selected line numbers.
 
-## Talon language definitions
+## Talon language features
 
-Adds definitions for Talon actions, lists and captures.
+-   Adds document formatter for Talon files.
+-   Adds definitions for Talon actions, lists and captures.
 
 ## Build
 

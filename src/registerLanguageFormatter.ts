@@ -1,8 +1,18 @@
-import { window, Range, TextEditor, EndOfLine } from "vscode";
+import {
+    EndOfLine,
+    languages,
+    Range,
+    TextDocument,
+    TextEdit,
+    TextEditor,
+    window,
+} from "vscode";
 
 const columnWidth = 28;
 
-export default () => {
+function provideDocumentFormattingEditsTalon(
+    document: TextDocument
+): TextEdit[] {
     const editor = window.activeTextEditor!;
     const editorIndentation = getIndentation(editor);
     const lines = getLines(editor);
@@ -80,19 +90,19 @@ export default () => {
     const newText = result.join(getEOL(editor));
 
     if (originalText === newText) {
-        return;
+        return [];
     }
 
-    editor.edit((editBuilder) => {
-        editBuilder.replace(
+    return [
+        TextEdit.replace(
             new Range(
                 editor.document.lineAt(0).range.start,
                 editor.document.lineAt(editor.document.lineCount - 1).range.end
             ),
             newText
-        );
-    });
-};
+        ),
+    ];
+}
 
 function getLines(editor: TextEditor): string[] {
     const lines: string[] = [];
@@ -132,4 +142,13 @@ function getIndentation(editor: TextEditor): string {
 
 function getEOL(editor: TextEditor): string {
     return editor.document.eol === EndOfLine.LF ? "\n" : "\r\n";
+}
+
+export function registerLanguageFormatter() {
+    return languages.registerDocumentFormattingEditProvider(
+        { language: "talon" },
+        {
+            provideDocumentFormattingEdits: provideDocumentFormattingEditsTalon,
+        }
+    );
 }
