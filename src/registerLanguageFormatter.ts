@@ -24,17 +24,12 @@ function provideDocumentFormattingEditsTalon(
         const isIndented = line.startsWith(" ") || line.startsWith("\t");
 
         line = line.trim();
+        trailingEmptyLine = !line;
 
         // Empty line
-        if (!line) {
-            // Only add a single trailing empty line
-            if (!trailingEmptyLine) {
-                result.push("");
-            }
-            trailingEmptyLine = true;
+        if (trailingEmptyLine) {
+            result.push("");
             return;
-        } else {
-            trailingEmptyLine = false;
         }
 
         // Header divider
