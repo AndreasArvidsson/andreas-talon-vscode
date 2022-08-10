@@ -104,7 +104,17 @@ function getLines(editor: TextEditor): string[] {
     for (let i = 0; i < editor.document.lineCount; ++i) {
         lines.push(editor.document.lineAt(i).text);
     }
-    return lines;
+    return removeTrailingEmptyLines(lines);
+}
+
+function removeTrailingEmptyLines(lines: string[]): string[] {
+    let i = lines.length - 1;
+    for (; i > -1; --i) {
+        if (lines[i].trim()) {
+            break;
+        }
+    }
+    return lines.slice(0, i + 1);
 }
 
 // Find the colon separating commands and their implementation
