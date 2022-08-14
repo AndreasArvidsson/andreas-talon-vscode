@@ -1,15 +1,5 @@
-import { window, Location } from "vscode";
-
-interface SyntaxNode {
-    id: number;
-    type: string;
-    text: string;
-    parent: SyntaxNode;
-
-    childForFieldName(fieldName: string): SyntaxNode | null;
-}
-
-type GetNodeAtLocation = (location: Location) => SyntaxNode;
+import { Location, window } from "vscode";
+import { GetNodeAtLocation } from "./typings/parserTree";
 
 export default (getNodeAtLocation: GetNodeAtLocation): string | null => {
     try {
