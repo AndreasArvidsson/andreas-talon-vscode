@@ -36,6 +36,13 @@ In constant development. Things will break!
 -   Adds document formatter for Talon files.
 -   Adds definitions for Talon actions, lists and captures.
 
+### Disable formatting on save for Talon files
+```json
+"[talon]": {
+    "editor.formatOnSave": false
+}
+```
+
 ## Build
 
 ```bash
