@@ -1,5 +1,6 @@
 import { commands, ExtensionContext, extensions, window } from "vscode";
 import { executeCommands, printCommands } from "./commands";
+import { getDictationContext } from "./dictation";
 import { getFilename } from "./files";
 import getClassName from "./getClassName";
 import getSelectedText from "./getSelectedText";
@@ -47,6 +48,7 @@ export const activate = async (context: ExtensionContext) => {
         registerCommand("executeCommands", executeCommands),
         registerCommand("printCommands", printCommands),
         registerCommand("getSelectedText", getSelectedText),
+        registerCommand("getDictationContext", getDictationContext),
         registerCommand("increment", increment),
         registerCommand("decrement", decrement),
         registerCommand("openEditorAtIndex", openEditorAtIndex),

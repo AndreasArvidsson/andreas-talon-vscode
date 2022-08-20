@@ -16,6 +16,8 @@ In constant development. Things will break!
      Print available commands.
 -   `andreas.getSelectedText(): string`  
     Get selected text. Multiple selections are joined with new line.
+-   `andreas.getDictationContext(): string`  
+    Get text before and after selection. Used for context sensitive dictation.
 -   `andreas.increment()`  
     Increment selected number.
 -   `andreas.decrement()`  
@@ -37,6 +39,7 @@ In constant development. Things will break!
 -   Adds definitions for Talon actions, lists and captures.
 
 ### Disable formatting on save for Talon files
+
 ```json
 "[talon]": {
     "editor.formatOnSave": false
