@@ -2,6 +2,8 @@
 
 VSCode extension used by my personal [Talon scripts](https://github.com/AndreasArvidsson/andreas-talon).
 
+Accessible in the vscode marketplace as [Andreas Talon](https://marketplace.visualstudio.com/items?itemName=AndreasArvidsson.andreas-talon)
+
 In constant development. Things will break!
 
 ## Commands
