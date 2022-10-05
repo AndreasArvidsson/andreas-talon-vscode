@@ -2,6 +2,7 @@ import { commands, ExtensionContext, extensions, window } from "vscode";
 import { executeCommands, printCommands } from "./commands";
 import { getDictationContext } from "./dictation";
 import { getFilename } from "./files";
+import generateRange from "./generateRange";
 import getClassName from "./getClassName";
 import getSelectedText from "./getSelectedText";
 import git from "./git";
@@ -54,6 +55,7 @@ export const activate = async (context: ExtensionContext) => {
         registerCommand("openEditorAtIndex", openEditorAtIndex),
         registerCommand("getFileName", getFilename),
         registerCommand("undoUntilNotDirty", undoUntilNotDirty),
+        registerCommand("generateRange", generateRange),
         registerCommand("getClassName", () => getClassName(getNodeAtLocation)),
         registerCommand("getGitURL", (lineNumber: boolean) =>
             git.getURL(gitExtension, lineNumber)

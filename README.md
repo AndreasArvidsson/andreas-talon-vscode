@@ -24,6 +24,8 @@ In constant development. Things will break!
     Increment selected number.
 -   `andreas.decrement()`  
     Decrement selected number.
+-   `andreas.generateRange(start: number = 0)`  
+    Generate numerical range starting from given number.
 -   `andreas.openEditorAtIndex(index: number)`  
     Open editor/tab at given index. Negative indices are counted from the back.
 -   `andreas.getFileName(): string`  

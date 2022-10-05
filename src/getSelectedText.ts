@@ -1,10 +1,10 @@
 import { window } from "vscode";
+import getSortedSelections from "./util/getSortedSelections";
 
 export default (): string => {
-    const editor = window.activeTextEditor!;
-    const selections = [...editor.selections];
-    selections.sort((a, b) => a.start.compareTo(b.start));
-    return selections
-        .map((selection) => editor.document.getText(selection))
+    return getSortedSelections()
+        .map((selection) =>
+            window.activeTextEditor!.document.getText(selection)
+        )
         .join("\n");
 };
