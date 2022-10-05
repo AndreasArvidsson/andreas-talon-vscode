@@ -1,7 +1,7 @@
 import { Selection, window } from "vscode";
 import getSortedSelections from "./util/getSortedSelections";
 
-export default async (start: number = 0) => {
+export default async (start: number = 1) => {
     const editor = window.activeTextEditor;
 
     if (!editor) {
