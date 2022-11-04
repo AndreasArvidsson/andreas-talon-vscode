@@ -222,6 +222,6 @@ class Bitbucket implements Platform {
     }
 
     getPullRequestsURL(): string {
-        return `${this.repoUrl}/pull-requests#`;
+        return `${this.repoUrl}/pull-requests`;
     }
 }
