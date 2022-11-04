@@ -1,36 +1,58 @@
-import { TextDocument, window } from "vscode";
+import { Range, TextDocument, TextEditor, window } from "vscode";
 import { API, GitExtension, Repository } from "./typings/git";
 
-export default {
-    getURL: (gitExtension: GitExtension, lineNumber: boolean) => {
-        const api = gitExtension.getAPI(1);
-        const document = getDocument();
-        const filePath = getFilePath(document);
-        const repository = getRepository(api, filePath);
-        validateUnchangedDocument(document, repository);
-        const remote = getRemote(repository);
-        const branch = getBranch(repository);
-        const platform = getPlatform(remote);
-        const repoPath = repository.rootUri.path;
-        const path = filePath.substring(repoPath.length + 1);
-        const commit = repository.state.HEAD?.commit;
-        const url = toWebPage(platform, remote, branch, path, commit);
-        return lineNumber ? addLineNumber(platform, url) : url;
-    },
+let gitApi: API;
+
+export const init = (gitExtension: GitExtension) => {
+    gitApi = gitExtension.getAPI(1);
 };
 
-function getDocument() {
-    const document = window.activeTextEditor?.document;
-    if (!document) {
-        throw Error("Can't find text document");
-    }
-    if (document.isDirty) {
-        throw Error("Document contains unsaved changes");
-    }
-    return document;
+export const getFileURL = (lineNumber: boolean) => {
+    const { document, selection } = getEditor();
+    const filePath = getFilePath(document);
+    const repository = getRepository(filePath);
+    validateUnchangedDocument(document, repository);
+    const platform = getPlatform(repository);
+
+    return platform.getFileUrl(
+        getCommit(repository),
+        getRelativeFilepath(repository, filePath),
+        lineNumber ? selection : undefined
+    );
+};
+
+export const getIssuesURL = () => {
+    return getPlatformHelper().getIssuesUrl();
+};
+
+export const getNewIssueURL = () => {
+    return getPlatformHelper().getNewIssueUrl();
+};
+
+export const getPullRequestsURL = () => {
+    return getPlatformHelper().getPullRequestsURL();
+};
+
+function getPlatformHelper(): Platform {
+    const { document } = getEditor();
+    const filePath = getFilePath(document);
+    const repository = getRepository(filePath);
+    return getPlatform(repository);
 }
 
-function getFilePath(document: TextDocument) {
+function getRelativeFilepath(repository: Repository, filePath: string) {
+    return filePath.substring(repository.rootUri.path.length + 1);
+}
+
+function getEditor(): TextEditor {
+    const editor = window.activeTextEditor;
+    if (!editor) {
+        throw Error("Can't find active text editor");
+    }
+    return editor;
+}
+
+function getFilePath(document: TextDocument): string {
     const path = document.uri.path;
     if (!path) {
         throw Error("Can't find file path");
@@ -42,6 +64,10 @@ function validateUnchangedDocument(
     document: TextDocument,
     repository: Repository
 ) {
+    if (document.isDirty) {
+        throw Error("Document contains unsaved changes");
+    }
+
     const changes = [
         ...repository.state.workingTreeChanges,
         ...repository.state.indexChanges,
@@ -55,9 +81,9 @@ function validateUnchangedDocument(
     }
 }
 
-const getRepository = (api: API, filePath: string) => {
-    const repository = api.repositories.find((r) =>
-        filePath.startsWith(r.rootUri.path)
+const getRepository = (filePath: string): Repository => {
+    const repository = gitApi.repositories.find((r) =>
+        filePath.toLowerCase().startsWith(r.rootUri.path.toLowerCase())
     );
     if (!repository) {
         throw Error("Can't find git repository");
@@ -81,7 +107,7 @@ function getRemote(repository: Repository) {
     throw Error("Can't find git remote");
 }
 
-function getBranch(repository: Repository) {
+function getBranch(repository: Repository): string {
     const branch = repository.state.HEAD?.name;
     if (!branch) {
         throw Error("Can't find git branch");
@@ -89,24 +115,15 @@ function getBranch(repository: Repository) {
     return branch;
 }
 
-function toWebPage(
-    platform: Platform,
-    remote: string,
-    branch: string,
-    filePath: string,
-    commit?: string
-) {
-    const host = remoteToWebPage(remote);
-    const commitOrBranch = commit ?? branch;
-    switch (platform) {
-        case "github":
-            return `${host}/blob/${commitOrBranch}/${filePath}`;
-        case "bitbucket":
-            return `${host}/src/${commitOrBranch}/${filePath}`;
+function getCommit(repository: Repository): string {
+    const commit = repository.state.HEAD?.commit;
+    if (!commit) {
+        throw Error("Can't find git commit");
     }
+    return commit;
 }
 
-function remoteToWebPage(remote: string) {
+function remoteToUrl(remote: string) {
     if (remote.startsWith("git@")) {
         remote = remote.replace(":", "/").replace("git@", "https://");
     }
@@ -116,31 +133,95 @@ function remoteToWebPage(remote: string) {
     return remote;
 }
 
-function addLineNumber(platform: Platform, url: string) {
-    const editor = window.activeTextEditor!;
-    const { isSingleLine } = editor.selection;
-    const startLine = editor.selection.start.line + 1;
-    const endLine = editor.selection.end.line + 1;
-    switch (platform) {
-        case "github":
-            return isSingleLine
-                ? `${url}#L${startLine}`
-                : `${url}#L${startLine}-L${endLine}`;
-        case "bitbucket":
-            return isSingleLine
-                ? `${url}#lines-${startLine}`
-                : `${url}#lines-${startLine}:${endLine}`;
-    }
-}
-
-function getPlatform(remote: string): Platform {
+function getPlatform(repository: Repository): Platform {
+    const remote = getRemote(repository);
     if (remote.includes("github.com")) {
-        return "github";
+        return new Github(remote);
     }
     if (remote.includes("bitbucket.org")) {
-        return "bitbucket";
+        return new Bitbucket(remote);
     }
-    throw Error("Can't find git platform");
+    throw Error(`Can't find git platform for '${remote}'`);
 }
 
-type Platform = "github" | "bitbucket";
+interface Platform {
+    name: string;
+    getFileUrl(commitOrBranch: string, filePath: string, range?: Range): string;
+    getIssuesUrl(): string;
+    getNewIssueUrl(): string;
+    getPullRequestsURL(): string;
+}
+
+class Github implements Platform {
+    name = "GitHub";
+    repoUrl: string;
+
+    constructor(remote: string) {
+        this.repoUrl = remoteToUrl(remote);
+    }
+
+    getFileUrl(
+        commitOrBranch: string,
+        filePath: string,
+        range?: Range
+    ): string {
+        let url = `${this.repoUrl}/blob/${commitOrBranch}/${filePath}`;
+
+        if (range != null) {
+            url = range.isSingleLine
+                ? `${url}#L${range.start.line + 1}`
+                : `${url}#L${range.start.line + 1}-L${range.end.line + 1}`;
+        }
+
+        return url;
+    }
+
+    getIssuesUrl(): string {
+        return `${this.repoUrl}/issues`;
+    }
+
+    getNewIssueUrl(): string {
+        return `${this.repoUrl}/issues/new`;
+    }
+
+    getPullRequestsURL(): string {
+        return `${this.repoUrl}/pulls#`;
+    }
+}
+
+class Bitbucket implements Platform {
+    name = "Bitbucket";
+    repoUrl: string;
+
+    constructor(remote: string) {
+        this.repoUrl = remoteToUrl(remote);
+    }
+
+    getFileUrl(
+        commitOrBranch: string,
+        filePath: string,
+        range?: Range
+    ): string {
+        let url = `${this.repoUrl}/src/${commitOrBranch}/${filePath}`;
+
+        if (range != null) {
+            url = range.isSingleLine
+                ? `${url}#lines-${range.start.line + 1}`
+                : `${url}#lines-${range.start.line + 1}:${range.end.line + 1}`;
+        }
+
+        return url;
+    }
+
+    getIssuesUrl(): string {
+        return `${this.repoUrl}/issues`;
+    }
+
+    getNewIssueUrl(): string {
+        return `${this.repoUrl}/issues/new`;
+    }
+
+    getPullRequestsURL(): string {
+        return `${this.repoUrl}/pull-requests#`;
+    }
+}

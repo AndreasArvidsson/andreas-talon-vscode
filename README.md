@@ -34,8 +34,14 @@ In constant development. Things will break!
     Undo until the document is not dirty. Same as closing and reopening the document without saving changes.
 -   `andreas.getClassName(): string`  
     Get class name. Useful for inserting constructor in C++/Java.
--   `andreas.getGitURL(lineNumber: boolean): string`  
-    Get URL to Git repository webpage. Optionally include selected line numbers.
+-   `andreas.getGitFileURL(lineNumber: boolean): string`  
+    Get URL to Git repository file webpage. Optionally include selected line numbers.
+-   `andreas.getGitIssuesURL(): string`  
+    Get URL to Git repository issues webpage.
+-   `andreas.getGitNewIssueURL(): string`  
+    Get URL to Git repository new issue webpage.
+-   `andreas.getGitPullRequestsURL(): string`  
+    Get URL to Git repository pull requests webpage.
 
 ## Talon language features
 
@@ -60,6 +66,7 @@ $ vsce package
 ## Dependencies
 
 -   [Command server](https://marketplace.visualstudio.com/items?itemName=pokey.command-server)
+-   [Parse tree](https://marketplace.visualstudio.com/items?itemName=pokey.parse-tree)
 
 ## Resources
 

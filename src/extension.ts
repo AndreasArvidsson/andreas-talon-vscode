@@ -1,11 +1,11 @@
-import { commands, ExtensionContext, extensions, window } from "vscode";
+import { commands, ExtensionContext, window } from "vscode";
 import { executeCommands, printCommands } from "./commands";
 import { getDictationContext } from "./dictation";
 import { getFilename } from "./files";
 import generateRange from "./generateRange";
-import getClassName from "./getClassName";
+import * as className from "./getClassName";
 import getSelectedText from "./getSelectedText";
-import git from "./git";
+import * as git from "./git";
 import lineMiddle from "./lineMiddle";
 import { decrement, increment } from "./numbers";
 import { registerLanguageDefinitions } from "./registerLanguageDefinitions";
@@ -13,17 +13,13 @@ import { registerLanguageFormatter } from "./registerLanguageFormatter";
 import selectTo from "./selectTo";
 import { openEditorAtIndex } from "./tabs";
 import undoUntilNotDirty from "./undoUntilNotDirty";
+import getExtension from "./util/getExtension";
 
 export const activate = async (context: ExtensionContext) => {
-    const parseTreeExtension = extensions.getExtension("pokey.parse-tree");
-    if (!parseTreeExtension) {
-        throw Error("Depends on pokey.parse-tree extension");
-    }
-    const gitExtension = extensions.getExtension("vscode.git")?.exports;
-    if (!gitExtension) {
-        throw Error("Depends on vscode.git extension");
-    }
-    const { getNodeAtLocation } = await parseTreeExtension.activate();
+    const parseTreeExtension = await getExtension("pokey.parse-tree");
+    const gitExtension = await getExtension("vscode.git");
+    className.init(parseTreeExtension);
+    git.init(gitExtension);
 
     const registerCommand = (
         command: string,
@@ -56,10 +52,11 @@ export const activate = async (context: ExtensionContext) => {
         registerCommand("getFileName", getFilename),
         registerCommand("undoUntilNotDirty", undoUntilNotDirty),
         registerCommand("generateRange", generateRange),
-        registerCommand("getClassName", () => getClassName(getNodeAtLocation)),
-        registerCommand("getGitURL", (lineNumber: boolean) =>
-            git.getURL(gitExtension, lineNumber)
-        )
+        registerCommand("getClassName", className.get),
+        registerCommand("getGitFileURL", git.getFileURL),
+        registerCommand("getGitIssuesURL", git.getIssuesURL),
+        registerCommand("getGitNewIssueURL", git.getNewIssueURL),
+        registerCommand("getGitPullRequestsURL", git.getPullRequestsURL)
     );
 };
 

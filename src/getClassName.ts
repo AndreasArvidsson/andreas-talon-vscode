@@ -1,7 +1,17 @@
 import { Location, window } from "vscode";
 import { GetNodeAtLocation } from "./typings/parserTree";
 
-export default (getNodeAtLocation: GetNodeAtLocation): string | null => {
+type ParseTreeExtension = {
+    getNodeAtLocation: GetNodeAtLocation;
+};
+
+let getNodeAtLocation: GetNodeAtLocation;
+
+export const init = (parseTreeExtension: ParseTreeExtension) => {
+    getNodeAtLocation = parseTreeExtension.getNodeAtLocation;
+};
+
+export const get = (): string | null => {
     try {
         const editor = window.activeTextEditor!;
         const pos = editor.selection.active;
