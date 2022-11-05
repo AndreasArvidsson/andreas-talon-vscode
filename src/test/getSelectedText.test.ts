@@ -1,10 +1,10 @@
-import { runTest } from "./runTest";
+import { runTest } from "./testUtil/runTest";
 
-const command = { id: "getSelectedText" };
+const command = "getSelectedText";
 
-suite(command.id, async function () {
+suite(command, async function () {
     runTest({
-        title: command.id,
+        title: command,
         command,
         pre: {
             content: "_abc_",

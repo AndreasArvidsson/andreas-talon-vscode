@@ -1,8 +1,8 @@
-import { runTest } from "./runTest";
+import { runTest } from "./testUtil/runTest";
 
-const command = { id: "lineMiddle" };
+const command = "lineMiddle";
 
-suite(command.id, async function () {
+suite(command, async function () {
     runTest({
         title: "Text",
         command,

@@ -1,22 +1,39 @@
 export interface TestFixture {
     title: string;
-    language?: string;
-    command: {
-        id: string;
-        args?: any[];
-    };
+    command: Command | string;
     pre: {
+        language?: string;
         content?: string;
-        selections?: NumberSelections;
+        selections?: NumberSelection[] | NumberSelection;
     };
     post: {
+        language?: string;
         content?: string;
-        selections?: NumberSelections;
+        selections?: NumberSelection[] | NumberSelection;
         returnValue?: unknown;
     };
 }
 
-export type NumberSelections = NumberSelection | NumberSelection[];
+export interface FullTestFixture {
+    title: string;
+    command: Command;
+    pre: {
+        language: string;
+        content: string;
+        selections: NumberSelection[];
+    };
+    post: {
+        language: string;
+        content: string;
+        selections: NumberSelection[];
+        returnValue: unknown;
+    };
+}
+
+export interface Command {
+    id: string;
+    args: any[];
+}
 
 export type NumberSelection =
     | [number, number]
