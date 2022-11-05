@@ -6,7 +6,7 @@ export interface TestFixture {
         args?: any[];
     };
     pre: {
-        content: string;
+        content?: string;
         selections?: number[][];
     };
     post: {
