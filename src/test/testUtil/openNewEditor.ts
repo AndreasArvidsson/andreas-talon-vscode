@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 
 export default async function openNewEditor(
-    content: string,
-    language: string = "plaintext"
+    language: string = "plaintext",
+    content?: string
 ) {
     await vscode.commands.executeCommand("workbench.action.closeAllEditors");
 
@@ -13,7 +13,7 @@ export default async function openNewEditor(
 
     const editor = await vscode.window.showTextDocument(document);
 
-    const eol = content.includes("\r\n")
+    const eol = content?.includes("\r\n")
         ? vscode.EndOfLine.CRLF
         : vscode.EndOfLine.LF;
     if (eol !== editor.document.eol) {

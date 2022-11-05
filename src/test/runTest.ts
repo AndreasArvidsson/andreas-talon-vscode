@@ -25,7 +25,7 @@ async function openEditor(fixture: TestFixture) {
         pre: { content, selections },
     } = fixture;
 
-    const editor = await openNewEditor(content, fixture.language);
+    const editor = await openNewEditor(language, content);
 
     if (selections != null) {
         editor.selections = numbersToSelections(selections);
@@ -38,13 +38,14 @@ function evaluatePost(fixture: TestFixture, editor: vscode.TextEditor) {
     const { content, selections } = fixture.post;
 
     if (content != null) {
-        assert.equal(editor.document.getText(), content);
+        assert.equal(editor.document.getText(), content, "Content");
     }
 
     if (selections != null) {
         assert.deepEqual(
             selectionsToPlainSelections(editor.selections),
-            numbersToPlainSelections(selections)
+            numbersToPlainSelections(selections),
+            "Selections"
         );
     }
 }
