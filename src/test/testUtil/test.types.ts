@@ -7,13 +7,20 @@ export interface TestFixture {
     };
     pre: {
         content?: string;
-        selections?: number[][];
+        selections?: NumberSelections;
     };
     post: {
         content?: string;
-        selections?: number[][];
+        selections?: NumberSelections;
+        returnValue?: unknown;
     };
 }
+
+export type NumberSelections = NumberSelection | NumberSelection[];
+
+export type NumberSelection =
+    | [number, number]
+    | [number, number, number, number];
 
 export interface PlainPosition {
     line: number;

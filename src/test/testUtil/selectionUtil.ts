@@ -1,5 +1,10 @@
 import * as vscode from "vscode";
-import { PlainPosition, PlainSelection } from "./test.types";
+import {
+    NumberSelection,
+    NumberSelections,
+    PlainPosition,
+    PlainSelection,
+} from "./test.types";
 
 export function selectionsToPlainSelections(
     selections: readonly vscode.Selection[]
@@ -25,16 +30,20 @@ function toPlainPosition(position: vscode.Position): PlainPosition {
 }
 
 export function numbersToPlainSelections(
-    numbers: number[][]
+    numbers: NumberSelections
 ): PlainSelection[] {
     return selectionsToPlainSelections(numbersToSelections(numbers));
 }
 
-export function numbersToSelections(numbers: number[][]): vscode.Selection[] {
-    return numbers.map((n) => numbersToSelection(n));
+export function numbersToSelections(
+    numbers: NumberSelections
+): vscode.Selection[] {
+    return Array.isArray(numbers[0])
+        ? numbers.map((n) => numbersToSelection(n as NumberSelection))
+        : [numbersToSelection(numbers as NumberSelection)];
 }
 
-export function numbersToSelection(numbers: number[]): vscode.Selection {
+export function numbersToSelection(numbers: NumberSelection): vscode.Selection {
     if (numbers.length === 2) {
         const [line, character] = numbers;
         return new vscode.Selection(line, character, line, character);

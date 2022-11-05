@@ -13,9 +13,9 @@ export const runTest = (testConfig: TestFixture) => {
     test(testConfig.title, async () => {
         const editor = await openEditor(testConfig);
 
-        await runCommand(testConfig);
+        const returnValue = await runCommand(testConfig);
 
-        evaluatePost(testConfig, editor);
+        evaluatePost(testConfig, editor, returnValue);
     });
 };
 
@@ -34,8 +34,12 @@ async function openEditor(fixture: TestFixture) {
     return editor;
 }
 
-function evaluatePost(fixture: TestFixture, editor: vscode.TextEditor) {
-    const { content, selections } = fixture.post;
+function evaluatePost(
+    fixture: TestFixture,
+    editor: vscode.TextEditor,
+    actualReturnValue: unknown
+) {
+    const { content, selections, returnValue } = fixture.post;
 
     if (content != null) {
         assert.equal(editor.document.getText(), content, "Content");
@@ -47,6 +51,10 @@ function evaluatePost(fixture: TestFixture, editor: vscode.TextEditor) {
             numbersToPlainSelections(selections),
             "Selections"
         );
+    }
+
+    if (returnValue != null) {
+        assert.deepEqual(actualReturnValue, returnValue, "Return value");
     }
 }
 

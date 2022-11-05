@@ -10,7 +10,7 @@ suite(command.id, async function () {
             content: "  aa",
         },
         post: {
-            selections: [[0, 3]],
+            selections: [0, 3],
         },
     });
 
@@ -21,7 +21,7 @@ suite(command.id, async function () {
             content: "    ",
         },
         post: {
-            selections: [[0, 2]],
+            selections: [0, 2],
         },
     });
 });
