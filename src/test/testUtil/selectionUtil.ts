@@ -1,15 +1,5 @@
 import * as vscode from "vscode";
-
-export interface PlainPosition {
-    line: number;
-    character: number;
-}
-
-export interface PlainSelection {
-    start: PlainPosition;
-    end: PlainPosition;
-    isReversed: boolean;
-}
+import { PlainPosition, PlainSelection } from "./test.types";
 
 export function selectionsToPlainSelections(
     selections: readonly vscode.Selection[]

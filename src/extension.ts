@@ -14,6 +14,7 @@ import selectTo from "./selectTo";
 import { openEditorAtIndex } from "./tabs";
 import undoUntilNotDirty from "./undoUntilNotDirty";
 import getExtension from "./util/getExtension";
+import getFullCommand from "./util/getFullCommand";
 
 export const activate = async (context: ExtensionContext) => {
     const parseTreeExtension = await getExtension("pokey.parse-tree");
@@ -25,7 +26,8 @@ export const activate = async (context: ExtensionContext) => {
         command: string,
         callback: (...args: any[]) => any
     ) => {
-        const fullCommand = `andreas.${command}`;
+        const fullCommand = getFullCommand(command);
+
         return commands.registerCommand(fullCommand, (...args: any[]) => {
             try {
                 return callback(...args);

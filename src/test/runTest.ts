@@ -1,31 +1,17 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
+import getFullCommand from "../util/getFullCommand";
+import openNewEditor from "./testUtil/openNewEditor";
 import {
     numbersToPlainSelections,
     numbersToSelections,
     selectionsToPlainSelections,
 } from "./testUtil/selectionUtil";
+import { TestFixture } from "./testUtil/test.types";
 
-export interface Test {
-    title: string;
-    language?: string;
-    command: {
-        id: string;
-        args?: any[];
-    };
-    pre: {
-        content: string;
-        selections?: number[][];
-    };
-    post: {
-        content?: string;
-        selections?: number[][];
-    };
-}
-
-export const runTest = (testConfig: Test) => {
+export const runTest = (testConfig: TestFixture) => {
     test(testConfig.title, async () => {
-        const editor = await openEditorForTest(testConfig);
+        const editor = await openEditor(testConfig);
 
         await runCommand(testConfig);
 
@@ -33,8 +19,23 @@ export const runTest = (testConfig: Test) => {
     });
 };
 
-function evaluatePost(testConfig: Test, editor: vscode.TextEditor) {
-    const { content, selections } = testConfig.post;
+async function openEditor(fixture: TestFixture) {
+    const {
+        language,
+        pre: { content, selections },
+    } = fixture;
+
+    const editor = await openNewEditor(content, fixture.language);
+
+    if (selections != null) {
+        editor.selections = numbersToSelections(selections);
+    }
+
+    return editor;
+}
+
+function evaluatePost(fixture: TestFixture, editor: vscode.TextEditor) {
+    const { content, selections } = fixture.post;
 
     if (content != null) {
         assert.equal(editor.document.getText(), content);
@@ -48,45 +49,8 @@ function evaluatePost(testConfig: Test, editor: vscode.TextEditor) {
     }
 }
 
-function runCommand(testConfig: Test) {
-    const { id, args } = testConfig.command;
+function runCommand(fixture: TestFixture) {
+    const { id, args } = fixture.command;
 
-    const fullId = `andreas.${id}`;
-
-    return vscode.commands.executeCommand(fullId, ...(args ?? []));
-}
-
-async function openEditorForTest(testConfig: Test) {
-    const {
-        language,
-        pre: { content, selections },
-    } = testConfig;
-
-    const editor = await openNewEditor(content, testConfig.language);
-
-    if (selections != null) {
-        editor.selections = numbersToSelections(selections);
-    }
-
-    return editor;
-}
-
-async function openNewEditor(content: string, language: string = "plaintext") {
-    // await vscode.commands.executeCommand("workbench.action.closeAllEditors");
-
-    const document = await vscode.workspace.openTextDocument({
-        language,
-        content,
-    });
-
-    const editor = await vscode.window.showTextDocument(document);
-
-    const eol = content.includes("\r\n")
-        ? vscode.EndOfLine.CRLF
-        : vscode.EndOfLine.LF;
-    if (eol !== editor.document.eol) {
-        await editor.edit((editBuilder) => editBuilder.setEndOfLine(eol));
-    }
-
-    return editor;
+    return vscode.commands.executeCommand(getFullCommand(id), ...(args ?? []));
 }

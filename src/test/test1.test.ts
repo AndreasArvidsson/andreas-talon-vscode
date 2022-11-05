@@ -1,4 +1,4 @@
-import { runTest, Test } from "./runTest";
+import { runTest } from "./runTest";
 
 const command = { id: "lineMiddle" };
 
