@@ -4,6 +4,8 @@ export default async function openNewEditor(
     content: string,
     language: string = "plaintext"
 ) {
+    await vscode.commands.executeCommand("workbench.action.closeAllEditors");
+
     const document = await vscode.workspace.openTextDocument({
         language,
         content,
