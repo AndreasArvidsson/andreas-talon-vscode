@@ -28,9 +28,8 @@ function getCallback(fixture: TestFixture): () => Thenable<unknown> {
     }
 
     const { command } = fixture;
-    const isObject = typeof command === "object";
-    const id = isObject ? command.id : command;
-    const args = isObject ? command.args ?? [] : [];
+    const id = typeof command === "object" ? command.id : command;
+    const args = typeof command === "object" ? command.args ?? [] : [];
 
     return () => {
         return commands.executeCommand(getFullCommand(id), ...args);
