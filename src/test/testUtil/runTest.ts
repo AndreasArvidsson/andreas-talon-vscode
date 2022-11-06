@@ -41,16 +41,13 @@ function assertPost(
 
     assert.equal(editor.document.languageId, language, "Language");
     assert.equal(editor.document.getText(), content, "Content");
+    assert.deepEqual(actualReturnValue, returnValue, "Return value");
 
     assert.deepEqual(
         selectionsToPlainSelections(editor.selections),
         numbersToPlainSelections(selections),
         "Selections"
     );
-
-    if (returnValue !== undefined) {
-        assert.deepEqual(actualReturnValue, returnValue, "Return value");
-    }
 }
 
 function runCommand(fixture: FullTestFixture) {
