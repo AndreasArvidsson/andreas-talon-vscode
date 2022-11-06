@@ -1,6 +1,5 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
-import getFullCommand from "../../util/getFullCommand";
 import { getFullFixture } from "./getFullFixture";
 import openNewEditor from "./openNewEditor";
 import {
@@ -10,13 +9,13 @@ import {
 } from "./selectionUtil";
 import { FullTestFixture, TestFixture } from "./test.types";
 
-export const runTest = (fixture: TestFixture) => {
+export const runTest = (fixture: TestFixture): void => {
     test(fixture.title, async () => {
         const fullFixture = getFullFixture(fixture);
 
         const editor = await openEditor(fullFixture);
 
-        const returnValue = await runCommand(fullFixture);
+        const returnValue = await fullFixture.callback();
 
         assertPost(fullFixture, editor, returnValue);
     });
@@ -48,10 +47,4 @@ function assertPost(
         numbersToPlainSelections(selections),
         "Selections"
     );
-}
-
-function runCommand(fixture: FullTestFixture) {
-    const { id, args } = fixture.command;
-
-    return vscode.commands.executeCommand(getFullCommand(id), ...args);
 }

@@ -1,7 +1,11 @@
 import { window, Selection } from "vscode";
 
-export default () => {
-    const editor = window.activeTextEditor!;
+export default (): void => {
+    const editor = window.activeTextEditor;
+    if (!editor) {
+        return;
+    }
+
     editor.selections = editor.selections.map((selection) => {
         const line = editor.document.lineAt(selection.active.line);
         let start, end;

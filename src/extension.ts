@@ -16,7 +16,9 @@ import undoUntilNotDirty from "./undoUntilNotDirty";
 import getExtension from "./util/getExtension";
 import getFullCommand from "./util/getFullCommand";
 
-export const activate = async (context: vscode.ExtensionContext) => {
+export const activate = async (
+    context: vscode.ExtensionContext
+): Promise<void> => {
     const parseTreeExtension = await getExtension("pokey.parse-tree");
     const gitExtension = await getExtension("vscode.git");
     className.init(parseTreeExtension);
@@ -65,5 +67,3 @@ export const activate = async (context: vscode.ExtensionContext) => {
         registerCommand("getGitPullRequestsURL", git.getPullRequestsURL)
     );
 };
-
-export const deactivate = () => {};

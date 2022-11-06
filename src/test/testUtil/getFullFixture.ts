@@ -1,13 +1,13 @@
+import { commands } from "vscode";
+import getFullCommand from "../../util/getFullCommand";
 import { FullTestFixture, NumberSelection, TestFixture } from "./test.types";
 
 export function getFullFixture(fixture: TestFixture): FullTestFixture {
-    const { title, command, pre, post } = fixture;
+    const { title, pre, post } = fixture;
+
     return {
         title,
-        command: {
-            id: typeof command === "object" ? command.id : command,
-            args: (typeof command === "object" ? command.args : null) ?? [],
-        },
+        callback: getCallback(fixture),
         pre: {
             language: pre.language ?? "plaintext",
             content: pre.content ?? "",
@@ -19,6 +19,21 @@ export function getFullFixture(fixture: TestFixture): FullTestFixture {
             selections: getSelections(post.selections ?? pre.selections),
             returnValue: post.returnValue,
         },
+    };
+}
+
+function getCallback(fixture: TestFixture): () => Thenable<unknown> {
+    if (fixture.callback != null) {
+        return fixture.callback;
+    }
+
+    const { command } = fixture;
+    const isObject = typeof command === "object";
+    const id = isObject ? command.id : command;
+    const args = isObject ? command.args ?? [] : [];
+
+    return () => {
+        return commands.executeCommand(getFullCommand(id), ...args);
     };
 }
 

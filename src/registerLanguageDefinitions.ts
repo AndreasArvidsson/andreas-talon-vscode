@@ -1,19 +1,18 @@
+import { promises as fs } from "fs";
+import { compile as gitignoreCompiler } from "gitignore-parser";
+import * as path from "path";
 import {
     CancellationToken,
     Definition,
     DefinitionLink,
     Disposable,
     languages,
-    Location,
     Position,
     Range,
     TextDocument,
     Uri,
     workspace,
 } from "vscode";
-import { promises as fs } from "fs";
-import * as path from "path";
-import { compile as gitignoreCompiler } from "gitignore-parser";
 
 // Match namespace
 const NS = "\\w*\\.?";
@@ -29,12 +28,13 @@ function createPythonFunctionRegex(name: string) {
 async function provideDefinitionTalon(
     document: TextDocument,
     position: Position,
-    token: CancellationToken
+    _token: CancellationToken
 ): Promise<Definition | DefinitionLink[]> {
     const positionAndWorkspace = getPositionAndWorkspace(document, position);
     if (!positionAndWorkspace) {
         return [];
     }
+
     const { wordText, lineText, workspacePath } = positionAndWorkspace;
     let scope: SearchScope | null = null;
 
@@ -69,7 +69,7 @@ async function provideDefinitionTalon(
 async function provideDefinitionPython(
     document: TextDocument,
     position: Position,
-    token: CancellationToken
+    _token: CancellationToken
 ): Promise<Definition | DefinitionLink[]> {
     const positionAndFolder = getPositionAndWorkspace(document, position);
     if (!positionAndFolder) {
@@ -101,7 +101,7 @@ function extractionCallback(
     fileContent: string
 ): DefinitionLink[] {
     return matches.map((match) => {
-        const leadingLines = fileContent.slice(0, match.index!).split("\n");
+        const leadingLines = fileContent.slice(0, match.index ?? 0).split("\n");
         const line = leadingLines.length - 1;
         const indentationLength = leadingLines[leadingLines.length - 1].length;
         const matchLines = match[0].split("\n");
@@ -133,7 +133,7 @@ async function getGitIgnore(folderPath: string) {
         const gitignore = gitignoreCompiler(gitignoreContent);
         return gitignore.denies;
     } catch (error) {
-        return (input: string) => false;
+        return (_input: string) => false;
     }
 }
 
@@ -153,11 +153,12 @@ function testWordAtPosition(
     position: Position,
     lineText: string,
     regex: RegExp
-) {
-    return !!Array.from(lineText.matchAll(regex)).find(
+): boolean {
+    return Array.from(lineText.matchAll(regex)).some(
         (match) =>
-            position.character >= match.index! &&
-            position.character <= match.index! + match[0].length
+            match.index != null &&
+            position.character >= match.index &&
+            position.character <= match.index + match[0].length
     );
 }
 
@@ -241,7 +242,7 @@ async function parsePythonFile(
     return callback(uri, matches, fileContent);
 }
 
-export function registerLanguageDefinitions() {
+export function registerLanguageDefinitions(): Disposable {
     return Disposable.from(
         languages.registerDefinitionProvider(
             { language: "talon" },

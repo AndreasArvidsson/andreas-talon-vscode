@@ -1,7 +1,11 @@
 import { window } from "vscode";
 
 async function update(increment: boolean) {
-    const editor = window.activeTextEditor!;
+    const editor = window.activeTextEditor;
+    if (!editor) {
+        return;
+    }
+
     await editor.edit((editBuilder) => {
         editor.selections.forEach((selection) => {
             const selectionText = editor.document.getText(selection);
@@ -34,10 +38,10 @@ async function update(increment: boolean) {
     });
 }
 
-export async function increment() {
+export function increment(): void {
     update(true);
 }
 
-export async function decrement() {
+export function decrement(): void {
     update(false);
 }

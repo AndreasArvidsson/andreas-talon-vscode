@@ -1,4 +1,5 @@
 import {
+    Disposable,
     EndOfLine,
     languages,
     Range,
@@ -11,9 +12,13 @@ import {
 const columnWidth = 28;
 
 function provideDocumentFormattingEditsTalon(
-    document: TextDocument
+    _document: TextDocument
 ): TextEdit[] {
-    const editor = window.activeTextEditor!;
+    const editor = window.activeTextEditor;
+    if (!editor) {
+        return [];
+    }
+
     const editorIndentation = getIndentation(editor);
     const lines = getLines(editor);
     const startOfBodyLine = lines.findIndex((line) => line.startsWith("-"));
@@ -122,7 +127,6 @@ const getColonIndex = (line: string): number => {
     const parts = line.matchAll(/[():]/g);
     let inParen = false;
     for (const m of parts) {
-        const char = m[0];
         switch (m[0]) {
             case "(":
                 inParen = true;
@@ -149,7 +153,7 @@ function getEOL(editor: TextEditor): string {
     return editor.document.eol === EndOfLine.LF ? "\n" : "\r\n";
 }
 
-export function registerLanguageFormatter() {
+export function registerLanguageFormatter(): Disposable {
     return languages.registerDocumentFormattingEditProvider(
         { language: "talon" },
         {

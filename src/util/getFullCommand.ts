@@ -1,1 +1,3 @@
-export default (command: string) => `andreas.${command}`;
+export default (command: string): string => {
+    return `andreas.${command}`;
+};

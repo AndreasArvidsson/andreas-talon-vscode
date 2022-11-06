@@ -3,11 +3,11 @@ import { API, GitExtension, Repository } from "./typings/git";
 
 let gitApi: API;
 
-export const init = (gitExtension: GitExtension) => {
+export const init = (gitExtension: GitExtension): void => {
     gitApi = gitExtension.getAPI(1);
 };
 
-export const getFileURL = (lineNumber: boolean) => {
+export const getFileURL = (lineNumber: boolean): string => {
     const { document, selection } = getEditor();
     const filePath = getFilePath(document);
     const repository = getRepository(filePath);
@@ -21,19 +21,19 @@ export const getFileURL = (lineNumber: boolean) => {
     );
 };
 
-export const getRepoURL = () => {
+export const getRepoURL = (): string => {
     return getPlatformHelper().getRepoUrl();
 };
 
-export const getIssuesURL = () => {
+export const getIssuesURL = (): string => {
     return getPlatformHelper().getIssuesUrl();
 };
 
-export const getNewIssueURL = () => {
+export const getNewIssueURL = (): string => {
     return getPlatformHelper().getNewIssueUrl();
 };
 
-export const getPullRequestsURL = () => {
+export const getPullRequestsURL = (): string => {
     return getPlatformHelper().getPullRequestsURL();
 };
 
@@ -111,13 +111,13 @@ function getRemote(repository: Repository) {
     throw Error("Can't find git remote");
 }
 
-function getBranch(repository: Repository): string {
-    const branch = repository.state.HEAD?.name;
-    if (!branch) {
-        throw Error("Can't find git branch");
-    }
-    return branch;
-}
+// function getBranch(repository: Repository): string {
+//     const branch = repository.state.HEAD?.name;
+//     if (!branch) {
+//         throw Error("Can't find git branch");
+//     }
+//     return branch;
+// }
 
 function getCommit(repository: Repository): string {
     const commit = repository.state.HEAD?.commit;

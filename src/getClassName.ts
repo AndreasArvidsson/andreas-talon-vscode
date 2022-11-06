@@ -7,24 +7,29 @@ type ParseTreeExtension = {
 
 let getNodeAtLocation: GetNodeAtLocation;
 
-export const init = (parseTreeExtension: ParseTreeExtension) => {
+export const init = (parseTreeExtension: ParseTreeExtension): void => {
     getNodeAtLocation = parseTreeExtension.getNodeAtLocation;
 };
 
 export const get = (): string | null => {
+    const editor = window.activeTextEditor;
+    if (!editor) {
+        return null;
+    }
+
     try {
-        const editor = window.activeTextEditor!;
         const pos = editor.selection.active;
         const location = new Location(editor.document.uri, pos);
         let node = getNodeAtLocation(location);
         while (node.parent != null) {
             if (node.type === "class_declaration") {
-                return node.childForFieldName("name")!.text;
+                return node.childForFieldName("name")?.text ?? null;
             }
             node = node.parent;
         }
     } catch (error) {
         console.log(error);
     }
+
     return null;
 };

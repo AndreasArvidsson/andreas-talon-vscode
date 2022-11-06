@@ -1,10 +1,13 @@
 import { window } from "vscode";
 
-export const getDictationContext = () => {
+type ReturnValue = { before: string; after: string };
+
+export const getDictationContext = (): ReturnValue => {
     const editor = window.activeTextEditor;
     if (!editor || editor.selections.length !== 1) {
         return { before: "", after: "" };
     }
+
     const startLine = editor.document.lineAt(editor.selection.start);
     const endLine = editor.document.lineAt(editor.selection.end);
     const startChar = editor.selection.start.character;

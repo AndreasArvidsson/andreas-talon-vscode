@@ -1,6 +1,5 @@
-export interface TestFixture {
+interface TestFixtureBase {
     title: string;
-    command: Command | string;
     pre: {
         language?: string;
         content?: string;
@@ -14,9 +13,21 @@ export interface TestFixture {
     };
 }
 
+interface TextFixtureCommand extends TestFixtureBase {
+    command: Command | string;
+    callback?: never;
+}
+
+interface TextFixtureCallback extends TestFixtureBase {
+    command?: never;
+    callback: () => Thenable<unknown>;
+}
+
+export type TestFixture = TextFixtureCommand | TextFixtureCallback;
+
 export interface FullTestFixture {
     title: string;
-    command: Command;
+    callback: () => Thenable<unknown>;
     pre: {
         language: string;
         content: string;
