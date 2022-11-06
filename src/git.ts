@@ -21,6 +21,10 @@ export const getFileURL = (lineNumber: boolean) => {
     );
 };
 
+export const getRepoURL = () => {
+    return getPlatformHelper().getRepoUrl();
+};
+
 export const getIssuesURL = () => {
     return getPlatformHelper().getIssuesUrl();
 };
@@ -147,6 +151,7 @@ function getPlatform(repository: Repository): Platform {
 interface Platform {
     name: string;
     getFileUrl(commitOrBranch: string, filePath: string, range?: Range): string;
+    getRepoUrl(): string;
     getIssuesUrl(): string;
     getNewIssueUrl(): string;
     getPullRequestsURL(): string;
@@ -174,6 +179,10 @@ class Github implements Platform {
         }
 
         return url;
+    }
+
+    getRepoUrl(): string {
+        return this.repoUrl;
     }
 
     getIssuesUrl(): string {
@@ -211,6 +220,10 @@ class Bitbucket implements Platform {
         }
 
         return url;
+    }
+
+    getRepoUrl(): string {
+        return this.repoUrl;
     }
 
     getIssuesUrl(): string {

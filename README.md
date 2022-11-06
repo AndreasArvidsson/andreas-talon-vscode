@@ -36,6 +36,8 @@ In constant development. Things will break!
     Get class name. Useful for inserting constructor in C++/Java.
 -   `andreas.getGitFileURL(lineNumber: boolean): string`  
     Get URL to Git repository file webpage. Optionally include selected line numbers.
+-   `andreas.getGitRepoURL(): string`  
+    Get URL to Git repository webpage.
 -   `andreas.getGitIssuesURL(): string`  
     Get URL to Git repository issues webpage.
 -   `andreas.getGitNewIssueURL(): string`  
