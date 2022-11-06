@@ -1,4 +1,4 @@
-import { commands, ExtensionContext, window } from "vscode";
+import * as vscode from "vscode";
 import { executeCommands, printCommands } from "./commands";
 import { getDictationContext } from "./dictation";
 import { getFilename } from "./files";
@@ -16,7 +16,7 @@ import undoUntilNotDirty from "./undoUntilNotDirty";
 import getExtension from "./util/getExtension";
 import getFullCommand from "./util/getFullCommand";
 
-export const activate = async (context: ExtensionContext) => {
+export const activate = async (context: vscode.ExtensionContext) => {
     const parseTreeExtension = await getExtension("pokey.parse-tree");
     const gitExtension = await getExtension("vscode.git");
     className.init(parseTreeExtension);
@@ -25,18 +25,21 @@ export const activate = async (context: ExtensionContext) => {
     const registerCommand = (
         command: string,
         callback: (...args: any[]) => any
-    ) => {
+    ): vscode.Disposable => {
         const fullCommand = getFullCommand(command);
 
-        return commands.registerCommand(fullCommand, (...args: any[]) => {
-            try {
-                return callback(...args);
-            } catch (ex) {
-                const err = ex as Error;
-                window.showErrorMessage(err.message);
-                console.error(err.stack);
+        return vscode.commands.registerCommand(
+            fullCommand,
+            (...args: any[]) => {
+                try {
+                    return callback(...args);
+                } catch (ex) {
+                    const err = ex as Error;
+                    vscode.window.showErrorMessage(err.message);
+                    console.error(err.stack);
+                }
             }
-        });
+        );
     };
 
     context.subscriptions.push(
