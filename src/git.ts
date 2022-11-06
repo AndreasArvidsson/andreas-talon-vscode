@@ -1,5 +1,5 @@
 import { Range, TextDocument, TextEditor, window } from "vscode";
-import { API, GitExtension, Repository } from "./typings/git";
+import { API, GitExtension, Remote, Repository } from "./typings/git";
 
 let gitApi: API;
 
@@ -68,6 +68,9 @@ function validateUnchangedDocument(
     document: TextDocument,
     repository: Repository
 ) {
+    if (document.uri.scheme !== "file") {
+        throw Error("Document scheme is not file");
+    }
     if (document.isDirty) {
         throw Error("Document contains unsaved changes");
     }
@@ -77,16 +80,18 @@ function validateUnchangedDocument(
         ...repository.state.indexChanges,
         ...repository.state.mergeChanges,
     ];
-    const change = !!changes.find(
-        (change) => change.uri.path === document.uri.path
-    );
-    if (change) {
-        throw Error("Uncommitted git changes");
+    const hasGitChange = changes.some((c) => c.uri.path === document.uri.path);
+    if (hasGitChange) {
+        throw Error("Document contains uncommitted git changes");
     }
 }
 
 const getRepository = (filePath: string): Repository => {
-    const repository = gitApi.repositories.find((r) =>
+    const { repositories } = gitApi;
+    if (repositories.length === 1) {
+        return repositories[0];
+    }
+    const repository = repositories.find((r) =>
         filePath.toLowerCase().startsWith(r.rootUri.path.toLowerCase())
     );
     if (!repository) {
@@ -95,20 +100,22 @@ const getRepository = (filePath: string): Repository => {
     return repository;
 };
 
-function getRemote(repository: Repository) {
+function getRemote(repository: Repository): Remote {
     const name = repository.state.HEAD?.upstream?.remote;
-    for (const remote of repository.state.remotes) {
-        if (remote.name !== name) {
-            continue;
-        }
-        if (remote.fetchUrl) {
-            return remote.fetchUrl;
-        }
-        if (remote.pushUrl) {
-            return remote.pushUrl;
-        }
+    const remote = repository.state.remotes.find((r) => r.name === name);
+    if (!remote) {
+        throw Error(`Can't find git remote '${name}'`);
     }
-    throw Error("Can't find git remote");
+    return remote;
+}
+
+function getRemoteUrl(repository: Repository) {
+    const remote = getRemote(repository);
+    const url = remote.fetchUrl ?? remote.pushUrl;
+    if (!url) {
+        throw Error(`Remote '${remote.name}' has no fetch or push url`);
+    }
+    return url;
 }
 
 function getBranch(repository: Repository): string {
@@ -127,25 +134,25 @@ function getCommit(repository: Repository): string {
     return commit;
 }
 
-function remoteToUrl(remote: string) {
-    if (remote.startsWith("git@")) {
-        remote = remote.replace(":", "/").replace("git@", "https://");
+function cleanGitUrl(url: string) {
+    if (url.startsWith("git@")) {
+        url = url.replace(":", "/").replace("git@", "https://");
     }
-    if (remote.endsWith(".git")) {
-        remote = remote.substring(0, remote.length - 4);
+    if (url.endsWith(".git")) {
+        url = url.substring(0, url.length - 4);
     }
-    return remote;
+    return url;
 }
 
 function getPlatform(repository: Repository): Platform {
-    const remote = getRemote(repository);
-    if (remote.includes("github.com")) {
-        return new Github(remote);
+    const remoteUrl = getRemoteUrl(repository);
+    if (remoteUrl.includes("github.com")) {
+        return new Github(remoteUrl);
     }
-    if (remote.includes("bitbucket.org")) {
-        return new Bitbucket(remote);
+    if (remoteUrl.includes("bitbucket.org")) {
+        return new Bitbucket(remoteUrl);
     }
-    throw Error(`Can't find git platform for '${remote}'`);
+    throw Error(`Can't find git platform for remote url '${remoteUrl}'`);
 }
 
 interface Platform {
@@ -161,8 +168,8 @@ class Github implements Platform {
     name = "GitHub";
     repoUrl: string;
 
-    constructor(remote: string) {
-        this.repoUrl = remoteToUrl(remote);
+    constructor(remoteUrl: string) {
+        this.repoUrl = cleanGitUrl(remoteUrl);
     }
 
     getFileUrl(
@@ -202,8 +209,8 @@ class Bitbucket implements Platform {
     name = "Bitbucket";
     repoUrl: string;
 
-    constructor(remote: string) {
-        this.repoUrl = remoteToUrl(remote);
+    constructor(remoteUrl: string) {
+        this.repoUrl = cleanGitUrl(remoteUrl);
     }
 
     getFileUrl(
