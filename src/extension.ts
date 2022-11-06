@@ -55,6 +55,7 @@ export const activate = async (context: ExtensionContext) => {
         registerCommand("undoUntilNotDirty", undoUntilNotDirty),
         registerCommand("generateRange", generateRange),
         registerCommand("getClassName", className.get),
+        registerCommand("getGitRepoURL", git.getRepoURL),
         registerCommand("getGitFileURL", git.getFileURL),
         registerCommand("getGitIssuesURL", git.getIssuesURL),
         registerCommand("getGitNewIssueURL", git.getNewIssueURL),
