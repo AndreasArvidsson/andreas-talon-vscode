@@ -11,7 +11,22 @@ suite(command, async function () {
             selections: [0, 1, 0, 4],
         },
         post: {
-            returnValue: "abc",
+            returnValue: ["abc"],
+        },
+    });
+
+    runTest({
+        title: command,
+        command,
+        pre: {
+            content: "abc",
+            selections: [
+                [0, 0, 0, 1],
+                [0, 2, 0, 3],
+            ],
+        },
+        post: {
+            returnValue: ["a", "c"],
         },
     });
 });

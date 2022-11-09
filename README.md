@@ -16,8 +16,8 @@ In constant development. Things will break!
     Sequentially execute multiple commands. Useful for keybindings.
 -   `andreas.printCommands()`  
      Print available commands.
--   `andreas.getSelectedText(): string`  
-    Get selected text. Multiple selections are joined with new line.
+-   `andreas.getSelectedText(): string[]`  
+    Get selected text.
 -   `andreas.getDictationContext(): string`  
     Get text before and after selection. Used for context sensitive dictation.
 -   `andreas.increment()`  
