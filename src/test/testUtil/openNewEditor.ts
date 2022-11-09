@@ -1,4 +1,5 @@
 import { commands, EndOfLine, TextEditor, window, workspace } from "vscode";
+import { getParseTreeExtension } from "../../util/getExtension";
 
 interface Options {
     language: string;
@@ -11,6 +12,8 @@ export default async function openNewEditor(
     await commands.executeCommand("workbench.action.closeAllEditors");
 
     const document = await workspace.openTextDocument(options);
+
+    await (await getParseTreeExtension()).loadLanguage(options.language);
 
     const editor = await window.showTextDocument(document);
 

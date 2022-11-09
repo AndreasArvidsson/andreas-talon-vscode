@@ -12,14 +12,14 @@ import { registerLanguageDefinitions } from "./registerLanguageDefinitions";
 import { registerLanguageFormatter } from "./registerLanguageFormatter";
 import selectTo from "./selectTo";
 import { openEditorAtIndex } from "./tabs";
-import getExtension from "./util/getExtension";
+import { getGitExtension, getParseTreeExtension } from "./util/getExtension";
 import getFullCommand from "./util/getFullCommand";
 
 export const activate = async (
     context: vscode.ExtensionContext
 ): Promise<void> => {
-    const parseTreeExtension = await getExtension("pokey.parse-tree");
-    const gitExtension = await getExtension("vscode.git");
+    const parseTreeExtension = await getParseTreeExtension();
+    const gitExtension = await getGitExtension();
     className.init(parseTreeExtension);
     git.init(gitExtension);
 
