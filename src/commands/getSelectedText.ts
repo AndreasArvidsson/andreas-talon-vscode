@@ -1,5 +1,5 @@
 import { window } from "vscode";
-import getSortedSelections from "./util/getSortedSelections";
+import getSortedSelections from "../util/getSortedSelections";
 
 export default (): string[] => {
     const editor = window.activeTextEditor;

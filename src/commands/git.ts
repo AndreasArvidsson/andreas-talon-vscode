@@ -1,5 +1,5 @@
 import { Range, TextDocument, TextEditor, window } from "vscode";
-import { API, GitExtension, Remote, Repository } from "./typings/git";
+import { API, GitExtension, Remote, Repository } from "../typings/git";
 
 let gitApi: API;
 

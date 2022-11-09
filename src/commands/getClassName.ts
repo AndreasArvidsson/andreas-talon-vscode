@@ -1,5 +1,5 @@
 import { Location, window } from "vscode";
-import { ParseTreeExtension } from "./typings/parserTree";
+import { ParseTreeExtension } from "../typings/parserTree";
 
 let parseTree: ParseTreeExtension;
 

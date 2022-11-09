@@ -1,12 +1,6 @@
 import * as vscode from "vscode";
 
-export async function executeCommands(commands: string[]): Promise<void> {
-    for (const command of commands) {
-        await vscode.commands.executeCommand(command);
-    }
-}
-
-export async function printCommands(): Promise<void> {
+export default async (): Promise<void> => {
     const commandList = (await vscode.commands.getCommands()).filter(
         (c) => !c.startsWith("_")
     );
@@ -14,4 +8,4 @@ export async function printCommands(): Promise<void> {
     commandList.forEach((c) => {
         console.log(c);
     });
-}
+};

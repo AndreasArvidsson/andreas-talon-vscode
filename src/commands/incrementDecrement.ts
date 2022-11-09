@@ -38,10 +38,10 @@ async function update(increment: boolean) {
     });
 }
 
-export function increment(): void {
-    update(true);
+export function increment(): Promise<void> {
+    return update(true);
 }
 
-export function decrement(): void {
-    update(false);
+export function decrement(): Promise<void> {
+    return update(false);
 }

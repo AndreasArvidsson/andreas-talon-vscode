@@ -1,17 +1,18 @@
 import * as vscode from "vscode";
-import { executeCommands, printCommands } from "./commands";
-import { getDictationContext } from "./dictation";
-import { getFilename } from "./files";
-import generateRange from "./generateRange";
-import * as className from "./getClassName";
-import getSelectedText from "./getSelectedText";
-import * as git from "./git";
-import lineMiddle from "./lineMiddle";
-import { decrement, increment } from "./numbers";
+import executeCommands from "./commands/executeCommands";
+import generateRange from "./commands/generateRange";
+import * as className from "./commands/getClassName";
+import getDictationContext from "./commands/getDictationContext";
+import getFilename from "./commands/getFilename";
+import getSelectedText from "./commands/getSelectedText";
+import * as git from "./commands/git";
+import { decrement, increment } from "./commands/incrementDecrement";
+import lineMiddle from "./commands/lineMiddle";
+import openEditorAtIndex from "./commands/openEditorAtIndex";
+import printCommands from "./commands/printCommands";
+import selectTo from "./commands/selectTo";
 import { registerLanguageDefinitions } from "./registerLanguageDefinitions";
 import { registerLanguageFormatter } from "./registerLanguageFormatter";
-import selectTo from "./selectTo";
-import { openEditorAtIndex } from "./tabs";
 import { getGitExtension, getParseTreeExtension } from "./util/getExtension";
 import getFullCommand from "./util/getFullCommand";
 
@@ -55,7 +56,7 @@ export const activate = async (
         registerCommand("increment", increment),
         registerCommand("decrement", decrement),
         registerCommand("openEditorAtIndex", openEditorAtIndex),
-        registerCommand("getFileName", getFilename),
+        registerCommand("getFilename", getFilename),
         registerCommand("generateRange", generateRange),
         registerCommand("getClassName", className.get),
         registerCommand("getGitRepoURL", git.getRepoURL),

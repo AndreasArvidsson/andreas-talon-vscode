@@ -38,13 +38,12 @@ function assertPost(
 ) {
     const { language, content, selections, returnValue } = fixture.post;
 
-    assert.equal(editor.document.languageId, language, "Language");
-    assert.equal(editor.document.getText(), content, "Content");
-    assert.deepEqual(actualReturnValue, returnValue, "Return value");
+    assert.equal(editor.document.languageId, language);
+    assert.equal(editor.document.getText(), content);
+    assert.deepEqual(actualReturnValue, returnValue);
 
     assert.deepEqual(
         selectionsToPlainSelections(editor.selections),
-        numbersToPlainSelections(selections),
-        "Selections"
+        numbersToPlainSelections(selections)
     );
 }

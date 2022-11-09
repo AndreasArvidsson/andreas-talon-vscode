@@ -4,7 +4,7 @@ const command = "getSelectedText";
 
 suite(command, async function () {
     runTest({
-        title: command,
+        title: "Single selection",
         command,
         pre: {
             content: "_abc_",
@@ -16,7 +16,7 @@ suite(command, async function () {
     });
 
     runTest({
-        title: command,
+        title: "Double selections",
         command,
         pre: {
             content: "abc",
