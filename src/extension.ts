@@ -12,7 +12,6 @@ import { registerLanguageDefinitions } from "./registerLanguageDefinitions";
 import { registerLanguageFormatter } from "./registerLanguageFormatter";
 import selectTo from "./selectTo";
 import { openEditorAtIndex } from "./tabs";
-import undoUntilNotDirty from "./undoUntilNotDirty";
 import getExtension from "./util/getExtension";
 import getFullCommand from "./util/getFullCommand";
 
@@ -57,7 +56,6 @@ export const activate = async (
         registerCommand("decrement", decrement),
         registerCommand("openEditorAtIndex", openEditorAtIndex),
         registerCommand("getFileName", getFilename),
-        registerCommand("undoUntilNotDirty", undoUntilNotDirty),
         registerCommand("generateRange", generateRange),
         registerCommand("getClassName", className.get),
         registerCommand("getGitRepoURL", git.getRepoURL),

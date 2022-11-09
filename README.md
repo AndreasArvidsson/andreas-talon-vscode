@@ -30,8 +30,6 @@ In constant development. Things will break!
     Open editor/tab at given index. Negative indices are counted from the back.
 -   `andreas.getFileName(): string`  
     Get file name of active editor.
--   `andreas.undoUntilNotDirty()`  
-    Undo until the document is not dirty. Same as closing and reopening the document without saving changes.
 -   `andreas.getClassName(): string`  
     Get class name. Useful for inserting constructor in C++/Java.
 -   `andreas.getGitFileURL(lineNumber: boolean): string`  
