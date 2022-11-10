@@ -7,18 +7,36 @@ export const init = (gitExtension: GitExtension): void => {
     gitApi = gitExtension.getAPI(1);
 };
 
-export const getFileURL = (lineNumber: boolean): string => {
-    const { document, selection } = getEditor();
+type Parameters = {
+    useSelection: boolean;
+    useBranch: boolean;
+};
+
+export const getFileURL = ({
+    useSelection = false,
+    useBranch = false,
+}: Parameters): string => {
+    const { document, selections } = getEditor();
     const filePath = getFilePath(document);
     const repository = getRepository(filePath);
-    validateUnchangedDocument(document, repository);
     const platform = getPlatform(repository);
+    const relativeFilePath = getRelativeFilepath(repository, filePath);
+    const range = useSelection ? selections[0] : undefined;
+    const commitOrBranch = useBranch
+        ? getBranch(repository)
+        : getCommit(repository);
 
-    return platform.getFileUrl(
-        getCommit(repository),
-        getRelativeFilepath(repository, filePath),
-        lineNumber ? selection : undefined
-    );
+    // If we're going to use the commit sha there can't be any changes
+    if (!useBranch) {
+        validateUnchangedDocument(document, repository);
+    }
+
+    // We can only do your URL to a single range of lines
+    if (useSelection && selections.length > 1) {
+        throw Error("Can't get Git file URL with multiple selections");
+    }
+
+    return platform.getFileUrl(commitOrBranch, relativeFilePath, range);
 };
 
 export const getRepoURL = (): string => {
@@ -82,7 +100,7 @@ function validateUnchangedDocument(
     ];
     const hasGitChange = changes.some((c) => c.uri.path === document.uri.path);
     if (hasGitChange) {
-        throw Error("Document contains uncommitted git changes");
+        throw Error("Document contains uncommitted Git changes");
     }
 }
 
@@ -95,7 +113,7 @@ const getRepository = (filePath: string): Repository => {
         filePath.toLowerCase().startsWith(r.rootUri.path.toLowerCase())
     );
     if (!repository) {
-        throw Error("Can't find git repository");
+        throw Error("Can't find Git repository");
     }
     return repository;
 };
@@ -118,18 +136,18 @@ function getRemoteUrl(repository: Repository) {
     return url;
 }
 
-// function getBranch(repository: Repository): string {
-//     const branch = repository.state.HEAD?.name;
-//     if (!branch) {
-//         throw Error("Can't find git branch");
-//     }
-//     return branch;
-// }
+function getBranch(repository: Repository): string {
+    const branch = repository.state.HEAD?.name;
+    if (!branch) {
+        throw Error("Can't find Git branch");
+    }
+    return branch;
+}
 
 function getCommit(repository: Repository): string {
     const commit = repository.state.HEAD?.commit;
     if (!commit) {
-        throw Error("Can't find git commit");
+        throw Error("Can't find Git commit");
     }
     return commit;
 }
@@ -152,7 +170,7 @@ function getPlatform(repository: Repository): Platform {
     if (remoteUrl.includes("bitbucket.org")) {
         return new Bitbucket(remoteUrl);
     }
-    throw Error(`Can't find git platform for remote url '${remoteUrl}'`);
+    throw Error(`Can't find Git platform for remote url '${remoteUrl}'`);
 }
 
 interface Platform {

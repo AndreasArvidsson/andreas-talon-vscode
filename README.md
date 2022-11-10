@@ -32,7 +32,7 @@ In constant development. Things will break!
     Get file name of active editor.
 -   `andreas.getClassName(): string`  
     Get class name. Useful for inserting constructor in C++/Java.
--   `andreas.getGitFileURL(lineNumber: boolean): string`  
+-   `andreas.getGitFileURL({ useSelection: boolean, useBranch: boolean }): string`  
     Get URL to Git repository file webpage. Optionally include selected line numbers.
 -   `andreas.getGitRepoURL(): string`  
     Get URL to Git repository webpage.
