@@ -78,10 +78,7 @@ async function provideDefinitionPython(
     const { wordText, lineText, workspacePath } = positionAndFolder;
     let scope: SearchScope | null = null;
 
-    const actionRegex = new RegExp(
-        `actions\\.${NS}${wordText}\\(${ANY}\\)`,
-        "g"
-    );
+    const actionRegex = new RegExp(`actions\\.${NS}${wordText}\\(`, "g");
 
     // Test for Talon action
     if (testWordAtPosition(position, lineText, actionRegex)) {
