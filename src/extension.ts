@@ -8,6 +8,7 @@ import getSelectedText from "./commands/getSelectedText";
 import * as git from "./commands/git";
 import { decrement, increment } from "./commands/incrementDecrement";
 import lineMiddle from "./commands/lineMiddle";
+import newFile from "./commands/newFile";
 import openEditorAtIndex from "./commands/openEditorAtIndex";
 import printCommands from "./commands/printCommands";
 import selectTo from "./commands/selectTo";
@@ -57,6 +58,7 @@ export const activate = async (
         registerCommand("decrement", decrement),
         registerCommand("openEditorAtIndex", openEditorAtIndex),
         registerCommand("getFilename", getFilename),
+        registerCommand("newFile", newFile),
         registerCommand("generateRange", generateRange),
         registerCommand("getClassName", className.get),
         registerCommand("getGitRepoURL", git.getRepoURL),
