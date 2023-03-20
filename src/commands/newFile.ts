@@ -2,7 +2,7 @@ import { commands, TextEditor, window, workspace, Uri } from "vscode";
 import * as path from "path";
 import * as fs from "fs";
 
-export default async (): Promise<void> => {
+export default async (name?: string): Promise<void> => {
     const editor = window.activeTextEditor;
 
     const fsPath =
@@ -15,14 +15,16 @@ export default async (): Promise<void> => {
         return;
     }
 
-    const selectedText = getSelectedText(editor);
     const dir = path.dirname(fsPath);
-    const ext = path.extname(selectedText) ? "" : path.extname(fsPath);
+    const suggestedName = name || getSelectedText(editor);
+    const suggestedExt = path.extname(suggestedName)
+        ? ""
+        : path.extname(fsPath);
 
     const filename = await window.showInputBox({
         prompt: "New name",
-        value: `${selectedText}${ext}`,
-        valueSelection: [0, selectedText.length],
+        value: `${suggestedName}${suggestedExt}`,
+        valueSelection: [0, suggestedName.length],
         ignoreFocusOut: true,
     });
 

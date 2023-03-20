@@ -30,7 +30,7 @@ In constant development. Things will break!
     Open editor/tab at given index. Negative indices are counted from the back.
 -   `andreas.getFileName(): string`  
     Get file name of active editor.
--   `andreas.newFile()`  
+-   `andreas.newFile(name? string)`  
     Create new file. Uses selected text and current file extension as suggestion.
 -   `andreas.getClassName(): string`  
     Get class name. Useful for inserting constructor in C++/Java.
