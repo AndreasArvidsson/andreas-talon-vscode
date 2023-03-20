@@ -17,7 +17,7 @@ export default async (): Promise<void> => {
 
     const selectedText = getSelectedText(editor);
     const dir = path.dirname(fsPath);
-    const ext = path.extname(fsPath);
+    const ext = path.extname(selectedText) ? "" : path.extname(fsPath);
 
     const filename = await window.showInputBox({
         prompt: "New name",
