@@ -1,20 +1,21 @@
 import * as vscode from "vscode";
-import { copyFilename } from "./commands/copyFilename";
-import { duplicateFile } from "./commands/duplicateFile";
 import { executeCommands } from "./commands/executeCommands";
+import { copyFilename } from "./commands/files/copyFilename";
+import { duplicateFile } from "./commands/files/duplicateFile";
+import { getFilename } from "./commands/files/getFilename";
+import { moveFile } from "./commands/files/moveFile";
+import { newFile } from "./commands/files/newFile";
+import { removeFile } from "./commands/files/removeFile";
+import { renameFile } from "./commands/files/renameFile";
 import { generateRange } from "./commands/generateRange";
 import * as className from "./commands/getClassName";
 import { getDictationContext } from "./commands/getDictationContext";
-import { getFilename } from "./commands/getFilename";
 import { getSelectedText } from "./commands/getSelectedText";
 import * as git from "./commands/git";
 import { decrement, increment } from "./commands/incrementDecrement";
 import { lineMiddle } from "./commands/lineMiddle";
-import { newFile } from "./commands/newFile";
 import { openEditorAtIndex } from "./commands/openEditorAtIndex";
 import { printCommands } from "./commands/printCommands";
-import { removeFile } from "./commands/removeFile";
-import { renameFile } from "./commands/renameFile";
 import { selectTo } from "./commands/selectTo";
 import { registerLanguageDefinitions } from "./registerLanguageDefinitions";
 import { registerLanguageFormatter } from "./registerLanguageFormatter";
@@ -47,6 +48,14 @@ export const activate = async (context: vscode.ExtensionContext): Promise<void> 
     context.subscriptions.push(
         registerLanguageDefinitions(),
         registerLanguageFormatter(),
+        // Files
+        registerCommand("copyFilename", copyFilename),
+        registerCommand("duplicateFile", duplicateFile),
+        registerCommand("getFilename", getFilename),
+        registerCommand("moveFile", moveFile),
+        registerCommand("newFile", newFile),
+        registerCommand("removeFile", removeFile),
+        registerCommand("renameFile", renameFile),
         // Navigation
         registerCommand("selectTo", selectTo),
         registerCommand("lineMiddle", lineMiddle),
@@ -55,14 +64,6 @@ export const activate = async (context: vscode.ExtensionContext): Promise<void> 
         registerCommand("generateRange", generateRange),
         registerCommand("increment", increment),
         registerCommand("decrement", decrement),
-        // Files
-        registerCommand("getFilename", getFilename),
-        registerCommand("copyFilename", copyFilename),
-        registerCommand("newFile", newFile),
-        registerCommand("renameFile", renameFile),
-        registerCommand("removeFile", removeFile),
-        registerCommand("duplicateFile", duplicateFile),
-        // moveFile
         // Git
         registerCommand("getGitRepoURL", git.getRepoURL),
         registerCommand("getGitFileURL", git.getFileURL),

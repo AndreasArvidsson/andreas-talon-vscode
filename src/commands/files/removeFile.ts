@@ -1,6 +1,6 @@
 import * as path from "path";
 import { window } from "vscode";
-import { deleteFile } from "../util/fileSystem";
+import { deleteFile } from "../../util/fileSystem";
 
 export async function removeFile(): Promise<void> {
     const editor = window.activeTextEditor;

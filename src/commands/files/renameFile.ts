@@ -1,6 +1,6 @@
-import * as fileSystem from "../util/fileSystem";
-import { getNewFilenameContext } from "../util/getRenameContext";
-import { showNewNameInputBox } from "../util/showNewNameInputBox";
+import * as fileSystem from "../../util/fileSystem";
+import { getNewFilenameContext } from "../../util/getRenameContext";
+import { showNewNameInputBox } from "../../util/showNewNameInputBox";
 
 export async function renameFile(name?: string): Promise<void> {
     const context = getNewFilenameContext(name);

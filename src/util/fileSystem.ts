@@ -29,14 +29,18 @@ export async function renameFile(uri: Uri, filename: string): Promise<void> {
     const dir = path.dirname(uri.fsPath);
     const destination = Uri.file(path.join(dir, filename));
 
+    await moveFile(uri, destination);
+}
+
+export async function moveFile(source: Uri, destination: Uri): Promise<void> {
     assertWritableFile(destination);
 
     const edit = new WorkspaceEdit();
-    edit.renameFile(uri, destination);
+    edit.renameFile(source, destination);
     const result = await workspace.applyEdit(edit);
 
     if (!result) {
-        throw new Error(`Failed to rename file: ${uri.fsPath}`);
+        throw new Error(`Failed to move file: ${source.fsPath}`);
     }
 }
 

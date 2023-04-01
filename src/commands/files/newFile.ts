@@ -1,8 +1,8 @@
 import * as path from "path";
 import { Uri, commands } from "vscode";
-import { showNewNameInputBox } from "../util/showNewNameInputBox";
-import { createFile, openTextDocument } from "../util/fileSystem";
-import { getNewFilenameContext } from "../util/getRenameContext";
+import { showNewNameInputBox } from "../../util/showNewNameInputBox";
+import { createFile, openTextDocument } from "../../util/fileSystem";
+import { getNewFilenameContext } from "../../util/getRenameContext";
 
 export async function newFile(name?: string): Promise<void> {
     const context = getNewFilenameContext(name);

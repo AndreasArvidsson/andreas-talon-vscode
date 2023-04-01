@@ -1,8 +1,8 @@
 import * as path from "path";
 import { Uri } from "vscode";
-import { showNewNameInputBox } from "../util/showNewNameInputBox";
-import { copyFile, openTextDocument } from "../util/fileSystem";
-import { getNewFilenameContext } from "../util/getRenameContext";
+import { showNewNameInputBox } from "../../util/showNewNameInputBox";
+import { copyFile, openTextDocument } from "../../util/fileSystem";
+import { getNewFilenameContext } from "../../util/getRenameContext";
 
 export async function duplicateFile(name?: string): Promise<void> {
     const context = getNewFilenameContext(name);
