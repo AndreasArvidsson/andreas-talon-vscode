@@ -49,33 +49,32 @@ export const activate = async (context: vscode.ExtensionContext): Promise<void> 
         registerLanguageDefinitions(),
         registerLanguageFormatter(),
         // Files
-        registerCommand("copyFilename", copyFilename),
-        registerCommand("duplicateFile", duplicateFile),
         registerCommand("getFilename", getFilename),
-        registerCommand("moveFile", moveFile),
+        registerCommand("copyFilename", copyFilename),
         registerCommand("newFile", newFile),
-        registerCommand("removeFile", removeFile),
+        registerCommand("duplicateFile", duplicateFile),
         registerCommand("renameFile", renameFile),
-        // Navigation
-        registerCommand("selectTo", selectTo),
-        registerCommand("lineMiddle", lineMiddle),
-        registerCommand("openEditorAtIndex", openEditorAtIndex),
+        registerCommand("removeFile", removeFile),
+        registerCommand("moveFile", moveFile),
         // Edits
         registerCommand("generateRange", generateRange),
         registerCommand("increment", increment),
         registerCommand("decrement", decrement),
+        // Navigation
+        registerCommand("openEditorAtIndex", openEditorAtIndex),
+        registerCommand("selectTo", selectTo),
+        registerCommand("lineMiddle", lineMiddle),
         // Git
-        registerCommand("getGitRepoURL", git.getRepoURL),
         registerCommand("getGitFileURL", git.getFileURL),
+        registerCommand("getGitRepoURL", git.getRepoURL),
         registerCommand("getGitIssuesURL", git.getIssuesURL),
         registerCommand("getGitNewIssueURL", git.getNewIssueURL),
         registerCommand("getGitPullRequestsURL", git.getPullRequestsURL),
-        // Commands
-        registerCommand("executeCommands", executeCommands),
-        registerCommand("printCommands", printCommands),
-        // Misc
+        // Other
         registerCommand("getSelectedText", getSelectedText),
+        registerCommand("getClassName", className.get),
         registerCommand("getDictationContext", getDictationContext),
-        registerCommand("getClassName", className.get)
+        registerCommand("executeCommands", executeCommands),
+        registerCommand("printCommands", printCommands)
     );
 };
