@@ -1,10 +1,5 @@
-import { Selection, window } from "vscode";
+import { Selection, TextEditor } from "vscode";
 
-export default (): Selection[] => {
-    const editor = window.activeTextEditor;
-    if (!editor) {
-        return [];
-    }
-
+export default (editor: TextEditor): Selection[] => {
     return editor.selections.slice().sort((a, b) => a.start.compareTo(b.start));
 };

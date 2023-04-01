@@ -9,7 +9,7 @@ export default async (start = 1): Promise<void> => {
     }
 
     const wereEditsApplied = await editor.edit((editBuilder) => {
-        getSortedSelections().forEach((selection, i) => {
+        getSortedSelections(editor).forEach((selection, i) => {
             const text = (start + i).toString();
             editBuilder.replace(selection, text);
         });

@@ -3,11 +3,12 @@ import getSortedSelections from "../util/getSortedSelections";
 
 export default (): string[] => {
     const editor = window.activeTextEditor;
+
     if (!editor) {
         return [];
     }
 
-    return getSortedSelections().map((selection) =>
+    return getSortedSelections(editor).map((selection) =>
         editor.document.getText(selection)
     );
 };
