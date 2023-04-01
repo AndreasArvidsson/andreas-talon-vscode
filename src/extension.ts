@@ -12,6 +12,7 @@ import lineMiddle from "./commands/lineMiddle";
 import newFile from "./commands/newFile";
 import openEditorAtIndex from "./commands/openEditorAtIndex";
 import printCommands from "./commands/printCommands";
+import renameFile from "./commands/renameFile";
 import selectTo from "./commands/selectTo";
 import { registerLanguageDefinitions } from "./registerLanguageDefinitions";
 import { registerLanguageFormatter } from "./registerLanguageFormatter";
@@ -34,9 +35,9 @@ export const activate = async (
 
         return vscode.commands.registerCommand(
             fullCommand,
-            (...args: any[]) => {
+            async (...args: any[]) => {
                 try {
-                    return callback(...args);
+                    return await Promise.resolve(callback(...args));
                 } catch (ex) {
                     const err = ex as Error;
                     vscode.window.showErrorMessage(err.message);
@@ -61,6 +62,11 @@ export const activate = async (
         registerCommand("getFilename", getFilename),
         registerCommand("copyFilename", copyFilename),
         registerCommand("newFile", newFile),
+        registerCommand("renameFile", renameFile),
+        //         duplicateFile
+        //
+        // removeFile
+        // moveFile
         // Git
         registerCommand("getGitRepoURL", git.getRepoURL),
         registerCommand("getGitFileURL", git.getFileURL),

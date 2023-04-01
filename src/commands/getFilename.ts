@@ -3,10 +3,11 @@ import * as path from "path";
 
 export default (): string => {
     const editor = window.activeTextEditor;
+    const fsPath = editor?.document.uri.fsPath;
 
-    if (!editor?.document.uri.fsPath) {
+    if (!fsPath) {
         throw Error("Can't get filename");
     }
 
-    return path.basename(editor.document.uri.fsPath);
+    return path.basename(fsPath);
 };
