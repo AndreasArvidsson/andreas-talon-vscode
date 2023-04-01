@@ -38,7 +38,7 @@ export default async (name?: string): Promise<void> => {
     const result = await workspace.applyEdit(edit);
 
     if (!result) {
-        throw new Error(`Failed to create file: ${file}`);
+        throw new Error(`Failed to create file: ${uri.fsPath}`);
     }
 
     const document = await workspace.openTextDocument(uri);

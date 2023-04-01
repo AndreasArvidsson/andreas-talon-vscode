@@ -12,6 +12,7 @@ import lineMiddle from "./commands/lineMiddle";
 import newFile from "./commands/newFile";
 import openEditorAtIndex from "./commands/openEditorAtIndex";
 import printCommands from "./commands/printCommands";
+import removeFile from "./commands/removeFile";
 import renameFile from "./commands/renameFile";
 import selectTo from "./commands/selectTo";
 import { registerLanguageDefinitions } from "./registerLanguageDefinitions";
@@ -63,9 +64,10 @@ export const activate = async (
         registerCommand("copyFilename", copyFilename),
         registerCommand("newFile", newFile),
         registerCommand("renameFile", renameFile),
+        registerCommand("removeFile", removeFile),
         //         duplicateFile
         //
-        // removeFile
+        //
         // moveFile
         // Git
         registerCommand("getGitRepoURL", git.getRepoURL),

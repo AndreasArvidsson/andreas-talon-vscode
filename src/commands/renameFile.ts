@@ -12,24 +12,21 @@ export default async (name?: string): Promise<void> => {
 
     const suggestedName = context.input?.name ?? context.file.name;
     const suggestedExt = context.input?.ext ?? context.file.ext ?? "";
+    const value = `${suggestedName}${suggestedExt}`;
 
     const filename = await window.showInputBox({
         prompt: "New name",
-        value: `${suggestedName}${suggestedExt}`,
+        value,
         valueSelection: [0, suggestedName.length],
         ignoreFocusOut: true,
     });
 
-    if (!filename) {
+    if (!filename || filename === value) {
         return;
     }
 
     const file = path.join(context.dir, filename);
     const uri = Uri.file(file);
-
-    if (context.uri.fsPath === file) {
-        return;
-    }
 
     if (fs.existsSync(file)) {
         throw Error(`File '${filename}' already exists`);
@@ -40,6 +37,6 @@ export default async (name?: string): Promise<void> => {
     const result = await workspace.applyEdit(edit);
 
     if (!result) {
-        throw new Error(`Failed to rename file: ${file}`);
+        throw new Error(`Failed to rename file: ${context.uri.fsPath}`);
     }
 };
