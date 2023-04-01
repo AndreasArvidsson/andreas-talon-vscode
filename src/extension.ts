@@ -1,28 +1,27 @@
 import * as vscode from "vscode";
-import copyFilename from "./commands/copyFilename";
-import executeCommands from "./commands/executeCommands";
-import generateRange from "./commands/generateRange";
+import { copyFilename } from "./commands/copyFilename";
+import { duplicateFile } from "./commands/duplicateFile";
+import { executeCommands } from "./commands/executeCommands";
+import { generateRange } from "./commands/generateRange";
 import * as className from "./commands/getClassName";
-import getDictationContext from "./commands/getDictationContext";
-import getFilename from "./commands/getFilename";
-import getSelectedText from "./commands/getSelectedText";
+import { getDictationContext } from "./commands/getDictationContext";
+import { getFilename } from "./commands/getFilename";
+import { getSelectedText } from "./commands/getSelectedText";
 import * as git from "./commands/git";
 import { decrement, increment } from "./commands/incrementDecrement";
-import lineMiddle from "./commands/lineMiddle";
-import newFile from "./commands/newFile";
-import openEditorAtIndex from "./commands/openEditorAtIndex";
-import printCommands from "./commands/printCommands";
-import removeFile from "./commands/removeFile";
-import renameFile from "./commands/renameFile";
-import selectTo from "./commands/selectTo";
+import { lineMiddle } from "./commands/lineMiddle";
+import { newFile } from "./commands/newFile";
+import { openEditorAtIndex } from "./commands/openEditorAtIndex";
+import { printCommands } from "./commands/printCommands";
+import { removeFile } from "./commands/removeFile";
+import { renameFile } from "./commands/renameFile";
+import { selectTo } from "./commands/selectTo";
 import { registerLanguageDefinitions } from "./registerLanguageDefinitions";
 import { registerLanguageFormatter } from "./registerLanguageFormatter";
 import { getGitExtension, getParseTreeExtension } from "./util/getExtension";
-import getFullCommand from "./util/getFullCommand";
+import { getFullCommand } from "./util/getFullCommand";
 
-export const activate = async (
-    context: vscode.ExtensionContext
-): Promise<void> => {
+export const activate = async (context: vscode.ExtensionContext): Promise<void> => {
     const parseTreeExtension = await getParseTreeExtension();
     const gitExtension = await getGitExtension();
     className.init(parseTreeExtension);
@@ -34,18 +33,15 @@ export const activate = async (
     ): vscode.Disposable => {
         const fullCommand = getFullCommand(command);
 
-        return vscode.commands.registerCommand(
-            fullCommand,
-            async (...args: any[]) => {
-                try {
-                    return await Promise.resolve(callback(...args));
-                } catch (ex) {
-                    const err = ex as Error;
-                    vscode.window.showErrorMessage(err.message);
-                    console.error(err.stack);
-                }
+        return vscode.commands.registerCommand(fullCommand, async (...args: any[]) => {
+            try {
+                return await Promise.resolve<unknown>(callback(...args));
+            } catch (ex) {
+                const err = ex as Error;
+                await vscode.window.showErrorMessage(err.message);
+                console.error(err.stack);
             }
-        );
+        });
     };
 
     context.subscriptions.push(
@@ -65,9 +61,7 @@ export const activate = async (
         registerCommand("newFile", newFile),
         registerCommand("renameFile", renameFile),
         registerCommand("removeFile", removeFile),
-        //         duplicateFile
-        //
-        //
+        registerCommand("duplicateFile", duplicateFile),
         // moveFile
         // Git
         registerCommand("getGitRepoURL", git.getRepoURL),

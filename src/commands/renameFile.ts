@@ -1,10 +1,9 @@
-import * as fs from "fs";
-import * as path from "path";
-import { Uri, WorkspaceEdit, window, workspace } from "vscode";
-import { getRenameContext } from "../util/getRenameContext";
+import * as fileSystem from "../util/fileSystem";
+import { getNewFilenameContext } from "../util/getRenameContext";
+import { showNewNameInputBox } from "../util/showNewNameInputBox";
 
-export default async (name?: string): Promise<void> => {
-    const context = getRenameContext(name);
+export async function renameFile(name?: string): Promise<void> {
+    const context = getNewFilenameContext(name);
 
     if (!context) {
         throw Error("Can't rename file");
@@ -12,31 +11,10 @@ export default async (name?: string): Promise<void> => {
 
     const suggestedName = context.input?.name ?? context.file.name;
     const suggestedExt = context.input?.ext ?? context.file.ext ?? "";
-    const value = `${suggestedName}${suggestedExt}`;
 
-    const filename = await window.showInputBox({
-        prompt: "New name",
-        value,
-        valueSelection: [0, suggestedName.length],
-        ignoreFocusOut: true,
-    });
+    const filename = await showNewNameInputBox(suggestedName, suggestedExt);
 
-    if (!filename || filename === value) {
-        return;
+    if (filename && filename !== context.filename) {
+        await fileSystem.renameFile(context.uri, filename);
     }
-
-    const file = path.join(context.dir, filename);
-    const uri = Uri.file(file);
-
-    if (fs.existsSync(file)) {
-        throw Error(`File '${filename}' already exists`);
-    }
-
-    const edit = new WorkspaceEdit();
-    edit.renameFile(context.uri, uri);
-    const result = await workspace.applyEdit(edit);
-
-    if (!result) {
-        throw new Error(`Failed to rename file: ${context.uri.fsPath}`);
-    }
-};
+}

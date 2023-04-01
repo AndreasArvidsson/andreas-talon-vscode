@@ -1,7 +1,11 @@
 import * as vscode from "vscode";
 
-export default async (commands: string[]): Promise<void> => {
+export async function executeCommands(commands: string[]): Promise<unknown[]> {
+    const results: unknown[] = [];
+
     for (const command of commands) {
-        await vscode.commands.executeCommand(command);
+        results.push(await vscode.commands.executeCommand(command));
     }
-};
+
+    return results;
+}

@@ -11,7 +11,7 @@ import {
     Range,
     TextDocument,
     Uri,
-    workspace,
+    workspace
 } from "vscode";
 
 // Match namespace
@@ -50,7 +50,7 @@ async function provideDefinitionTalon(
         scope = {
             regex: createPythonFunctionRegex(wordText),
             callback: extractionCallback,
-            gitIgnore: await getGitIgnore(workspacePath),
+            gitIgnore: await getGitIgnore(workspacePath)
         };
     }
 
@@ -59,7 +59,7 @@ async function provideDefinitionTalon(
         scope = {
             regex: new RegExp(`(\\w+\\.lists\\["${NS})(${wordText})"\\]`, "g"),
             callback: extractionCallback,
-            gitIgnore: await getGitIgnore(workspacePath),
+            gitIgnore: await getGitIgnore(workspacePath)
         };
     }
 
@@ -85,7 +85,7 @@ async function provideDefinitionPython(
         scope = {
             regex: createPythonFunctionRegex(wordText),
             callback: extractionCallback,
-            gitIgnore: await getGitIgnore(workspacePath),
+            gitIgnore: await getGitIgnore(workspacePath)
         };
     }
 
@@ -118,7 +118,7 @@ function extractionCallback(
                 line + matchLines.length - 1,
                 (matchLines.length === 1 ? indentationLength : 0) +
                     matchLines[matchLines.length - 1].length
-            ),
+            )
         };
     });
 }
@@ -128,7 +128,7 @@ async function getGitIgnore(folderPath: string) {
         const gitignorePath = path.join(folderPath, ".gitignore");
         const gitignoreContent = await fs.readFile(gitignorePath, "utf8");
         const gitignore = gitignoreCompiler(gitignoreContent);
-        return gitignore.denies;
+        return (input: string) => gitignore.denies(input);
     } catch (error) {
         return (_input: string) => false;
     }
@@ -146,11 +146,7 @@ function getPositionAndWorkspace(document: TextDocument, position: Position) {
     return { ...wordAtPosition, workspacePath: workspaceFolder.uri.fsPath };
 }
 
-function testWordAtPosition(
-    position: Position,
-    lineText: string,
-    regex: RegExp
-): boolean {
+function testWordAtPosition(position: Position, lineText: string, regex: RegExp): boolean {
     return Array.from(lineText.matchAll(regex)).some(
         (match) =>
             match.index != null &&
@@ -172,11 +168,7 @@ function getWordAtPosition(document: TextDocument, position: Position) {
 interface SearchScope {
     regex: RegExp;
     gitIgnore: (path: string) => boolean;
-    callback: (
-        uri: Uri,
-        matches: RegExpMatchArray[],
-        fileContent: string
-    ) => DefinitionLink[];
+    callback: (uri: Uri, matches: RegExpMatchArray[], fileContent: string) => DefinitionLink[];
 }
 
 async function searchInPath(

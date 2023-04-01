@@ -1,19 +1,21 @@
 {
     "extends": [
         "eslint:recommended",
-        "plugin:@typescript-eslint/recommended"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-        "@typescript-eslint"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
     ],
     "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
+    "ignorePatterns": ["src/typings"],
     "parserOptions": {
-        "ecmaVersion": 6,
+        "project": "./tsconfig.json",
+        "ecmaVersion": 2022,
         "sourceType": "module"
     },
     "rules": {
-        "@typescript-eslint/naming-convention": "warn",
+        "no-warning-comments": "warn",
+        "@typescript-eslint/naming-convention": "error",
         "@typescript-eslint/semi": "warn",
         "@typescript-eslint/no-explicit-any": "off",
         "curly": "error",
@@ -31,8 +33,5 @@
                 "argsIgnorePattern": "^_"
             }
         ]
-    },
-    "ignorePatterns": [
-        "src/typings"
-    ]
+    }
 }

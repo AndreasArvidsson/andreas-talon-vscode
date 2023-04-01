@@ -1,7 +1,7 @@
 import { window } from "vscode";
 import * as path from "path";
 
-export default (): string => {
+export function getFilename(): string {
     const editor = window.activeTextEditor;
     const fsPath = editor?.document.uri.fsPath;
 
@@ -10,4 +10,4 @@ export default (): string => {
     }
 
     return path.basename(fsPath);
-};
+}

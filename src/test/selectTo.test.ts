@@ -2,49 +2,49 @@ import { runTest } from "./testUtil/runTest";
 
 const command = "selectTo";
 
-suite(command, async function () {
+suite(command, () => {
     runTest({
         title: "Extend before",
         command: {
             id: command,
-            args: [0],
+            args: [0]
         },
         pre: {
             content: "a\nb\nc",
-            selections: [2, 0],
+            selections: [2, 0]
         },
         post: {
-            selections: [2, 0, 0, 0],
-        },
+            selections: [2, 0, 0, 0]
+        }
     });
 
     runTest({
         title: "Extend after",
         command: {
             id: command,
-            args: [2],
+            args: [2]
         },
         pre: {
             content: "a\nb\nc",
-            selections: [0, 0],
+            selections: [0, 0]
         },
         post: {
-            selections: [0, 0, 2, 1],
-        },
+            selections: [0, 0, 2, 1]
+        }
     });
 
     runTest({
         title: "Extend same",
         command: {
             id: command,
-            args: [1],
+            args: [1]
         },
         pre: {
             content: "a\nb\nc",
-            selections: [1, 0],
+            selections: [1, 0]
         },
         post: {
-            selections: [1, 0, 1, 1],
-        },
+            selections: [1, 0, 1, 1]
+        }
     });
 });

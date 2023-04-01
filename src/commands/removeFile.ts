@@ -1,7 +1,8 @@
 import * as path from "path";
-import { WorkspaceEdit, window, workspace } from "vscode";
+import { window } from "vscode";
+import { deleteFile } from "../util/fileSystem";
 
-export default async (): Promise<void> => {
+export async function removeFile(): Promise<void> {
     const editor = window.activeTextEditor;
 
     if (editor?.document?.uri.scheme !== "file") {
@@ -17,15 +18,7 @@ export default async (): Promise<void> => {
         "Remove file"
     );
 
-    if (!remove) {
-        return;
+    if (remove) {
+        await deleteFile(uri);
     }
-
-    const edit = new WorkspaceEdit();
-    edit.deleteFile(uri);
-    const result = await workspace.applyEdit(edit);
-
-    if (!result) {
-        throw new Error(`Failed to remove file: ${uri.fsPath}`);
-    }
-};
+}

@@ -12,19 +12,14 @@ type Parameters = {
     useBranch: boolean;
 };
 
-export const getFileURL = ({
-    useSelection = false,
-    useBranch = false,
-}: Parameters): string => {
+export function getFileURL({ useSelection = false, useBranch = false }: Parameters): string {
     const { document, selections } = getEditor();
     const filePath = getFilePath(document);
     const repository = getRepository(filePath);
     const platform = getPlatform(repository);
     const relativeFilePath = getRelativeFilepath(repository, filePath);
     const range = useSelection ? selections[0] : undefined;
-    const commitOrBranch = useBranch
-        ? getBranch(repository)
-        : getCommit(repository);
+    const commitOrBranch = useBranch ? getBranch(repository) : getCommit(repository);
 
     // If we're going to use the commit sha there can't be any changes
     if (!useBranch) {
@@ -37,23 +32,23 @@ export const getFileURL = ({
     }
 
     return platform.getFileUrl(commitOrBranch, relativeFilePath, range);
-};
+}
 
-export const getRepoURL = (): string => {
+export function getRepoURL(): string {
     return getPlatformHelper().getRepoUrl();
-};
+}
 
-export const getIssuesURL = (): string => {
+export function getIssuesURL(): string {
     return getPlatformHelper().getIssuesUrl();
-};
+}
 
-export const getNewIssueURL = (): string => {
+export function getNewIssueURL(): string {
     return getPlatformHelper().getNewIssueUrl();
-};
+}
 
-export const getPullRequestsURL = (): string => {
+export function getPullRequestsURL(): string {
     return getPlatformHelper().getPullRequestsURL();
-};
+}
 
 function getPlatformHelper(): Platform {
     const { document } = getEditor();
@@ -82,10 +77,7 @@ function getFilePath(document: TextDocument): string {
     return path;
 }
 
-function validateUnchangedDocument(
-    document: TextDocument,
-    repository: Repository
-) {
+function validateUnchangedDocument(document: TextDocument, repository: Repository) {
     if (document.uri.scheme !== "file") {
         throw Error("Document scheme is not file");
     }
@@ -96,7 +88,7 @@ function validateUnchangedDocument(
     const changes = [
         ...repository.state.workingTreeChanges,
         ...repository.state.indexChanges,
-        ...repository.state.mergeChanges,
+        ...repository.state.mergeChanges
     ];
     const hasGitChange = changes.some((c) => c.uri.path === document.uri.path);
     if (hasGitChange) {
@@ -104,7 +96,7 @@ function validateUnchangedDocument(
     }
 }
 
-const getRepository = (filePath: string): Repository => {
+function getRepository(filePath: string): Repository {
     const { repositories } = gitApi;
     if (repositories.length === 1) {
         return repositories[0];
@@ -116,13 +108,13 @@ const getRepository = (filePath: string): Repository => {
         throw Error("Can't find Git repository");
     }
     return repository;
-};
+}
 
 function getRemote(repository: Repository): Remote {
     const name = repository.state.HEAD?.upstream?.remote;
     const remote = repository.state.remotes.find((r) => r.name === name);
     if (!remote) {
-        throw Error(`Can't find git remote '${name}'`);
+        throw Error(`Can't find git remote '${name ?? ""}'`);
     }
     return remote;
 }
@@ -190,11 +182,7 @@ class Github implements Platform {
         this.repoUrl = cleanGitUrl(remoteUrl);
     }
 
-    getFileUrl(
-        commitOrBranch: string,
-        filePath: string,
-        range?: Range
-    ): string {
+    getFileUrl(commitOrBranch: string, filePath: string, range?: Range): string {
         let url = `${this.repoUrl}/blob/${commitOrBranch}/${filePath}`;
 
         if (range != null) {
@@ -231,11 +219,7 @@ class Bitbucket implements Platform {
         this.repoUrl = cleanGitUrl(remoteUrl);
     }
 
-    getFileUrl(
-        commitOrBranch: string,
-        filePath: string,
-        range?: Range
-    ): string {
+    getFileUrl(commitOrBranch: string, filePath: string, range?: Range): string {
         let url = `${this.repoUrl}/src/${commitOrBranch}/${filePath}`;
 
         if (range != null) {

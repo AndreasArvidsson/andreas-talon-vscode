@@ -5,7 +5,7 @@ import openNewEditor from "./openNewEditor";
 import {
     numbersToPlainSelections,
     numbersToSelections,
-    selectionsToPlainSelections,
+    selectionsToPlainSelections
 } from "./selectionUtil";
 import { FullTestFixture, TestFixture } from "./test.types";
 

@@ -2,7 +2,7 @@ import { runTest } from "./testUtil/runTest";
 
 const command = "getDictationContext";
 
-suite(command, async function () {
+suite(command, () => {
     runTest({
         title: "Multiple selections",
         command,
@@ -10,12 +10,12 @@ suite(command, async function () {
             content: "ab",
             selections: [
                 [0, 0],
-                [1, 1],
-            ],
+                [1, 1]
+            ]
         },
         post: {
-            returnValue: { before: "", after: "" },
-        },
+            returnValue: { before: "", after: "" }
+        }
     });
 
     runTest({
@@ -23,11 +23,11 @@ suite(command, async function () {
         command,
         pre: {
             content: "abcd",
-            selections: [0, 2],
+            selections: [0, 2]
         },
         post: {
-            returnValue: { before: "ab", after: "cd" },
-        },
+            returnValue: { before: "ab", after: "cd" }
+        }
     });
 
     runTest({
@@ -35,10 +35,10 @@ suite(command, async function () {
         command,
         pre: {
             content: "ab_cd",
-            selections: [0, 2, 0, 3],
+            selections: [0, 2, 0, 3]
         },
         post: {
-            returnValue: { before: "ab", after: "cd" },
-        },
+            returnValue: { before: "ab", after: "cd" }
+        }
     });
 });

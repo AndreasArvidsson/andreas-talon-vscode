@@ -1,5 +1,5 @@
 import { commands } from "vscode";
-import getFullCommand from "../../util/getFullCommand";
+import { getFullCommand } from "../../util/getFullCommand";
 import { FullTestFixture, NumberSelection, TestFixture } from "./test.types";
 
 export function getFullFixture(fixture: TestFixture): FullTestFixture {
@@ -11,14 +11,14 @@ export function getFullFixture(fixture: TestFixture): FullTestFixture {
         pre: {
             language: pre.language ?? "plaintext",
             content: pre.content ?? "",
-            selections: getSelections(pre.selections),
+            selections: getSelections(pre.selections)
         },
         post: {
             language: post.language ?? pre.language ?? "plaintext",
             content: post.content ?? pre.content ?? "",
             selections: getSelections(post.selections ?? pre.selections),
-            returnValue: post.returnValue,
-        },
+            returnValue: post.returnValue
+        }
     };
 }
 
@@ -36,9 +36,7 @@ function getCallback(fixture: TestFixture): () => Thenable<unknown> {
     };
 }
 
-function getSelections(
-    selections?: NumberSelection[] | NumberSelection
-): NumberSelection[] {
+function getSelections(selections?: NumberSelection[] | NumberSelection): NumberSelection[] {
     if (selections == null) {
         return [[0, 0, 0, 0]];
     }

@@ -1,7 +1,7 @@
 import { Selection, window } from "vscode";
-import getSortedSelections from "../util/getSortedSelections";
+import { getSortedSelections } from "../util/getSortedSelections";
 
-export default async (start = 1): Promise<void> => {
+export async function generateRange(start = 1): Promise<void> {
     const editor = window.activeTextEditor;
 
     if (!editor) {
@@ -23,4 +23,4 @@ export default async (start = 1): Promise<void> => {
     editor.selections = editor.selections.map(
         (selection) => new Selection(selection.end, selection.end)
     );
-};
+}

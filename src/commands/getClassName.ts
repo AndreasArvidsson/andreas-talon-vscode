@@ -3,11 +3,11 @@ import { ParseTreeExtension } from "../typings/parserTree";
 
 let parseTree: ParseTreeExtension;
 
-export const init = (parseTreeExtension: ParseTreeExtension): void => {
+export function init(parseTreeExtension: ParseTreeExtension): void {
     parseTree = parseTreeExtension;
-};
+}
 
-export const get = (): string | null => {
+export function get(): string | null {
     const editor = window.activeTextEditor;
     if (!editor) {
         return null;
@@ -28,4 +28,4 @@ export const get = (): string | null => {
     }
 
     return null;
-};
+}

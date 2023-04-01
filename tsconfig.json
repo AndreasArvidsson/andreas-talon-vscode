@@ -1,17 +1,14 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es6",
-        "lib": [
-            "es2020"
-        ],
+        "target": "ESNext",
+        "lib": ["ESNext"],
+        "moduleResolution": "node",
+        "rootDir": "src",
         "outDir": "out",
         "sourceMap": true,
         "strict": true,
-        "rootDir": "src"
+        "forceConsistentCasingInFileNames": true
     },
-    "exclude": [
-        "node_modules",
-        ".vscode-test"
-    ]
+    "include": ["src"]
 }

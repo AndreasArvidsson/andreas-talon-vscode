@@ -1,6 +1,6 @@
 import { window, Selection } from "vscode";
 
-export default (): void => {
+export function lineMiddle(): void {
     const editor = window.activeTextEditor;
     if (!editor) {
         return;
@@ -19,4 +19,4 @@ export default (): void => {
         const middle = Math.floor((start + end) / 2);
         return new Selection(line.lineNumber, middle, line.lineNumber, middle);
     });
-};
+}

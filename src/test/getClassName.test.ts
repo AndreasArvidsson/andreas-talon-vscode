@@ -2,7 +2,7 @@ import { runTest } from "./testUtil/runTest";
 
 const command = "getClassName";
 
-suite(command, async function () {
+suite(command, () => {
     console.debug = () => {
         // The parse tree extensions spams debug logs
     };
@@ -13,10 +13,10 @@ suite(command, async function () {
         pre: {
             language: "java",
             content: "class MyClass {\n\n}",
-            selections: [1, 0],
+            selections: [1, 0]
         },
         post: {
-            returnValue: "MyClass",
-        },
+            returnValue: "MyClass"
+        }
     });
 });

@@ -30,6 +30,7 @@
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "lint": "eslint . --ext .ts,.tsx",
+        "prettier": "prettier --write .",
         "watch": "tsc -watch -p ./"
     },
     "extensionDependencies": [
@@ -40,16 +41,17 @@
         "gitignore-parser": "^0.0.2"
     },
     "devDependencies": {
+        "@types/gitignore-parser": "^0.0.0",
+        "@types/glob": "^8.0.0",
+        "@types/mocha": "^10.0.0",
         "@types/node": "^16.11.3",
         "@types/vscode": "^1.68.0",
-        "@types/gitignore-parser": "^0.0.0",
-        "@types/mocha": "^10.0.0",
-        "@types/glob": "^8.0.0",
         "@typescript-eslint/eslint-plugin": "^4.16.0",
         "@typescript-eslint/parser": "^4.16.0",
         "eslint": "^7.21.0",
-        "typescript": "^4.2.2",
+        "glob": "^8.0.3",
         "mocha": "^10.1.0",
-        "glob": "^8.0.3"
+        "prettier": "^2.8.7",
+        "typescript": "^4.2.2"
     }
 }

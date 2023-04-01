@@ -2,10 +2,10 @@ import { window } from "vscode";
 
 type ReturnValue = { before: string; after: string };
 
-export default (): ReturnValue => {
+export function getDictationContext(): ReturnValue {
     const editor = window.activeTextEditor;
 
-    if (!editor || editor.selections.length !== 1) {
+    if (editor?.selections.length !== 1) {
         return { before: "", after: "" };
     }
 
@@ -16,6 +16,6 @@ export default (): ReturnValue => {
 
     return {
         before: startLine.text.slice(startChar - 2, startChar),
-        after: endLine.text.slice(endChar, endChar + 2),
+        after: endLine.text.slice(endChar, endChar + 2)
     };
-};
+}

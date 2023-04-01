@@ -6,14 +6,12 @@ import {
     TextDocument,
     TextEdit,
     TextEditor,
-    window,
+    window
 } from "vscode";
 
 const columnWidth = 28;
 
-function provideDocumentFormattingEditsTalon(
-    _document: TextDocument
-): TextEdit[] {
+function provideDocumentFormattingEditsTalon(_document: TextDocument): TextEdit[] {
     const editor = window.activeTextEditor;
     if (!editor) {
         return [];
@@ -100,7 +98,7 @@ function provideDocumentFormattingEditsTalon(
                 editor.document.lineAt(editor.document.lineCount - 1).range.end
             ),
             newText
-        ),
+        )
     ];
 }
 
@@ -157,7 +155,7 @@ export function registerLanguageFormatter(): Disposable {
     return languages.registerDocumentFormattingEditProvider(
         { language: "talon" },
         {
-            provideDocumentFormattingEdits: provideDocumentFormattingEditsTalon,
+            provideDocumentFormattingEdits: provideDocumentFormattingEditsTalon
         }
     );
 }

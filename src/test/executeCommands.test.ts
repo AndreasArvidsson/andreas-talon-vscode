@@ -1,8 +1,9 @@
+import { getFullCommand } from "../util/getFullCommand";
 import { runTest } from "./testUtil/runTest";
 
 const command = "executeCommands";
 
-suite(command, async function () {
+suite(command, () => {
     runTest({
         title: command,
         command: {
@@ -11,15 +12,17 @@ suite(command, async function () {
                 [
                     "editor.action.insertLineAfter",
                     "editor.action.insertLineAfter",
-                ],
-            ],
+                    getFullCommand("getFilename")
+                ]
+            ]
         },
         pre: {
-            content: "",
+            content: ""
         },
         post: {
             content: "\n\n",
             selections: [2, 0],
-        },
+            returnValue: [undefined, undefined, "Untitled-1"]
+        }
     });
 });

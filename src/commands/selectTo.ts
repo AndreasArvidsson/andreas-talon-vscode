@@ -1,6 +1,6 @@
 import { Selection, window } from "vscode";
 
-export default (lineNumber: number): void => {
+export function selectTo(lineNumber: number): void {
     const editor = window.activeTextEditor;
     if (!editor) {
         return;
@@ -13,4 +13,4 @@ export default (lineNumber: number): void => {
     } else if (line.range.end.isAfter(end)) {
         editor.selection = new Selection(start, line.range.end);
     }
-};
+}

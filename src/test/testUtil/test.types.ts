@@ -46,9 +46,7 @@ export interface Command {
     args: any[];
 }
 
-export type NumberSelection =
-    | [number, number]
-    | [number, number, number, number];
+export type NumberSelection = [number, number] | [number, number, number, number];
 
 export interface PlainPosition {
     line: number;

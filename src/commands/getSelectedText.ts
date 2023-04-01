@@ -1,14 +1,12 @@
 import { window } from "vscode";
-import getSortedSelections from "../util/getSortedSelections";
+import { getSortedSelections } from "../util/getSortedSelections";
 
-export default (): string[] => {
+export function getSelectedText(): string[] {
     const editor = window.activeTextEditor;
 
     if (!editor) {
         return [];
     }
 
-    return getSortedSelections(editor).map((selection) =>
-        editor.document.getText(selection)
-    );
-};
+    return getSortedSelections(editor).map((selection) => editor.document.getText(selection));
+}

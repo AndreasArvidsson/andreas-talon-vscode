@@ -9,14 +9,13 @@ interface SplitName {
 interface RenameContext {
     uri: Uri;
     dir: string;
+    filename: string;
     file: SplitName;
     input?: SplitName;
     selected?: SplitName;
 }
 
-export function getRenameContext(
-    inputName?: string
-): RenameContext | undefined {
+export function getNewFilenameContext(inputName?: string): RenameContext | undefined {
     const editor = window.activeTextEditor;
 
     if (editor?.document?.uri.scheme !== "file") {
@@ -29,9 +28,10 @@ export function getRenameContext(
     return {
         uri,
         dir: path.dirname(uri.fsPath),
+        filename: path.basename(uri.fsPath),
         file: splitName(path.basename(uri.fsPath)),
         input: inputName ? splitName(inputName) : undefined,
-        selected: selected ? splitName(selected) : undefined,
+        selected: selected ? splitName(selected) : undefined
     };
 }
 
@@ -42,7 +42,7 @@ function splitName(fullName: string) {
     const ext = i < 0 ? undefined : fullName.substring(i);
     return {
         name,
-        ext,
+        ext
     };
 }
 

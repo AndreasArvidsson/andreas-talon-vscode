@@ -2,17 +2,17 @@ import { runTest } from "./testUtil/runTest";
 
 const command = "getSelectedText";
 
-suite(command, async function () {
+suite(command, () => {
     runTest({
         title: "Single selection",
         command,
         pre: {
             content: "_abc_",
-            selections: [0, 1, 0, 4],
+            selections: [0, 1, 0, 4]
         },
         post: {
-            returnValue: ["abc"],
-        },
+            returnValue: ["abc"]
+        }
     });
 
     runTest({
@@ -22,11 +22,11 @@ suite(command, async function () {
             content: "abc",
             selections: [
                 [0, 0, 0, 1],
-                [0, 2, 0, 3],
-            ],
+                [0, 2, 0, 3]
+            ]
         },
         post: {
-            returnValue: ["a", "c"],
-        },
+            returnValue: ["a", "c"]
+        }
     });
 });
