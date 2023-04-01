@@ -17,7 +17,7 @@ export async function moveFile(): Promise<void> {
 
     const folder = await showFolderPicker(uri);
 
-    if (folder) {
+    if (folder && folder !== path.dirname(uri.fsPath)) {
         const filename = path.basename(uri.fsPath);
         const newPath = path.join(folder, filename);
         await fileSystem.moveFile(uri, Uri.file(newPath));
