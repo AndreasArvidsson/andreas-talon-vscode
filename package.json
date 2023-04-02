@@ -38,10 +38,9 @@
         "pokey.parse-tree"
     ],
     "dependencies": {
-        "gitignore-parser": "^0.0.2"
+        "ignore": "^5.2.4"
     },
     "devDependencies": {
-        "@types/gitignore-parser": "^0.0.0",
         "@types/glob": "^8.1.0",
         "@types/mocha": "^10.0.1",
         "@types/node": "^18.15.11",

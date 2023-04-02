@@ -9,6 +9,7 @@ import {
     workspace
 } from "vscode";
 import * as fileSystem from "../../util/fileSystem";
+import { getGitIgnore } from "../../util/gitIgnore";
 
 interface FileQuickPickItem extends QuickPickItem {
     path: string;
@@ -37,6 +38,7 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
     return new Promise<string | undefined>((resolve) => {
         const workspaceFolder = getWorkspaceFolder(uri);
         const workspaceDir = workspaceFolder.uri.fsPath;
+        const gitIgnore = getGitIgnore(workspaceDir);
         const quickPick = window.createQuickPick<FileQuickPickItem>();
         quickPick.ignoreFocusOut = true;
 
@@ -59,10 +61,14 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
 
             for (const [name, type] of files) {
                 if (type === FileType.Directory) {
-                    items.push({
-                        label: `$(folder) ${name}`,
-                        path: path.join(dir, name)
-                    });
+                    const folderPath = path.join(dir, name);
+                    const relativePath = path.relative(workspaceDir, folderPath);
+                    if (!gitIgnore(relativePath)) {
+                        items.push({
+                            label: `$(folder) ${name}`,
+                            path: folderPath
+                        });
+                    }
                 }
             }
 
