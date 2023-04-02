@@ -1,10 +1,19 @@
 import * as path from "path";
-import { FileType, QuickPickItem, Uri, WorkspaceFolder, window, workspace } from "vscode";
+import {
+    FileType,
+    QuickPickItem,
+    QuickPickItemKind,
+    Uri,
+    WorkspaceFolder,
+    window,
+    workspace
+} from "vscode";
 import * as fileSystem from "../../util/fileSystem";
 
 interface FileQuickPickItem extends QuickPickItem {
     path: string;
     move?: boolean;
+    select?: string;
 }
 
 export async function moveFile(): Promise<void> {
@@ -28,16 +37,21 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
     return new Promise<string | undefined>((resolve) => {
         const workspaceFolder = getWorkspaceFolder(uri);
         const workspaceDir = workspaceFolder.uri.fsPath;
-        const quickPick = window.createQuickPick();
+        const quickPick = window.createQuickPick<FileQuickPickItem>();
         quickPick.ignoreFocusOut = true;
 
-        async function changeDirectory(dir: string) {
+        async function changeDirectory(dir: string, select?: string) {
             const items: FileQuickPickItem[] = [];
 
             items.push({ label: "$(file) Move file here", path: dir, move: true });
+            items.push({ label: "", path: "", kind: QuickPickItemKind.Separator });
 
             if (dir !== workspaceDir) {
-                items.push({ label: "$(folder) ..", path: path.dirname(dir) });
+                items.push({
+                    label: "$(folder) ..",
+                    path: path.dirname(dir),
+                    select: dir
+                });
             }
 
             const uri = Uri.file(dir);
@@ -59,16 +73,16 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
             quickPick.title = title;
             quickPick.value = "";
             quickPick.items = items;
-            quickPick.activeItems = [items[1]];
+            quickPick.activeItems = [items.find((i) => i.path === select) ?? items[2]];
         }
 
         quickPick.onDidAccept(async () => {
-            const selection = quickPick.activeItems[0] as FileQuickPickItem;
+            const selection = quickPick.activeItems[0];
             if (selection.move) {
                 quickPick.hide();
                 resolve(selection.path);
             } else {
-                await changeDirectory(selection.path);
+                await changeDirectory(selection.path, selection.select);
             }
         });
 
