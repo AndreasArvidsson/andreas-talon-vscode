@@ -1,4 +1,4 @@
-import * as path from "path";
+import path from "node:path";
 import { TextEditor, Uri, window } from "vscode";
 
 interface SplitName {

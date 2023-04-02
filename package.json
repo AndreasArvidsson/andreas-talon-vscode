@@ -28,10 +28,10 @@
     "scripts": {
         "build": "vsce package",
         "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "lint": "eslint . --ext .ts,.tsx",
+        "compile": "tsc -p .",
+        "lint": "eslint src",
         "prettier": "prettier --write .",
-        "watch": "tsc -watch -p ./"
+        "watch": "tsc -watch -p ."
     },
     "extensionDependencies": [
         "vscode.git",
@@ -42,16 +42,16 @@
     },
     "devDependencies": {
         "@types/gitignore-parser": "^0.0.0",
-        "@types/glob": "^8.0.0",
-        "@types/mocha": "^10.0.0",
-        "@types/node": "^16.11.3",
-        "@types/vscode": "^1.68.0",
-        "@typescript-eslint/eslint-plugin": "^4.16.0",
-        "@typescript-eslint/parser": "^4.16.0",
-        "eslint": "^7.21.0",
-        "glob": "^8.0.3",
-        "mocha": "^10.1.0",
+        "@types/glob": "^8.1.0",
+        "@types/mocha": "^10.0.1",
+        "@types/node": "^18.15.11",
+        "@types/vscode": "1.68.0",
+        "@typescript-eslint/eslint-plugin": "^5.57.0",
+        "@typescript-eslint/parser": "^5.57.0",
+        "eslint": "^8.37.0",
+        "glob": "^9.3.4",
+        "mocha": "^10.2.0",
         "prettier": "^2.8.7",
-        "typescript": "^4.2.2"
+        "typescript": "^5.0.3"
     }
 }

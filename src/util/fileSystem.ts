@@ -1,6 +1,6 @@
-import * as fs from "fs";
+import * as fs from "node:fs";
+import path from "node:path";
 import { Uri, WorkspaceEdit, window, workspace } from "vscode";
-import * as path from "path";
 
 export async function createFile(uri: Uri): Promise<void> {
     assertWritableFile(uri);

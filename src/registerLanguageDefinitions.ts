@@ -1,6 +1,6 @@
-import { promises as fs } from "fs";
 import { compile as gitignoreCompiler } from "gitignore-parser";
-import * as path from "path";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 import {
     CancellationToken,
     Definition,

@@ -1,4 +1,4 @@
-import * as path from "path";
+import path from "node:path";
 import { window } from "vscode";
 import { deleteFile } from "../../util/fileSystem";
 

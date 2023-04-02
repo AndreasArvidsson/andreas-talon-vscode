@@ -34,7 +34,7 @@ export const activate = async (context: vscode.ExtensionContext): Promise<void> 
     ): vscode.Disposable => {
         const fullCommand = getFullCommand(command);
 
-        return vscode.commands.registerCommand(fullCommand, async (...args: any[]) => {
+        return vscode.commands.registerCommand(fullCommand, async (...args: unknown[]) => {
             try {
                 return await Promise.resolve<unknown>(callback(...args));
             } catch (ex) {

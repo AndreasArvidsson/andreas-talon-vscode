@@ -1,4 +1,4 @@
-import * as path from "path";
+import path from "node:path";
 import { Uri, commands } from "vscode";
 import { showNewNameInputBox } from "../../util/showNewNameInputBox";
 import { createFile, openTextDocument } from "../../util/fileSystem";
