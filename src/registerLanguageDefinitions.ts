@@ -1,4 +1,3 @@
-import { compile as gitignoreCompiler } from "gitignore-parser";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import {
@@ -13,6 +12,7 @@ import {
     Uri,
     workspace
 } from "vscode";
+import { getGitIgnore } from "./util/gitIgnore";
 
 // Match namespace
 const NS = "\\w*\\.?";
@@ -50,7 +50,7 @@ async function provideDefinitionTalon(
         scope = {
             regex: createPythonFunctionRegex(wordText),
             callback: extractionCallback,
-            gitIgnore: await getGitIgnore(workspacePath)
+            gitIgnore: getGitIgnore(workspacePath)
         };
     }
 
@@ -59,7 +59,7 @@ async function provideDefinitionTalon(
         scope = {
             regex: new RegExp(`(\\w+\\.lists\\["${NS})(${wordText})"\\]`, "g"),
             callback: extractionCallback,
-            gitIgnore: await getGitIgnore(workspacePath)
+            gitIgnore: getGitIgnore(workspacePath)
         };
     }
 
@@ -85,7 +85,7 @@ async function provideDefinitionPython(
         scope = {
             regex: createPythonFunctionRegex(wordText),
             callback: extractionCallback,
-            gitIgnore: await getGitIgnore(workspacePath)
+            gitIgnore: getGitIgnore(workspacePath)
         };
     }
 
@@ -121,17 +121,6 @@ function extractionCallback(
             )
         };
     });
-}
-
-async function getGitIgnore(folderPath: string) {
-    try {
-        const gitignorePath = path.join(folderPath, ".gitignore");
-        const gitignoreContent = await fs.readFile(gitignorePath, "utf8");
-        const gitignore = gitignoreCompiler(gitignoreContent);
-        return (input: string) => gitignore.denies(input);
-    } catch (error) {
-        return (_input: string) => false;
-    }
 }
 
 function getPositionAndWorkspace(document: TextDocument, position: Position) {
