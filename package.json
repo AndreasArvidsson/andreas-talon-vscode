@@ -23,14 +23,131 @@
         "onStartupFinished"
     ],
     "contributes": {
-        "commands": []
+        "commands": [
+            {
+                "command": "andreas.getFilename",
+                "category": "Andreas (File)",
+                "title": "Get filename of active file."
+            },
+            {
+                "command": "andreas.copyFilename",
+                "category": "Andreas (File)",
+                "title": "Copy filename of active file to clipboard."
+            },
+            {
+                "command": "andreas.newFile",
+                "category": "Andreas (File)",
+                "title": "Create new file."
+            },
+            {
+                "command": "andreas.duplicateFile",
+                "category": "Andreas (File)",
+                "title": "Create duplicate/copy of active file."
+            },
+            {
+                "command": "andreas.renameFile",
+                "category": "Andreas (File)",
+                "title": "Rename active file."
+            },
+            {
+                "command": "andreas.removeFile",
+                "category": "Andreas (File)",
+                "title": "Remove/delete the active file."
+            },
+            {
+                "command": "andreas.moveFile",
+                "category": "Andreas (File)",
+                "title": "Move active file to new directory."
+            },
+            {
+                "command": "andreas.generateRange",
+                "category": "Andreas (Edit)",
+                "title": "Generate numerical range."
+            },
+            {
+                "command": "andreas.increment",
+                "category": "Andreas (Edit)",
+                "title": "Increment selected number."
+            },
+            {
+                "command": "andreas.decrement",
+                "category": "Andreas (Edit)",
+                "title": "Decrement selected number."
+            },
+            {
+                "command": "andreas.openEditorAtIndex",
+                "category": "Andreas (Nav)",
+                "title": "Open editor/tab at given index."
+            },
+            {
+                "command": "andreas.selectTo",
+                "category": "Andreas (Nav)",
+                "title": "Select from current location to specified line."
+            },
+            {
+                "command": "andreas.lineMiddle",
+                "category": "Andreas (Nav)",
+                "title": "Move curser to middle of the current line."
+            },
+            {
+                "command": "andreas.getGitFileURL",
+                "category": "Andreas (Git)",
+                "title": "Get URL to Git repository file webpage."
+            },
+            {
+                "command": "andreas.getGitRepoURL",
+                "category": "Andreas (Git)",
+                "title": "Get URL to Git repository webpage."
+            },
+            {
+                "command": "andreas.getGitIssuesURL",
+                "category": "Andreas (Git)",
+                "title": "Get URL to Git repository issues webpage."
+            },
+            {
+                "command": "andreas.getGitNewIssueURL",
+                "category": "Andreas (Git)",
+                "title": "Get URL to Git repository new issue webpage."
+            },
+            {
+                "command": "andreas.getGitPullRequestsURL",
+                "category": "Andreas (Git)",
+                "title": "Get URL to Git repository pull requests webpage."
+            },
+            {
+                "command": "andreas.getSelectedText",
+                "category": "Andreas (Other)",
+                "title": "Get selected text."
+            },
+            {
+                "command": "andreas.getClassName",
+                "category": "Andreas (Other)",
+                "title": "Get class name."
+            },
+            {
+                "command": "andreas.getDictationContext",
+                "category": "Andreas (Other)",
+                "title": "Get text before and after selection."
+            },
+            {
+                "command": "andreas.executeCommands",
+                "category": "Andreas (Other)",
+                "title": "Sequentially execute multiple commands."
+            },
+            {
+                "command": "andreas.printCommands",
+                "category": "Andreas (Other)",
+                "title": "Print available commands."
+            }
+        ]
     },
     "scripts": {
         "build": "vsce package",
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p .",
-        "lint": "eslint src",
+        "test": "eslint src && tsx src/meta-updater --test",
         "prettier": "prettier --write .",
+        "meta-updater": "tsx src/meta-updater",
         "watch": "tsc -watch -p ."
     },
     "extensionDependencies": [
@@ -51,6 +168,7 @@
         "glob": "^9.3.4",
         "mocha": "^10.2.0",
         "prettier": "^2.8.7",
+        "tsx": "^3.12.6",
         "typescript": "^5.0.3"
     }
 }
