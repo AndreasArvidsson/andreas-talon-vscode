@@ -8,9 +8,11 @@ In constant development. Things will break!
 
 ## Commands
 
+Many of the commands take arguments and return values that can only be used with the [Command server](https://marketplace.visualstudio.com/items?itemName=pokey.command-server)
+
 ### File commands
 
--   `andreas.getFileName(): string`  
+-   `andreas.getFilename(): string`  
     Get filename of active file.
 -   `andreas.copyFilename()`  
     Copy filename of active file to clipboard.
@@ -21,27 +23,27 @@ In constant development. Things will break!
 -   `andreas.renameFile(name?: string)`  
     Rename active file.
 -   `andreas.removeFile()`  
-    Remove/deletes the active file.
+    Remove/delete the active file.
 -   `andreas.moveFile()`  
     Move active file to new directory.
 
 ### Edit commands
 
 -   `andreas.generateRange(start: number = 1)`  
-    Generate numerical range starting from given number.
+    Generate numerical range. Starts from 1 by default
 -   `andreas.increment()`  
     Increment selected number.
 -   `andreas.decrement()`  
     Decrement selected number.
 
-### Navigation commands
+### Nav commands
 
 -   `andreas.openEditorAtIndex(index: number)`  
     Open editor/tab at given index. Negative indices are counted from the back.
 -   `andreas.selectTo(line: number)`  
-     Select from current location to specified line.
+    Select from current location to specified line.
 -   `andreas.lineMiddle()`  
-     Move curser to middle of the current line.
+    Move curser to middle of the current line.
 
 ### Git commands
 
@@ -62,12 +64,12 @@ In constant development. Things will break!
     Get selected text.
 -   `andreas.getClassName(): string`  
     Get class name. Useful for inserting constructors in C++/Java.
--   `andreas.getDictationContext(): string`  
+-   `andreas.getDictationContext(): {before: string, after: string}`  
     Get text before and after selection. Used for context sensitive dictation.
 -   `andreas.executeCommands(commands: string[])`  
     Sequentially execute multiple commands. Useful for keybindings.
 -   `andreas.printCommands()`  
-     Print available commands.
+    Print available commands.
 
 ## Talon language features
 

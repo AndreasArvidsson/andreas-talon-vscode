@@ -2,10 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 
 export function json<T>(callback: (content: T) => T) {
-    return (content: string) => {
+    return (content: string): string => {
         const jsonContent = JSON.parse(content) as T;
-        const jsonResult = callback(jsonContent);
-        return JSON.stringify(jsonResult, null, 4);
+        const jsonContentUpdated = callback(jsonContent);
+        return JSON.stringify(jsonContentUpdated, null, 4) + "\n";
     };
 }
 

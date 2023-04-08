@@ -2,7 +2,9 @@
 
 import { json, updater } from "./meta-updater";
 import { updatePackageJson } from "./updatePackageJson";
+import { updateReadme } from "./updateReadme";
 
 updater({
-    "package.json": json(updatePackageJson)
+    "package.json": json(updatePackageJson),
+    "README.md": updateReadme
 });
