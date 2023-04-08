@@ -3,7 +3,7 @@ import { API, GitExtension, Remote, Repository } from "../typings/git";
 
 let gitApi: API;
 
-export const init = (gitExtension: GitExtension): void => {
+export const gitInit = (gitExtension: GitExtension): void => {
     gitApi = gitExtension.getAPI(1);
 };
 
@@ -12,7 +12,7 @@ type Parameters = {
     useBranch: boolean;
 };
 
-export function getFileURL({ useSelection = false, useBranch = false }: Parameters): string {
+export function getGitFileURL({ useSelection = false, useBranch = false }: Parameters): string {
     const { document, selections } = getEditor();
     const filePath = getFilePath(document);
     const repository = getRepository(filePath);
@@ -34,19 +34,19 @@ export function getFileURL({ useSelection = false, useBranch = false }: Paramete
     return platform.getFileUrl(commitOrBranch, relativeFilePath, range);
 }
 
-export function getRepoURL(): string {
+export function getGitRepoURL(): string {
     return getPlatformHelper().getRepoUrl();
 }
 
-export function getIssuesURL(): string {
+export function getGitIssuesURL(): string {
     return getPlatformHelper().getIssuesUrl();
 }
 
-export function getNewIssueURL(): string {
+export function getGitNewIssueURL(): string {
     return getPlatformHelper().getNewIssueUrl();
 }
 
-export function getPullRequestsURL(): string {
+export function getGitPullRequestsURL(): string {
     return getPlatformHelper().getPullRequestsURL();
 }
 

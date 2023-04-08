@@ -3,11 +3,11 @@ import { ParseTreeExtension } from "../typings/parserTree";
 
 let parseTree: ParseTreeExtension;
 
-export function init(parseTreeExtension: ParseTreeExtension): void {
+export function classNameInit(parseTreeExtension: ParseTreeExtension): void {
     parseTree = parseTreeExtension;
 }
 
-export function get(): string | null {
+export function getClassName(): string | null {
     const editor = window.activeTextEditor;
     if (!editor) {
         return null;
