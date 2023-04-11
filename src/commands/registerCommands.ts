@@ -1,13 +1,14 @@
 import * as vscode from "vscode";
-import { CommandIds } from "./commands";
-import { moveFile, renameFile } from "../util/fileSystem";
 import { getFullCommand } from "../util/getFullCommand";
+import { CommandIds } from "./commands";
 import { executeCommands } from "./executeCommands";
 import { copyFilename } from "./files/copyFilename";
 import { duplicateFile } from "./files/duplicateFile";
 import { getFilename } from "./files/getFilename";
+import { moveFile } from "./files/moveFile";
 import { newFile } from "./files/newFile";
 import { removeFile } from "./files/removeFile";
+import { renameFile } from "./files/renameFile";
 import { generateRange } from "./generateRange";
 import { getClassName } from "./getClassName";
 import { getDictationContext } from "./getDictationContext";
