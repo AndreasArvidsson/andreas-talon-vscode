@@ -10,6 +10,7 @@ import {
 } from "vscode";
 import * as fileSystem from "../../util/fileSystem";
 import { getGitIgnore } from "../../util/gitIgnore";
+import { getDir, getFilename } from "../../util/fileSystem";
 
 interface FileQuickPickItem extends QuickPickItem {
     path: string;
@@ -27,8 +28,8 @@ export async function moveFile(): Promise<void> {
 
     const folder = await showFolderPicker(uri);
 
-    if (folder && folder !== path.dirname(uri.fsPath)) {
-        const filename = path.basename(uri.fsPath);
+    if (folder && folder !== getDir(uri)) {
+        const filename = getFilename(uri);
         const newPath = path.join(folder, filename);
         await fileSystem.moveFile(uri, Uri.file(newPath));
     }
@@ -96,7 +97,7 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
             resolve(undefined);
         });
 
-        void changeDirectory(path.dirname(uri.fsPath));
+        void changeDirectory(getDir(uri));
 
         quickPick.show();
     });

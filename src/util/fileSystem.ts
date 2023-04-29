@@ -1,9 +1,9 @@
-import * as fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 import { Uri, WorkspaceEdit, window, workspace } from "vscode";
 
 export async function createFile(uri: Uri): Promise<void> {
-    assertWritableFile(uri);
+    assertNonExistingFile(uri);
 
     const edit = new WorkspaceEdit();
     edit.createFile(uri);
@@ -15,7 +15,7 @@ export async function createFile(uri: Uri): Promise<void> {
 }
 
 export async function copyFile(source: Uri, destination: Uri): Promise<void> {
-    assertWritableFile(destination);
+    assertNonExistingFile(destination);
 
     try {
         await workspace.fs.copy(source, destination);
@@ -25,15 +25,21 @@ export async function copyFile(source: Uri, destination: Uri): Promise<void> {
     }
 }
 
-export async function renameFile(uri: Uri, filename: string): Promise<void> {
-    const dir = path.dirname(uri.fsPath);
+export function renameFile(uri: Uri, filename: string): void {
+    const dir = getDir(uri);
+    const originalFilename = getFilename(uri);
     const destination = Uri.file(path.join(dir, filename));
 
-    await moveFile(uri, destination);
+    // Don't assert that file doesn't exist for case change
+    if (originalFilename.toLocaleLowerCase() !== filename.toLocaleLowerCase()) {
+        assertNonExistingFile(destination);
+    }
+
+    fs.renameSync(uri.fsPath, destination.fsPath);
 }
 
 export async function moveFile(source: Uri, destination: Uri): Promise<void> {
-    assertWritableFile(destination);
+    assertNonExistingFile(destination);
 
     const edit = new WorkspaceEdit();
     edit.renameFile(source, destination);
@@ -59,9 +65,21 @@ export async function openTextDocument(uri: Uri): Promise<void> {
     await window.showTextDocument(document);
 }
 
-function assertWritableFile(uri: Uri) {
-    if (fs.existsSync(uri.fsPath)) {
-        const filename = path.basename(uri.fsPath);
+export function getFilename(uri: Uri): string {
+    return path.basename(fs.realpathSync.native(uri.fsPath));
+}
+
+export function getDir(uri: Uri): string {
+    return path.dirname(uri.fsPath);
+}
+
+function assertNonExistingFile(uri: Uri) {
+    if (fileExists(uri)) {
+        const filename = getFilename(uri);
         throw Error(`File '${filename}' already exists`);
     }
+}
+
+function fileExists(uri: Uri) {
+    return fs.existsSync(uri.fsPath);
 }

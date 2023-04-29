@@ -15,6 +15,6 @@ export async function renameFile(name?: string): Promise<void> {
     const filename = await showNewNameInputBox(suggestedName, suggestedExt);
 
     if (filename && filename !== context.filename) {
-        await fileSystem.renameFile(context.uri, filename);
+        fileSystem.renameFile(context.uri, filename);
     }
 }

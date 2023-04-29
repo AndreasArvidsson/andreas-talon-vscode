@@ -1,5 +1,5 @@
-import path from "node:path";
 import { TextEditor, Uri, window } from "vscode";
+import { getDir, getFilename } from "./fileSystem";
 
 interface SplitName {
     name: string;
@@ -24,12 +24,13 @@ export function getNewFilenameContext(inputName?: string): RenameContext | undef
 
     const uri = editor.document.uri;
     const selected = getSelectedText(editor);
+    const filename = getFilename(uri);
 
     return {
         uri,
-        dir: path.dirname(uri.fsPath),
-        filename: path.basename(uri.fsPath),
-        file: splitName(path.basename(uri.fsPath)),
+        dir: getDir(uri),
+        filename,
+        file: splitName(filename),
         input: inputName ? splitName(inputName) : undefined,
         selected: selected ? splitName(selected) : undefined
     };

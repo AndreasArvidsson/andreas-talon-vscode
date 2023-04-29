@@ -1,6 +1,6 @@
-import path from "node:path";
 import { window } from "vscode";
 import { deleteFile } from "../../util/fileSystem";
+import { getFilename } from "../../util/fileSystem";
 
 export async function removeFile(): Promise<void> {
     const editor = window.activeTextEditor;
@@ -10,7 +10,7 @@ export async function removeFile(): Promise<void> {
     }
 
     const uri = editor.document.uri;
-    const filename = path.basename(uri.fsPath);
+    const filename = getFilename(uri);
 
     const remove = await window.showInformationMessage(
         `Are you sure you want to remove '${filename}'?`,
