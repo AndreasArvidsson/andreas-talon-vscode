@@ -25,17 +25,25 @@ export async function copyFile(source: Uri, destination: Uri): Promise<void> {
     }
 }
 
-export function renameFile(uri: Uri, filename: string): void {
+export async function renameFile(uri: Uri, filename: string): Promise<void> {
     const dir = getDir(uri);
     const originalFilename = getFilename(uri);
     const destination = Uri.file(path.join(dir, filename));
 
-    // Don't assert that file doesn't exist for case change
-    if (originalFilename.toLocaleLowerCase() !== filename.toLocaleLowerCase()) {
-        assertNonExistingFile(destination);
+    // Special case for when just change case case of a filename
+    if (originalFilename.toLocaleLowerCase() === filename.toLocaleLowerCase()) {
+        fs.renameSync(uri.fsPath, destination.fsPath);
+        return;
     }
 
-    fs.renameSync(uri.fsPath, destination.fsPath);
+    assertNonExistingFile(destination);
+    const edit = new WorkspaceEdit();
+    edit.renameFile(uri, destination);
+    const result = await workspace.applyEdit(edit);
+
+    if (!result) {
+        throw new Error(`Failed to rename file: ${uri.fsPath}`);
+    }
 }
 
 export async function moveFile(source: Uri, destination: Uri): Promise<void> {
