@@ -3,12 +3,13 @@ import { getFullCommand } from "../util/getFullCommand";
 
 export function updateReadme(content: string): string {
     const header = "## Commands";
-    const indexStart = content.indexOf(header);
-    const indexEnd = content.indexOf("\n## ", indexStart + header.length);
+    const indexHeader = content.indexOf(header);
+    const indexStart = content.indexOf("\n### ", indexHeader + header.length);
+    const indexEnd = content.indexOf("\n## ", indexStart + 4);
     const pre = content.substring(0, indexStart);
     const post = content.substring(indexEnd);
 
-    const commands: string[] = [header];
+    const commands: string[] = [];
     let category = "";
 
     for (const [command, desc] of Object.entries(commandDescriptions)) {
