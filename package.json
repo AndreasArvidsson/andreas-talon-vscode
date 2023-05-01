@@ -23,6 +23,18 @@
         "onStartupFinished"
     ],
     "contributes": {
+        "languages": [
+            {
+                "id": "talon",
+                "aliases": [
+                    "TalonScript"
+                ],
+                "extensions": [
+                    ".talon",
+                    ".talon-list"
+                ]
+            }
+        ],
         "commands": [
             {
                 "command": "andreas.getFilename",
