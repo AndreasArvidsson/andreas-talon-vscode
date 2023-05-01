@@ -120,7 +120,7 @@ async function parseTalonListFile(
         return [];
     }
     const uri = Uri.file(absolutePath);
-    return parseTalonListMatches(uri, matches[0], fileContent);
+    return parseTalonListMatch(uri, matches[0], fileContent);
 }
 
 function parsePythonMatches(
@@ -158,7 +158,7 @@ function parsePythonMatches(
     });
 }
 
-function parseTalonListMatches(
+function parseTalonListMatch(
     uri: Uri,
     match: RegExpMatchArray,
     fileContent: string
