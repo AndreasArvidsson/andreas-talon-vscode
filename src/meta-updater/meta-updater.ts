@@ -72,11 +72,11 @@ function getWorkspaceDir(): string {
 }
 
 function readFile(file: string): string {
-    return fs.readFileSync(file, { encoding: "utf8" });
+    return fs.readFileSync(file, "utf8");
 }
 
 function writeFile(file: string, data: string) {
-    fs.writeFileSync(file, data, { encoding: "utf8" });
+    fs.writeFileSync(file, data, "utf8");
 }
 
 function isTest() {
