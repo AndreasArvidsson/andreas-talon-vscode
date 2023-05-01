@@ -11,8 +11,9 @@ import {
 } from "vscode";
 import { getPythonMatchAtPosition, getTalonMatchAtPosition } from "./language/matchers";
 import { searchInWorkspace } from "./language/searchInWorkspace";
+import { getFilename } from "./util/fileSystem";
 
-export async function provideDefinitionTalon(
+async function provideDefinitionTalon(
     document: TextDocument,
     position: Position,
     _token: CancellationToken
@@ -30,7 +31,7 @@ export async function provideDefinitionTalon(
     return searchInWorkspace(workspaceFolder, match);
 }
 
-export async function provideDefinitionPython(
+async function provideDefinitionPython(
     document: TextDocument,
     position: Position,
     _token: CancellationToken
@@ -48,13 +49,33 @@ export async function provideDefinitionPython(
     return searchInWorkspace(workspaceFolder, match);
 }
 
-function provideHoverTalon(
+async function provideHoverTalon(
     document: TextDocument,
     position: Position,
     _token: CancellationToken
-): Hover {
-    const ms = new MarkdownString("value2");
-    return new Hover("stuff");
+): Promise<Hover | undefined> {
+    const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
+    if (!workspaceFolder) {
+        return undefined;
+    }
+
+    const match = getTalonMatchAtPosition(document, position);
+    if (!match) {
+        return undefined;
+    }
+
+    const result = await searchInWorkspace(workspaceFolder, match);
+    if (!result.length) {
+        return undefined;
+    }
+
+    const value = result.map((r) => {
+        const name = getFilename(r.targetUri);
+        const link = `[${name}](${r.targetUri.path}#${r.targetRange.start.line + 1})`;
+        return new MarkdownString().appendMarkdown(link).appendCodeblock(r.targetText, r.language);
+    });
+
+    return new Hover(value);
 }
 
 export function registerLanguageDefinitions(): Disposable {

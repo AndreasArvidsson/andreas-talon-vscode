@@ -1,9 +1,11 @@
 import { Position, TextDocument } from "vscode";
 import { ANY, NS } from "./RegexUtils";
 
+export type TalonMatchType = "action" | "capture" | "list";
+
 export interface TalonMatch {
     text: string;
-    type: "action" | "capture" | "list";
+    type: TalonMatchType;
 }
 
 export function getTalonMatchAtPosition(
