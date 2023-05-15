@@ -18,7 +18,7 @@ export function getClassName(): string | null {
         const location = new Location(editor.document.uri, pos);
         let node = parseTree.getNodeAtLocation(location);
         while (node.parent != null) {
-            if (node.type === "class_declaration") {
+            if (node.type === "class_declaration" || node.type === "enum_declaration") {
                 return node.childForFieldName("name")?.text ?? null;
             }
             node = node.parent;
