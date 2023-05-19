@@ -114,6 +114,18 @@ export const commandDescriptions = {
         "Used for context sensitive dictation.",
         "(): {before: string, after: string}"
     ),
+    getSetting: hidden(
+        "Other",
+        "Get setting from vscode",
+        undefined,
+        "(section: string, defaultValue?: T): T | undefined"
+    ),
+    setSetting: hidden(
+        "Other",
+        "Set setting for vscode",
+        undefined,
+        "(section: string, value: any)"
+    ),
     executeCommands: hidden(
         "Other",
         "Sequentially execute multiple commands.",

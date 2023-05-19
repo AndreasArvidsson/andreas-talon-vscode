@@ -25,6 +25,7 @@ import { lineMiddle } from "./lineMiddle";
 import { openEditorAtIndex } from "./openEditorAtIndex";
 import { printCommands } from "./printCommands";
 import { selectTo } from "./selectTo";
+import { getSetting, setSetting } from "./settings";
 
 type Callback = (...args: any[]) => any;
 
@@ -56,6 +57,8 @@ export function registerCommands(): vscode.Disposable[] {
         getSelectedText,
         getClassName,
         getDictationContext,
+        getSetting,
+        setSetting,
         executeCommands,
         printCommands
     };

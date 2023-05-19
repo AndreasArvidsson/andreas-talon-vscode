@@ -66,6 +66,10 @@ Many of the commands take arguments and return values that can only be used with
     Get class name. Useful for inserting constructors in C++/Java.
 -   `andreas.getDictationContext(): {before: string, after: string}`  
     Get text before and after selection. Used for context sensitive dictation.
+-   `andreas.getSetting(section: string, defaultValue?: T): T | undefined`  
+    Get setting from vscode
+-   `andreas.setSetting(section: string, value: any)`  
+    Set setting for vscode
 -   `andreas.executeCommands(commands: string[])`  
     Sequentially execute multiple commands. Useful for keybindings.
 -   `andreas.printCommands()`  

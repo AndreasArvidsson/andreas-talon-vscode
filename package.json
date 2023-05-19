@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.10.1",
+    "version": "3.11.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -140,6 +140,16 @@
                 "command": "andreas.getDictationContext",
                 "category": "Andreas (Other)",
                 "title": "Get text before and after selection."
+            },
+            {
+                "command": "andreas.getSetting",
+                "category": "Andreas (Other)",
+                "title": "Get setting from vscode"
+            },
+            {
+                "command": "andreas.setSetting",
+                "category": "Andreas (Other)",
+                "title": "Set setting for vscode"
             },
             {
                 "command": "andreas.executeCommands",
