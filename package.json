@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.11.0",
+    "version": "3.12.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -27,10 +27,18 @@
             {
                 "id": "talon",
                 "aliases": [
-                    "TalonScript"
+                    "Talon"
                 ],
                 "extensions": [
-                    ".talon",
+                    ".talon"
+                ]
+            },
+            {
+                "id": "talon-list",
+                "aliases": [
+                    "Talon list"
+                ],
+                "extensions": [
                     ".talon-list"
                 ]
             }
