@@ -8,5 +8,5 @@ export function getFilename(): string {
         throw Error("Can't get filename");
     }
 
-    return fsGetFilename(uri);
+    return uri.scheme === "file" ? fsGetFilename(uri) : uri.fsPath;
 }
