@@ -51,6 +51,18 @@ suite("increment / decrement", () => {
     });
 
     runTest({
+        title: "increment a1b2c",
+        command: "increment",
+        pre: {
+            content: "a1b2c",
+            selections: [0, 0, 0, 5]
+        },
+        post: {
+            content: "a2b3c"
+        }
+    });
+
+    runTest({
         title: "decrement 1",
         command: "decrement",
         pre: {
@@ -95,6 +107,18 @@ suite("increment / decrement", () => {
         },
         post: {
             content: "-0.6"
+        }
+    });
+
+    runTest({
+        title: "decrement a1b2c",
+        command: "decrement",
+        pre: {
+            content: "a1b2c",
+            selections: [0, 0, 0, 5]
+        },
+        post: {
+            content: "a0b1c"
         }
     });
 });
