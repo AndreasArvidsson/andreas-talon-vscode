@@ -9,7 +9,7 @@ async function update(increment: boolean) {
     await editor.edit((editBuilder) => {
         editor.selections.forEach((selection) => {
             const selectionText = editor.document.getText(selection);
-            const updatedText = selectionText.replace(/-*(\d+.\d+)|-*\d+/g, (text) => {
+            const updatedText = selectionText.replace(/-*\d+(\.\d+)*/g, (text) => {
                 const isFloat = text.includes(".");
                 let numb;
                 if (isFloat) {
