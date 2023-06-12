@@ -89,6 +89,10 @@ Many of the commands take arguments and return values that can only be used with
 }
 ```
 
+## Demo
+
+[YouTube - On hover and go to definition demo](https://youtu.be/UdMLNVLkBkg)
+
 ## Build
 
 ```bash
