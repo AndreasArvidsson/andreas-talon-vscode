@@ -31,6 +31,10 @@
     "keywords": [
         "Voice coding"
     ],
+    "galleryBanner": {
+        "color": "#00001A",
+        "theme": "dark"
+    },
     "contributes": {
         "languages": [
             {
