@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 import { registerCommands } from "./commands/registerCommands";
-import { registerLanguageDefinitions } from "./registerLanguageDefinitions";
-import { registerLanguageFormatter } from "./registerLanguageFormatter";
+import { registerLanguageCodeActions } from "./language/registerLanguageCodeActions";
+import { registerLanguageDefinitions } from "./language/registerLanguageDefinitions";
+import { registerLanguageFormatter } from "./language/registerLanguageFormatter";
 import { getGitExtension, getParseTreeExtension } from "./util/getExtension";
 
 export const activate = async (context: vscode.ExtensionContext): Promise<void> => {
@@ -11,6 +12,7 @@ export const activate = async (context: vscode.ExtensionContext): Promise<void> 
     context.subscriptions.push(
         ...registerCommands(parseTreeExtension, gitExtension),
         registerLanguageDefinitions(),
+        registerLanguageCodeActions(parseTreeExtension),
         registerLanguageFormatter()
     );
 };
