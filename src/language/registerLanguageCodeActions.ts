@@ -24,9 +24,9 @@ abstract class ProviderCodeActions implements CodeActionProvider {
         range: Range,
         context: CodeActionContext,
         _token: CancellationToken
-    ): CodeAction[] | undefined {
+    ): CodeAction[] {
         if (context.triggerKind === CodeActionTriggerKind.Automatic) {
-            return undefined;
+            return [];
         }
 
         const commentAction = this.getCommentEdit(document, range);
@@ -35,7 +35,7 @@ abstract class ProviderCodeActions implements CodeActionProvider {
             return [commentAction];
         }
 
-        return undefined;
+        return [];
     }
 
     protected getNodes(document: TextDocument, range: Range) {
