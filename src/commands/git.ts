@@ -1,60 +1,76 @@
 import { Range, TextDocument, TextEditor, window } from "vscode";
 import { API, GitExtension, Remote, Repository } from "../typings/git";
 
-let gitApi: API;
-
-export const gitInit = (gitExtension: GitExtension): void => {
-    gitApi = gitExtension.getAPI(1);
-};
-
-type Parameters = {
+export type GitParameters = {
     useSelection: boolean;
     useBranch: boolean;
 };
 
-export function getGitFileURL({ useSelection = false, useBranch = false }: Parameters): string {
-    const { document, selections } = getEditor();
-    const filePath = getFilePath(document);
-    const repository = getRepository(filePath);
-    const platform = getPlatform(repository);
-    const relativeFilePath = getRelativeFilepath(repository, filePath);
-    const range = useSelection ? selections[0] : undefined;
-    const commitOrBranch = useBranch ? getBranch(repository) : getCommit(repository);
+export class Git {
+    private gitApi: API;
 
-    // If we're going to use the commit sha there can't be any changes
-    if (!useBranch) {
-        validateUnchangedDocument(document, repository);
+    constructor(gitExtension: GitExtension) {
+        this.gitApi = gitExtension.getAPI(1);
     }
 
-    // We can only do your URL to a single range of lines
-    if (useSelection && selections.length > 1) {
-        throw Error("Can't get Git file URL with multiple selections");
+    getGitFileURL({ useSelection = false, useBranch = false }: GitParameters): string {
+        const { document, selections } = getEditor();
+        const filePath = getFilePath(document);
+        const repository = this.getRepository(filePath);
+        const platform = getPlatform(repository);
+        const relativeFilePath = getRelativeFilepath(repository, filePath);
+        const range = useSelection ? selections[0] : undefined;
+        const commitOrBranch = useBranch ? getBranch(repository) : getCommit(repository);
+
+        // If we're going to use the commit sha there can't be any changes
+        if (!useBranch) {
+            validateUnchangedDocument(document, repository);
+        }
+
+        // We can only do your URL to a single range of lines
+        if (useSelection && selections.length > 1) {
+            throw Error("Can't get Git file URL with multiple selections");
+        }
+
+        return platform.getFileUrl(commitOrBranch, relativeFilePath, range);
     }
 
-    return platform.getFileUrl(commitOrBranch, relativeFilePath, range);
-}
+    getGitRepoURL(): string {
+        return this.getPlatformHelper().getRepoUrl();
+    }
 
-export function getGitRepoURL(): string {
-    return getPlatformHelper().getRepoUrl();
-}
+    getGitIssuesURL(): string {
+        return this.getPlatformHelper().getIssuesUrl();
+    }
 
-export function getGitIssuesURL(): string {
-    return getPlatformHelper().getIssuesUrl();
-}
+    getGitNewIssueURL(): string {
+        return this.getPlatformHelper().getNewIssueUrl();
+    }
 
-export function getGitNewIssueURL(): string {
-    return getPlatformHelper().getNewIssueUrl();
-}
+    getGitPullRequestsURL(): string {
+        return this.getPlatformHelper().getPullRequestsURL();
+    }
 
-export function getGitPullRequestsURL(): string {
-    return getPlatformHelper().getPullRequestsURL();
-}
+    private getPlatformHelper(): Platform {
+        const { document } = getEditor();
+        const filePath = getFilePath(document);
+        const repository = this.getRepository(filePath);
+        return getPlatform(repository);
+    }
 
-function getPlatformHelper(): Platform {
-    const { document } = getEditor();
-    const filePath = getFilePath(document);
-    const repository = getRepository(filePath);
-    return getPlatform(repository);
+    private getRepository(filePath: string): Repository {
+        const { repositories } = this.gitApi;
+        if (repositories.length === 1) {
+            return repositories[0];
+        }
+        const repository = repositories.find((r) =>
+            filePath.toLowerCase().startsWith(r.rootUri.path.toLowerCase())
+        );
+        if (!repository) {
+            throw Error("Can't find Git repository");
+        }
+        return repository;
+    }
 }
 
 function getRelativeFilepath(repository: Repository, filePath: string) {
@@ -94,20 +110,6 @@ function validateUnchangedDocument(document: TextDocument, repository: Repositor
     if (hasGitChange) {
         throw Error("Document contains uncommitted Git changes");
     }
-}
-
-function getRepository(filePath: string): Repository {
-    const { repositories } = gitApi;
-    if (repositories.length === 1) {
-        return repositories[0];
-    }
-    const repository = repositories.find((r) =>
-        filePath.toLowerCase().startsWith(r.rootUri.path.toLowerCase())
-    );
-    if (!repository) {
-        throw Error("Can't find Git repository");
-    }
-    return repository;
 }
 
 function getRemote(repository: Repository): Remote {
