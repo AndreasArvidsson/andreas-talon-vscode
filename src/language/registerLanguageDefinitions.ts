@@ -9,9 +9,9 @@ import {
     TextDocument,
     workspace
 } from "vscode";
-import { getPythonMatchAtPosition, getTalonMatchAtPosition } from "./language/matchers";
-import { searchInWorkspace } from "./language/searchInWorkspace";
-import { getFilename } from "./util/fileSystem";
+import { getFilename } from "../util/fileSystem";
+import { getPythonMatchAtPosition, getTalonMatchAtPosition } from "./matchers";
+import { searchInWorkspace } from "./searchInWorkspace";
 
 async function provideDefinitionTalon(
     document: TextDocument,
@@ -80,14 +80,12 @@ async function provideHoverTalon(
 
 export function registerLanguageDefinitions(): Disposable {
     return Disposable.from(
-        languages.registerDefinitionProvider(
-            { language: "talon" },
-            { provideDefinition: provideDefinitionTalon }
-        ),
-        languages.registerDefinitionProvider(
-            { language: "python" },
-            { provideDefinition: provideDefinitionPython }
-        ),
-        languages.registerHoverProvider({ language: "talon" }, { provideHover: provideHoverTalon })
+        languages.registerDefinitionProvider("talon", {
+            provideDefinition: provideDefinitionTalon
+        }),
+        languages.registerDefinitionProvider("python", {
+            provideDefinition: provideDefinitionPython
+        }),
+        languages.registerHoverProvider("talon", { provideHover: provideHoverTalon })
     );
 }
