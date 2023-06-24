@@ -10,6 +10,10 @@
         "type": "git",
         "url": "https://github.com/AndreasArvidsson/andreas-vscode"
     },
+    "sponsor": {
+        "url": "https://github.com/sponsors/AndreasArvidsson"
+    },
+    "funding": "https://github.com/sponsors/AndreasArvidsson",
     "engines": {
         "vscode": "^1.68.0"
     },
