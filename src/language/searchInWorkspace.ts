@@ -119,7 +119,7 @@ async function parsePythonFile(absolutePath: string): Promise<SearchResult[]> {
         /^([ \t]+def\s*)([\w\d]+)\s*\([\s\S]*?\)\s*(?:->\s*\w+)?:(\s+"{3}[\s\S]+?"{3})?/gm;
     // @ ID .capture ( ANY ) WS def NAME ( ANY ) -> TYPE :
     const captureRegex =
-        /^@\w+\.capture\([\s\S]*?\)\s+(def\s+)([\w\d]+)\s*\([\s\S]*?\)\s*(->)?\s*(?:->\s*\w+):/gm;
+        /^(@\w+\.capture\([\s\S]*?\)\s+def\s+)([\w\d]+)\s*\([\s\S]*?\)\s*(->)?\s*(?:->\s*\w+):/gm;
     // ID .lists [ NAME ] WS = WS ([...]|{...}|[\w.()])
     const listRegex =
         /(\w+\.lists\[")([\w.]+)"\]\s*=\s*(?:(?:\{[\s\S]*?\})|(?:\[[\s\S]*?\])|[\w.()]+)/gm;
@@ -199,14 +199,19 @@ function parsePythonMatches(
             (matchLines.length === 1 ? indentationLength : 0) +
                 matchLines[matchLines.length - 1].length
         );
+
         // This is just the function name
+        const nameOffsetLines = match[1].split("\n");
+        const nameOffsetRow = nameOffsetLines.length - 1;
+        const nameOffsetCol = nameOffsetLines[nameOffsetLines.length - 1].length;
         const targetSelectionRange = new Range(
-            line,
-            indentationLength + match[1].length,
-            line,
-            indentationLength + match[1].length + match[2].length
+            line + nameOffsetRow,
+            indentationLength + nameOffsetCol,
+            line + nameOffsetRow,
+            indentationLength + nameOffsetCol + match[2].length
         );
 
+        // Format name and target text for display
         const name = match[2].replace(/^self\./, "user.");
         const fullName = ns ? `${ns}.${name}` : name;
         const indentation = match[0].match(/^\s+/)?.[0] ?? "";
