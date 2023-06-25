@@ -116,14 +116,17 @@ async function provideCompletionItemsTalon(
     }
 
     const searchResults = await searchInWorkspace(workspaceFolder, match);
+    const values = searchResults.map((r) => r.name);
 
-    return searchResults.map((r) => ({
-        label: r.name,
+    const range = new Range(
+        position.translate(undefined, -prefix.length),
+        position.translate(undefined, -prefix.length)
+    );
+
+    return Array.from(new Set(values)).map((v) => ({
         kind: CompletionItemKind.Value,
-        range: new Range(
-            position.translate(undefined, -prefix.length),
-            position.translate(undefined, -prefix.length)
-        )
+        label: v,
+        range
     }));
 }
 

@@ -26,14 +26,14 @@ export function getTalonMatchAtPosition(
 
     const [name, shortName] = names;
     const lineText = document.lineAt(position).text;
-    const actionRegex = new RegExp(`${NS}${shortName}\\(${ANY}\\)`, "g");
+    const actionRegex = new RegExp(`${name}\\(${ANY}\\)`, "g");
     const captureRegex = new RegExp(`<${NS}${shortName}>`, "g");
     const listRegex = new RegExp(`{${NS}${name}}`, "g");
 
     if (testWordAtPosition(position, lineText, actionRegex)) {
         return {
             type: "action",
-            name: shortName
+            name: name
         };
     }
 

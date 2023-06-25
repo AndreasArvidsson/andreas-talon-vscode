@@ -11,6 +11,11 @@ export interface SearchResult extends DefinitionLink {
     type: TalonMatchType;
 }
 
+interface Namespace {
+    name: string;
+    line: number;
+}
+
 type GitIgnore = (path: string) => boolean;
 
 export async function searchInWorkspace(
@@ -106,33 +111,51 @@ async function searchInPath(
 
 async function parsePythonFile(absolutePath: string): Promise<SearchResult[]> {
     const fileContent = await fs.readFile(absolutePath, "utf-8");
+
+    // @ ID .action_class (" \w ")
+    const classRegex = /^@[\w\d]+\.action_class(?:\("(\w+)"\))?/gm;
     // INDENT def WS NAME WS ( ANY ) -> TYPE :
-    const actionRegex = /^([ \t]+def\s*)(\w+)\s*\([\s\S]*?\)\s*(?:->\s*\w+)?:/gm;
+    const actionRegex =
+        /^([ \t]+def\s*)([\w\d]+)\s*\([\s\S]*?\)\s*(?:->\s*\w+)?:(\s+"{3}[\s\S]+?"{3})?/gm;
     // @ ID .capture ( ANY ) WS def NAME ( ANY ) -> TYPE :
     const captureRegex =
-        // /^@\w+\.capture\([\s\S]*?\)\s+def\s+(\w+)\s*\([\s\S]*?\)\s*(->)?\s*(?:->\s*\w+):/gm;
-        /^@\w+\.capture\([\s\S]*?\)\s+(def\s+)(\w+)\s*\([\s\S]*?\)\s*(->)?\s*(?:->\s*\w+):/gm;
+        /^@\w+\.capture\([\s\S]*?\)\s+(def\s+)([\w\d]+)\s*\([\s\S]*?\)\s*(->)?\s*(?:->\s*\w+):/gm;
     // ID .lists [ NAME ] WS = WS ([...]|{...}|[\w.()])
-    const listRegex = /(\w+\.lists)\["([\w.]+)"\]\s*=\s*((\{[\s\S]*?\})|(\[[\s\S]*?\])|[\w.()]+)/gm;
+    const listRegex =
+        /(\w+\.lists\[")([\w.]+)"\]\s*=\s*(?:(?:\{[\s\S]*?\})|(?:\[[\s\S]*?\])|[\w.()]+)/gm;
+
+    const uri = Uri.file(absolutePath);
+    const namespaces = getTalonNamespacesFromPython(classRegex, fileContent);
+
     return [
-        ...parsePythonFileInner(actionRegex, absolutePath, fileContent, "action"),
-        ...parsePythonFileInner(captureRegex, absolutePath, fileContent, "capture"),
-        ...parsePythonFileInner(listRegex, absolutePath, fileContent, "list")
+        ...parsePythonFileInner(uri, fileContent, "action", actionRegex, namespaces),
+        ...parsePythonFileInner(uri, fileContent, "capture", captureRegex),
+        ...parsePythonFileInner(uri, fileContent, "list", listRegex)
     ];
 }
 
+function getTalonNamespacesFromPython(regex: RegExp, fileContent: string): Namespace[] {
+    const matches = Array.from(fileContent.matchAll(regex));
+    return matches
+        .map((m) => ({
+            name: m[1] ?? "user",
+            line: fileContent.slice(0, m.index ?? 0).split("\n").length - 1
+        }))
+        .sort((a, b) => a.line - b.line);
+}
+
 function parsePythonFileInner(
-    regex: RegExp,
-    absolutePath: string,
+    uri: Uri,
     fileContent: string,
-    type: TalonMatchType
+    type: TalonMatchType,
+    regex: RegExp,
+    namespaces?: Namespace[]
 ): SearchResult[] {
     const matches = Array.from(fileContent.matchAll(regex));
     if (!matches.length) {
         return [];
     }
-    const uri = Uri.file(absolutePath);
-    return parsePythonMatches(uri, matches, fileContent, type);
+    return parsePythonMatches(uri, fileContent, matches, type, namespaces);
 }
 
 async function parseTalonListFile(absolutePath: string): Promise<SearchResult[]> {
@@ -144,20 +167,30 @@ async function parseTalonListFile(absolutePath: string): Promise<SearchResult[]>
         return [];
     }
     const uri = Uri.file(absolutePath);
-    return parseTalonListMatch(uri, matches[0], fileContent);
+    return parseTalonListMatch(uri, fileContent, matches[0]);
 }
 
 function parsePythonMatches(
     uri: Uri,
-    matches: RegExpMatchArray[],
     fileContent: string,
-    type: TalonMatchType
+    matches: RegExpMatchArray[],
+    type: TalonMatchType,
+    namespaces?: Namespace[]
 ): SearchResult[] {
-    return matches.map((match) => {
+    const results: SearchResult[] = [];
+
+    matches.forEach((match) => {
         const leadingLines = fileContent.slice(0, match.index ?? 0).split("\n");
         const line = leadingLines.length - 1;
         const indentationLength = leadingLines[leadingLines.length - 1].length;
         const matchLines = match[0].split("\n");
+        const ns = namespaces ? getNamespace(namespaces, line) : "";
+
+        // This function does not belong to a Talon actions class
+        if (ns == null) {
+            return;
+        }
+
         // This is the entire function signature
         const targetRange = new Range(
             line,
@@ -173,22 +206,39 @@ function parsePythonMatches(
             line,
             indentationLength + match[1].length + match[2].length
         );
-        return {
+
+        const name = match[2].replace(/^self\./, "user.");
+        const fullName = ns ? `${ns}.${name}` : name;
+        results.push({
             type,
             language: "python",
             targetUri: uri,
             targetRange,
             targetSelectionRange,
             targetText: match[0],
-            name: match[2].replace(/^self\./, "user.")
-        };
+            name: fullName
+        });
     });
+
+    return results;
+}
+
+function getNamespace(namespaces: Namespace[], line: number): string | undefined {
+    let res = undefined;
+    for (const ns of namespaces) {
+        if (ns.line >= line) {
+            break;
+        }
+        // Actions in the main namespace is not prefixed
+        res = ns.name === "main" ? "" : ns.name;
+    }
+    return res;
 }
 
 function parseTalonListMatch(
     uri: Uri,
-    match: RegExpMatchArray,
-    fileContent: string
+    fileContent: string,
+    match: RegExpMatchArray
 ): SearchResult[] {
     const lines = fileContent.split("\n");
     const lastLineIndex = lines.length - 1;
