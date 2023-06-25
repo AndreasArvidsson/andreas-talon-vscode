@@ -209,13 +209,18 @@ function parsePythonMatches(
 
         const name = match[2].replace(/^self\./, "user.");
         const fullName = ns ? `${ns}.${name}` : name;
+        const indentation = match[0].match(/^\s+/)?.[0] ?? "";
+        const targetText = indentation
+            ? match[0].replace(new RegExp(`^${indentation}`, "gm"), "")
+            : match[0];
+
         results.push({
             type,
             language: "python",
             targetUri: uri,
             targetRange,
             targetSelectionRange,
-            targetText: match[0],
+            targetText,
             name: fullName
         });
     });
