@@ -13,6 +13,7 @@ import {
     workspace
 } from "vscode";
 import { getFilename } from "../util/fileSystem";
+import { getDefaultActions } from "./defaultActions";
 import { getPythonMatchAtPosition, getTalonMatchAtPosition, TalonMatch } from "./matchers";
 import { searchInWorkspace } from "./searchInWorkspace";
 
@@ -67,18 +68,21 @@ async function provideHoverTalon(
         return undefined;
     }
 
-    const result = await searchInWorkspace(workspaceFolder, match);
-    if (!result.length) {
-        return undefined;
-    }
+    const workspaceResults = await searchInWorkspace(workspaceFolder, match);
 
-    const value = result.map((r) => {
+    const defaultStrings = getDefaultActions(match).map((a) => {
+        return new MarkdownString()
+            .appendMarkdown(a.path)
+            .appendCodeblock(a.targetText, a.language);
+    });
+
+    const userStrings = workspaceResults.map((r) => {
         const name = getFilename(r.targetUri);
         const link = `[${name}](${r.targetUri.path}#${r.targetRange.start.line + 1})`;
         return new MarkdownString().appendMarkdown(link).appendCodeblock(r.targetText, r.language);
     });
 
-    return new Hover(value);
+    return new Hover([...defaultStrings, ...userStrings]);
 }
 
 async function provideCompletionItemsTalon(
