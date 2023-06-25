@@ -119,18 +119,22 @@ async function provideCompletionItemsTalon(
         return [];
     }
 
-    const searchResults = await searchInWorkspace(workspaceFolder, match);
-    const values = searchResults.map((r) => r.name);
+    const defaultValues = getDefaultActions(match).map((a) => a.name);
+    const workspaceResults = await searchInWorkspace(workspaceFolder, match);
+    const workspaceValues = workspaceResults.map((r) => r.name);
+    const values = defaultValues.concat(workspaceValues);
 
     const range = new Range(
         position.translate(undefined, -prefix.length),
         position.translate(undefined, -prefix.length)
     );
 
-    return Array.from(new Set(values)).map((v) => ({
-        kind: CompletionItemKind.Value,
-        label: v,
-        range
+    const kind = match.type === "action" ? CompletionItemKind.Function : CompletionItemKind.Value;
+
+    return Array.from(new Set(values)).map((label) => ({
+        kind,
+        range,
+        label
     }));
 }
 

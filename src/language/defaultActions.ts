@@ -476,11 +476,11 @@ interface ActionDesc {
 }
 
 const actionsList: ActionDesc[] = Array.from(
-    rawActionsList.matchAll(/^(([\w\d.]+)\([\s\S]*?\)[\s\S]*?)\n([ ]+[\s\S]+?\n)+/gm)
+    rawActionsList.matchAll(/^(([\w\d.]+)\([\s\S]*?\)[\s\S]*?)\n(?:[ ]+[\s\S]+?\n)+/gm)
 ).map((r) => {
     const signature = r[1].replace(/^\w+\./, "");
     const name = r[2];
-    let docstr = r[3];
+    let docstr = r[0].substring(r[1].length + 1);
     const indent = docstr.match(/^[ ]+/)?.[0] ?? "";
     docstr = docstr.replace(new RegExp(`^${indent}`, "gm"), "").trimEnd();
     const targetText = `def ${signature}:\n    """${docstr}"""`;
