@@ -2,84 +2,61 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { DefinitionLink, Range, Uri, WorkspaceFolder } from "vscode";
 import { getGitIgnore } from "../util/gitIgnore";
-import { ANY, NS, WS } from "./RegexUtils";
 import { TalonMatch, TalonMatchType } from "./matchers";
-
-interface SearchScope {
-    pythonRegex: RegExp;
-    listRegex?: RegExp;
-    gitIgnore: (path: string) => boolean;
-}
 
 export interface SearchResult extends DefinitionLink {
     targetText: string;
+    name: string;
     language: string;
+    type: TalonMatchType;
 }
+
+type GitIgnore = (path: string) => boolean;
 
 export async function searchInWorkspace(
     workspace: WorkspaceFolder,
-    talonMatch: TalonMatch
+    match: TalonMatch
 ): Promise<SearchResult[]> {
-    const workspacePath = workspace.uri.fsPath;
-    const { text, type } = talonMatch;
-    const scope: SearchScope = {
-        ...getRegexForMatch(type, text),
-        gitIgnore: getGitIgnore(workspacePath)
-    };
-    return searchInDirectory(scope, workspacePath, "");
-}
-
-function getRegexForMatch(type: TalonMatchType, text: string) {
-    switch (type) {
-        case "action":
-        case "capture":
-            return {
-                pythonRegex: new RegExp(`(def${WS})(${text})${WS}\\(${ANY}\\)${ANY}:`, "g")
-            };
-        case "list": {
-            const assign = `(${WS}=${WS}({${ANY}}|[${ANY}]|\\w+))`;
-            return {
-                pythonRegex: new RegExp(`(\\w+\\.lists\\["${NS})(${text})"\\]${assign}`, "g"),
-                listRegex: new RegExp(`^(list:${WS}${NS})(${text})`, "g")
-            };
+    const results = await searchInWorkspaceInner(workspace);
+    const resultsForType = (() => {
+        switch (match.type) {
+            case "action":
+                return results.actions;
+            case "capture":
+                return results.captures;
+            case "list":
+                return results.lists;
         }
+    })();
+    if ("name" in match) {
+        return resultsForType.filter((r) => r.name === match.name);
     }
+    return resultsForType.filter((r) => r.name.startsWith(match.prefix));
 }
 
-async function searchInPath(
-    searchScope: SearchScope,
-    absolutePath: string,
-    relativePath: string,
-    filename: string
-): Promise<SearchResult[]> {
-    // Filenames starting with `.` are ignored by Talon.
-    if (filename.startsWith(".") || searchScope.gitIgnore(relativePath)) {
-        return [];
-    }
-
-    // Python file. Parse for content.
-    if (relativePath.endsWith(".py")) {
-        return parsePythonFile(searchScope.pythonRegex, absolutePath);
-    }
-
-    // Talon list file. Parse for content.
-    if (relativePath.endsWith(".talon-list")) {
-        return parseTalonListFile(searchScope.listRegex, absolutePath);
-    }
-
-    // Files with unrelated file endings. Just ignore.
-    if (/\.\w+$/.test(relativePath)) {
-        return [];
-    }
-
-    const fileStats = await fs.stat(absolutePath);
-    return fileStats.isDirectory()
-        ? searchInDirectory(searchScope, absolutePath, relativePath)
-        : [];
+async function searchInWorkspaceInner(workspace: WorkspaceFolder) {
+    const workspacePath = workspace.uri.fsPath;
+    const actions: SearchResult[] = [];
+    const captures: SearchResult[] = [];
+    const lists: SearchResult[] = [];
+    const results = await searchInDirectory(getGitIgnore(workspacePath), workspacePath, "");
+    results.forEach((r) => {
+        switch (r.type) {
+            case "action":
+                actions.push(r);
+                break;
+            case "capture":
+                captures.push(r);
+                break;
+            case "list":
+                lists.push(r);
+        }
+    });
+    return { actions, captures, lists };
 }
 
 async function searchInDirectory(
-    searchScope: SearchScope,
+    gitIgnore: GitIgnore,
     absolutePath: string,
     relativePath: string
 ): Promise<SearchResult[]> {
@@ -87,7 +64,7 @@ async function searchInDirectory(
     const definitions = await Promise.all(
         files.map((filename) =>
             searchInPath(
-                searchScope,
+                gitIgnore,
                 path.join(absolutePath, filename),
                 path.join(relativePath, filename),
                 filename
@@ -97,23 +74,70 @@ async function searchInDirectory(
     return definitions.flat();
 }
 
-async function parsePythonFile(regex: RegExp, absolutePath: string): Promise<SearchResult[]> {
+async function searchInPath(
+    gitIgnore: GitIgnore,
+    absolutePath: string,
+    relativePath: string,
+    filename: string
+): Promise<SearchResult[]> {
+    // Filenames starting with `.` are ignored by Talon.
+    if (filename.startsWith(".") || gitIgnore(relativePath)) {
+        return [];
+    }
+
+    // Python file. Parse for content.
+    if (relativePath.endsWith(".py")) {
+        return parsePythonFile(absolutePath);
+    }
+
+    // Talon list file. Parse for content.
+    if (relativePath.endsWith(".talon-list")) {
+        return parseTalonListFile(absolutePath);
+    }
+
+    // Files with unrelated file endings. Just ignore.
+    if (/\.\w+$/.test(relativePath)) {
+        return [];
+    }
+
+    const fileStats = await fs.stat(absolutePath);
+    return fileStats.isDirectory() ? searchInDirectory(gitIgnore, absolutePath, relativePath) : [];
+}
+
+async function parsePythonFile(absolutePath: string): Promise<SearchResult[]> {
     const fileContent = await fs.readFile(absolutePath, "utf-8");
+    // INDENT def WS NAME WS ( ANY ) -> TYPE :
+    const actionRegex = /^([ \t]+def\s*)(\w+)\s*\([\s\S]*?\)\s*(?:->\s*\w+)?:/gm;
+    // @ ID .capture ( ANY ) WS def NAME ( ANY ) -> TYPE :
+    const captureRegex =
+        // /^@\w+\.capture\([\s\S]*?\)\s+def\s+(\w+)\s*\([\s\S]*?\)\s*(->)?\s*(?:->\s*\w+):/gm;
+        /^@\w+\.capture\([\s\S]*?\)\s+(def\s+)(\w+)\s*\([\s\S]*?\)\s*(->)?\s*(?:->\s*\w+):/gm;
+    // ID .lists [ NAME ] WS = WS ([...]|{...}|[\w.()])
+    const listRegex = /(\w+\.lists)\["([\w.]+)"\]\s*=\s*((\{[\s\S]*?\})|(\[[\s\S]*?\])|[\w.()]+)/gm;
+    return [
+        ...parsePythonFileInner(actionRegex, absolutePath, fileContent, "action"),
+        ...parsePythonFileInner(captureRegex, absolutePath, fileContent, "capture"),
+        ...parsePythonFileInner(listRegex, absolutePath, fileContent, "list")
+    ];
+}
+
+function parsePythonFileInner(
+    regex: RegExp,
+    absolutePath: string,
+    fileContent: string,
+    type: TalonMatchType
+): SearchResult[] {
     const matches = Array.from(fileContent.matchAll(regex));
     if (!matches.length) {
         return [];
     }
     const uri = Uri.file(absolutePath);
-    return parsePythonMatches(uri, matches, fileContent);
+    return parsePythonMatches(uri, matches, fileContent, type);
 }
 
-async function parseTalonListFile(
-    regex: RegExp | undefined,
-    absolutePath: string
-): Promise<SearchResult[]> {
-    if (regex == null) {
-        return [];
-    }
+async function parseTalonListFile(absolutePath: string): Promise<SearchResult[]> {
+    // list: WS NAME
+    const regex = /^(list:\s*)([\w.]+)/g;
     const fileContent = await fs.readFile(absolutePath, "utf-8");
     const matches = Array.from(fileContent.matchAll(regex));
     if (matches.length !== 1) {
@@ -126,7 +150,8 @@ async function parseTalonListFile(
 function parsePythonMatches(
     uri: Uri,
     matches: RegExpMatchArray[],
-    fileContent: string
+    fileContent: string,
+    type: TalonMatchType
 ): SearchResult[] {
     return matches.map((match) => {
         const leadingLines = fileContent.slice(0, match.index ?? 0).split("\n");
@@ -149,11 +174,13 @@ function parsePythonMatches(
             indentationLength + match[1].length + match[2].length
         );
         return {
+            type,
             language: "python",
             targetUri: uri,
             targetRange,
             targetSelectionRange,
-            targetText: match[0]
+            targetText: match[0],
+            name: match[2].replace(/^self\./, "user.")
         };
     });
 }
@@ -174,11 +201,13 @@ function parseTalonListMatch(
     );
     return [
         {
+            type: "list",
             language: "talon",
             targetUri: uri,
             targetRange,
             targetSelectionRange,
-            targetText: fileContent
+            targetText: fileContent,
+            name: match[2].replace(/^self\./, "user.")
         }
     ];
 }

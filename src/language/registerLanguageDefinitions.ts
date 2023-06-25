@@ -1,16 +1,19 @@
 import {
     CancellationToken,
+    CompletionItem,
+    CompletionItemKind,
     DefinitionLink,
     Disposable,
     Hover,
     languages,
     MarkdownString,
     Position,
+    Range,
     TextDocument,
     workspace
 } from "vscode";
 import { getFilename } from "../util/fileSystem";
-import { getPythonMatchAtPosition, getTalonMatchAtPosition } from "./matchers";
+import { getPythonMatchAtPosition, getTalonMatchAtPosition, TalonMatch } from "./matchers";
 import { searchInWorkspace } from "./searchInWorkspace";
 
 async function provideDefinitionTalon(
@@ -78,6 +81,52 @@ async function provideHoverTalon(
     return new Hover(value);
 }
 
+async function provideCompletionItemsTalon(
+    document: TextDocument,
+    position: Position
+): Promise<CompletionItem[]> {
+    const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
+    if (!workspaceFolder) {
+        return [];
+    }
+
+    const line = document.lineAt(position.line);
+    const text = line.text.substring(0, position.character);
+    const prefix = text.match(/[\w\d.]+$/)?.[0] ?? "";
+
+    const match = ((): TalonMatch | undefined => {
+        const isInScript = line.firstNonWhitespaceCharacterIndex !== 0 || text.includes(":");
+        // When in the script side of the command available values are the action names
+        if (isInScript) {
+            return { type: "action", prefix };
+        }
+        const prevChar = text.substring(0, text.length - prefix.length).trim();
+        // When in the rule side of the command available values are list and capture names
+        if (prevChar.endsWith("{")) {
+            return { type: "list", prefix };
+        }
+        if (prevChar.endsWith("<")) {
+            return { type: "capture", prefix };
+        }
+        return undefined;
+    })();
+
+    if (!match) {
+        return [];
+    }
+
+    const searchResults = await searchInWorkspace(workspaceFolder, match);
+
+    return searchResults.map((r) => ({
+        label: r.name,
+        kind: CompletionItemKind.Value,
+        range: new Range(
+            position.translate(undefined, -prefix.length),
+            position.translate(undefined, -prefix.length)
+        )
+    }));
+}
+
 export function registerLanguageDefinitions(): Disposable {
     return Disposable.from(
         languages.registerDefinitionProvider("talon", {
@@ -86,6 +135,11 @@ export function registerLanguageDefinitions(): Disposable {
         languages.registerDefinitionProvider("python", {
             provideDefinition: provideDefinitionPython
         }),
-        languages.registerHoverProvider("talon", { provideHover: provideHoverTalon })
+        languages.registerHoverProvider("talon", { provideHover: provideHoverTalon }),
+        languages.registerCompletionItemProvider(
+            "talon",
+            { provideCompletionItems: provideCompletionItemsTalon },
+            "."
+        )
     );
 }

@@ -78,8 +78,9 @@ Many of the commands take arguments and return values that can only be used with
 ## Talon language features
 
 -   Adds document formatter for Talon files.
--   Adds definitions for Talon actions, lists and captures.
+-   Adds (go to) definitions for Talon actions, lists and captures.
 -   Adds hover for Talon actions, lists and captures.
+-   Adds code completion for Talon actions, lists and captures.
 
 ### Disable formatting on save for Talon files
 
