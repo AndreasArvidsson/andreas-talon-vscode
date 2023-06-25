@@ -218,7 +218,7 @@ function parsePythonMatches(
         const ns = getNamespace ? getNamespace(line, match[0]) : "";
 
         // This function does not belong to a Talon actions class
-        if (ns == null) {
+        if (ns == null || match[2].startsWith("_")) {
             return;
         }
 

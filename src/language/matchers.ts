@@ -3,12 +3,12 @@ import { ANY } from "./RegexUtils";
 
 export type TalonMatchType = "action" | "capture" | "list";
 
-interface TalonMatchName {
+export interface TalonMatchName {
     type: TalonMatchType;
     name: string;
 }
 
-interface TalonMatchPrefix {
+export interface TalonMatchPrefix {
     type: TalonMatchType;
     prefix: string;
 }
@@ -18,7 +18,7 @@ export type TalonMatch = TalonMatchName | TalonMatchPrefix;
 export function getTalonMatchAtPosition(
     document: TextDocument,
     position: Position
-): TalonMatch | undefined {
+): TalonMatchName | undefined {
     const name = getNameAtPosition(document, position);
     if (!name) {
         return undefined;
@@ -56,7 +56,7 @@ export function getTalonMatchAtPosition(
 export function getPythonMatchAtPosition(
     document: TextDocument,
     position: Position
-): TalonMatch | undefined {
+): TalonMatchName | undefined {
     const name = getNameAtPosition(document, position);
     if (!name) {
         return undefined;
@@ -73,6 +73,51 @@ export function getPythonMatchAtPosition(
     }
 
     return undefined;
+}
+
+export function getTalonPrefixAtPosition(
+    document: TextDocument,
+    position: Position
+): TalonMatchPrefix | undefined {
+    const line = document.lineAt(position.line);
+    const text = line.text.substring(0, position.character);
+    const prefix = text.match(/[\w\d.]+$/)?.[0] ?? "";
+    const isInScript = line.firstNonWhitespaceCharacterIndex !== 0 || text.includes(":");
+
+    // When in the script side of the command available values are the action names
+    if (isInScript) {
+        return { type: "action", prefix };
+    }
+
+    const prevChar =
+        text
+            .substring(0, text.length - prefix.length)
+            .trim()
+            .at(-1) ?? "";
+
+    // When in the rule side of the command available values are list and capture names
+    if (prevChar === "{") {
+        return { type: "list", prefix };
+    }
+
+    if (prevChar === "<") {
+        return { type: "capture", prefix };
+    }
+
+    return undefined;
+}
+
+export function getPythonPrefixAtPosition(
+    document: TextDocument,
+    position: Position
+): TalonMatchPrefix | undefined {
+    const line = document.lineAt(position.line);
+    const text = line.text.substring(0, position.character);
+    const prefix = text.trimStart().match(/actions.[\w\d.]*$/)?.[0];
+    if (!prefix) {
+        return undefined;
+    }
+    return { type: "action", prefix: prefix.substring(8) };
 }
 
 function getNameAtPosition(document: TextDocument, position: Position): string | undefined {

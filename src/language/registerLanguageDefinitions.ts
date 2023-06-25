@@ -2,9 +2,12 @@ import {
     CancellationToken,
     CompletionItem,
     CompletionItemKind,
+    CompletionItemProvider,
     DefinitionLink,
+    DefinitionProvider,
     Disposable,
     Hover,
+    HoverProvider,
     languages,
     MarkdownString,
     Position,
@@ -13,149 +16,196 @@ import {
     workspace
 } from "vscode";
 import { getFilename } from "../util/fileSystem";
-import { getDefaultActions } from "./defaultActions";
-import { getPythonMatchAtPosition, getTalonMatchAtPosition, TalonMatch } from "./matchers";
+import { searchInDefaultActions } from "./defaultActions";
+import {
+    getPythonMatchAtPosition,
+    getPythonPrefixAtPosition,
+    getTalonMatchAtPosition,
+    getTalonPrefixAtPosition,
+    TalonMatchName,
+    TalonMatchPrefix
+} from "./matchers";
 import { searchInWorkspace } from "./searchInWorkspace";
 
-async function provideDefinitionTalon(
-    document: TextDocument,
-    position: Position,
-    _token: CancellationToken
-): Promise<DefinitionLink[]> {
-    const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
-    if (!workspaceFolder) {
-        return [];
+abstract class ProviderDefinition implements DefinitionProvider {
+    async provideDefinition(
+        document: TextDocument,
+        position: Position,
+        _token: CancellationToken
+    ): Promise<DefinitionLink[]> {
+        const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
+        if (!workspaceFolder) {
+            return [];
+        }
+
+        const match = getTalonMatchAtPosition(document, position);
+        if (!match) {
+            return [];
+        }
+
+        return searchInWorkspace(workspaceFolder, match);
     }
 
-    const match = getTalonMatchAtPosition(document, position);
-    if (!match) {
-        return [];
-    }
-
-    return searchInWorkspace(workspaceFolder, match);
+    protected abstract getMatchAtPosition(
+        document: TextDocument,
+        position: Position
+    ): TalonMatchName | undefined;
 }
 
-async function provideDefinitionPython(
-    document: TextDocument,
-    position: Position,
-    _token: CancellationToken
-): Promise<DefinitionLink[]> {
-    const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
-    if (!workspaceFolder) {
-        return [];
+class ProviderDefinitionTalon extends ProviderDefinition {
+    protected getMatchAtPosition(
+        document: TextDocument,
+        position: Position
+    ): TalonMatchName | undefined {
+        return getTalonMatchAtPosition(document, position);
     }
-
-    const match = getPythonMatchAtPosition(document, position);
-    if (!match) {
-        return [];
-    }
-
-    return searchInWorkspace(workspaceFolder, match);
 }
 
-async function provideHoverTalon(
-    document: TextDocument,
-    position: Position,
-    _token: CancellationToken
-): Promise<Hover | undefined> {
-    const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
-    if (!workspaceFolder) {
-        return undefined;
+class ProviderDefinitionPython extends ProviderDefinition {
+    protected getMatchAtPosition(
+        document: TextDocument,
+        position: Position
+    ): TalonMatchName | undefined {
+        return getPythonMatchAtPosition(document, position);
     }
-
-    const match = getTalonMatchAtPosition(document, position);
-    if (!match) {
-        return undefined;
-    }
-
-    const workspaceResults = await searchInWorkspace(workspaceFolder, match);
-
-    const defaultStrings = getDefaultActions(match).map((a) => {
-        return new MarkdownString()
-            .appendMarkdown(a.path)
-            .appendCodeblock(a.targetText, a.language);
-    });
-
-    const userStrings = workspaceResults.map((r) => {
-        const name = getFilename(r.targetUri);
-        const line = r.targetRange.start.line + 1;
-        const link = `[${name} #${line}](${r.targetUri.path}#${line})`;
-        return new MarkdownString().appendMarkdown(link).appendCodeblock(r.targetText, r.language);
-    });
-
-    return new Hover([...defaultStrings, ...userStrings]);
 }
 
-async function provideCompletionItemsTalon(
-    document: TextDocument,
-    position: Position
-): Promise<CompletionItem[]> {
-    const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
-    if (!workspaceFolder) {
-        return [];
+abstract class ProviderHover implements HoverProvider {
+    async provideHover(
+        document: TextDocument,
+        position: Position,
+        _token: CancellationToken
+    ): Promise<Hover | undefined> {
+        const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
+        if (!workspaceFolder) {
+            return undefined;
+        }
+
+        const match = this.getMatchAtPosition(document, position);
+        if (!match) {
+            return undefined;
+        }
+
+        const workspaceResults = await searchInWorkspace(workspaceFolder, match);
+
+        const defaultStrings = searchInDefaultActions(match).map((a) => {
+            return new MarkdownString()
+                .appendMarkdown(a.path)
+                .appendCodeblock(a.targetText, a.language);
+        });
+
+        const userStrings = workspaceResults.map((r) => {
+            const name = getFilename(r.targetUri);
+            const line = r.targetRange.start.line + 1;
+            const link = `[${name} #${line}](${r.targetUri.path}#${line})`;
+            return new MarkdownString()
+                .appendMarkdown(link)
+                .appendCodeblock(r.targetText, r.language);
+        });
+
+        return new Hover([...defaultStrings, ...userStrings]);
     }
 
-    const line = document.lineAt(position.line);
-    const text = line.text.substring(0, position.character);
-    const prefix = text.match(/[\w\d.]+$/)?.[0] ?? "";
+    protected abstract getMatchAtPosition(
+        document: TextDocument,
+        position: Position
+    ): TalonMatchName | undefined;
+}
 
-    const match = ((): TalonMatch | undefined => {
-        const isInScript = line.firstNonWhitespaceCharacterIndex !== 0 || text.includes(":");
-        // When in the script side of the command available values are the action names
-        if (isInScript) {
-            return { type: "action", prefix };
-        }
-        const prevChar =
-            text
-                .substring(0, text.length - prefix.length)
-                .trim()
-                .at(-1) ?? "";
-        // When in the rule side of the command available values are list and capture names
-        if (prevChar === "{") {
-            return { type: "list", prefix };
-        }
-        if (prevChar === "<") {
-            return { type: "capture", prefix };
-        }
-        return undefined;
-    })();
+class ProviderHoverTalon extends ProviderHover {
+    protected getMatchAtPosition(
+        document: TextDocument,
+        position: Position
+    ): TalonMatchName | undefined {
+        return getTalonMatchAtPosition(document, position);
+    }
+}
 
-    if (!match) {
-        return [];
+class ProviderHoverPython extends ProviderHover {
+    protected getMatchAtPosition(
+        document: TextDocument,
+        position: Position
+    ): TalonMatchName | undefined {
+        return getPythonMatchAtPosition(document, position);
+    }
+}
+
+abstract class ProviderCompletionItem implements CompletionItemProvider {
+    static readonly triggererCharacters = ["."];
+
+    async provideCompletionItems(
+        document: TextDocument,
+        position: Position
+    ): Promise<CompletionItem[]> {
+        const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
+        if (!workspaceFolder) {
+            return [];
+        }
+
+        const match = this.getPrefixAtPosition(document, position);
+        if (!match) {
+            return [];
+        }
+
+        const defaultValues = searchInDefaultActions(match).map((a) => a.name);
+        const workspaceResults = await searchInWorkspace(workspaceFolder, match);
+        const workspaceValues = workspaceResults.map((r) => r.name);
+        const values = defaultValues.concat(workspaceValues);
+
+        const range = new Range(
+            position.translate(undefined, -match.prefix.length),
+            position.translate(undefined, -match.prefix.length)
+        );
+
+        const kind =
+            match.type === "action" ? CompletionItemKind.Function : CompletionItemKind.Value;
+
+        return Array.from(new Set(values)).map((label) => ({
+            kind,
+            range,
+            label
+        }));
     }
 
-    const defaultValues = getDefaultActions(match).map((a) => a.name);
-    const workspaceResults = await searchInWorkspace(workspaceFolder, match);
-    const workspaceValues = workspaceResults.map((r) => r.name);
-    const values = defaultValues.concat(workspaceValues);
+    protected abstract getPrefixAtPosition(
+        document: TextDocument,
+        position: Position
+    ): TalonMatchPrefix | undefined;
+}
 
-    const range = new Range(
-        position.translate(undefined, -prefix.length),
-        position.translate(undefined, -prefix.length)
-    );
+class ProviderCompletionItemTalon extends ProviderCompletionItem {
+    protected getPrefixAtPosition(
+        document: TextDocument,
+        position: Position
+    ): TalonMatchPrefix | undefined {
+        return getTalonPrefixAtPosition(document, position);
+    }
+}
 
-    const kind = match.type === "action" ? CompletionItemKind.Function : CompletionItemKind.Value;
-
-    return Array.from(new Set(values)).map((label) => ({
-        kind,
-        range,
-        label
-    }));
+class ProviderCompletionItemPython extends ProviderCompletionItem {
+    protected getPrefixAtPosition(
+        document: TextDocument,
+        position: Position
+    ): TalonMatchPrefix | undefined {
+        return getPythonPrefixAtPosition(document, position);
+    }
 }
 
 export function registerLanguageDefinitions(): Disposable {
     return Disposable.from(
-        languages.registerDefinitionProvider("talon", {
-            provideDefinition: provideDefinitionTalon
-        }),
-        languages.registerDefinitionProvider("python", {
-            provideDefinition: provideDefinitionPython
-        }),
-        languages.registerHoverProvider("talon", { provideHover: provideHoverTalon }),
+        languages.registerDefinitionProvider("talon", new ProviderDefinitionTalon()),
+        languages.registerDefinitionProvider("python", new ProviderDefinitionPython()),
+        languages.registerHoverProvider("talon", new ProviderHoverTalon()),
+        languages.registerHoverProvider("python", new ProviderHoverPython()),
         languages.registerCompletionItemProvider(
             "talon",
-            { provideCompletionItems: provideCompletionItemsTalon },
-            "."
+            new ProviderCompletionItemTalon(),
+            ...ProviderCompletionItem.triggererCharacters
+        ),
+        languages.registerCompletionItemProvider(
+            "python",
+            new ProviderCompletionItemPython(),
+            ...ProviderCompletionItem.triggererCharacters
         )
     );
 }

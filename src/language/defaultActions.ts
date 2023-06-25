@@ -493,7 +493,7 @@ const actionsList: ActionDesc[] = Array.from(
     };
 });
 
-export function getDefaultActions(match: TalonMatch): ActionDesc[] {
+export function searchInDefaultActions(match: TalonMatch): ActionDesc[] {
     if (match.type !== "action") {
         return [];
     }
