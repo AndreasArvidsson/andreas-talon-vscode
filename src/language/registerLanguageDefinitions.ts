@@ -97,7 +97,11 @@ abstract class ProviderHover implements HoverProvider {
         const userStrings = workspaceResults.map((r) => {
             const name = getFilename(r.targetUri);
             const line = r.targetRange.start.line + 1;
-            const link = `[${name} #${line}](${r.targetUri.path}#${line})`;
+
+            const link =
+                line > 1
+                    ? `[${name} #${line}](${r.targetUri.path}#${line})`
+                    : `[${name}](${r.targetUri.path})`;
             return new MarkdownString()
                 .appendMarkdown(link)
                 .appendCodeblock(r.targetText, r.language);
