@@ -21,11 +21,9 @@ type GitIgnore = (path: string) => boolean;
 // @ ID .action_class (" \w ")
 const classRegex = /^@[\w\d]+\.action_class(?:\("(\w+)"\))?/gm;
 // INDENT def WS NAME WS ( ANY ) -> TYPE :
-const actionRegex =
-    /^([ \t]+def\s*)([\w\d]+)\s*\([\s\S]*?\)\s*(?:->\s*\w+)?:(\s+"{3}[\s\S]+?"{3})?/gm;
+const actionRegex = /^([ \t]+def\s+)([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:(\s+"{3}[\s\S]+?"{3})?/gm;
 // @ ID .capture ( ANY ) WS def NAME ( ANY ) -> TYPE :
-const captureRegex =
-    /^(@\w+\.capture\([\s\S]*?\)\s+def\s+)([\w\d]+)\s*\([\s\S]*?\)\s*(->)?\s*(?:->\s*\w+):/gm;
+const captureRegex = /^(@\w+\.capture\([\s\S]*?\)\s+def\s+)([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:/gm;
 // ID .lists [ NAME ] WS = WS ([...]|{...}|[\w.()])
 const listRegex =
     /(\w+\.lists\[")([\w.]+)"\]\s*=\s*(?:(?:\{[\s\S]*?\})|(?:\[[\s\S]*?\])|[\w.()]+)/gm;
