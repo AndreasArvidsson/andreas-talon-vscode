@@ -78,7 +78,8 @@ async function provideHoverTalon(
 
     const userStrings = workspaceResults.map((r) => {
         const name = getFilename(r.targetUri);
-        const link = `[${name}](${r.targetUri.path}#${r.targetRange.start.line + 1})`;
+        const line = r.targetRange.start.line + 1;
+        const link = `[${name} #${line}](${r.targetUri.path}#${line})`;
         return new MarkdownString().appendMarkdown(link).appendCodeblock(r.targetText, r.language);
     });
 
@@ -104,12 +105,16 @@ async function provideCompletionItemsTalon(
         if (isInScript) {
             return { type: "action", prefix };
         }
-        const prevChar = text.substring(0, text.length - prefix.length).trim();
+        const prevChar =
+            text
+                .substring(0, text.length - prefix.length)
+                .trim()
+                .at(-1) ?? "";
         // When in the rule side of the command available values are list and capture names
-        if (prevChar.endsWith("{")) {
+        if (prevChar === "{") {
             return { type: "list", prefix };
         }
-        if (prevChar.endsWith("<")) {
+        if (prevChar === "<") {
             return { type: "capture", prefix };
         }
         return undefined;

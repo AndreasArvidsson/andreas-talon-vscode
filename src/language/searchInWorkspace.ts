@@ -18,6 +18,8 @@ interface Namespace {
 
 type GitIgnore = (path: string) => boolean;
 
+type GetNamespace = (line: number, name: string) => string | undefined;
+
 // @ ID .action_class (" \w ")
 const classRegex = /^@[\w\d]+\.action_class(?:\("(\w+)"\))?/gm;
 // INDENT def WS NAME WS ( ANY ) -> TYPE :
@@ -27,6 +29,8 @@ const captureRegex = /^(@\w+\.capture\([\s\S]*?\)\s+def\s+)([\w\d]+)\s*\([\s\S]*
 // ID .lists [ NAME ] WS = WS ([...]|{...}|[\w.()])
 const listRegex =
     /(\w+\.lists\[")([\w.]+)"\]\s*=\s*(?:(?:\{[\s\S]*?\})|(?:\[[\s\S]*?\])|[\w.()]+)/gm;
+// @ ANY (rule="NS.NAME"
+const captureNameRegex = /^@[\s\S]*?\((?:path=)?"([\w.]+)"/;
 
 export async function searchInWorkspace(
     workspace: WorkspaceFolder,
@@ -151,35 +155,36 @@ function parsePythonFileInner(
         return [];
     }
 
-    const getNamespace = (() => {
-        if (type === "action") {
-            const namespaces = getTalonNamespacesFromPython(classRegex, fileContent);
+    let getNamespace: GetNamespace | undefined;
 
-            return (line: number, _name: string): string | undefined => {
-                let res = undefined;
-                for (const ns of namespaces) {
-                    if (ns.line >= line) {
-                        break;
-                    }
-                    // Actions in the main namespace is not prefixed
-                    res = ns.name === "main" ? "" : ns.name;
-                }
-                return res;
-            };
+    if (type === "action") {
+        const namespaces = getTalonNamespacesFromPython(classRegex, fileContent);
+
+        if (!namespaces.length) {
+            return [];
         }
 
-        if (type === "capture") {
-            return (line: number, name: string): string | undefined => {
-                switch (name) {
-                    case "number":
-                    case "number_small":
-                        return "";
-                    default:
-                        return "user";
+        getNamespace = (line: number, _name: string): string | undefined => {
+            let res = undefined;
+            for (const ns of namespaces) {
+                if (ns.line >= line) {
+                    break;
                 }
-            };
-        }
-    })();
+                // Actions in the main namespace is not prefixed
+                res = ns.name === "main" ? "" : ns.name;
+            }
+            return res;
+        };
+    } else if (type === "capture") {
+        getNamespace = (line: number, content: string): string | undefined => {
+            const name = content.match(captureNameRegex)?.[1];
+            if (!name) {
+                return "user";
+            }
+            const index = name.indexOf(".");
+            return index > -1 ? name.substring(0, index) : "";
+        };
+    }
 
     return parsePythonMatches(uri, fileContent, matches, type, getNamespace);
 }
@@ -201,7 +206,7 @@ function parsePythonMatches(
     fileContent: string,
     matches: RegExpMatchArray[],
     type: TalonMatchType,
-    getNamespace?: (line: number, name: string) => string | undefined
+    getNamespace?: GetNamespace
 ): SearchResult[] {
     const results: SearchResult[] = [];
 
@@ -210,7 +215,7 @@ function parsePythonMatches(
         const line = leadingLines.length - 1;
         const indentationLength = leadingLines[leadingLines.length - 1].length;
         const matchLines = match[0].split("\n");
-        const ns = getNamespace ? getNamespace(line, match[2]) : "";
+        const ns = getNamespace ? getNamespace(line, match[0]) : "";
 
         // This function does not belong to a Talon actions class
         if (ns == null) {
