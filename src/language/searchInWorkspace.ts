@@ -48,9 +48,11 @@ export async function searchInWorkspace(
         }
     })();
     if ("name" in match) {
-        return resultsForType.filter((r) => r.name === match.name);
+        const name = match.name.replace(/^self\./, "user.");
+        return resultsForType.filter((r) => r.name === name);
     }
-    return resultsForType.filter((r) => r.name.startsWith(match.prefix));
+    const prefix = match.prefix.replace(/^self\./, "user.");
+    return resultsForType.filter((r) => r.name.startsWith(prefix));
 }
 
 async function searchInWorkspaceInner(workspace: WorkspaceFolder) {
