@@ -15,7 +15,6 @@ jobs:
         with:
           node-version: 16
       - run: npm install
-      - run: npx vsce package
       - name: Publish to Open VSX Registry
         id: publishToOpenVSX
         uses: HaaLeo/publish-vscode-extension@v1
