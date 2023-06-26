@@ -64,10 +64,26 @@ export function getPythonMatchAtPosition(
 
     const lineText = document.lineAt(position).text;
     const actionRegex = new RegExp(`actions.${name}\\(`, "g");
+    const captureRegex = new RegExp(`<${name}>`, "g");
+    const listRegex = new RegExp(`{${name}}`, "g");
 
     if (testWordAtPosition(position, lineText, actionRegex)) {
         return {
             type: "action",
+            name
+        };
+    }
+
+    if (testWordAtPosition(position, lineText, captureRegex)) {
+        return {
+            type: "capture",
+            name: name
+        };
+    }
+
+    if (testWordAtPosition(position, lineText, listRegex)) {
+        return {
+            type: "list",
             name
         };
     }

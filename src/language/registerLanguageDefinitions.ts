@@ -38,7 +38,7 @@ abstract class ProviderDefinition implements DefinitionProvider {
             return [];
         }
 
-        const match = getTalonMatchAtPosition(document, position);
+        const match = this.getMatchAtPosition(document, position);
         if (!match) {
             return [];
         }
