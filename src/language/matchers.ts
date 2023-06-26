@@ -95,14 +95,35 @@ export function getTalonPrefixAtPosition(
     document: TextDocument,
     position: Position
 ): TalonMatchPrefix | undefined {
+    return getPrefixAtPosition(document, position, true);
+}
+
+export function getPythonPrefixAtPosition(
+    document: TextDocument,
+    position: Position
+): TalonMatchPrefix | undefined {
+    return getPrefixAtPosition(document, position, false);
+}
+
+function getPrefixAtPosition(
+    document: TextDocument,
+    position: Position,
+    inTalon: boolean
+): TalonMatchPrefix | undefined {
     const line = document.lineAt(position.line);
     const text = line.text.substring(0, position.character);
-    const prefix = text.match(/[\w\d.]+$/)?.[0] ?? "";
-    const isInScript = line.firstNonWhitespaceCharacterIndex !== 0 || text.includes(":");
+    const prefix = text.match(/[\w\d.]*$/)?.[0] ?? "";
 
-    // When in the script side of the command available values are the action names
-    if (isInScript) {
-        return { type: "action", prefix };
+    if (inTalon) {
+        const isInScript = line.firstNonWhitespaceCharacterIndex > 0 || text.includes(":");
+        // When in the script side of a Talon command available values are the action names
+        if (isInScript) {
+            return { type: "action", prefix };
+        }
+    } else {
+        if (prefix.startsWith("actions.")) {
+            return { type: "action", prefix: prefix.substring(8) };
+        }
     }
 
     const prevChar =
@@ -111,7 +132,7 @@ export function getTalonPrefixAtPosition(
             .trim()
             .at(-1) ?? "";
 
-    // When in the rule side of the command available values are list and capture names
+    // When in the rule side of a Talon command available values are list and capture names
     if (prevChar === "{") {
         return { type: "list", prefix };
     }
@@ -121,19 +142,6 @@ export function getTalonPrefixAtPosition(
     }
 
     return undefined;
-}
-
-export function getPythonPrefixAtPosition(
-    document: TextDocument,
-    position: Position
-): TalonMatchPrefix | undefined {
-    const line = document.lineAt(position.line);
-    const text = line.text.substring(0, position.character);
-    const prefix = text.trimStart().match(/actions.[\w\d.]*$/)?.[0];
-    if (!prefix) {
-        return undefined;
-    }
-    return { type: "action", prefix: prefix.substring(8) };
 }
 
 function getNameAtPosition(document: TextDocument, position: Position): string | undefined {
