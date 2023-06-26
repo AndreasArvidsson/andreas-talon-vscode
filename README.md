@@ -109,6 +109,7 @@ Many of the commands take arguments and return values that can only be used with
 ![Hover Talon list-file](images/hover_talonlist.png)
 ![Hover Talon capture](images/hover_capture.png)
 ![Hover Talon action](images/hover_action.png)
+![Hover Talon action lis](images/hover_list_py.png)
 ![Hover Talon action python](images/hover_action_py.png)
 
 ### Go to definition
