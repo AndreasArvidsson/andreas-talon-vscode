@@ -1,5 +1,4 @@
-import { Position, TextDocument } from "vscode";
-import { ANY } from "./RegexUtils";
+import { Position, TextDocument, TextLine } from "vscode";
 
 export type TalonMatchType = "action" | "capture" | "list";
 
@@ -19,76 +18,14 @@ export function getTalonMatchAtPosition(
     document: TextDocument,
     position: Position
 ): TalonMatchName | undefined {
-    const name = getNameAtPosition(document, position);
-    if (!name) {
-        return undefined;
-    }
-
-    const lineText = document.lineAt(position).text;
-    const actionRegex = new RegExp(`${name}\\(${ANY}\\)`, "g");
-    const captureRegex = new RegExp(`<${name}>`, "g");
-    const listRegex = new RegExp(`{${name}}`, "g");
-
-    if (testWordAtPosition(position, lineText, actionRegex)) {
-        return {
-            type: "action",
-            name
-        };
-    }
-
-    if (testWordAtPosition(position, lineText, captureRegex)) {
-        return {
-            type: "capture",
-            name: name
-        };
-    }
-
-    if (testWordAtPosition(position, lineText, listRegex)) {
-        return {
-            type: "list",
-            name
-        };
-    }
-
-    return undefined;
+    return getMatchAtPosition(document, position, true);
 }
 
 export function getPythonMatchAtPosition(
     document: TextDocument,
     position: Position
 ): TalonMatchName | undefined {
-    const name = getNameAtPosition(document, position);
-    if (!name) {
-        return undefined;
-    }
-
-    const lineText = document.lineAt(position).text;
-    const actionRegex = new RegExp(`actions.${name}\\(`, "g");
-    const captureRegex = new RegExp(`<${name}>`, "g");
-    const listRegex = new RegExp(`{${name}}`, "g");
-
-    if (testWordAtPosition(position, lineText, actionRegex)) {
-        return {
-            type: "action",
-            name
-        };
-    }
-
-    if (testWordAtPosition(position, lineText, captureRegex)) {
-        return {
-            type: "capture",
-            name: name
-        };
-    }
-
-    if (testWordAtPosition(position, lineText, listRegex)) {
-        return {
-            type: "list",
-            name
-        };
-    }
-
-    return undefined;
+    return getMatchAtPosition(document, position, false);
 }
 
 export function getTalonPrefixAtPosition(
@@ -105,19 +42,70 @@ export function getPythonPrefixAtPosition(
     return getPrefixAtPosition(document, position, false);
 }
 
+function getMatchAtPosition(
+    document: TextDocument,
+    position: Position,
+    inTalon: boolean
+): TalonMatchName | undefined {
+    const name = getNameAtPosition(document, position);
+    if (!name) {
+        return undefined;
+    }
+
+    const line = document.lineAt(position);
+    const lineText = line.text;
+
+    if (inTalon) {
+        if (isInTalonScript(line, position)) {
+            const actionRegex = new RegExp(`${name}\\([\\s\\S]*?\\)`, "g");
+            if (testRegexAtPosition(position, lineText, actionRegex)) {
+                return {
+                    type: "action",
+                    name
+                };
+            }
+            return undefined;
+        }
+    } else {
+        const actionRegex = new RegExp(`actions.${name}\\(`, "g");
+        if (testRegexAtPosition(position, lineText, actionRegex)) {
+            return {
+                type: "action",
+                name
+            };
+        }
+    }
+
+    const captureRegex = new RegExp(`<${name}>`, "g");
+    if (testRegexAtPosition(position, lineText, captureRegex)) {
+        return {
+            type: "capture",
+            name: name
+        };
+    }
+
+    const listRegex = new RegExp(`{${name}}`, "g");
+    if (testRegexAtPosition(position, lineText, listRegex)) {
+        return {
+            type: "list",
+            name
+        };
+    }
+
+    return undefined;
+}
+
 function getPrefixAtPosition(
     document: TextDocument,
     position: Position,
     inTalon: boolean
 ): TalonMatchPrefix | undefined {
     const line = document.lineAt(position.line);
-    const text = line.text.substring(0, position.character);
-    const prefix = text.match(/[\w\d.]*$/)?.[0] ?? "";
+    const precedingText = line.text.substring(0, position.character);
+    const prefix = precedingText.match(/[\w\d.]+$/)?.[0] ?? "";
 
     if (inTalon) {
-        const isInScript = line.firstNonWhitespaceCharacterIndex > 0 || text.includes(":");
-        // When in the script side of a Talon command available values are the action names
-        if (isInScript) {
+        if (isInTalonScript(line, position)) {
             return { type: "action", prefix };
         }
     } else {
@@ -126,13 +114,8 @@ function getPrefixAtPosition(
         }
     }
 
-    const prevChar =
-        text
-            .substring(0, text.length - prefix.length)
-            .trim()
-            .at(-1) ?? "";
+    const prevChar = precedingText.at(-prefix.length - 1) ?? "";
 
-    // When in the rule side of a Talon command available values are list and capture names
     if (prevChar === "{") {
         return { type: "list", prefix };
     }
@@ -144,15 +127,24 @@ function getPrefixAtPosition(
     return undefined;
 }
 
+/** Returns true if the line is indented or the position is to the right side of the `:` */
+function isInTalonScript(line: TextLine, position: Position) {
+    if (line.firstNonWhitespaceCharacterIndex > 0) {
+        return true;
+    }
+    const index = line.text.indexOf(":");
+    return index > -1 && index < position.character;
+}
+
 function getNameAtPosition(document: TextDocument, position: Position): string | undefined {
-    const range = document.getWordRangeAtPosition(position, /\w+(\.\w+)*/);
+    const range = document.getWordRangeAtPosition(position, /[\w\d.]+/);
     if (!range || range.isEmpty || !range.isSingleLine) {
         return undefined;
     }
     return document.getText(range).replace(/^actions\./, "");
 }
 
-function testWordAtPosition(position: Position, lineText: string, regex: RegExp): boolean {
+function testRegexAtPosition(position: Position, lineText: string, regex: RegExp): boolean {
     return Array.from(lineText.matchAll(regex)).some(
         (match) =>
             match.index != null &&
