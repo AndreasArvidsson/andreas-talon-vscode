@@ -97,14 +97,12 @@ abstract class ProviderHover implements HoverProvider {
         const userStrings = workspaceResults.map((r) => {
             const name = getFilename(r.targetUri);
             const line = r.targetRange.start.line + 1;
-
             const link =
                 line > 1
                     ? `[${name} #${line}](${r.targetUri.path}#${line})`
                     : `[${name}](${r.targetUri.path})`;
-            return new MarkdownString()
-                .appendMarkdown(link)
-                .appendCodeblock(r.targetText, r.language);
+            const code = cleanHoverCode(r.targetText);
+            return new MarkdownString().appendMarkdown(link).appendCodeblock(code, r.language);
         });
 
         return new Hover([...defaultStrings, ...userStrings]);
@@ -114,6 +112,24 @@ abstract class ProviderHover implements HoverProvider {
         document: TextDocument,
         position: Position
     ): TalonMatchName | undefined;
+}
+
+function cleanHoverCode(text: string): string {
+    let lines = text.split(/\r?\n/);
+    // Remove talon-list files context
+    if (lines[0].startsWith("list:")) {
+        const index = lines.findIndex((l) => l.startsWith("-"));
+        if (index > -1) {
+            lines = lines.slice(index + 1);
+        }
+    }
+    // Remove empty or commented lines
+    return lines
+        .filter((l) => {
+            const lt = l.trimStart();
+            return lt !== "" && lt[0] !== "#";
+        })
+        .join("\n");
 }
 
 class ProviderHoverTalon extends ProviderHover {
