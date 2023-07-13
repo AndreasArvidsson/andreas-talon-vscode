@@ -60,6 +60,8 @@ Many of the commands take arguments and return values that can only be used with
 
 ### Other commands
 
+-   `andreas.getDocumentText(): string`  
+    Get document text.
 -   `andreas.getSelectedText(): string[]`  
     Get selected text.
 -   `andreas.getClassName(): string`  

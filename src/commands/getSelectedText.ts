@@ -10,3 +10,13 @@ export function getSelectedText(): string[] {
 
     return getSortedSelections(editor).map((selection) => editor.document.getText(selection));
 }
+
+export function getDocumentText(): string {
+    const editor = window.activeTextEditor;
+
+    if (!editor) {
+        return "";
+    }
+
+    return editor.document.getText();
+}

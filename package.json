@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.22.0",
+    "version": "3.23.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -148,6 +148,11 @@
                 "command": "andreas.getGitPullRequestsURL",
                 "category": "Andreas (Git)",
                 "title": "Get URL to Git repository pull requests webpage."
+            },
+            {
+                "command": "andreas.getDocumentText",
+                "category": "Andreas (Other)",
+                "title": "Get document text."
             },
             {
                 "command": "andreas.getSelectedText",

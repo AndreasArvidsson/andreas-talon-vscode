@@ -101,6 +101,7 @@ export const commandDescriptions = {
         "(): string"
     ),
     // Other commands
+    getDocumentText: hidden("Other", "Get document text.", undefined, "(): string"),
     getSelectedText: hidden("Other", "Get selected text.", undefined, "(): string[]"),
     getClassName: hidden(
         "Other",

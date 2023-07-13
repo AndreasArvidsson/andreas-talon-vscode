@@ -14,7 +14,7 @@ import { renameFile } from "./files/renameFile";
 import { generateRange } from "./generateRange";
 import { ClassName } from "./getClassName";
 import { getDictationContext } from "./getDictationContext";
-import { getSelectedText } from "./getSelectedText";
+import { getSelectedText, getDocumentText } from "./getSelectedText";
 import { Git, GitParameters } from "./git";
 import { decrement, increment } from "./incrementDecrement";
 import { lineMiddle } from "./lineMiddle";
@@ -56,6 +56,7 @@ export function registerCommands(
         getGitNewIssueURL: () => git.getGitNewIssueURL(),
         getGitPullRequestsURL: () => git.getGitPullRequestsURL(),
         // Other
+        getDocumentText,
         getSelectedText,
         getClassName: () => className.getClassName(),
         getDictationContext,
