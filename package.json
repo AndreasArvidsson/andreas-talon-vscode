@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.23.0",
+    "version": "3.24.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -125,6 +125,26 @@
                 "title": "Move curser to middle of the current line."
             },
             {
+                "command": "andreas.getDocumentText",
+                "category": "Andreas (Text)",
+                "title": "Get document text."
+            },
+            {
+                "command": "andreas.getSelectedText",
+                "category": "Andreas (Text)",
+                "title": "Get selected text."
+            },
+            {
+                "command": "andreas.getDictationContext",
+                "category": "Andreas (Text)",
+                "title": "Get text before and after selection."
+            },
+            {
+                "command": "andreas.getClassName",
+                "category": "Andreas (Text)",
+                "title": "Get class name."
+            },
+            {
                 "command": "andreas.getGitFileURL",
                 "category": "Andreas (Git)",
                 "title": "Get URL to Git repository file webpage."
@@ -148,26 +168,6 @@
                 "command": "andreas.getGitPullRequestsURL",
                 "category": "Andreas (Git)",
                 "title": "Get URL to Git repository pull requests webpage."
-            },
-            {
-                "command": "andreas.getDocumentText",
-                "category": "Andreas (Other)",
-                "title": "Get document text."
-            },
-            {
-                "command": "andreas.getSelectedText",
-                "category": "Andreas (Other)",
-                "title": "Get selected text."
-            },
-            {
-                "command": "andreas.getClassName",
-                "category": "Andreas (Other)",
-                "title": "Get class name."
-            },
-            {
-                "command": "andreas.getDictationContext",
-                "category": "Andreas (Other)",
-                "title": "Get text before and after selection."
             },
             {
                 "command": "andreas.getSetting",
@@ -195,9 +195,8 @@
         "build": "vsce package",
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p .",
-        "test": "eslint src && tsx src/meta-updater --test",
-        "prettier": "prettier --write .",
-        "meta-updater": "tsx src/meta-updater",
+        "test": "eslint src && tsx src/meta-updater --test && prettier --check .",
+        "fix": "tsx src/meta-updater && prettier --write .",
         "watch": "tsc -watch -p ."
     },
     "extensionDependencies": [

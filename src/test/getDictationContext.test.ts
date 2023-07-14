@@ -14,7 +14,7 @@ suite(command, () => {
             ]
         },
         post: {
-            returnValue: { before: "", after: "" }
+            returnValue: null
         }
     });
 

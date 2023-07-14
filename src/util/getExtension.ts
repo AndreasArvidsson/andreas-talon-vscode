@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { CommandServerExtension } from "../typings/commandServer";
 import { GitExtension } from "../typings/git";
 import { ParseTreeExtension } from "../typings/parserTree";
 
@@ -13,6 +14,10 @@ async function getExtension<T>(name: string): Promise<T> {
 
 export function getParseTreeExtension(): Promise<ParseTreeExtension> {
     return getExtension("pokey.parse-tree");
+}
+
+export function getCommandServerExtension(): Promise<CommandServerExtension> {
+    return getExtension("pokey.command-server");
 }
 
 export function getGitExtension(): Promise<GitExtension> {

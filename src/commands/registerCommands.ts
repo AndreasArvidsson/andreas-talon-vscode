@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { CommandServerExtension } from "../typings/commandServer";
 import { GitExtension } from "../typings/git";
 import { ParseTreeExtension } from "../typings/parserTree";
 import { getFullCommand } from "../util/getFullCommand";
@@ -12,10 +13,8 @@ import { newFile } from "./files/newFile";
 import { removeFile } from "./files/removeFile";
 import { renameFile } from "./files/renameFile";
 import { generateRange } from "./generateRange";
-import { ClassName } from "./getClassName";
-import { getDictationContext } from "./getDictationContext";
-import { getSelectedText, getDocumentText } from "./getSelectedText";
-import { Git, GitParameters } from "./git";
+import { GetText } from "./GetText";
+import { Git, GitParameters } from "./Git";
 import { decrement, increment } from "./incrementDecrement";
 import { lineMiddle } from "./lineMiddle";
 import { openEditorAtIndex } from "./openEditorAtIndex";
@@ -27,9 +26,10 @@ type Callback = (...args: any[]) => any;
 
 export function registerCommands(
     parseTreeExtension: ParseTreeExtension,
+    commandServerExtension: CommandServerExtension,
     gitExtension: GitExtension
 ): vscode.Disposable[] {
-    const className = new ClassName(parseTreeExtension);
+    const getText = new GetText(commandServerExtension, parseTreeExtension);
     const git = new Git(gitExtension);
 
     const commands: Record<CommandIds, Callback> = {
@@ -49,6 +49,11 @@ export function registerCommands(
         openEditorAtIndex,
         selectTo,
         lineMiddle,
+        // Text
+        getDocumentText: () => getText.getDocumentText(),
+        getSelectedText: () => getText.getSelectedText(),
+        getDictationContext: () => getText.getDictationContext(),
+        getClassName: () => getText.getClassName(),
         // Git
         getGitFileURL: (p: GitParameters) => git.getGitFileURL(p),
         getGitRepoURL: () => git.getGitRepoURL(),
@@ -56,10 +61,6 @@ export function registerCommands(
         getGitNewIssueURL: () => git.getGitNewIssueURL(),
         getGitPullRequestsURL: () => git.getGitPullRequestsURL(),
         // Other
-        getDocumentText,
-        getSelectedText,
-        getClassName: () => className.getClassName(),
-        getDictationContext,
         getSetting,
         setSetting,
         executeCommands,

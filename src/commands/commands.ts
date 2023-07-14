@@ -1,4 +1,4 @@
-type Category = "File" | "Edit" | "Nav" | "Git" | "Other";
+type Category = "File" | "Edit" | "Nav" | "Text" | "Git" | "Other";
 
 interface CommandDescription {
     readonly isVisible: boolean;
@@ -51,6 +51,7 @@ export const commandDescriptions = {
     renameFile: visible("File", "Rename active file.", undefined, "(name?: string)"),
     removeFile: visible("File", "Remove/delete the active file."),
     moveFile: visible("File", "Move active file to new directory."),
+
     // Edit commands
     generateRange: visible(
         "Edit",
@@ -60,6 +61,7 @@ export const commandDescriptions = {
     ),
     increment: visible("Edit", "Increment selected number."),
     decrement: visible("Edit", "Decrement selected number."),
+
     // Navigation commands
     openEditorAtIndex: hidden(
         "Nav",
@@ -74,6 +76,23 @@ export const commandDescriptions = {
         "(line: number)"
     ),
     lineMiddle: visible("Nav", "Move curser to middle of the current line."),
+
+    // Text commands
+    getDocumentText: hidden("Text", "Get document text.", undefined, "(): string | null"),
+    getSelectedText: hidden("Text", "Get selected text.", undefined, "(): string[] | null"),
+    getDictationContext: hidden(
+        "Text",
+        "Get text before and after selection.",
+        "Used for context sensitive dictation.",
+        "(): {before: string, after: string} | null"
+    ),
+    getClassName: hidden(
+        "Text",
+        "Get class name.",
+        "Useful for inserting constructors in C++/Java.",
+        "(): string | null"
+    ),
+
     // Git commands
     getGitFileURL: hidden(
         "Git",
@@ -100,21 +119,8 @@ export const commandDescriptions = {
         undefined,
         "(): string"
     ),
+
     // Other commands
-    getDocumentText: hidden("Other", "Get document text.", undefined, "(): string"),
-    getSelectedText: hidden("Other", "Get selected text.", undefined, "(): string[]"),
-    getClassName: hidden(
-        "Other",
-        "Get class name.",
-        "Useful for inserting constructors in C++/Java.",
-        "(): string"
-    ),
-    getDictationContext: hidden(
-        "Other",
-        "Get text before and after selection.",
-        "Used for context sensitive dictation.",
-        "(): {before: string, after: string}"
-    ),
     getSetting: hidden(
         "Other",
         "Get setting from vscode",

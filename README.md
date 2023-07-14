@@ -45,6 +45,17 @@ Many of the commands take arguments and return values that can only be used with
 -   `andreas.lineMiddle()`  
     Move curser to middle of the current line.
 
+### Text commands
+
+-   `andreas.getDocumentText(): string | null`  
+    Get document text.
+-   `andreas.getSelectedText(): string[] | null`  
+    Get selected text.
+-   `andreas.getDictationContext(): {before: string, after: string} | null`  
+    Get text before and after selection. Used for context sensitive dictation.
+-   `andreas.getClassName(): string | null`  
+    Get class name. Useful for inserting constructors in C++/Java.
+
 ### Git commands
 
 -   `andreas.getGitFileURL({ useSelection: boolean, useBranch: boolean }): string`  
@@ -60,14 +71,6 @@ Many of the commands take arguments and return values that can only be used with
 
 ### Other commands
 
--   `andreas.getDocumentText(): string`  
-    Get document text.
--   `andreas.getSelectedText(): string[]`  
-    Get selected text.
--   `andreas.getClassName(): string`  
-    Get class name. Useful for inserting constructors in C++/Java.
--   `andreas.getDictationContext(): {before: string, after: string}`  
-    Get text before and after selection. Used for context sensitive dictation.
 -   `andreas.getSetting(section: string, defaultValue?: T): T | undefined`  
     Get setting from vscode
 -   `andreas.setSetting(section: string, value: any)`  
