@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.24.0",
+    "version": "3.24.1",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -201,6 +201,7 @@
     },
     "extensionDependencies": [
         "vscode.git",
+        "pokey.command-server",
         "pokey.parse-tree"
     ],
     "dependencies": {
