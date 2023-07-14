@@ -5,7 +5,8 @@ on:
     branches: [master]
 
 jobs:
-  publish:
+  test:
+    name: Run tests
     runs-on: ubuntu-latest
     environment: Production
     steps:
@@ -15,6 +16,18 @@ jobs:
           node-version: 16
       - run: npm install
       - run: npm run test
+
+  publish:
+    name: Publish to marketplace
+    runs-on: ubuntu-latest
+    environment: Production
+    needs: test
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm install
       - name: Publish to Open VSX Registry
         id: publishToOpenVSX
         uses: HaaLeo/publish-vscode-extension@v1
