@@ -13,7 +13,7 @@ import { getFakeCommandServerExtension } from "./util/getFakeCommandServerExtens
 export const activate = async (context: vscode.ExtensionContext): Promise<void> => {
     const isTesting = context.extensionMode === vscode.ExtensionMode.Test;
     const parseTreeExtension = await getParseTreeExtension();
-        const gitExtension = await getGitExtension();
+    const gitExtension = await getGitExtension();
     const commandServerExtension = isTesting
         ? getFakeCommandServerExtension()
         : await getCommandServerExtension();
