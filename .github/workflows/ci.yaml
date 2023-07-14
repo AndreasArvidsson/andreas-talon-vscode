@@ -1,9 +1,7 @@
-name: Deploy
+name: CI
 
 on:
-  workflow_run:
-    workflows: [Test]
-    types: [completed]
+  push:
     branches: [master]
 
 jobs:
@@ -16,6 +14,7 @@ jobs:
         with:
           node-version: 16
       - run: npm install
+      - run: npm run test
       - name: Publish to Open VSX Registry
         id: publishToOpenVSX
         uses: HaaLeo/publish-vscode-extension@v1
