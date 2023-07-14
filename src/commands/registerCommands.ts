@@ -14,7 +14,7 @@ import { removeFile } from "./files/removeFile";
 import { renameFile } from "./files/renameFile";
 import { generateRange } from "./generateRange";
 import { GetText } from "./GetText";
-import { Git, GitParameters } from "./Git";
+import { GitUtil, GitParameters } from "./GitUtil";
 import { decrement, increment } from "./incrementDecrement";
 import { lineMiddle } from "./lineMiddle";
 import { openEditorAtIndex } from "./openEditorAtIndex";
@@ -30,7 +30,7 @@ export function registerCommands(
     gitExtension: GitExtension
 ): vscode.Disposable[] {
     const getText = new GetText(commandServerExtension, parseTreeExtension);
-    const git = new Git(gitExtension);
+    const git = new GitUtil(gitExtension);
 
     const commands: Record<CommandIds, Callback> = {
         // Files

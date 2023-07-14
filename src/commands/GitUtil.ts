@@ -6,7 +6,7 @@ export type GitParameters = {
     useBranch: boolean;
 };
 
-export class Git {
+export class GitUtil {
     private gitApi: API;
 
     constructor(gitExtension: GitExtension) {
