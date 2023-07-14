@@ -111,6 +111,31 @@ suite("increment / decrement", () => {
     });
 
     runTest({
+        title: "increment 1 + 2",
+        command: { id: "increment", args: [2] },
+        pre: {
+            content: "1",
+            selections: [0, 0, 0, 1]
+        },
+        post: {
+            content: "3"
+        }
+    });
+
+    runTest({
+        title: "decrement 1.5 - 0.5",
+        command: { id: "decrement", args: [0.5] },
+        pre: {
+            content: "1.5",
+            selections: [0, 0, 0, 3]
+        },
+        post: {
+            content: "1",
+            selections: [0, 0, 0, 1]
+        }
+    });
+
+    runTest({
         title: "decrement a1b2c",
         command: "decrement",
         pre: {

@@ -31,9 +31,9 @@ Many of the commands take arguments and return values that can only be used with
 
 -   `andreas.generateRange(start: number = 1)`  
     Generate numerical range. Starts from 1 by default
--   `andreas.increment()`  
+-   `andreas.increment(value?: number)`  
     Increment selected number.
--   `andreas.decrement()`  
+-   `andreas.decrement(value?: number)`  
     Decrement selected number.
 
 ### Nav commands

@@ -59,8 +59,8 @@ export const commandDescriptions = {
         "Starts from 1 by default",
         "(start: number = 1)"
     ),
-    increment: visible("Edit", "Increment selected number."),
-    decrement: visible("Edit", "Decrement selected number."),
+    increment: visible("Edit", "Increment selected number.", undefined, "(value?: number)"),
+    decrement: visible("Edit", "Decrement selected number.", undefined, "(value?: number)"),
 
     // Navigation commands
     openEditorAtIndex: hidden(
