@@ -142,4 +142,4 @@ export const commandDescriptions = {
     printCommands: visible("Other", "Print available commands.")
 } as const;
 
-export type CommandIds = keyof typeof commandDescriptions;
+export type CommandId = keyof typeof commandDescriptions;

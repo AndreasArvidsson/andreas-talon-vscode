@@ -1,4 +1,4 @@
-import { commandDescriptions } from "../commands/commands";
+import { CommandId, commandDescriptions } from "../commands/commands";
 import { getFullCommand } from "../util/getFullCommand";
 
 interface Command {
@@ -24,7 +24,7 @@ export function updatePackageJson(content: PackageJson): PackageJson {
 
 function getCommands(): Command[] {
     return Object.entries(commandDescriptions).map(([command, { category, title }]) => ({
-        command: getFullCommand(command),
+        command: getFullCommand(command as CommandId),
         category: `Andreas (${category})`,
         title
         // ...(isVisible ? {} : { enablement: "false" })

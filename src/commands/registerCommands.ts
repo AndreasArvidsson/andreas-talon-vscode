@@ -3,7 +3,7 @@ import { CommandServerExtension } from "../typings/commandServer";
 import { GitExtension } from "../typings/git";
 import { ParseTreeExtension } from "../typings/parserTree";
 import { getFullCommand } from "../util/getFullCommand";
-import { CommandIds } from "./commands";
+import { CommandId } from "./commands";
 import { executeCommands } from "./executeCommands";
 import { copyFilename } from "./files/copyFilename";
 import { duplicateFile } from "./files/duplicateFile";
@@ -32,7 +32,7 @@ export function registerCommands(
     const getText = new GetText(commandServerExtension, parseTreeExtension);
     const git = new GitUtil(gitExtension);
 
-    const commands: Record<CommandIds, Callback> = {
+    const commands: Record<CommandId, Callback> = {
         // Files
         getFilename,
         copyFilename,
@@ -65,14 +65,14 @@ export function registerCommands(
         setSetting,
         executeCommands,
         printCommands
-    };
+    } as const;
 
     return Object.entries(commands).map(([command, callback]) =>
-        registerCommand(command, callback)
+        registerCommand(command as CommandId, callback)
     );
 }
 
-function registerCommand(command: string, callback: Callback): vscode.Disposable {
+function registerCommand(command: CommandId, callback: Callback): vscode.Disposable {
     const fullCommand = getFullCommand(command);
 
     return vscode.commands.registerCommand(fullCommand, async (...args: unknown[]) => {

@@ -1,3 +1,5 @@
+import { CommandId } from "../../commands/commands";
+
 interface TestFixtureBase {
     title: string;
     pre: {
@@ -14,7 +16,7 @@ interface TestFixtureBase {
 }
 
 interface TextFixtureCommand extends TestFixtureBase {
-    command: Command | string;
+    command: Command | CommandId;
     callback?: never;
 }
 
@@ -42,7 +44,7 @@ export interface FullTestFixture {
 }
 
 export interface Command {
-    id: string;
+    id: CommandId;
     args: any[];
 }
 

@@ -1,4 +1,4 @@
-import { commandDescriptions } from "../commands/commands";
+import { CommandId, commandDescriptions } from "../commands/commands";
 import { getFullCommand } from "../util/getFullCommand";
 
 export function updateReadme(content: string): string {
@@ -17,7 +17,7 @@ export function updateReadme(content: string): string {
             category = desc.category;
             commands.push(`\n### ${category} commands\n`);
         }
-        const fullCommand = getFullCommand(command);
+        const fullCommand = getFullCommand(command as CommandId);
         commands.push(`-   \`${fullCommand}${desc.args}\`  `);
         commands.push(`    ${desc.description}`);
     }
