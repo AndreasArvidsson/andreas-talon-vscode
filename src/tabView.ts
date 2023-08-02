@@ -1,14 +1,32 @@
 import * as vscode from "vscode";
-import path from "node:path";
 import { getFullCommand } from "./util/getFullCommand";
 
 export function createTabView(): vscode.Disposable {
     return new TreeDataProvider();
 }
 
-const activeIcon = path.join(__filename, "..", "..", "images", "dash.svg");
+interface GroupElement {
+    type: "group";
+    groupIndex: number;
+    tabIndex: number;
+    tabGroup: vscode.TabGroup;
+}
 
-class TreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+interface TabElement {
+    type: "tab";
+    index: number;
+    tab: vscode.Tab;
+}
+
+interface PaddingElement {
+    type: "padding";
+}
+
+type Element = GroupElement | TabElement | PaddingElement;
+
+const paddingElement: PaddingElement = { type: "padding" };
+
+class TreeDataProvider implements vscode.TreeDataProvider<Element> {
     private readonly _onDidChangeTreeData = new vscode.EventEmitter<void>();
     private readonly mainDisposable: vscode.Disposable;
     private onTabChangeDisposable: vscode.Disposable | undefined;
@@ -42,43 +60,87 @@ class TreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
         }
     }
 
-    getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
-        return element;
-    }
-
-    getChildren(): vscode.TreeItem[] {
-        const tabGroups = [...vscode.window.tabGroups.all];
-        tabGroups.sort((a) => (a.isActive ? -1 : 0));
-
-        let index = 0;
-
-        return tabGroups.flatMap((group, groupIndex) => {
-            const tabs = group.tabs.map((tab) => this.createItem(tab, index++));
-            if (groupIndex < tabGroups.length) {
-                tabs.push({});
-            }
-            return tabs;
-        });
-    }
-
-    private createItem(tab: vscode.Tab, index: number): vscode.TreeItem {
-        const labelParts = [(index + 1).toString().padStart(2), tab.label];
-        if (tab.isDirty) {
-            labelParts.push("●");
+    getTreeItem(element: Element): vscode.TreeItem {
+        if (element.type === "group") {
+            return {
+                label: `GROUP ${element.groupIndex + 1}`,
+                collapsibleState: vscode.TreeItemCollapsibleState.Expanded
+            };
         }
-        return {
-            label: labelParts.join(" "),
-            iconPath: tab.isActive ? activeIcon : undefined,
-            command: {
-                title: `Focus tab ${index + 1}`,
-                command: getFullCommand("openEditorAtIndex"),
-                arguments: [index]
-            }
-        };
+        if (element.type === "padding") {
+            return {};
+        }
+        return createItem(element.tab, element.index);
+    }
+
+    getChildren(element?: Element): Element[] {
+        if (element == null) {
+            let tabIndex = 0;
+
+            return vscode.window.tabGroups.all.flatMap((tabGroup, groupIndex) => {
+                const result: GroupElement = { type: "group", groupIndex, tabIndex, tabGroup };
+                tabIndex += tabGroup.tabs.length;
+                return groupIndex > 0 ? [paddingElement, result] : [result];
+            });
+        }
+
+        if (element.type === "group") {
+            return element.tabGroup.tabs.map((tab, index) => ({
+                type: "tab",
+                index: element.tabIndex + index,
+                tab
+            }));
+        }
+
+        throw Error(`Can't get children for element type '${element.type}'`);
     }
 
     dispose() {
         this.mainDisposable.dispose();
         this.onTabChangeDisposable?.dispose();
     }
+}
+
+function createItem(tab: vscode.Tab, index: number): vscode.TreeItem {
+    const hint = indexToHint(index);
+
+    const labelParts = [hint.padStart(2), " - ", tab.label];
+    if (tab.isDirty) {
+        labelParts.push("●");
+    }
+    if (tab.isActive) {
+        labelParts.push("*");
+    }
+    const label = labelParts.join(" ");
+
+    const uri = tab.input instanceof vscode.TabInputText ? tab.input.uri : undefined;
+    const resourceUri = uri != null && uri.scheme !== "untitled" ? uri : undefined;
+
+    const command: vscode.Command = {
+        title: `Focus tab ${hint}`,
+        command: getFullCommand("focusTab"),
+        arguments: [hint]
+    };
+
+    return {
+        label,
+        resourceUri,
+        command
+    };
+}
+
+function indexToHint(index: number): string {
+    const letters: string[] = [];
+    const ref = "A".charCodeAt(0);
+
+    while (index > -1) {
+        const mod = index % 26;
+        letters.push(String.fromCharCode(ref + mod));
+        index -= mod;
+        if (index === 0) {
+            break;
+        }
+    }
+
+    return letters.join("");
 }
