@@ -3,6 +3,7 @@ import { registerCommands } from "./commands/registerCommands";
 import { registerLanguageCodeActions } from "./language/registerLanguageCodeActions";
 import { registerLanguageDefinitions } from "./language/registerLanguageDefinitions";
 import { registerLanguageFormatter } from "./language/registerLanguageFormatter";
+import { createTabView } from "./tabView";
 import {
     getCommandServerExtension,
     getGitExtension,
@@ -22,6 +23,7 @@ export const activate = async (context: vscode.ExtensionContext): Promise<void> 
         ...registerCommands(parseTreeExtension, commandServerExtension, gitExtension),
         registerLanguageDefinitions(),
         registerLanguageCodeActions(parseTreeExtension),
-        registerLanguageFormatter()
+        registerLanguageFormatter(),
+        createTabView()
     );
 };

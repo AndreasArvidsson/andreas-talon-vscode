@@ -58,6 +58,14 @@
                 ]
             }
         ],
+        "views": {
+            "explorer": [
+                {
+                    "id": "andreas.tabs",
+                    "name": "Tabs"
+                }
+            ]
+        },
         "commands": [
             {
                 "command": "andreas.getFilename",
