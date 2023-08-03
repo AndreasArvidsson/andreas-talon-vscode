@@ -1,25 +1,12 @@
 import { commands, window } from "vscode";
 import { focusViewColumn } from "../util/focusViewColumn";
+import { hintToIndex } from "../util/hints";
 
 export async function focusTab(hint: string): Promise<void> {
-    console.log(hint);
-    let index = hintToIndex(hint);
-    index = await focusTabGroup(index);
+    const index = hintToIndex(hint);
+    const indexInGroup = await focusTabGroup(index);
 
-    await commands.executeCommand("workbench.action.openEditorAtIndex", index);
-}
-
-function hintToIndex(hint: string): number {
-    const ref = "a".charCodeAt(0);
-    const letters = hint.toLowerCase().split("").reverse();
-    let result = 0;
-
-    letters.forEach((letter, index) => {
-        const value = letter.charCodeAt(0) - ref;
-        result += value + (value + 1) * 26 * index;
-    });
-
-    return result;
+    await commands.executeCommand("workbench.action.openEditorAtIndex", indexInGroup);
 }
 
 async function focusTabGroup(index: number): Promise<number> {

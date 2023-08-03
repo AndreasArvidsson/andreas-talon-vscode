@@ -123,6 +123,11 @@
                 "title": "Open editor/tab at given index."
             },
             {
+                "command": "andreas.focusTab",
+                "category": "Andreas (Nav)",
+                "title": "Focus tab by hint."
+            },
+            {
                 "command": "andreas.selectTo",
                 "category": "Andreas (Nav)",
                 "title": "Select from current location to specified line."

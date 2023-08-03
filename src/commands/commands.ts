@@ -69,7 +69,7 @@ export const commandDescriptions = {
         "Negative indices are counted from the back.",
         "(index: number)"
     ),
-    focusTab: hidden("Nav", "Focus tab by hint", "Hints are [A-ZZ]", "(hint: string)"),
+    focusTab: hidden("Nav", "Focus tab by hint.", "Hints range [A-ZZ].", "(hint: string)"),
     selectTo: hidden(
         "Nav",
         "Select from current location to specified line.",

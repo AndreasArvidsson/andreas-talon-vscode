@@ -40,6 +40,8 @@ Many of the commands take arguments and return values that can only be used with
 
 -   `andreas.openEditorAtIndex(index: number)`  
     Open editor/tab at given index. Negative indices are counted from the back.
+-   `andreas.focusTab(hint: string)`  
+    Focus tab by hint. Hints range [A-ZZ].
 -   `andreas.selectTo(line: number)`  
     Select from current location to specified line.
 -   `andreas.lineMiddle()`  

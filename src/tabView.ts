@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { getFullCommand } from "./util/getFullCommand";
+import { indexToHint } from "./util/hints";
 
 export function createTabView(): vscode.Disposable {
     return new TreeDataProvider();
@@ -127,20 +128,4 @@ function createItem(tab: vscode.Tab, index: number): vscode.TreeItem {
         resourceUri,
         command
     };
-}
-
-function indexToHint(index: number): string {
-    const letters: string[] = [];
-    const ref = "A".charCodeAt(0);
-
-    while (index > -1) {
-        const mod = index % 26;
-        letters.push(String.fromCharCode(ref + mod));
-        index -= mod;
-        if (index === 0) {
-            break;
-        }
-    }
-
-    return letters.join("");
 }
