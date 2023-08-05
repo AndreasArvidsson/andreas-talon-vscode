@@ -41,15 +41,14 @@ class TalonFormatter {
         const nl = node.startPosition.row > this.lastRow + 1 ? this.eol : "";
         this.lastRow = node.endPosition.row;
         const text = this.getNodeTextInternal(node, isIndented);
+        this.lastRow = node.endPosition.row;
         return `${nl}${text}`;
     }
 
     private getNodeTextInternal(node: SyntaxNode, isIndented = false): string {
         switch (node.type) {
-            case "source_file": {
-                const text = node.children.map((n) => this.getNodeText(n)).join("");
-                return `${text}${this.eol}`;
-            }
+            case "source_file":
+                return node.children.map((n) => this.getNodeText(n)).join("");
 
             case "matches": {
                 if (node.children.length === 0) {
@@ -59,11 +58,13 @@ class TalonFormatter {
                 return `${text}${this.eol}-${this.eol}`;
             }
 
+            case "declarations": {
+                const text = node.children.map((n) => this.getNodeText(n)).join(this.eol);
+                return `${text}${this.eol}`;
+            }
+
             case "match":
                 return node.children.map((n) => this.getNodeText(n)).join("");
-
-            case "declarations":
-                return node.children.map((n) => this.getNodeText(n)).join(this.eol);
 
             case "block":
                 return node.children.map((n) => this.getNodeText(n, isIndented)).join(this.eol);
@@ -107,15 +108,16 @@ class TalonFormatter {
             case "rule":
             case "tag_binding":
             case "settings_binding":
-            case "identifier":
-            case "variable":
-            case "integer":
-            case "string":
             case "key(":
             case "sleep(":
             case "gamepad(":
             case "face(":
             case "parrot(":
+            case "identifier":
+            case "variable":
+            case "string":
+            case "integer":
+            case "float":
             case "=":
             case "(":
             case ")":
