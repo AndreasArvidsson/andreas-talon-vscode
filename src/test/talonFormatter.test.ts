@@ -59,7 +59,7 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
     }
 ];
 
-suite.only("Talon formatter", () => {
+suite("Talon formatter", () => {
     for (const fixture of fixtures) {
         runTest({
             title: fixture.title,
