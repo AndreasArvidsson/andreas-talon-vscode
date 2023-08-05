@@ -1,91 +1,144 @@
-import {
-    Disposable,
-    EndOfLine,
-    languages,
-    Range,
-    TextDocument,
-    TextEdit,
-    TextEditor,
-    window
-} from "vscode";
+/* eslint-disable @typescript-eslint/unbound-method */
+import { Disposable, EndOfLine, languages, Range, TextEdit, TextEditor, window } from "vscode";
+import { SyntaxNode } from "web-tree-sitter";
+import { ParseTreeExtension } from "../typings/parserTree";
 
 const columnWidth = 28;
 
-function provideDocumentFormattingEditsTalon(_document: TextDocument): TextEdit[] {
+class TalonFormatter {
+    private readonly ident: string;
+    private readonly eol: string;
+    private lastRow: number;
+
+    constructor(private editor: TextEditor) {
+        this.ident = getIndentation(editor);
+        this.eol = getEOL(editor);
+        this.lastRow = 0;
+        this.getNodeText = this.getNodeText.bind(this);
+    }
+
+    getText(node: SyntaxNode): string {
+        return this.getNodeText(node);
+    }
+
+    private getLeftRightText(node: SyntaxNode): string {
+        const { children } = node;
+        const isMultiline = children[2].startPosition.row > children[1].endPosition.row;
+        const left = this.getNodeText(children[0]);
+        const leftWithColon = `${left}:`;
+        const leftWithPadding = isMultiline
+            ? leftWithColon
+            : `${leftWithColon} `.padEnd(columnWidth);
+        const nl = isMultiline ? this.eol : "";
+        const right = children
+            .slice(2)
+            .map((n) => this.getNodeText(n, isMultiline))
+            .join(this.eol);
+        return `${leftWithPadding}${nl}${right}`;
+    }
+
+    private getNodeText(node: SyntaxNode, isIndented = false): string {
+        const nl = node.startPosition.row > this.lastRow + 1 ? this.eol : "";
+        this.lastRow = node.endPosition.row;
+        const text = this.getNodeTextInternal(node, isIndented);
+        return `${nl}${text}`;
+    }
+
+    private getNodeTextInternal(node: SyntaxNode, isIndented = false): string {
+        switch (node.type) {
+            case "source_file": {
+                const text = node.children.map((n) => this.getNodeText(n)).join("");
+                return `${text}${this.eol}`;
+            }
+
+            case "matches": {
+                if (node.children.length === 0) {
+                    return "";
+                }
+                const text = node.children.map((n) => this.getNodeText(n)).join(this.eol);
+                return `${text}${this.eol}-${this.eol}`;
+            }
+
+            case "match":
+                return node.children.map((n) => this.getNodeText(n)).join("");
+
+            case "declarations":
+                return node.children.map((n) => this.getNodeText(n)).join(this.eol);
+
+            case "block":
+                return node.children.map((n) => this.getNodeText(n, isIndented)).join(this.eol);
+
+            case "command_declaration":
+            case "key_binding_declaration":
+            case "parrot_declaration":
+            case "face_declaration":
+            case "gamepad_declaration":
+            case "settings_declaration":
+                return this.getLeftRightText(node);
+
+            case "comment":
+                return isIndented ? `${this.ident}${node.text}` : node.text;
+
+            case "expression_statement":
+            case "assignment_statement": {
+                const text = node.children.map((n) => this.getNodeText(n)).join(" ");
+                return isIndented ? `${this.ident}${text}` : text;
+            }
+
+            case "action":
+            case "key_action":
+            case "sleep_action":
+            case "argument_list":
+            case "key_binding":
+            case "face_binding":
+            case "gamepad_binding":
+            case "parrot_binding":
+            case "tag_import_declaration":
+                return node.children.map((n) => this.getNodeText(n)).join("");
+
+            case "match_modifier":
+            case ":":
+            case ",":
+                return `${node.text} `;
+
+            case "implicit_string":
+                return node.text.trim();
+
+            case "rule":
+            case "tag_binding":
+            case "settings_binding":
+            case "identifier":
+            case "variable":
+            case "integer":
+            case "string":
+            case "key(":
+            case "sleep(":
+            case "gamepad(":
+            case "face(":
+            case "parrot(":
+            case "=":
+            case "(":
+            case ")":
+                return node.text;
+
+            default:
+                console.warn(`Unknown syntax node type '${node.type}'`);
+                return node.text;
+        }
+    }
+}
+
+function provideDocumentFormattingEditsTalon(parseTreeExtension: ParseTreeExtension): TextEdit[] {
     const editor = window.activeTextEditor;
-    if (!editor) {
-        return [];
+
+    if (editor == null) {
+        throw Error("Active text editor is null");
     }
 
-    const editorIndentation = getIndentation(editor);
-    const lines = getLines(editor);
-    const startOfBodyLine = lines.findIndex((line) => line.startsWith("-"));
-    const result: string[] = [];
-    let trailingEmptyLine = false;
-
-    lines.forEach((line, index) => {
-        const isIndented = line.startsWith(" ") || line.startsWith("\t");
-
-        line = line.trim();
-        trailingEmptyLine = !line;
-
-        // Empty line
-        if (trailingEmptyLine) {
-            result.push("");
-            return;
-        }
-
-        // Header divider
-        if (line.startsWith("-")) {
-            result.push(line);
-            return;
-        }
-
-        // Lines are either totaly left or one tab in
-        const indent = isIndented ? editorIndentation : "";
-
-        // Commented or indented lines are not modified
-        if (line.startsWith("#") || isIndented) {
-            result.push(indent + line);
-            return;
-        }
-
-        const colonIndex = getColonIndex(line);
-
-        // Without a colon. Probably a multiline body.
-        if (colonIndex < 0) {
-            result.push(indent + line);
-            return;
-        }
-
-        const left = indent + line.slice(0, colonIndex).trim();
-        const right = line.slice(colonIndex + 1).trim();
-        const isHeader = index < startOfBodyLine;
-        const isTag = line.startsWith("tag()");
-
-        // Without a right hand side. Probably rule for a multiline command.
-        if (!right) {
-            result.push(left + ":");
-            return;
-        }
-
-        // Command that should NOT have padding
-        if (isHeader || isTag) {
-            result.push(left + ": " + right);
-            return;
-        }
-
-        // Command that should have whitespace padding between left and right
-        result.push((left + ": ").padEnd(columnWidth) + right);
-    });
-
-    // Document ends with an empty line
-    if (!trailingEmptyLine) {
-        result.push("");
-    }
-
+    const tree = parseTreeExtension.getTree(editor.document);
+    const formatter = new TalonFormatter(editor);
+    const newText = formatter.getText(tree.rootNode);
     const originalText = editor.document.getText();
-    const newText = result.join(getEOL(editor));
 
     if (originalText === newText) {
         return [];
@@ -102,45 +155,6 @@ function provideDocumentFormattingEditsTalon(_document: TextDocument): TextEdit[
     ];
 }
 
-function getLines(editor: TextEditor): string[] {
-    const lines: string[] = [];
-    for (let i = 0; i < editor.document.lineCount; ++i) {
-        lines.push(editor.document.lineAt(i).text);
-    }
-    return removeTrailingEmptyLines(lines);
-}
-
-function removeTrailingEmptyLines(lines: string[]): string[] {
-    let i = lines.length - 1;
-    for (; i > -1; --i) {
-        if (lines[i].trim()) {
-            break;
-        }
-    }
-    return lines.slice(0, i + 1);
-}
-
-// Find the colon separating commands and their implementation
-const getColonIndex = (line: string): number => {
-    const parts = line.matchAll(/[():]/g);
-    let inParen = false;
-    for (const m of parts) {
-        switch (m[0]) {
-            case "(":
-                inParen = true;
-                break;
-            case ")":
-                inParen = false;
-                break;
-            case ":":
-                if (!inParen && m.index != null) {
-                    return m.index;
-                }
-        }
-    }
-    return -1;
-};
-
 function getIndentation(editor: TextEditor): string {
     return new Array(editor.options.tabSize ?? 4)
         .fill(editor.options.insertSpaces ? " " : "\t")
@@ -151,11 +165,19 @@ function getEOL(editor: TextEditor): string {
     return editor.document.eol === EndOfLine.LF ? "\n" : "\r\n";
 }
 
-export function registerLanguageFormatter(): Disposable {
+export function registerLanguageFormatter(parseTreeExtension: ParseTreeExtension): Disposable {
     return languages.registerDocumentFormattingEditProvider(
         { language: "talon" },
         {
-            provideDocumentFormattingEdits: provideDocumentFormattingEditsTalon
+            provideDocumentFormattingEdits: async () => {
+                try {
+                    return provideDocumentFormattingEditsTalon(parseTreeExtension);
+                } catch (ex) {
+                    const err = ex as Error;
+                    await window.showErrorMessage(err.message);
+                    console.error(err.stack);
+                }
+            }
         }
     );
 }
