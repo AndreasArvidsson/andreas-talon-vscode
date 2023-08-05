@@ -18,7 +18,7 @@ class TalonFormatter {
     }
 
     getText(node: SyntaxNode): string {
-        return this.getNodeText(node);
+        return this.getNodeText(node) + this.eol;
     }
 
     private getLeftRightText(node: SyntaxNode): string {
@@ -48,20 +48,21 @@ class TalonFormatter {
     private getNodeTextInternal(node: SyntaxNode, isIndented = false): string {
         switch (node.type) {
             case "source_file":
-                return node.children.map((n) => this.getNodeText(n)).join("");
+                return node.children
+                    .map((n) => this.getNodeText(n))
+                    .filter(Boolean)
+                    .join(this.eol);
 
             case "matches": {
                 if (node.children.length === 0) {
                     return "";
                 }
                 const text = node.children.map((n) => this.getNodeText(n)).join(this.eol);
-                return `${text}${this.eol}-${this.eol}`;
+                return `${text}${this.eol}-`;
             }
 
-            case "declarations": {
-                const text = node.children.map((n) => this.getNodeText(n)).join(this.eol);
-                return `${text}${this.eol}`;
-            }
+            case "declarations":
+                return node.children.map((n) => this.getNodeText(n)).join(this.eol);
 
             case "match":
                 return node.children.map((n) => this.getNodeText(n)).join("");

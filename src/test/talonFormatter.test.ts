@@ -56,6 +56,81 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
             "face(smile):                'face'",
             ""
         ]
+    },
+    {
+        title: "Large file",
+        pre: `\
+not   mode  : command
+tag :  stuff
+-
+
+some command : 
+    # stuff
+    edit.left(  )
+    key(  enter  )
+    key(  enter  )
+    sleep(   200ms  )
+    user.too_stuff( 5 ,  7  , true  ,  false  ) 
+    
+command    :                    "command"
+
+# hello
+
+
+tag() :  user.some_tag
+
+settings(  ) :
+    speech.debug  =  1
+    speech.stuff  =  1
+
+key(  enter  )  :        "enter hello"
+gamepad(  north  )  :         "north"
+face(  smile  )  :        "smile"
+parrot(  pop  )  :           "pop"
+deck(  stuff  )  :      "deck"
+
+slap  :
+    key(  end  )
+    key(  enter  )
+
+# Uncomment this to enable the curse yes/curse no commands (show hide mouse cursor). See issue #688.
+# tag(): user.mouse_cursor_commands_enable`,
+        post: `\
+not mode: command
+tag: stuff
+-
+
+some command:
+    # stuff
+    edit.left()
+    key(enter)
+    key(enter)
+    sleep(200ms)
+    user.too_stuff(5, 7, true, false)
+
+command:                    "command"
+
+# hello
+
+tag(): user.some_tag
+
+settings(  ):
+    speech.debug = 1
+    speech.stuff = 1
+
+key(enter):                 "enter hello"
+gamepad(north):             "north"
+face(smile):                "smile"
+parrot(pop):                "pop"
+deck(  stuff  ):            "deck"
+
+slap:
+    key(end)
+    key(enter)
+
+# Uncomment this to enable the curse yes/curse no commands (show hide mouse cursor). See issue #688.
+# tag(): user.mouse_cursor_commands_enable
+`
     }
 ];
 
