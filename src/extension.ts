@@ -23,7 +23,7 @@ export const activate = async (context: vscode.ExtensionContext): Promise<void> 
         ...registerCommands(parseTreeExtension, commandServerExtension, gitExtension),
         registerLanguageDefinitions(),
         registerLanguageCodeActions(parseTreeExtension),
-        registerLanguageFormatter(),
+        registerLanguageFormatter(parseTreeExtension),
         createTabView()
     );
 };
