@@ -135,10 +135,15 @@ function provideDocumentFormattingEditsTalon(parseTreeExtension: ParseTreeExtens
     const editor = window.activeTextEditor;
 
     if (editor == null) {
-        throw Error("Active text editor is null");
+        return [];
     }
 
     const tree = parseTreeExtension.getTree(editor.document);
+
+    if (tree.rootNode.hasError()) {
+        return [];
+    }
+
     const formatter = new TalonFormatter(editor);
     const newText = formatter.getText(tree.rootNode);
     const originalText = editor.document.getText();
