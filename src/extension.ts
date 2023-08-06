@@ -20,7 +20,7 @@ export const activate = async (context: vscode.ExtensionContext): Promise<void> 
         : await getCommandServerExtension();
 
     context.subscriptions.push(
-        ...registerCommands(parseTreeExtension, commandServerExtension, gitExtension),
+        registerCommands(parseTreeExtension, commandServerExtension, gitExtension),
         registerLanguageDefinitions(),
         registerLanguageCodeActions(parseTreeExtension),
         registerLanguageFormatter(parseTreeExtension),

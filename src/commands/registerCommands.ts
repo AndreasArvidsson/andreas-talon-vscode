@@ -29,7 +29,7 @@ export function registerCommands(
     parseTreeExtension: ParseTreeExtension,
     commandServerExtension: CommandServerExtension,
     gitExtension: GitExtension
-): vscode.Disposable[] {
+): vscode.Disposable {
     const getText = new GetText(commandServerExtension, parseTreeExtension);
     const git = new GitUtil(gitExtension);
 
@@ -69,8 +69,10 @@ export function registerCommands(
         printCommands
     } as const;
 
-    return Object.entries(commands).map(([command, callback]) =>
-        registerCommand(command as CommandId, callback)
+    return vscode.Disposable.from(
+        ...Object.entries(commands).map(([command, callback]) =>
+            registerCommand(command as CommandId, callback)
+        )
     );
 }
 
