@@ -10,6 +10,7 @@ import {
 import type { SyntaxNode } from "web-tree-sitter";
 import { ParseTreeExtension } from "../typings/parserTree";
 import { TalonFormatter } from "./TalonFormatter";
+import { TreeSitterFormatter } from "./TreeSitterFormatter";
 
 export interface LanguageFormatter {
     getText(ident: string, eol: string, node: SyntaxNode): string;
@@ -24,6 +25,7 @@ function provideDocumentFormattingEdits(
     const tree = parseTreeExtension.getTree(document);
 
     if (tree.rootNode.hasError()) {
+        console.warn(`Abort document formatting: Syntax tree has error`);
         return [];
     }
 
@@ -47,13 +49,24 @@ function provideDocumentFormattingEdits(
 }
 
 export function registerLanguageFormatter(parseTreeExtension: ParseTreeExtension): Disposable {
-    return languages.registerDocumentFormattingEditProvider("talon", {
-        provideDocumentFormattingEdits: (document: TextDocument, options: FormattingOptions) =>
-            provideDocumentFormattingEdits(
-                parseTreeExtension,
-                document,
-                options,
-                new TalonFormatter()
-            )
-    });
+    return Disposable.from(
+        languages.registerDocumentFormattingEditProvider("talon", {
+            provideDocumentFormattingEdits: (document, options) =>
+                provideDocumentFormattingEdits(
+                    parseTreeExtension,
+                    document,
+                    options,
+                    new TalonFormatter()
+                )
+        }),
+        languages.registerDocumentFormattingEditProvider("scm", {
+            provideDocumentFormattingEdits: (document, options) =>
+                provideDocumentFormattingEdits(
+                    parseTreeExtension,
+                    document,
+                    options,
+                    new TreeSitterFormatter()
+                )
+        })
+    );
 }

@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.28.0",
+    "version": "3.29.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -55,6 +55,15 @@
                 ],
                 "extensions": [
                     ".talon-list"
+                ]
+            },
+            {
+                "id": "scm",
+                "aliases": [
+                    "Tree-sitter Query"
+                ],
+                "extensions": [
+                    ".scm"
                 ]
             }
         ],

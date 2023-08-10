@@ -4,16 +4,12 @@ import type { LanguageFormatter } from "./registerLanguageFormatter";
 const columnWidth = 28;
 
 export class TalonFormatter implements LanguageFormatter {
-    private lastRow: number;
+    private lastRow = 0;
     private ident = "";
     private eol = "";
 
-    constructor() {
-        this.lastRow = 0;
-        this.getNodeText = this.getNodeText.bind(this);
-    }
-
     getText(ident: string, eol: string, node: SyntaxNode): string {
+        this.lastRow = 0;
         this.ident = ident;
         this.eol = eol;
         return this.getNodeText(node) + this.eol;
