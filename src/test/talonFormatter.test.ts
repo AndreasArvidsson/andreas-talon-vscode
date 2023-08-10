@@ -60,6 +60,11 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
         ]
     },
     {
+        title: "CRLF comment",
+        pre: "# Hello\r\nfoo: 'bar'",
+        post: "# Hello\r\nfoo:                        'bar'\r\n"
+    },
+    {
         title: "Large file",
         pre: `\
 not   mode  : command
