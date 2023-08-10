@@ -38,8 +38,8 @@ export class TreeSitterFormatter implements LanguageFormatter {
         parts.push(
             node.children
                 .slice(index)
-                .map((n) => n.text)
-                .join(" ")
+                .map((n) => this.getNodeText(n, 0))
+                .join("")
         );
         return parts.join("");
     }
@@ -88,7 +88,7 @@ export class TreeSitterFormatter implements LanguageFormatter {
                 return node.children.map((n) => this.getNodeText(n, 0)).join(this.eol);
 
             case "grouping":
-                return node.children.map((n) => this.getNodeText(n, 1)).join(this.eol);
+                return node.children.map((n) => this.getNodeText(n, numIndents + 1)).join(this.eol);
 
             case "list":
                 return this.getListText(node, numIndents);
