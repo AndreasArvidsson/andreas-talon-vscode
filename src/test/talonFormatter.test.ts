@@ -45,14 +45,16 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
             "tag()  :  user.some_tag",
             "key( enter )  :  'key'",
             "gamepad( north )  :  'gamepad'",
-            "parrot( pulp )  :  'parrot'",
+            "parrot( pop )  :  'parrot'",
+            "noise( pop )  :  'noise'",
             "face( smile )  :  'face'"
         ],
         post: [
             "tag(): user.some_tag",
             "key(enter):                 'key'",
             "gamepad(north):             'gamepad'",
-            "parrot(pulp):               'parrot'",
+            "parrot(pop):                'parrot'",
+            "noise(pop):                 'noise'",
             "face(smile):                'face'",
             ""
         ]
@@ -79,7 +81,7 @@ command    :                    "command"
 
 tag() :  user.some_tag
 
-settings(  ) :
+settings() :
     speech.debug  =  1
     speech.stuff  =  1
 
@@ -87,6 +89,7 @@ key(  enter  )  :        "enter hello"
 gamepad(  north  )  :         "north"
 face(  smile  )  :        "smile"
 parrot(  pop  )  :           "pop"
+noise(  pop  )  :         "noise"
 deck(  stuff  )  :      "deck"
 
 slap  :
@@ -114,7 +117,7 @@ command:                    "command"
 
 tag(): user.some_tag
 
-settings(  ):
+settings():
     speech.debug = 1
     speech.stuff = 1
 
@@ -122,6 +125,7 @@ key(enter):                 "enter hello"
 gamepad(north):             "north"
 face(smile):                "smile"
 parrot(pop):                "pop"
+noise(pop):                 "noise"
 deck(  stuff  ):            "deck"
 
 slap:

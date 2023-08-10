@@ -73,13 +73,16 @@ class TalonFormatter {
             case "command_declaration":
             case "key_binding_declaration":
             case "parrot_declaration":
+            case "noise_declaration":
             case "face_declaration":
             case "gamepad_declaration":
             case "settings_declaration":
                 return this.getLeftRightText(node);
 
-            case "comment":
-                return isIndented ? `${this.ident}${node.text}` : node.text;
+            case "comment": {
+                const text = node.text.trimEnd();
+                return isIndented ? `${this.ident}${text}` : text;
+            }
 
             case "expression_statement":
             case "assignment_statement": {
@@ -95,6 +98,7 @@ class TalonFormatter {
             case "face_binding":
             case "gamepad_binding":
             case "parrot_binding":
+            case "noise_binding":
             case "tag_import_declaration":
                 return node.children.map((n) => this.getNodeText(n)).join("");
 
@@ -114,6 +118,7 @@ class TalonFormatter {
             case "gamepad(":
             case "face(":
             case "parrot(":
+            case "noise(":
             case "identifier":
             case "variable":
             case "string":
