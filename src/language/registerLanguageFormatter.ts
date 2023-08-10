@@ -80,6 +80,7 @@ class TalonFormatter {
                 return this.getLeftRightText(node);
 
             case "comment": {
+                // When using crlf eol comments have a trailing `\r`
                 const text = node.text.trimEnd();
                 return isIndented ? `${this.ident}${text}` : text;
             }
