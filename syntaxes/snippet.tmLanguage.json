@@ -10,7 +10,7 @@
     ],
     "repository": {
         "context": {
-            "begin": "(?=^name:)|(?<=^---$)",
+            "begin": "(?=^\\w+\\s*:)|(?<=^---$)",
             "end": "(?=^-$)",
             "patterns": [
                 {

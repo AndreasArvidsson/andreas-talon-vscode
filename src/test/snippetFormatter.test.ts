@@ -17,9 +17,9 @@ $1.wrapperScope  :   statement
     $0.phrase:catch
     $0.wrapperScope :statement
 ---
-
 language: javascript
 -
+
 try {
     $1
 }
@@ -59,7 +59,6 @@ a: b
 
 language: python
 -
-
 try:
     $1
 except Exception as ex:

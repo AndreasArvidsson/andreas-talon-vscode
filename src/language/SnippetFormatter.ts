@@ -6,19 +6,21 @@ export class SnippetFormatter implements LanguageFormatterText {
     getText(ident: string, eol: string, text: string): string {
         this.eol = eol;
 
-        const sections = text.split(/^---$/m);
+        const documents = text.split(/^---$/m);
         return (
-            sections
-                .map((s) => this.getSectionText(s))
-                .join("---")
+            documents
+                .map((s) => this.getDocumentText(s))
+                // Remove empty documents
+                .filter(Boolean)
+                .join(`${eol}---${eol}${eol}`)
                 .trim() + eol
         );
     }
 
-    private getSectionText(text: string): string {
+    private getDocumentText(text: string): string {
         const parts = text.split(/^-$/m);
         parts[0] = this.getContextText(parts[0]);
-        return parts.join("-");
+        return parts.map((p) => p.trim()).join(`${this.eol}-${this.eol}`);
     }
 
     private getContextText(text: string): string {
