@@ -1,9 +1,9 @@
 import type { SyntaxNode } from "web-tree-sitter";
-import type { LanguageFormatter } from "./registerLanguageFormatter";
+import type { LanguageFormatterTree } from "./registerLanguageFormatter";
 
 const columnWidth = 28;
 
-export class TalonFormatter implements LanguageFormatter {
+export class TalonFormatter implements LanguageFormatterTree {
     private lastRow = 0;
     private ident = "";
     private eol = "";

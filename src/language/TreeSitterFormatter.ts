@@ -1,7 +1,7 @@
 import type { SyntaxNode } from "web-tree-sitter";
-import type { LanguageFormatter } from "./registerLanguageFormatter";
+import type { LanguageFormatterTree } from "./registerLanguageFormatter";
 
-export class TreeSitterFormatter implements LanguageFormatter {
+export class TreeSitterFormatter implements LanguageFormatterTree {
     private lastRow = 0;
     private ident = "";
     private eol = "";

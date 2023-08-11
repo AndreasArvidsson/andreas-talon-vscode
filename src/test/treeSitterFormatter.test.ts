@@ -4,16 +4,16 @@ import { runTest } from "./testUtil/runTest";
 type Content = string | string[];
 
 const fixtures: { title: string; pre: Content; post: Content }[] = [
-    // {
-    //     title: "Damed nodes",
-    //     pre: ["(aaa", "    (bbb", "      (ccc)", "    ", ")", ")"],
-    //     post: ["(aaa", "    (bbb", "        (ccc)", "    )", ")", ""]
-    // },
-    // {
-    //     title: "Anonymous node",
-    //     pre: '";" ?  @namedFunction.end  @functionName.domain.end',
-    //     post: '";"? @namedFunction.end @functionName.domain.end\n'
-    // },
+    {
+        title: "Damed nodes",
+        pre: ["(aaa", "    (bbb", "      (ccc)", "    ", ")", ")"],
+        post: ["(aaa", "    (bbb", "        (ccc)", "    )", ")", ""]
+    },
+    {
+        title: "Anonymous node",
+        pre: '";" ?  @namedFunction.end  @functionName.domain.end',
+        post: '";"? @namedFunction.end @functionName.domain.end\n'
+    },
     {
         title: "Large file",
         pre: `\

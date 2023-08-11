@@ -1,0 +1,68 @@
+{
+    "scopeName": "source.snippet",
+    "patterns": [
+        {
+            "include": "#context"
+        },
+        {
+            "include": "#body"
+        }
+    ],
+    "repository": {
+        "context": {
+            "begin": "(?=^name:)|(?<=^---$)",
+            "end": "(?=^-$)",
+            "patterns": [
+                {
+                    "include": "#key-value"
+                }
+            ]
+        },
+        "body": {
+            "begin": "(?<=^-$)",
+            "end": "(?=^---$)",
+            "name": "string.unquoted.snippet"
+        },
+        "key-value": {
+            "match": "(.*?)\\s*:\\s*(.*)",
+            "captures": {
+                "1": {
+                    "patterns": [
+                        {
+                            "include": "#key"
+                        },
+                        {
+                            "include": "#variable"
+                        }
+                    ]
+                },
+                "2": {
+                    "patterns": [
+                        {
+                            "include": "#value"
+                        }
+                    ]
+                }
+            }
+        },
+        "key": {
+            "match": "^(name|phrase|language)$",
+            "name": "entity.name.tag.snippet"
+        },
+        "variable": {
+            "match": "^(\\$.+)\\.(phrase|wrapperScope)$",
+            "captures": {
+                "1": {
+                    "name": "variable.other.snippet"
+                },
+                "2": {
+                    "name": "entity.name.tag.snippet"
+                }
+            }
+        },
+        "value": {
+            "match": ".*",
+            "name": "entity.name.function.snippet"
+        }
+    }
+}
