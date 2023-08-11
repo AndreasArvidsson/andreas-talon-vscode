@@ -17,16 +17,16 @@ $1.wrapperScope  :   statement
     $0.phrase:catch
     $0.wrapperScope :statement
 ---
-language: javascript
+language: javascript|  java
 -
 
 try {
-    $1
+    $1 
 }
 catch(error) {
-    $0
+    $0 
 } ---
-a: b
+a: b 
 ---
 
 language: python
@@ -46,7 +46,7 @@ $0.phrase: catch
 $0.wrapperScope: statement
 ---
 
-language: javascript
+language: javascript | java
 -
 try {
     $1
