@@ -108,6 +108,10 @@ tab {self.letter} [{self.letter}]:
     user.run_rpc_command("andreas.focusTab", "{letter_1}{letter_2 or ''}")
 ```
 
+## Tree-sitter Query(scm) language features
+
+-   Adds document formatter for scm files.
+
 ## Images
 
 ### Code completion
