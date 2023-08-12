@@ -58,8 +58,14 @@ export class SnippetFormatter implements LanguageFormatterText {
     }
 
     private getBodyText(text: string): string {
+        // Find first line that is not empty. Preserve indentation.
+        const matchLeading = text.match(/^[ \t]*\S/m);
+        if (matchLeading?.index == null) {
+            return "";
+        }
         return text
-            .trim()
+            .slice(matchLeading.index)
+            .trimEnd()
             .split(/\r?\n/)
             .map((l) => l.trimEnd())
             .join(this.eol);

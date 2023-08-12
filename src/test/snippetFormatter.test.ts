@@ -5,6 +5,25 @@ type Content = string | string[];
 
 const fixtures: { title: string; pre: Content; post: Content }[] = [
     {
+        title: "Empty lines",
+        pre: `
+name: foo
+-
+  
+  foo  
+  
+ bar 
+baz `,
+        post: `\
+name: foo
+-
+  foo
+
+ bar
+baz
+`
+    },
+    {
         title: "Large file",
         pre: `\
 
