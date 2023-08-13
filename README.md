@@ -150,7 +150,7 @@ tab {self.letter} [{self.letter}]:
 
 ## Demo
 
-[YouTube - On hover and go to definition demo](https://youtu.be/UdMLNVLkBkg)
+[YouTube - On hover and go to definition](https://youtu.be/UdMLNVLkBkg)
 
 [YouTube - Tab view](https://youtu.be/35yRJwSjTCk)
 
