@@ -144,9 +144,15 @@ tab {self.letter} [{self.letter}]:
 
 ![Quick fix convert line comment to jsdoc](images/fix_jsdoc.png)
 
+### Tab view
+
+![Tab view](images/tab_view.png)
+
 ## Demo
 
 [YouTube - On hover and go to definition demo](https://youtu.be/UdMLNVLkBkg)
+
+[YouTube - Tab view](https://youtu.be/35yRJwSjTCk)
 
 ## Build
 
