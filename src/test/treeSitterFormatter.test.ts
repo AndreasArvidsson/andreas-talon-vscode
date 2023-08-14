@@ -5,7 +5,7 @@ type Content = string | string[];
 
 const fixtures: { title: string; pre: Content; post: Content }[] = [
     {
-        title: "Damed nodes",
+        title: "Named nodes",
         pre: ["(aaa", "    (bbb", "      (ccc)", "    ", ")", ")"],
         post: ["(aaa", "    (bbb", "        (ccc)", "    )", ")", ""]
     },

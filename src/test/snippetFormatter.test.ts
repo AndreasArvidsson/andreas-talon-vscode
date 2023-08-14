@@ -1,9 +1,35 @@
 import { commands } from "vscode";
 import { runTest } from "./testUtil/runTest";
+import { NumberSelection } from "./testUtil/test.types";
 
 type Content = string | string[];
 
-const fixtures: { title: string; pre: Content; post: Content }[] = [
+const fixtures: { title: string; pre: Content; post: Content; selections?: NumberSelection }[] = [
+    {
+        title: "Key order",
+        selections: [0, 1],
+        pre: `\
+$0.wrapperScope: statement
+$0.phrase: try
+$foo.phrase: bar
+$1.phrase: catch
+$1.wrapperScope: statement
+phrase: try catch
+language: javascript
+name: mySnippet`,
+        post: `\
+name: mySnippet
+language: javascript
+phrase: try catch
+
+$1.phrase: catch
+$1.wrapperScope: statement
+$foo.phrase: bar
+$0.phrase: try
+$0.wrapperScope: statement
+---
+`
+    },
     {
         title: "Empty lines",
         pre: `
@@ -21,6 +47,7 @@ name: foo
 
  bar
 baz
+---
 `
     },
     {
@@ -82,6 +109,7 @@ try:
     $1
 except Exception as ex:
     $0
+---
 `
     }
 ];
@@ -96,7 +124,8 @@ suite("Snippet formatter", () => {
                 content: getContentString(fixture.pre)
             },
             post: {
-                content: getContentString(fixture.post)
+                content: getContentString(fixture.post),
+                selections: fixture.selections
             }
         });
     }

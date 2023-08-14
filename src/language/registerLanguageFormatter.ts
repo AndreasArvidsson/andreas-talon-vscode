@@ -45,8 +45,13 @@ function provideDocumentFormattingEditsForText(
     formatter: LanguageFormatterText
 ): TextEdit[] {
     const [indentation, eol] = parseOptions(document, options);
-    const newText = formatter.getText(indentation, eol, document.getText());
-    return createTextEdits(document, newText);
+    try {
+        const newText = formatter.getText(indentation, eol, document.getText());
+        return createTextEdits(document, newText);
+    } catch (error) {
+        console.warn((error as Error).message);
+        return [];
+    }
 }
 
 function parseOptions(document: TextDocument, options: FormattingOptions): [string, string] {

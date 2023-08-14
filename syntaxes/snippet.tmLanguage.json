@@ -10,29 +10,37 @@
     ],
     "repository": {
         "context": {
-            "begin": "(?=^\\w+\\s*:)|(?<=^---$)",
+            "begin": "(?=^\\$?[\\w.]+\\s*:)|(?<=^---$)",
             "end": "(?=^-$)",
             "patterns": [
                 {
-                    "include": "#key-value"
+                    "include": "#pair-scalar"
+                },
+                {
+                    "include": "#pair-vector"
+                },
+                {
+                    "include": "#pair-variable"
                 }
             ]
         },
         "body": {
             "begin": "(?<=^-$)",
             "end": "(?=^---$)",
-            "name": "string.unquoted.snippet"
+            "name": "string.unquoted.snippet",
+            "patterns": [
+                {
+                    "include": "#variable"
+                }
+            ]
         },
-        "key-value": {
-            "match": "(.*?)\\s*:\\s*(.*)",
+        "pair-scalar": {
+            "match": "^(name): ?(\\w+)$",
             "captures": {
                 "1": {
                     "patterns": [
                         {
                             "include": "#key"
-                        },
-                        {
-                            "include": "#variable"
                         }
                     ]
                 },
@@ -45,20 +53,58 @@
                 }
             }
         },
-        "key": {
-            "match": "^(name|phrase|language)$",
-            "name": "entity.name.tag.snippet"
-        },
-        "variable": {
-            "match": "^(\\$.+)\\.(phrase|wrapperScope)$",
+        "pair-vector": {
+            "match": "^(phrase|language): ?([\\w| ]+)$",
             "captures": {
                 "1": {
-                    "name": "variable.other.snippet"
+                    "patterns": [
+                        {
+                            "include": "#key"
+                        }
+                    ]
                 },
                 "2": {
-                    "name": "entity.name.tag.snippet"
+                    "patterns": [
+                        {
+                            "include": "#value"
+                        }
+                    ]
                 }
             }
+        },
+        "pair-variable": {
+            "match": "^(\\$\\w+)\\.(phrase|wrapperScope): ?([\\w ]+)$",
+            "captures": {
+                "1": {
+                    "patterns": [
+                        {
+                            "include": "#variable"
+                        }
+                    ]
+                },
+                "2": {
+                    "patterns": [
+                        {
+                            "include": "#key"
+                        }
+                    ]
+                },
+                "3": {
+                    "patterns": [
+                        {
+                            "include": "#value"
+                        }
+                    ]
+                }
+            }
+        },
+        "variable": {
+            "match": "\\$\\w+",
+            "name": "variable.other.snippet"
+        },
+        "key": {
+            "match": "\\w+",
+            "name": "entity.name.tag.snippet"
         },
         "value": {
             "match": "\\w+",

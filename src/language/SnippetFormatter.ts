@@ -1,3 +1,4 @@
+import { SnippetDocument, SnippetVariable, parseSnippetFile } from "./SnippetParser";
 import type { LanguageFormatterText } from "./registerLanguageFormatter";
 
 export class SnippetFormatter implements LanguageFormatterText {
@@ -6,68 +7,64 @@ export class SnippetFormatter implements LanguageFormatterText {
     getText(ident: string, eol: string, text: string): string {
         this.eol = eol;
 
-        const documents = text.split(/^---$/m);
         return (
-            documents
+            parseSnippetFile(text)
                 .map((s) => this.getDocumentText(s))
                 // Remove empty documents
                 .filter(Boolean)
-                .join(`${eol}---${eol}${eol}`)
-                .trim() + eol
+                .join(`${eol}---${eol}${eol}`) + `${eol}---${eol}`
         );
     }
 
-    private getDocumentText(text: string): string {
-        const parts = text.split(/^-$/m);
-        if (parts.length === 1) {
-            return this.getContextText(parts[0]);
+    private getDocumentText(document: SnippetDocument): string {
+        const parts: string[] = [
+            this.getOptionalPairString("name", document.name),
+            this.getOptionalPairString("language", document.language),
+            this.getOptionalPairString("phrase", document.phrase)
+        ].filter(Boolean);
+
+        if (document.variables.length > 0) {
+            if (parts.length > 0) {
+                parts.push("");
+            }
+            parts.push(...this.getSortedVariables(document.variables));
         }
-        if (parts.length === 2) {
-            const context = this.getContextText(parts[0]);
-            const body = this.getBodyText(parts[1]);
-            return `${context}${this.eol}-${this.eol}${body}`;
+
+        if (document.body != null) {
+            parts.push("-", ...document.body);
         }
-        return text;
+
+        return parts.join(this.eol);
     }
 
-    private getContextText(text: string): string {
-        return (
-            text
-                .trim()
-                .split(/\r?\n/)
-                .map((l) => this.getContextLineText(l))
-                .join(this.eol)
-                // Limit to single empty line
-                .replace(/(\r?\n){3,}/g, this.eol + this.eol)
-        );
+    private getSortedVariables(variables: SnippetVariable[]): string[] {
+        const result = [...variables];
+        result.sort(compareVariables);
+        return result
+            .flatMap((variable) => [
+                this.getOptionalPairString(`$${variable.name}.phrase`, variable.phrase),
+                this.getOptionalPairString(`$${variable.name}.wrapperScope`, variable.wrapperScope)
+            ])
+            .filter(Boolean);
     }
 
-    private getContextLineText(text: string): string {
-        if (text.trim().length === 0) {
+    private getOptionalPairString(key: string, value: string | string[] | undefined): string {
+        if (value == null) {
             return "";
         }
-        const parts = text.split(":");
-        if (parts.length === 2) {
-            const value = parts[1]
-                .split("|")
-                .map((p) => p.trim())
-                .join(" | ");
-            return `${parts[0].trim()}: ${value}`;
+        if (Array.isArray(value)) {
+            return `${key}: ${value.join(" | ")}`;
         }
-        return text;
+        return `${key}: ${value}`;
     }
+}
 
-    private getBodyText(text: string): string {
-        // Find first line that is not empty. Preserve indentation.
-        const matchLeading = text.match(/^[ \t]*\S/m);
-        if (matchLeading?.index == null) {
-            return "";
-        }
-        return text
-            .slice(matchLeading.index)
-            .trimEnd()
-            .split(/\r?\n/)
-            .map((l) => l.trimEnd())
-            .join(this.eol);
+function compareVariables(a: SnippetVariable, b: SnippetVariable): number {
+    if (a.name === "0") {
+        return 1;
     }
+    if (b.name === "0") {
+        return -1;
+    }
+    return a.name.localeCompare(b.name);
 }
