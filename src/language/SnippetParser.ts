@@ -14,26 +14,35 @@ export interface SnippetVariable {
 
 export function parseSnippetFile(content: string): SnippetDocument[] {
     const documents = content.split(/^---$/m);
-    return documents.map(parseDocument);
+    return documents.map(parseDocument).filter((d): d is SnippetDocument => d != null);
 }
 
-function parseDocument(text: string): SnippetDocument {
+function parseDocument(text: string): SnippetDocument | undefined {
     const parts = text.split(/^-$/m);
     if (parts.length > 2) {
         throw Error(`Found multiple '-' in snippet document '${text}'`);
     }
-    const document = parseContext(parts[0]);
+    let document = parseContext(parts[0]);
     if (parts.length === 2) {
-        document.body = parseBody(parts[1]);
+        const body = parseBody(parts[1]);
+        if (body != null) {
+            if (document == null) {
+                document = { variables: [] };
+            }
+            document.body = parseBody(parts[1]);
+        }
     }
     return document;
 }
 
-function parseContext(text: string): SnippetDocument {
-    const document: SnippetDocument = {
-        variables: []
-    };
+function parseContext(text: string): SnippetDocument | undefined {
+    const document: SnippetDocument = { variables: [] };
     const pairs = parseContextPairs(text);
+
+    if (Object.keys(pairs).length === 0) {
+        return undefined;
+    }
+
     const variables: Record<string, string> = {};
 
     for (const [key, value] of Object.entries(pairs)) {
@@ -89,7 +98,7 @@ function parseContextPairs(text: string): Record<string, string> {
 function parseVariables(variables: Record<string, string>): SnippetVariable[] {
     const map: Record<string, SnippetVariable> = {};
 
-    const getVariable = (name: string) => {
+    const getVariable = (name: string): SnippetVariable => {
         if (map[name] == null) {
             map[name] = { name };
         }
@@ -132,5 +141,5 @@ function parseBody(text: string): string[] | undefined {
 }
 
 function parseVectorValue(value: string): string[] {
-    return value.split("|").map((p) => p.trim());
+    return value.split("|").map((v) => v.trim());
 }

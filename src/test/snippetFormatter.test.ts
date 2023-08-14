@@ -51,6 +51,27 @@ baz
 `
     },
     {
+        title: "Empty document",
+        pre: `\
+name: test
+---
+
+---
+phrase: test
+-
+test
+`,
+        post: `\
+name: test
+---
+
+phrase: test
+-
+test
+---
+`
+    },
+    {
         title: "Large file",
         pre: `\
 
