@@ -73,7 +73,7 @@
             }
         },
         "pair-variable": {
-            "match": "^(\\$\\w+)\\.(phrase|wrapperScope): ?([\\w ]+)$",
+            "match": "^(\\$\\w+)\\.(wrapperPhrase|wrapperScope): ?([\\w ]+)$",
             "captures": {
                 "1": {
                     "patterns": [

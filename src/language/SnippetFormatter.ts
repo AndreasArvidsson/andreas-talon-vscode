@@ -42,7 +42,10 @@ export class SnippetFormatter implements LanguageFormatterText {
         result.sort(compareVariables);
         return result
             .flatMap((variable) => [
-                this.getOptionalPairString(`$${variable.name}.phrase`, variable.phrase),
+                this.getOptionalPairString(
+                    `$${variable.name}.wrapperPhrase`,
+                    variable.wrapperPhrase
+                ),
                 this.getOptionalPairString(`$${variable.name}.wrapperScope`, variable.wrapperScope)
             ])
             .filter(Boolean);
