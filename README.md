@@ -101,13 +101,6 @@ Many of the commands take arguments and return values that can only be used with
 
 -   Convert line and block comments to JS/Java doc comments
 
-### Focus tab Talon command
-
-```talon
-tab {self.letter} [{self.letter}]:
-    user.run_rpc_command("andreas.focusTab", "{letter_1}{letter_2 or ''}")
-```
-
 ## Tree-sitter Query(.scm) language features
 
 -   Adds document formatter for scm files.
@@ -116,6 +109,22 @@ tab {self.letter} [{self.letter}]:
 
 -   Adds syntax highlight for snippet files.
 -   Adds document formatter for snippet files.
+
+## Talon command examples
+
+### Focus tab
+
+```talon
+tab {self.letter} [{self.letter}]:
+    user.run_rpc_command("andreas.focusTab", "{letter_1}{letter_2 or ''}")
+```
+
+### Generate range
+
+```talon
+generate range [from <number_small>]:
+    user.run_rpc_command("andreas.generateRange", number_small or 1)
+```
 
 ## Images
 
