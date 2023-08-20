@@ -11,7 +11,16 @@ import {
 } from "./util/getExtension";
 import { getFakeCommandServerExtension } from "./util/getFakeCommandServerExtension";
 
-export const activate = async (context: vscode.ExtensionContext): Promise<void> => {
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
+    try {
+        await activateExtension(context);
+    } catch (error) {
+        await vscode.window.showErrorMessage((error as Error).message);
+        throw error;
+    }
+}
+
+async function activateExtension(context: vscode.ExtensionContext): Promise<void> {
     const isTesting = context.extensionMode === vscode.ExtensionMode.Test;
     const parseTreeExtension = await getParseTreeExtension();
     const gitExtension = await getGitExtension();
@@ -26,4 +35,4 @@ export const activate = async (context: vscode.ExtensionContext): Promise<void> 
         registerLanguageFormatter(parseTreeExtension),
         createTabView()
     );
-};
+}
