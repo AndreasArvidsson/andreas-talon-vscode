@@ -10,9 +10,9 @@ const fixtures: { title: string; pre: Content; post: Content; selections?: Numbe
         selections: [0, 1],
         pre: `\
 $0.wrapperScope: statement
-$0.phrase: try
-$foo.phrase: bar
-$1.phrase: catch
+$0.wrapperPhrase: try
+$foo.wrapperPhrase: bar
+$1.wrapperPhrase: catch
 $1.wrapperScope: statement
 phrase: try catch
 language: javascript
@@ -22,10 +22,10 @@ name: mySnippet
 language: javascript
 phrase: try catch
 
-$1.phrase: catch
+$1.wrapperPhrase: catch
 $1.wrapperScope: statement
-$foo.phrase: bar
-$0.phrase: try
+$foo.wrapperPhrase: bar
+$0.wrapperPhrase: try
 $0.wrapperScope: statement
 ---
 `
@@ -79,9 +79,9 @@ name:tryCatchStatement
 phrase   :  try catch
 
 
-$1.phrase:try
+$1.wrapperPhrase:try
 $1.wrapperScope  :   statement
-    $0.phrase:catch
+    $0.wrapperPhrase:catch
     $0.wrapperScope :statement
 ---
 language: javascript|  java
@@ -107,9 +107,9 @@ except Exception as ex:
 name: tryCatchStatement
 phrase: try catch
 
-$1.phrase: try
+$1.wrapperPhrase: try
 $1.wrapperScope: statement
-$0.phrase: catch
+$0.wrapperPhrase: catch
 $0.wrapperScope: statement
 ---
 
