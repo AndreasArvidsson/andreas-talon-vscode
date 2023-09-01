@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.33.2",
+    "version": "3.33.3",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -136,8 +136,7 @@
             {
                 "command": "andreas.formatSelectedFiles",
                 "category": "Andreas",
-                "title": "Format",
-                "enablement": "false"
+                "title": "Format"
             },
             {
                 "command": "andreas.generateRange",
@@ -258,8 +257,13 @@
         "menus": {
             "explorer/context": [
                 {
+                    "command": "andreas.formatSelectedFiles"
+                }
+            ],
+            "commandPalette": [
+                {
                     "command": "andreas.formatSelectedFiles",
-                    "title": "Format"
+                    "when": "false"
                 }
             ]
         }
