@@ -52,7 +52,7 @@ export const commandDescriptions = {
     removeFile: visible("File", "Remove/delete the active file."),
     moveFile: visible("File", "Move active file to new directory."),
     formatWorkspaceFiles: visible("File", "Format workspace files"),
-    formatSelectedFiles: hidden("File", "Format", " selected files"),
+    formatSelectedFiles: hidden("File", "Format", "selected files"),
 
     // Edit commands
     generateRange: visible(
