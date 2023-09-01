@@ -15,6 +15,7 @@ import { newFile } from "./files/newFile";
 import { removeFile } from "./files/removeFile";
 import { renameFile } from "./files/renameFile";
 import { focusTab } from "./focusTab";
+import { formatSelectedFiles, formatWorkspaceFiles } from "./formatFiles";
 import { generateRange } from "./generateRange";
 import { decrement, increment } from "./incrementDecrement";
 import { lineMiddle } from "./lineMiddle";
@@ -42,6 +43,8 @@ export function registerCommands(
         renameFile,
         removeFile,
         moveFile,
+        formatWorkspaceFiles,
+        formatSelectedFiles,
         // Edits
         generateRange,
         increment,

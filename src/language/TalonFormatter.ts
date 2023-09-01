@@ -116,6 +116,7 @@ export class TalonFormatter implements LanguageFormatterTree {
             case "noise(":
             case "identifier":
             case "variable":
+            case "binary_operator":
             case "string":
             case "integer":
             case "float":

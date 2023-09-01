@@ -51,6 +51,8 @@ export const commandDescriptions = {
     renameFile: visible("File", "Rename active file.", undefined, "(name?: string)"),
     removeFile: visible("File", "Remove/delete the active file."),
     moveFile: visible("File", "Move active file to new directory."),
+    formatWorkspaceFiles: visible("File", "Format workspace files"),
+    formatSelectedFiles: hidden("File", "Format", " selected files"),
 
     // Edit commands
     generateRange: visible(
@@ -76,7 +78,7 @@ export const commandDescriptions = {
         undefined,
         "(line: number)"
     ),
-    lineMiddle: visible("Nav", "Move curser to middle of the current line."),
+    lineMiddle: visible("Nav", "Move cursor to middle of the current line."),
 
     // Text commands
     getDocumentText: hidden("Text", "Get document text.", undefined, "(): string | null"),

@@ -27,6 +27,10 @@ Many of the commands take arguments and return values that can only be used with
     Remove/delete the active file.
 -   `andreas.moveFile()`  
     Move active file to new directory.
+-   `andreas.formatWorkspaceFiles()`  
+    Format workspace files
+-   `andreas.formatSelectedFiles()`  
+    Format selected files
 
 ### Edit commands
 
@@ -46,7 +50,7 @@ Many of the commands take arguments and return values that can only be used with
 -   `andreas.selectTo(line: number)`  
     Select from current location to specified line.
 -   `andreas.lineMiddle()`  
-    Move curser to middle of the current line.
+    Move cursor to middle of the current line.
 
 ### Text commands
 
