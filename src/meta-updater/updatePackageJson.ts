@@ -23,9 +23,9 @@ export function updatePackageJson(content: PackageJson): PackageJson {
 }
 
 function getCommands(): Command[] {
-    return Object.entries(commandDescriptions).map(([command, { category, title, isVisible }]) => ({
+    return Object.entries(commandDescriptions).map(([command, { title, isVisible }]) => ({
         command: getFullCommand(command as CommandId),
-        category: `Andreas (${category})`,
+        category: `Andreas`,
         title,
         ...(isVisible ? {} : { enablement: "false" })
     }));

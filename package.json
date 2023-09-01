@@ -94,164 +94,164 @@
         "commands": [
             {
                 "command": "andreas.getFilename",
-                "category": "Andreas (File)",
+                "category": "Andreas",
                 "title": "Get filename of active file.",
                 "enablement": "false"
             },
             {
                 "command": "andreas.copyFilename",
-                "category": "Andreas (File)",
+                "category": "Andreas",
                 "title": "Copy filename of active file to clipboard."
             },
             {
                 "command": "andreas.newFile",
-                "category": "Andreas (File)",
+                "category": "Andreas",
                 "title": "Create new file."
             },
             {
                 "command": "andreas.duplicateFile",
-                "category": "Andreas (File)",
+                "category": "Andreas",
                 "title": "Create duplicate/copy of active file."
             },
             {
                 "command": "andreas.renameFile",
-                "category": "Andreas (File)",
+                "category": "Andreas",
                 "title": "Rename active file."
             },
             {
                 "command": "andreas.removeFile",
-                "category": "Andreas (File)",
+                "category": "Andreas",
                 "title": "Remove/delete the active file."
             },
             {
                 "command": "andreas.moveFile",
-                "category": "Andreas (File)",
+                "category": "Andreas",
                 "title": "Move active file to new directory."
             },
             {
                 "command": "andreas.formatWorkspaceFiles",
-                "category": "Andreas (File)",
+                "category": "Andreas",
                 "title": "Format workspace files"
             },
             {
                 "command": "andreas.formatSelectedFiles",
-                "category": "Andreas (File)",
+                "category": "Andreas",
                 "title": "Format",
                 "enablement": "false"
             },
             {
                 "command": "andreas.generateRange",
-                "category": "Andreas (Edit)",
+                "category": "Andreas",
                 "title": "Generate numerical range."
             },
             {
                 "command": "andreas.increment",
-                "category": "Andreas (Edit)",
+                "category": "Andreas",
                 "title": "Increment selected number."
             },
             {
                 "command": "andreas.decrement",
-                "category": "Andreas (Edit)",
+                "category": "Andreas",
                 "title": "Decrement selected number."
             },
             {
                 "command": "andreas.openEditorAtIndex",
-                "category": "Andreas (Nav)",
+                "category": "Andreas",
                 "title": "Open editor/tab at given index.",
                 "enablement": "false"
             },
             {
                 "command": "andreas.focusTab",
-                "category": "Andreas (Nav)",
+                "category": "Andreas",
                 "title": "Focus tab by hint.",
                 "enablement": "false"
             },
             {
                 "command": "andreas.selectTo",
-                "category": "Andreas (Nav)",
+                "category": "Andreas",
                 "title": "Select from current location to specified line.",
                 "enablement": "false"
             },
             {
                 "command": "andreas.lineMiddle",
-                "category": "Andreas (Nav)",
+                "category": "Andreas",
                 "title": "Move cursor to middle of the current line."
             },
             {
                 "command": "andreas.getDocumentText",
-                "category": "Andreas (Text)",
+                "category": "Andreas",
                 "title": "Get document text.",
                 "enablement": "false"
             },
             {
                 "command": "andreas.getSelectedText",
-                "category": "Andreas (Text)",
+                "category": "Andreas",
                 "title": "Get selected text.",
                 "enablement": "false"
             },
             {
                 "command": "andreas.getDictationContext",
-                "category": "Andreas (Text)",
+                "category": "Andreas",
                 "title": "Get text before and after selection.",
                 "enablement": "false"
             },
             {
                 "command": "andreas.getClassName",
-                "category": "Andreas (Text)",
+                "category": "Andreas",
                 "title": "Get class name.",
                 "enablement": "false"
             },
             {
                 "command": "andreas.getGitFileURL",
-                "category": "Andreas (Git)",
+                "category": "Andreas",
                 "title": "Get URL to Git repository file webpage.",
                 "enablement": "false"
             },
             {
                 "command": "andreas.getGitRepoURL",
-                "category": "Andreas (Git)",
+                "category": "Andreas",
                 "title": "Get URL to Git repository webpage.",
                 "enablement": "false"
             },
             {
                 "command": "andreas.getGitIssuesURL",
-                "category": "Andreas (Git)",
+                "category": "Andreas",
                 "title": "Get URL to Git repository issues webpage.",
                 "enablement": "false"
             },
             {
                 "command": "andreas.getGitNewIssueURL",
-                "category": "Andreas (Git)",
+                "category": "Andreas",
                 "title": "Get URL to Git repository new issue webpage.",
                 "enablement": "false"
             },
             {
                 "command": "andreas.getGitPullRequestsURL",
-                "category": "Andreas (Git)",
+                "category": "Andreas",
                 "title": "Get URL to Git repository pull requests webpage.",
                 "enablement": "false"
             },
             {
                 "command": "andreas.getSetting",
-                "category": "Andreas (Other)",
+                "category": "Andreas",
                 "title": "Get setting from vscode",
                 "enablement": "false"
             },
             {
                 "command": "andreas.setSetting",
-                "category": "Andreas (Other)",
+                "category": "Andreas",
                 "title": "Set setting for vscode",
                 "enablement": "false"
             },
             {
                 "command": "andreas.executeCommands",
-                "category": "Andreas (Other)",
+                "category": "Andreas",
                 "title": "Sequentially execute multiple commands.",
                 "enablement": "false"
             },
             {
                 "command": "andreas.printCommands",
-                "category": "Andreas (Other)",
+                "category": "Andreas",
                 "title": "Print available commands."
             }
         ],

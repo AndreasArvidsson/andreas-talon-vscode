@@ -41,7 +41,7 @@ Many of the commands take arguments and return values that can only be used with
 -   `andreas.decrement(value?: number)`  
     Decrement selected number.
 
-### Nav commands
+### Navigation commands
 
 -   `andreas.openEditorAtIndex(index: number)`  
     Open editor/tab at given index. Negative indices are counted from the back.

@@ -1,4 +1,4 @@
-type Category = "File" | "Edit" | "Nav" | "Text" | "Git" | "Other";
+type Category = "File" | "Edit" | "Navigation" | "Text" | "Git" | "Other";
 
 interface CommandDescription {
     readonly isVisible: boolean;
@@ -66,19 +66,19 @@ export const commandDescriptions = {
 
     // Navigation commands
     openEditorAtIndex: hidden(
-        "Nav",
+        "Navigation",
         "Open editor/tab at given index.",
         "Negative indices are counted from the back.",
         "(index: number)"
     ),
-    focusTab: hidden("Nav", "Focus tab by hint.", "Hints range [A-ZZ].", "(hint: string)"),
+    focusTab: hidden("Navigation", "Focus tab by hint.", "Hints range [A-ZZ].", "(hint: string)"),
     selectTo: hidden(
-        "Nav",
+        "Navigation",
         "Select from current location to specified line.",
         undefined,
         "(line: number)"
     ),
-    lineMiddle: visible("Nav", "Move cursor to middle of the current line."),
+    lineMiddle: visible("Navigation", "Move cursor to middle of the current line."),
 
     // Text commands
     getDocumentText: hidden("Text", "Get document text.", undefined, "(): string | null"),
