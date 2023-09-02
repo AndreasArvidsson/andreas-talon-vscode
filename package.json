@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.33.3",
+    "version": "3.34.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -156,20 +156,17 @@
             {
                 "command": "andreas.openEditorAtIndex",
                 "category": "Andreas",
-                "title": "Open editor/tab at given index.",
-                "enablement": "false"
+                "title": "Open editor/tab at given index."
             },
             {
                 "command": "andreas.focusTab",
                 "category": "Andreas",
-                "title": "Focus tab by hint.",
-                "enablement": "false"
+                "title": "Focus tab by hint."
             },
             {
                 "command": "andreas.selectTo",
                 "category": "Andreas",
-                "title": "Select from current location to specified line.",
-                "enablement": "false"
+                "title": "Select from current location to specified line."
             },
             {
                 "command": "andreas.lineMiddle",

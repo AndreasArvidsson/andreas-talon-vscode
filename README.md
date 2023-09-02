@@ -30,7 +30,7 @@ Many of the commands take arguments and return values that can only be used with
 -   `andreas.formatWorkspaceFiles()`  
     Format workspace files
 -   `andreas.formatSelectedFiles()`  
-    Format selected files
+    Format selected files. Used by file explorer context menu.
 
 ### Edit commands
 
@@ -162,11 +162,17 @@ generate range [from <number_small>]:
 
 ![Tab view](images/tab_view.png)
 
+### Format selected files context menu
+
+<img src="images/format_context.png" height="500" />
+
 ## Demo
 
 [YouTube - On hover and go to definition](https://youtu.be/UdMLNVLkBkg)
 
 [YouTube - Tab view](https://youtu.be/35yRJwSjTCk)
+
+[YouTube - Format selected files](https://youtu.be/UiWT6GI86Nw)
 
 ## Build
 

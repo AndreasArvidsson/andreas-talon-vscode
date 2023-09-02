@@ -52,7 +52,11 @@ export const commandDescriptions = {
     removeFile: visible("File", "Remove/delete the active file."),
     moveFile: visible("File", "Move active file to new directory."),
     formatWorkspaceFiles: visible("File", "Format workspace files"),
-    formatSelectedFiles: visible("File", "Format", "selected files"),
+    formatSelectedFiles: visible(
+        "File",
+        "Format",
+        "selected files. Used by file explorer context menu."
+    ),
 
     // Edit commands
     generateRange: visible(
@@ -65,14 +69,14 @@ export const commandDescriptions = {
     decrement: visible("Edit", "Decrement selected number.", undefined, "(value?: number)"),
 
     // Navigation commands
-    openEditorAtIndex: hidden(
+    openEditorAtIndex: visible(
         "Navigation",
         "Open editor/tab at given index.",
         "Negative indices are counted from the back.",
         "(index: number)"
     ),
-    focusTab: hidden("Navigation", "Focus tab by hint.", "Hints range [A-ZZ].", "(hint: string)"),
-    selectTo: hidden(
+    focusTab: visible("Navigation", "Focus tab by hint.", "Hints range [A-ZZ].", "(hint: string)"),
+    selectTo: visible(
         "Navigation",
         "Select from current location to specified line.",
         undefined,
