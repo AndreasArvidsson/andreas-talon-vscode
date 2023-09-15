@@ -1,14 +1,15 @@
 export interface SnippetDocument {
     name?: string;
-    phrase?: string[];
-    language?: string[];
+    phrases?: string[];
+    insertionScopes?: string[];
+    languages?: string[];
     body?: string[];
     variables: SnippetVariable[];
 }
 
 export interface SnippetVariable {
     name: string;
-    wrapperPhrase?: string;
+    wrapperPhrases?: string[];
     wrapperScope?: string;
 }
 
@@ -51,10 +52,13 @@ function parseContext(text: string): SnippetDocument | undefined {
                 document.name = value;
                 break;
             case "phrase":
-                document.phrase = parseVectorValue(value);
+                document.phrases = parseVectorValue(value);
+                break;
+            case "insertionScope":
+                document.insertionScopes = parseVectorValue(value);
                 break;
             case "language":
-                document.language = parseVectorValue(value);
+                document.languages = parseVectorValue(value);
                 break;
             default:
                 if (!key.startsWith("$")) {
@@ -96,13 +100,13 @@ function parseContextPairs(text: string): Record<string, string> {
 }
 
 function parseVariables(variables: Record<string, string>): SnippetVariable[] {
-    const map: Record<string, SnippetVariable> = {};
+    const variablesMap: Record<string, SnippetVariable> = {};
 
     const getVariable = (name: string): SnippetVariable => {
-        if (map[name] == null) {
-            map[name] = { name };
+        if (variablesMap[name] == null) {
+            variablesMap[name] = { name };
         }
-        return map[name];
+        return variablesMap[name];
     };
 
     for (const [key, value] of Object.entries(variables)) {
@@ -114,17 +118,17 @@ function parseVariables(variables: Record<string, string>): SnippetVariable[] {
         const field = parts[1];
         switch (field) {
             case "wrapperPhrase":
-                getVariable(name).wrapperPhrase = value;
+                getVariable(name).wrapperPhrases = parseVectorValue(value);
                 break;
             case "wrapperScope":
                 getVariable(name).wrapperScope = value;
                 break;
             default:
-                throw Error(`Invalid key '${key}'`);
+                throw Error(`Invalid variable key '${key}'`);
         }
     }
 
-    return Object.values(map);
+    return Object.values(variablesMap);
 }
 
 function parseBody(text: string): string[] | undefined {

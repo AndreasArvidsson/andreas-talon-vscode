@@ -19,8 +19,9 @@ export class SnippetFormatter implements LanguageFormatterText {
     private getDocumentText(document: SnippetDocument): string {
         const parts: string[] = [
             this.getOptionalPairString("name", document.name),
-            this.getOptionalPairString("language", document.language),
-            this.getOptionalPairString("phrase", document.phrase)
+            this.getOptionalPairString("language", document.languages),
+            this.getOptionalPairString("phrase", document.phrases),
+            this.getOptionalPairString("insertionScope", document.insertionScopes)
         ].filter(Boolean);
 
         if (document.variables.length > 0) {
@@ -44,7 +45,7 @@ export class SnippetFormatter implements LanguageFormatterText {
             .flatMap((variable) => [
                 this.getOptionalPairString(
                     `$${variable.name}.wrapperPhrase`,
-                    variable.wrapperPhrase
+                    variable.wrapperPhrases
                 ),
                 this.getOptionalPairString(`$${variable.name}.wrapperScope`, variable.wrapperScope)
             ])

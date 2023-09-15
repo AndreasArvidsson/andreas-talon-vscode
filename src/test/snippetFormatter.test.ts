@@ -14,6 +14,7 @@ $0.wrapperPhrase: try
 $foo.wrapperPhrase: bar
 $1.wrapperPhrase: catch
 $1.wrapperScope: statement
+insertionScope: statement
 phrase: try catch
 language: javascript
 name: mySnippet`,
@@ -21,6 +22,7 @@ name: mySnippet`,
 name: mySnippet
 language: javascript
 phrase: try catch
+insertionScope: statement
 
 $1.wrapperPhrase: catch
 $1.wrapperScope: statement
@@ -76,10 +78,11 @@ test
         pre: `\
 
 name:tryCatchStatement
-phrase   :  try catch
+insertionScope: statement|namedFunction
+phrase   :  try catch  |  try
 
 
-$1.wrapperPhrase:try
+$1.wrapperPhrase:try|trying
 $1.wrapperScope  :   statement
     $0.wrapperPhrase:catch
     $0.wrapperScope :statement
@@ -105,9 +108,10 @@ except Exception as ex:
     $0`,
         post: `\
 name: tryCatchStatement
-phrase: try catch
+phrase: try catch | try
+insertionScope: statement | namedFunction
 
-$1.wrapperPhrase: try
+$1.wrapperPhrase: try | trying
 $1.wrapperScope: statement
 $0.wrapperPhrase: catch
 $0.wrapperScope: statement
