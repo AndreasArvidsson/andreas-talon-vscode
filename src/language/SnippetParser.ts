@@ -112,7 +112,7 @@ function parseVariables(variables: Record<string, string>): SnippetVariable[] {
     for (const [key, value] of Object.entries(variables)) {
         const parts = key.split(".");
         if (parts.length !== 2) {
-            throw Error(`Invalid key '${key}'`);
+            throw Error(`Invalid variable key '${key}'`);
         }
         const name = parts[0].slice(1);
         const field = parts[1];
