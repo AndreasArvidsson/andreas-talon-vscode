@@ -114,8 +114,7 @@ function createItem(tab: vscode.Tab, index: number): vscode.TreeItem {
     }
     const label = labelParts.join(" ");
 
-    const uri = tab.input instanceof vscode.TabInputText ? tab.input.uri : undefined;
-    const resourceUri = uri != null && uri.scheme !== "untitled" ? uri : undefined;
+    const resourceUri = tab.input instanceof vscode.TabInputText ? tab.input.uri : undefined;
 
     const command: vscode.Command = {
         title: `Focus tab ${hint}`,
@@ -123,9 +122,5 @@ function createItem(tab: vscode.Tab, index: number): vscode.TreeItem {
         arguments: [hint]
     };
 
-    return {
-        label,
-        resourceUri,
-        command
-    };
+    return { label, resourceUri, command };
 }
