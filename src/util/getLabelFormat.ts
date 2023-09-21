@@ -7,19 +7,34 @@ export function getLabelFormat(tab: vscode.Tab, uri: vscode.Uri): string | undef
     const format = vscode.workspace.getConfiguration().get<string>(labelFormatSetting);
     switch (format) {
         case "default":
-            return getConflictName(tab, uri);
+            return getConflictPath(tab, uri);
         case "short":
-            return path.basename(path.dirname(uri.fsPath));
-        case "medium": {
-            const relativeDirPath = path.dirname(vscode.workspace.asRelativePath(uri.fsPath));
-            return relativeDirPath !== "." ? relativeDirPath : undefined;
-        }
+            return getFolderName(uri);
+        case "medium":
+            return getPathRelativeWorkspace(uri);
         case "long":
-            return path.dirname(uri.fsPath);
+            return getAbsolutePath(uri);
     }
 }
 
-function getConflictName(tab: vscode.Tab, uri: vscode.Uri): string | undefined {
+function getFolderName(uri: vscode.Uri) {
+    return path.basename(path.dirname(uri.fsPath));
+}
+
+function getAbsolutePath(uri: vscode.Uri): string {
+    return path.dirname(uri.fsPath);
+}
+
+function getPathRelativeWorkspace(uri: vscode.Uri): string | undefined {
+    const wsFolder = vscode.workspace.getWorkspaceFolder(uri);
+    if (wsFolder == null) {
+        return getAbsolutePath(uri);
+    }
+    const relativeDirPath = path.dirname(path.relative(wsFolder.uri.fsPath, uri.fsPath));
+    return relativeDirPath !== "." ? relativeDirPath : undefined;
+}
+
+function getConflictPath(tab: vscode.Tab, uri: vscode.Uri): string | undefined {
     const hasNameConflict = tab.group.tabs.some((t) => t.label === tab.label && t !== tab);
 
     if (!hasNameConflict) {
