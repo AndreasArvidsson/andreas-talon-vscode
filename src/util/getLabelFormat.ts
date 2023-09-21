@@ -11,7 +11,7 @@ export function getLabelFormat(tab: vscode.Tab, uri: vscode.Uri): string | undef
         case "short":
             return path.basename(path.dirname(uri.fsPath));
         case "medium": {
-            const relativeDirPath = path.dirname(vscode.workspace.asRelativePath(uri));
+            const relativeDirPath = path.dirname(vscode.workspace.asRelativePath(uri.fsPath));
             return relativeDirPath !== "." ? relativeDirPath : undefined;
         }
         case "long":
