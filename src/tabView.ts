@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { getFullCommand } from "./util/getFullCommand";
+import { getLabelFormat, labelFormatSetting } from "./util/getLabelFormat";
 import { indexToHint } from "./util/hints";
 
 export function createTabView(): vscode.Disposable {
@@ -34,7 +35,7 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
     readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
     constructor() {
-        const treeView = vscode.window.createTreeView("andreas.tabs", {
+        const treeView = vscode.window.createTreeView(getFullCommand("tabs"), {
             treeDataProvider: this
         });
 
@@ -50,7 +51,12 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
                 const onTabChange = () => this._onDidChangeTreeData.fire();
                 this.onTabChangeDisposable = vscode.Disposable.from(
                     vscode.window.tabGroups.onDidChangeTabGroups(() => onTabChange()),
-                    vscode.window.tabGroups.onDidChangeTabs(() => onTabChange())
+                    vscode.window.tabGroups.onDidChangeTabs(() => onTabChange()),
+                    vscode.workspace.onDidChangeConfiguration(({ affectsConfiguration }) => {
+                        if (affectsConfiguration(labelFormatSetting)) {
+                            onTabChange();
+                        }
+                    })
                 );
             }
         } else {
@@ -104,17 +110,8 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
 
 function createItem(tab: vscode.Tab, index: number): vscode.TreeItem {
     const hint = indexToHint(index);
-
-    const labelParts = [hint.padStart(2), " - ", tab.label];
-    if (tab.isDirty) {
-        labelParts.push("●");
-    }
-    if (tab.isActive) {
-        labelParts.push("*");
-    }
-    const label = labelParts.join(" ");
-
     const resourceUri = tab.input instanceof vscode.TabInputText ? tab.input.uri : undefined;
+    const label = `${hint.padStart(2)} - ${tab.label}`;
 
     const command: vscode.Command = {
         title: `Focus tab ${hint}`,
@@ -122,5 +119,31 @@ function createItem(tab: vscode.Tab, index: number): vscode.TreeItem {
         arguments: [hint]
     };
 
-    return { label, resourceUri, command };
+    return {
+        resourceUri,
+        label,
+        command,
+        description: getDescription(tab, resourceUri)
+    };
+}
+
+function getDescription(tab: vscode.Tab, uri?: vscode.Uri): string | undefined {
+    const parts: string[] = [];
+
+    if (uri != null) {
+        const format = getLabelFormat(tab, uri);
+        if (format != null) {
+            parts.push(format);
+        }
+    }
+
+    if (tab.isDirty) {
+        parts.push("●");
+    }
+
+    if (tab.isActive) {
+        parts.push("*");
+    }
+
+    return parts.join(" ");
 }
