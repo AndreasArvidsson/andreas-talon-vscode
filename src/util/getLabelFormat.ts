@@ -17,7 +17,7 @@ export function getLabelFormat(tab: vscode.Tab, uri: vscode.Uri): string | undef
     }
 }
 
-function getFolderName(uri: vscode.Uri) {
+function getFolderName(uri: vscode.Uri): string {
     return path.basename(path.dirname(uri.fsPath));
 }
 
@@ -41,24 +41,23 @@ function getConflictPath(tab: vscode.Tab, uri: vscode.Uri): string | undefined {
         return undefined;
     }
 
-    const parts = [];
-    const relativePath = vscode.workspace.asRelativePath(uri);
-    const parsedPath = path.parse(relativePath);
-    const parentName = path.basename(parsedPath.dir);
+    const wsFolder = vscode.workspace.getWorkspaceFolder(uri);
+    const fsPath = wsFolder != null ? path.relative(wsFolder.uri.fsPath, uri.fsPath) : uri.fsPath;
+    const parsedPath = path.parse(fsPath);
+    const parts = [parsedPath.root];
 
-    if (parsedPath.root) {
-        parts.push(parsedPath.root);
-        const dirParent = path.dirname(parsedPath.dir);
-        if (dirParent && dirParent !== parsedPath.root) {
-            parts.push("...");
-            parts.push(path.sep);
+    if (parsedPath.dir) {
+        const grandFolder = path.dirname(parsedPath.dir);
+        const folderName = path.basename(parsedPath.dir);
+        // Have additional folders above this one that is not root.
+        if (grandFolder && grandFolder !== parsedPath.root && grandFolder !== ".") {
+            parts.push("...", path.sep);
         }
-    } else if (!parentName) {
-        parts.push(".", path.sep);
+        parts.push(folderName);
     }
-
-    if (parentName) {
-        parts.push(parentName);
+    // Empty relative path. ie workspace folder
+    else {
+        parts.push(".", path.sep);
     }
 
     return parts.join("");
