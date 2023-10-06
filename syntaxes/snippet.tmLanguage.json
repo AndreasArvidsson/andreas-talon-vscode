@@ -102,7 +102,7 @@
             }
         },
         "pair-variable-vector": {
-            "match": "^(\\$\\w+)\\.(wrapperPhrase): ?([\\w| ]+)$",
+            "match": "^(\\$\\w+)\\.(insertionFormatter|wrapperPhrase): ?([\\w| ]+)$",
             "captures": {
                 "1": {
                     "patterns": [

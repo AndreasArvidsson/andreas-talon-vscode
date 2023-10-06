@@ -11,6 +11,7 @@ const fixtures: { title: string; pre: Content; post: Content; selections?: Numbe
         pre: `\
 $0.wrapperScope: statement
 $0.wrapperPhrase: try
+$0.insertionFormatter: PASCAL_CASE
 $foo.wrapperPhrase: bar
 $1.wrapperPhrase: catch
 $1.wrapperScope: statement
@@ -27,6 +28,7 @@ insertionScope: statement
 $1.wrapperPhrase: catch
 $1.wrapperScope: statement
 $foo.wrapperPhrase: bar
+$0.insertionFormatter: PASCAL_CASE
 $0.wrapperPhrase: try
 $0.wrapperScope: statement
 ---
@@ -82,6 +84,7 @@ insertionScope: statement|namedFunction
 phrase   :  try catch  |  try
 
 
+$1.insertionFormatter: PASCAL_CASE
 $1.wrapperPhrase:try|trying
 $1.wrapperScope  :   statement
     $0.wrapperPhrase:catch
@@ -111,6 +114,7 @@ name: tryCatchStatement
 phrase: try catch | try
 insertionScope: statement | namedFunction
 
+$1.insertionFormatter: PASCAL_CASE
 $1.wrapperPhrase: try | trying
 $1.wrapperScope: statement
 $0.wrapperPhrase: catch

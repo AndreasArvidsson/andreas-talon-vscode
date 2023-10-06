@@ -44,6 +44,10 @@ export class SnippetFormatter implements LanguageFormatterText {
         return result
             .flatMap((variable) => [
                 this.getOptionalPairString(
+                    `$${variable.name}.insertionFormatter`,
+                    variable.insertionFormatters
+                ),
+                this.getOptionalPairString(
                     `$${variable.name}.wrapperPhrase`,
                     variable.wrapperPhrases
                 ),

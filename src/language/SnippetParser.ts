@@ -9,6 +9,7 @@ export interface SnippetDocument {
 
 export interface SnippetVariable {
     name: string;
+    insertionFormatters?: string[];
     wrapperPhrases?: string[];
     wrapperScope?: string;
 }
@@ -117,6 +118,9 @@ function parseVariables(variables: Record<string, string>): SnippetVariable[] {
         const name = parts[0].slice(1);
         const field = parts[1];
         switch (field) {
+            case "insertionFormatter":
+                getVariable(name).insertionFormatters = parseVectorValue(value);
+                break;
             case "wrapperPhrase":
                 getVariable(name).wrapperPhrases = parseVectorValue(value);
                 break;
