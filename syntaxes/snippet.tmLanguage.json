@@ -128,7 +128,7 @@
             }
         },
         "variable": {
-            "match": "\\$\\w+",
+            "match": "\\$\\w+|\\$\\{\\w+\\}",
             "name": "variable.other.snippet"
         },
         "key": {
