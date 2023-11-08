@@ -48,11 +48,10 @@ export class TalonFormatter implements LanguageFormatterTree {
                     .join(this.eol);
 
             case "matches": {
-                if (node.children.length === 0) {
+                if (node.children.length < 2) {
                     return "";
                 }
-                const text = node.children.map((n) => this.getNodeText(n)).join(this.eol);
-                return `${text}${this.eol}-`;
+                return node.children.map((n) => this.getNodeText(n)).join(this.eol);
             }
 
             case "declarations":
@@ -120,9 +119,10 @@ export class TalonFormatter implements LanguageFormatterTree {
             case "string":
             case "integer":
             case "float":
-            case "=":
             case "(":
             case ")":
+            case "=":
+            case "-":
                 return node.text;
 
             default:
