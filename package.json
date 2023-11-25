@@ -269,6 +269,7 @@
         "build": "vsce package",
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p .",
+        "clean": "rm -rf out",
         "test": "eslint src && tsx src/meta-updater --test && prettier --check .",
         "fix": "tsx src/meta-updater && prettier --write .",
         "watch": "tsc -watch -p ."
