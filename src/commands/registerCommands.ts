@@ -17,6 +17,7 @@ import { renameFile } from "./files/renameFile";
 import { focusTab } from "./focusTab";
 import { formatSelectedFiles, formatWorkspaceFiles } from "./formatFiles";
 import { generateRange } from "./generateRange";
+import { goToLine } from "./goToLine";
 import { decrement, increment } from "./incrementDecrement";
 import { lineMiddle } from "./lineMiddle";
 import { openEditorAtIndex } from "./openEditorAtIndex";
@@ -52,6 +53,7 @@ export function registerCommands(
         // Navigation
         openEditorAtIndex,
         focusTab,
+        goToLine,
         selectTo,
         lineMiddle,
         // Text
