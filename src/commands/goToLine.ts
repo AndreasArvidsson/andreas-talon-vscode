@@ -18,5 +18,8 @@ export function goToLine(line: number): void {
         documentLine.firstNonWhitespaceCharacterIndex
     );
 
-    editor.selection = new Selection(position, position);
+    const selection = new Selection(position, position);
+
+    editor.selection = selection;
+    editor.revealRange(selection);
 }
