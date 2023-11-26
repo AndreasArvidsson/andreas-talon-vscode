@@ -11,7 +11,7 @@ export async function duplicateFile(name?: string): Promise<void> {
         throw Error("Can't duplicate file");
     }
 
-    const suggestedName = context.input?.name ?? "";
+    const suggestedName = context.input?.name ?? context.file.name;
     const suggestedExt = context.input?.ext ?? context.file.ext ?? "";
 
     const filename = await showNewNameInputBox(suggestedName, suggestedExt);
