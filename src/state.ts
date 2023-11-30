@@ -29,7 +29,7 @@ export function registerStateUpdater(): vscode.Disposable {
         vscode.workspace.onDidChangeWorkspaceFolders(() => updateState()),
         vscode.window.onDidChangeWindowState((states) => {
             if (states.focused) {
-                void updateState();
+                return updateState();
             }
         })
     );
