@@ -133,6 +133,7 @@ export class TreeSitterFormatter implements LanguageFormatterTree {
                 return ` ${node.text}`;
 
             case "#":
+            case "_":
             case "predicate_type":
             case "identifier":
             case "quantifier":

@@ -1,3 +1,4 @@
+import * as editorconfig from "editorconfig";
 import {
     Disposable,
     EndOfLine,
@@ -55,8 +56,42 @@ function provideDocumentFormattingEditsForText(
 }
 
 function parseOptions(document: TextDocument, options: FormattingOptions): [string, string] {
-    const indentation = options.insertSpaces ? new Array(options.tabSize).fill(" ").join("") : "\t";
-    const eol = document.eol === EndOfLine.LF ? "\n" : "\r\n";
+    const config = editorconfig.parseSync(document.uri.fsPath);
+
+    const insertSpaces = (() => {
+        switch (config.indent_style) {
+            case "space":
+                return true;
+            case "tab":
+                return false;
+            default:
+                return options.insertSpaces;
+        }
+    })();
+
+    const tabSize = (() => {
+        if (typeof config.indent_size === "number") {
+            return config.indent_size;
+        }
+        if (config.indent_size === "tab" && typeof config.tab_width === "number") {
+            return config.tab_width;
+        }
+        return options.tabSize;
+    })();
+
+    const indentation = insertSpaces ? new Array(tabSize).fill(" ").join("") : "\t";
+
+    const eol = (() => {
+        switch (config.end_of_line) {
+            case "lf":
+                return "\n";
+            case "crlf":
+                return "\r\n";
+            default:
+                return document.eol === EndOfLine.LF ? "\n" : "\r\n";
+        }
+    })();
+
     return [indentation, eol];
 }
 

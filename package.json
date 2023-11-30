@@ -285,7 +285,8 @@
         "pokey.parse-tree"
     ],
     "dependencies": {
-        "ignore": "^5.2.4"
+        "ignore": "^5.2.4",
+        "editorconfig": "^2.0.0"
     },
     "devDependencies": {
         "@types/glob": "^8.1.0",

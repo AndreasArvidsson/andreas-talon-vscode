@@ -3,7 +3,6 @@ import { registerCommands } from "./commands/registerCommands";
 import { registerLanguageCodeActions } from "./language/registerLanguageCodeActions";
 import { registerLanguageDefinitions } from "./language/registerLanguageDefinitions";
 import { registerLanguageFormatter } from "./language/registerLanguageFormatter";
-import { registerStateUpdater } from "./state";
 import { createTabView } from "./tabView";
 import {
     getCommandServerExtension,
@@ -34,7 +33,6 @@ async function activateExtension(context: vscode.ExtensionContext): Promise<void
         registerLanguageDefinitions(),
         registerLanguageCodeActions(parseTreeExtension),
         registerLanguageFormatter(parseTreeExtension),
-        createTabView(),
-        isTesting ? vscode.Disposable.from() : registerStateUpdater()
+        createTabView()
     );
 }
