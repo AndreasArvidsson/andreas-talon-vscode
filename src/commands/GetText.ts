@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
-import { CommandServerExtension } from "../typings/commandServer";
+import type { QueryMatch, TreeSitter } from "../treeSitter/TreeSitter";
+import type { CommandServerExtension } from "../typings/commandServer";
 import { getSortedSelections } from "../util/getSortedSelections";
-import { ParseTreeExtension } from "../typings/parserTree";
 
 export class GetText {
     constructor(
         private commandServerExtension: CommandServerExtension,
-        private parseTreeExtension: ParseTreeExtension
+        private treeSitter: TreeSitter
     ) {}
 
     getDocumentText(): string | null {
@@ -54,24 +54,93 @@ export class GetText {
             return null;
         }
 
-        try {
-            const pos = editor.selection.active;
-            const location = new vscode.Location(editor.document.uri, pos);
-            let node = this.parseTreeExtension.getNodeAtLocation(location);
-            while (node.parent != null) {
-                if (node.type === "class_declaration" || node.type === "enum_declaration") {
-                    return node.childForFieldName("name")?.text ?? null;
-                }
-                node = node.parent;
-            }
-        } catch (error) {
-            console.log(error);
+        const result = this.treeSitter.parse(editor.document);
+        const classNode = findsSmallestContainingPosition(result, "class", editor.selection.active);
+
+        if (classNode == null) {
+            return null;
         }
 
-        return null;
+        const nameNode = findsSmallestInRange(result, "class.name", classNode.range);
+
+        return nameNode?.node.text ?? null;
+    }
+
+    getOpenTagName(): string | null {
+        const editor = vscode.window.activeTextEditor;
+
+        if (!editor || !this.inTextEditor()) {
+            return null;
+        }
+
+        const result = this.treeSitter.parse(editor.document);
+        const element = findsSmallestContainingPosition(result, "element", editor.selection.active);
+
+        if (element == null) {
+            return null;
+        }
+
+        const startTagName = findsSmallestInRange(result, "startTag.name", element.range);
+        const endTagName = findsSmallestInRange(result, "endTag.name", element.range);
+        const startName = startTagName?.node.text;
+        const endName = endTagName?.node.text;
+
+        if (startName == null || startName === endName) {
+            return null;
+        }
+
+        return startName;
     }
 
     private inTextEditor(): boolean {
         return this.commandServerExtension.getFocusedElementType() === "textEditor";
     }
+}
+
+function findsSmallestContainingPosition(
+    matches: QueryMatch[],
+    name: string,
+    position: vscode.Position
+): QueryMatch | undefined {
+    const filtered = matches.filter((match) => {
+        return match.name === name && match.range.contains(position);
+    });
+
+    if (filtered.length === 0) {
+        return undefined;
+    }
+
+    sortSmallest(filtered);
+
+    return filtered[0];
+}
+
+function findsSmallestInRange(
+    matches: QueryMatch[],
+    name: string,
+    range: vscode.Range
+): QueryMatch | undefined {
+    const filtered = matches.filter((match) => {
+        return match.name === name && range.contains(match.range);
+    });
+
+    if (filtered.length === 0) {
+        return undefined;
+    }
+
+    sortSmallest(filtered);
+
+    return filtered[0];
+}
+
+function sortSmallest(matches: QueryMatch[]) {
+    matches.sort((a, b) => {
+        if (a.range.contains(b.range)) {
+            return 1;
+        }
+        if (b.range.contains(a.range)) {
+            return -1;
+        }
+        return 0;
+    });
 }

@@ -100,6 +100,12 @@ export const commandDescriptions = {
         "Useful for inserting constructors in C++/Java.",
         "(): string | null"
     ),
+    getOpenTagName: hidden(
+        "Text",
+        "Get name for open tag.",
+        "Useful to close tag in HTML/XML.",
+        "(): string | null"
+    ),
 
     // Git commands
     getGitFileURL: hidden(

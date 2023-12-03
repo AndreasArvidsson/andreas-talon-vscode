@@ -9,7 +9,7 @@ import {
     TextEdit
 } from "vscode";
 import type { SyntaxNode } from "web-tree-sitter";
-import { ParseTreeExtension } from "../typings/parserTree";
+import { TreeSitter } from "../treeSitter/TreeSitter";
 import { SnippetFormatter } from "./SnippetFormatter";
 import { TalonFormatter } from "./TalonFormatter";
 import { TreeSitterFormatter } from "./TreeSitterFormatter";
@@ -23,20 +23,20 @@ export interface LanguageFormatterText {
 }
 
 function provideDocumentFormattingEditsForTree(
-    parseTreeExtension: ParseTreeExtension,
+    treeSitter: TreeSitter,
     document: TextDocument,
     options: FormattingOptions,
     formatter: LanguageFormatterTree
 ): TextEdit[] {
-    const tree = parseTreeExtension.getTree(document);
+    const rootNode = treeSitter.getRootNode(document);
 
-    if (tree.rootNode.hasError()) {
+    if (rootNode.hasError()) {
         console.warn(`Abort document formatting: Syntax tree has error`);
         return [];
     }
 
     const [indentation, eol] = parseOptions(document, options);
-    const newText = formatter.getText(indentation, eol, tree.rootNode);
+    const newText = formatter.getText(indentation, eol, rootNode);
     return createTextEdits(document, newText);
 }
 
@@ -110,12 +110,12 @@ function createTextEdits(document: TextDocument, text: string): TextEdit[] {
     ];
 }
 
-export function registerLanguageFormatter(parseTreeExtension: ParseTreeExtension): Disposable {
+export function registerLanguageFormatter(treeSitter: TreeSitter): Disposable {
     return Disposable.from(
         languages.registerDocumentFormattingEditProvider("talon", {
             provideDocumentFormattingEdits: (document, options) =>
                 provideDocumentFormattingEditsForTree(
-                    parseTreeExtension,
+                    treeSitter,
                     document,
                     options,
                     new TalonFormatter()
@@ -124,7 +124,7 @@ export function registerLanguageFormatter(parseTreeExtension: ParseTreeExtension
         languages.registerDocumentFormattingEditProvider("scm", {
             provideDocumentFormattingEdits: (document, options) =>
                 provideDocumentFormattingEditsForTree(
-                    parseTreeExtension,
+                    treeSitter,
                     document,
                     options,
                     new TreeSitterFormatter()

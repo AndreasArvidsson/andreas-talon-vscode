@@ -64,6 +64,8 @@ Many of the commands take arguments and return values that can only be used with
     Get text before and after selection. Used for context sensitive dictation.
 -   `andreas.getClassName(): string | null`  
     Get class name. Useful for inserting constructors in C++/Java.
+-   `andreas.getOpenTagName(): string | null`  
+    Get name for open tag. Useful to close tag in HTML/XML.
 
 ### Git commands
 

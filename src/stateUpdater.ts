@@ -8,7 +8,7 @@ interface State {
     workspaceFolders: string[];
 }
 
-const settingSection = "private.andreas";
+const settingSection = "andreas.private";
 const settingName = "trackState";
 const fullSettingName = `${settingSection}.${settingName}`;
 

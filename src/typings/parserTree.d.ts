@@ -1,8 +1,9 @@
-import { Location, TextDocument } from "vscode";
-import { SyntaxNode, Tree } from "web-tree-sitter";
+import * as vscode from "vscode";
+import type { Language, SyntaxNode, Tree } from "web-tree-sitter";
 
 export type ParseTreeExtension = {
     loadLanguage: (languageId: string) => Promise<boolean>;
-    getTree: (document: TextDocument) => Tree;
-    getNodeAtLocation: (location: Location) => SyntaxNode;
+    getLanguage(languageId: string): Language | undefined;
+    getTree: (document: vscode.TextDocument) => Tree;
+    getNodeAtLocation: (location: vscode.Location) => SyntaxNode;
 };

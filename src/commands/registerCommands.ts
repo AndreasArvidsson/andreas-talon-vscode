@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { CommandServerExtension } from "../typings/commandServer";
-import { GitExtension } from "../typings/git";
-import { ParseTreeExtension } from "../typings/parserTree";
+import type { TreeSitter } from "../treeSitter/TreeSitter";
+import type { CommandServerExtension } from "../typings/commandServer";
+import type { GitExtension } from "../typings/git";
 import { getFullCommand } from "../util/getFullCommand";
 import { GetText } from "./GetText";
 import { GitParameters, GitUtil } from "./GitUtil";
@@ -28,11 +28,11 @@ import { getSetting, setSetting } from "./settings";
 type Callback = (...args: any[]) => any;
 
 export function registerCommands(
-    parseTreeExtension: ParseTreeExtension,
     commandServerExtension: CommandServerExtension,
-    gitExtension: GitExtension
+    gitExtension: GitExtension,
+    treeSitter: TreeSitter
 ): vscode.Disposable {
-    const getText = new GetText(commandServerExtension, parseTreeExtension);
+    const getText = new GetText(commandServerExtension, treeSitter);
     const git = new GitUtil(gitExtension);
 
     const commands: Record<CommandId, Callback> = {
@@ -61,6 +61,7 @@ export function registerCommands(
         getSelectedText: () => getText.getSelectedText(),
         getDictationContext: () => getText.getDictationContext(),
         getClassName: () => getText.getClassName(),
+        getOpenTagName: () => getText.getOpenTagName(),
         // Git
         getGitFileURL: (p: GitParameters) => git.getGitFileURL(p),
         getGitRepoURL: () => git.getGitRepoURL(),

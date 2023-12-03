@@ -12,12 +12,12 @@ import {
     TextDocument,
     WorkspaceEdit
 } from "vscode";
-import { ParseTreeExtension } from "../typings/parserTree";
+import type { TreeSitter } from "../treeSitter/TreeSitter";
 
 abstract class ProviderCodeActions implements CodeActionProvider {
     protected abstract docActionName: string;
 
-    constructor(private parseTreeExtension: ParseTreeExtension) {}
+    constructor(private treeSitter: TreeSitter) {}
 
     provideCodeActions(
         document: TextDocument,
@@ -39,12 +39,12 @@ abstract class ProviderCodeActions implements CodeActionProvider {
     }
 
     protected getNodes(document: TextDocument, range: Range) {
-        const nodeStart = this.parseTreeExtension.getNodeAtLocation(
+        const nodeStart = this.treeSitter.getNodeAtLocation(
             new Location(document.uri, range.start)
         );
         const nodeEnd = range.isEmpty
             ? nodeStart
-            : this.parseTreeExtension.getNodeAtLocation(
+            : this.treeSitter.getNodeAtLocation(
                   new Location(document.uri, range.end.translate(undefined, -1))
               );
         return [nodeStart, nodeEnd];
@@ -150,9 +150,9 @@ export function lineCommentToDocComment(text: string) {
     return `${indent}/**\n${text}\n${indent}*/`;
 }
 
-export function registerLanguageCodeActions(parseTreeExtension: ParseTreeExtension): Disposable {
-    const codeActionsProviderJava = new ProvideCodeActionsJava(parseTreeExtension);
-    const codeActionsProviderJs = new ProvideCodeActionsJs(parseTreeExtension);
+export function registerLanguageCodeActions(treeSitter: TreeSitter): Disposable {
+    const codeActionsProviderJava = new ProvideCodeActionsJava(treeSitter);
+    const codeActionsProviderJs = new ProvideCodeActionsJs(treeSitter);
 
     return Disposable.from(
         languages.registerCodeActionsProvider("java", codeActionsProviderJava),

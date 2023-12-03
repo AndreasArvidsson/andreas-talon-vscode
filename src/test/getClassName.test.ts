@@ -3,10 +3,6 @@ import { runTest } from "./testUtil/runTest";
 const command = "getClassName";
 
 suite(command, () => {
-    console.debug = () => {
-        // The parse tree extensions spams debug logs
-    };
-
     runTest({
         title: command,
         command,

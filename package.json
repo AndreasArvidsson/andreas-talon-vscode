@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.43.0",
+    "version": "3.44.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -203,6 +203,12 @@
                 "enablement": "false"
             },
             {
+                "command": "andreas.getOpenTagName",
+                "category": "Andreas",
+                "title": "Get name for open tag.",
+                "enablement": "false"
+            },
+            {
                 "command": "andreas.getGitFileURL",
                 "category": "Andreas",
                 "title": "Get URL to Git repository file webpage.",
@@ -273,7 +279,8 @@
     "scripts": {
         "build": "vsce package",
         "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p .",
+        "compile": "tsc -p . && npm run bundle-assets",
+        "bundle-assets": "tsx ./src/scripts/bundleAssets.ts",
         "clean": "rm -rf out",
         "test": "eslint src && tsx src/meta-updater --test && prettier --check .",
         "fix": "tsx src/meta-updater && prettier --write .",
@@ -289,6 +296,7 @@
         "editorconfig": "^2.0.0"
     },
     "devDependencies": {
+        "@types/fs-extra": "^11.0.4",
         "@types/glob": "^8.1.0",
         "@types/mocha": "^10.0.1",
         "@types/node": "18.15.11",
@@ -296,6 +304,7 @@
         "@typescript-eslint/eslint-plugin": "^6.0.0",
         "@typescript-eslint/parser": "^6.0.0",
         "eslint": "^8.45.0",
+        "fs-extra": "^11.2.0",
         "glob": "^10.3.3",
         "mocha": "^10.2.0",
         "prettier": "^3.0.0",
