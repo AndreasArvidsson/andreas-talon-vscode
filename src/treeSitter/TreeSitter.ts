@@ -77,17 +77,15 @@ function getQueryFile(name: string): string {
     return path.join(__dirname, `queries/${name}.scm`);
 }
 
-const domainName = "_.domain";
-
 function matchesToScopes(matches: QueryMatch[]): Scope[] {
     const results: Scope[] = [];
 
     for (const match of matches) {
-        const domain = match.captures.find((capture) => capture.name === domainName);
+        const domain = match.captures.find((capture) => capture.name === "_.domain");
         const domainRange = domain != null ? nodeToRange(domain.node) : undefined;
 
         for (const capture of match.captures) {
-            if (capture.name === domainName) {
+            if (capture === domain) {
                 continue;
             }
 
