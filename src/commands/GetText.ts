@@ -32,7 +32,7 @@ export class GetText {
     getDictationContext(): { before: string; after: string } | null {
         const editor = vscode.window.activeTextEditor;
 
-        if (!editor || editor.selections.length !== 1 || !this.inTextEditor()) {
+        if (editor == null || !this.validEditor(editor)) {
             return null;
         }
 
@@ -50,7 +50,7 @@ export class GetText {
     getClassName(): string | null {
         const editor = vscode.window.activeTextEditor;
 
-        if (!editor || !this.inTextEditor()) {
+        if (editor == null || !this.validEditor(editor)) {
             return null;
         }
 
@@ -66,7 +66,7 @@ export class GetText {
     getOpenTagName(): string | null {
         const editor = vscode.window.activeTextEditor;
 
-        if (!editor || !this.inTextEditor()) {
+        if (editor == null || !this.validEditor(editor)) {
             return null;
         }
 
@@ -77,6 +77,10 @@ export class GetText {
         );
 
         return nameNode?.node.text ?? null;
+    }
+
+    private validEditor(editor: vscode.TextEditor) {
+        return editor.selections.length === 1 && this.inTextEditor();
     }
 
     private inTextEditor(): boolean {
