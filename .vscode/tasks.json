@@ -2,6 +2,36 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Build",
+            "dependsOn": ["TSBuild", "Bundle assets"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+
+        {
+            "label": "TSBuild",
+            "type": "npm",
+            "script": "build",
+            "problemMatcher": "$tsc",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "group": "build"
+        },
+
+        {
+            "label": "Bundle assets",
+            "type": "npm",
+            "script": "bundle-assets",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "group": "build"
+        },
+
+        {
             "type": "npm",
             "script": "watch",
             "problemMatcher": "$tsc-watch",
@@ -9,10 +39,7 @@
             "presentation": {
                 "reveal": "never"
             },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+            "group": "build"
         }
     ]
 }
