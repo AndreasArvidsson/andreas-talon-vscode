@@ -5,4 +5,4 @@
     (end_tag
         (tag_name) @endTag.name
     )?
-) @element
+) @_.domain

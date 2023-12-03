@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import type { QueryMatch, TreeSitter } from "../treeSitter/TreeSitter";
+import type { Scope, TreeSitter } from "../treeSitter/TreeSitter";
 import type { CommandServerExtension } from "../typings/commandServer";
 import { getSortedSelections } from "../util/getSortedSelections";
 
@@ -55,13 +55,11 @@ export class GetText {
         }
 
         const result = this.treeSitter.parse(editor.document);
-        const classNode = findsSmallestContainingPosition(result, "class", editor.selection.active);
-
-        if (classNode == null) {
-            return null;
-        }
-
-        const nameNode = findsSmallestInRange(result, "class.name", classNode.range);
+        const nameNode = findsSmallestContainingPosition(
+            result,
+            "class.name",
+            editor.selection.active
+        );
 
         return nameNode?.node.text ?? null;
     }
@@ -73,15 +71,17 @@ export class GetText {
             return null;
         }
 
-        const result = this.treeSitter.parse(editor.document);
-        const element = findsSmallestContainingPosition(result, "element", editor.selection.active);
-
-        if (element == null) {
-            return null;
-        }
-
-        const startTagName = findsSmallestInRange(result, "startTag.name", element.range);
-        const endTagName = findsSmallestInRange(result, "endTag.name", element.range);
+        const scopes = this.treeSitter.parse(editor.document);
+        const startTagName = findsSmallestContainingPosition(
+            scopes,
+            "startTag.name",
+            editor.selection.active
+        );
+        const endTagName = findsSmallestContainingPosition(
+            scopes,
+            "endTag.name",
+            editor.selection.active
+        );
         const startName = startTagName?.node.text;
         const endName = endTagName?.node.text;
 
@@ -98,43 +98,19 @@ export class GetText {
 }
 
 function findsSmallestContainingPosition(
-    matches: QueryMatch[],
+    scopes: Scope[],
     name: string,
     position: vscode.Position
-): QueryMatch | undefined {
-    const filtered = matches.filter((match) => {
-        return match.name === name && match.range.contains(position);
-    });
+): Scope | undefined {
+    const filtered = scopes.filter(
+        (scope) => scope.name === name && scope.domain.contains(position)
+    );
 
     if (filtered.length === 0) {
         return undefined;
     }
 
-    sortSmallest(filtered);
-
-    return filtered[0];
-}
-
-function findsSmallestInRange(
-    matches: QueryMatch[],
-    name: string,
-    range: vscode.Range
-): QueryMatch | undefined {
-    const filtered = matches.filter((match) => {
-        return match.name === name && range.contains(match.range);
-    });
-
-    if (filtered.length === 0) {
-        return undefined;
-    }
-
-    sortSmallest(filtered);
-
-    return filtered[0];
-}
-
-function sortSmallest(matches: QueryMatch[]) {
-    matches.sort((a, b) => {
+    filtered.sort((a, b) => {
         if (a.range.contains(b.range)) {
             return 1;
         }
@@ -143,4 +119,6 @@ function sortSmallest(matches: QueryMatch[]) {
         }
         return 0;
     });
+
+    return filtered[0];
 }

@@ -5,4 +5,4 @@
     (jsx_closing_element
         name: (_) @endTag.name
     )?
-) @element
+) @_.domain

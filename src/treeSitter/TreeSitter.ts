@@ -1,12 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import * as vscode from "vscode";
-import type { Point, Query, QueryCapture, SyntaxNode } from "web-tree-sitter";
+import type { Point, Query, QueryMatch, SyntaxNode } from "web-tree-sitter";
 import type { ParseTreeExtension } from "../typings/parserTree";
 
-export interface QueryMatch {
+export interface Scope {
     name: string;
     range: vscode.Range;
+    domain: vscode.Range;
     node: SyntaxNode;
 }
 
@@ -23,23 +24,14 @@ export class TreeSitter {
         return this.parseTreeExtension.getNodeAtLocation(location);
     }
 
-    parse(document: vscode.TextDocument): QueryMatch[] {
-        return this.getCaptures(document).map((capture) => {
-            const { name, node } = capture;
-            return {
-                name,
-                node,
-                range: new vscode.Range(
-                    pointToPosition(node.startPosition),
-                    pointToPosition(node.endPosition)
-                )
-            };
-        });
+    parse(document: vscode.TextDocument): Scope[] {
+        const matches = this.getMatches(document);
+        return matchesToScopes(matches);
     }
 
-    private getCaptures(document: vscode.TextDocument): QueryCapture[] {
+    private getMatches(document: vscode.TextDocument): QueryMatch[] {
         const root = this.getRootNode(document);
-        return this.getQuery(document.languageId)?.captures(root) ?? [];
+        return this.getQuery(document.languageId)?.matches(root) ?? [];
     }
 
     private getQuery(languageId: string): Query | undefined {
@@ -83,6 +75,37 @@ function loadQueryFile(file: string): string {
 
 function getQueryFile(name: string): string {
     return path.join(__dirname, `queries/${name}.scm`);
+}
+
+function matchesToScopes(matches: QueryMatch[]): Scope[] {
+    const results: Scope[] = [];
+
+    for (const match of matches) {
+        const domain = match.captures.find((capture) => capture.name === "_.domain");
+
+        for (const capture of match.captures) {
+            if (capture.name.endsWith(".domain")) {
+                continue;
+            }
+
+            const { name, node } = capture;
+            const range = nodeToRange(node);
+            const domainRange = domain != null ? nodeToRange(domain.node) : range;
+
+            results.push({
+                name,
+                node,
+                range,
+                domain: domainRange
+            });
+        }
+    }
+
+    return results;
+}
+
+function nodeToRange(node: SyntaxNode): vscode.Range {
+    return new vscode.Range(pointToPosition(node.startPosition), pointToPosition(node.endPosition));
 }
 
 function pointToPosition(point: Point): vscode.Position {

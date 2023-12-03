@@ -1,7 +1,7 @@
 (class_declaration
     name: (_) @class.name
-) @class
+) @_.domain
 
 (enum_declaration
     name: (_) @class.name
-) @class
+) @_.domain

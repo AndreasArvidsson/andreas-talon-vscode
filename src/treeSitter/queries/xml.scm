@@ -5,4 +5,4 @@
     (ETag
         (Name) @endTag.name
     )?
-) @element
+) @_.domain
