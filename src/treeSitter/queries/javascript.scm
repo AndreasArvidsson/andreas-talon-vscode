@@ -1,1 +1,3 @@
 ;; import jsx
+
+(comment) @comment

@@ -4,8 +4,10 @@ import * as vscode from "vscode";
 import type { Point, Query, QueryMatch, SyntaxNode } from "web-tree-sitter";
 import type { ParseTreeExtension } from "../typings/parserTree";
 
+export type ScopeName = "class.name" | "startTag.name" | "comment";
+
 export interface Scope {
-    name: string;
+    name: ScopeName;
     range: vscode.Range;
     domain: vscode.Range;
     node: SyntaxNode;
@@ -20,11 +22,27 @@ export class TreeSitter {
         return this.parseTreeExtension.getTree(document).rootNode;
     }
 
-    getNodeAtLocation(location: vscode.Location): SyntaxNode {
-        return this.parseTreeExtension.getNodeAtLocation(location);
+    findsSmallestContainingPosition(
+        document: vscode.TextDocument,
+        name: ScopeName,
+        position: vscode.Position
+    ): Scope | undefined {
+        const scopes = this.parse(document);
+
+        let smallest: Scope | undefined = undefined;
+
+        for (const scope of scopes) {
+            if (scope.name === name && scope.domain.contains(position)) {
+                if (smallest == null || smallest.domain.contains(scope.domain)) {
+                    smallest = scope;
+                }
+            }
+        }
+
+        return smallest;
     }
 
-    parse(document: vscode.TextDocument): Scope[] {
+    private parse(document: vscode.TextDocument): Scope[] {
         const matches = this.getMatches(document);
         return matchesToScopes(matches);
     }
@@ -93,7 +111,7 @@ function matchesToScopes(matches: QueryMatch[]): Scope[] {
             const range = nodeToRange(node);
 
             results.push({
-                name,
+                name: name as ScopeName,
                 node,
                 range,
                 domain: domainRange ?? range

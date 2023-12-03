@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import type { Scope, TreeSitter } from "../treeSitter/TreeSitter";
+import type { TreeSitter } from "../treeSitter/TreeSitter";
 import type { CommandServerExtension } from "../typings/commandServer";
 import { getSortedSelections } from "../util/getSortedSelections";
 
@@ -54,9 +54,8 @@ export class GetText {
             return null;
         }
 
-        const result = this.treeSitter.parse(editor.document);
-        const nameNode = findsSmallestContainingPosition(
-            result,
+        const nameNode = this.treeSitter.findsSmallestContainingPosition(
+            editor.document,
             "class.name",
             editor.selection.active
         );
@@ -71,9 +70,8 @@ export class GetText {
             return null;
         }
 
-        const scopes = this.treeSitter.parse(editor.document);
-        const nameNode = findsSmallestContainingPosition(
-            scopes,
+        const nameNode = this.treeSitter.findsSmallestContainingPosition(
+            editor.document,
             "startTag.name",
             editor.selection.active
         );
@@ -84,22 +82,4 @@ export class GetText {
     private inTextEditor(): boolean {
         return this.commandServerExtension.getFocusedElementType() === "textEditor";
     }
-}
-
-function findsSmallestContainingPosition(
-    scopes: Scope[],
-    name: string,
-    position: vscode.Position
-): Scope | undefined {
-    let smallest: Scope | undefined = undefined;
-
-    for (const scope of scopes) {
-        if (scope.name === name && scope.domain.contains(position)) {
-            if (smallest == null || smallest.domain.contains(scope.domain)) {
-                smallest = scope;
-            }
-        }
-    }
-
-    return smallest;
 }

@@ -7,7 +7,6 @@ import {
     CodeActionTriggerKind,
     Disposable,
     languages,
-    Location,
     Range,
     TextDocument,
     WorkspaceEdit
@@ -38,22 +37,23 @@ abstract class ProviderCodeActions implements CodeActionProvider {
         return [];
     }
 
-    protected getNodes(document: TextDocument, range: Range) {
-        const nodeStart = this.treeSitter.getNodeAtLocation(
-            new Location(document.uri, range.start)
-        );
-        const nodeEnd = range.isEmpty
-            ? nodeStart
-            : this.treeSitter.getNodeAtLocation(
-                  new Location(document.uri, range.end.translate(undefined, -1))
-              );
-        return [nodeStart, nodeEnd];
-    }
-
     protected getCommentEdit(document: TextDocument, range: Range): CodeAction | undefined {
-        const [nodeStart, nodeEnd] = this.getNodes(document, range);
+        const nodeStart = this.treeSitter.findsSmallestContainingPosition(
+            document,
+            "comment",
+            range.start
+        )?.node;
+        const nodeEnd = this.treeSitter.findsSmallestContainingPosition(
+            document,
+            "comment",
+            range.end
+        )?.node;
 
-        if (nodeStart.type === nodeEnd.type && this.isComment(nodeStart.type)) {
+        if (nodeStart == null || nodeEnd == null) {
+            return undefined;
+        }
+
+        if (nodeStart.type === nodeEnd.type) {
             const commentRange = new Range(
                 nodeStart.startPosition.row,
                 0,
@@ -84,7 +84,6 @@ abstract class ProviderCodeActions implements CodeActionProvider {
         return undefined;
     }
 
-    protected abstract isComment(type: string): boolean;
     protected abstract isDocComment(type: string, text: string): boolean;
     protected abstract isBlockComment(type: string, text: string): boolean;
     protected abstract isLineComment(type: string, text: string): boolean;
@@ -92,10 +91,6 @@ abstract class ProviderCodeActions implements CodeActionProvider {
 
 class ProvideCodeActionsJava extends ProviderCodeActions {
     docActionName = "JavaDoc";
-
-    protected isComment(type: string): boolean {
-        return type === "block_comment" || type === "line_comment";
-    }
 
     protected isDocComment(type: string, text: string): boolean {
         return /^\/\*\*[\s\S]*\*\/$/.test(text);
@@ -112,10 +107,6 @@ class ProvideCodeActionsJava extends ProviderCodeActions {
 
 class ProvideCodeActionsJs extends ProviderCodeActions {
     docActionName = "JSDoc";
-
-    protected isComment(type: string): boolean {
-        return type === "comment";
-    }
 
     protected isDocComment(type: string, text: string): boolean {
         return /^\/\*\*[\s\S]*\*\/$/.test(text);
