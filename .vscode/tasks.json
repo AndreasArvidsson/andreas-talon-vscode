@@ -3,7 +3,7 @@
     "tasks": [
         {
             "label": "Build",
-            "dependsOn": ["TSBuild", "Bundle assets"],
+            "dependsOn": ["Bundle assets", "Watch"],
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -11,35 +11,25 @@
         },
 
         {
-            "label": "TSBuild",
-            "type": "npm",
-            "script": "build",
-            "problemMatcher": "$tsc",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "group": "build"
-        },
-
-        {
             "label": "Bundle assets",
             "type": "npm",
             "script": "bundle-assets",
+            "group": "build",
             "presentation": {
                 "reveal": "silent"
-            },
-            "group": "build"
+            }
         },
 
         {
+            "label": "Watch",
             "type": "npm",
             "script": "watch",
             "problemMatcher": "$tsc-watch",
             "isBackground": true,
+            "group": "build",
             "presentation": {
-                "reveal": "never"
-            },
-            "group": "build"
+                "reveal": "silent"
+            }
         }
     ]
 }
