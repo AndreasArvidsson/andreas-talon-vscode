@@ -72,24 +72,13 @@ export class GetText {
         }
 
         const scopes = this.treeSitter.parse(editor.document);
-        const startTagName = findsSmallestContainingPosition(
+        const nameNode = findsSmallestContainingPosition(
             scopes,
             "startTag.name",
             editor.selection.active
         );
-        const endTagName = findsSmallestContainingPosition(
-            scopes,
-            "endTag.name",
-            editor.selection.active
-        );
-        const startName = startTagName?.node.text;
-        const endName = endTagName?.node.text;
 
-        if (startName == null || startName === endName) {
-            return null;
-        }
-
-        return startName;
+        return nameNode?.node.text ?? null;
     }
 
     private inTextEditor(): boolean {
@@ -102,23 +91,15 @@ function findsSmallestContainingPosition(
     name: string,
     position: vscode.Position
 ): Scope | undefined {
-    const filtered = scopes.filter(
-        (scope) => scope.name === name && scope.domain.contains(position)
-    );
+    let smallest: Scope | undefined = undefined;
 
-    if (filtered.length === 0) {
-        return undefined;
+    for (const scope of scopes) {
+        if (scope.name === name && scope.domain.contains(position)) {
+            if (smallest == null || smallest.domain.contains(scope.domain)) {
+                smallest = scope;
+            }
+        }
     }
 
-    filtered.sort((a, b) => {
-        if (a.range.contains(b.range)) {
-            return 1;
-        }
-        if (b.range.contains(a.range)) {
-            return -1;
-        }
-        return 0;
-    });
-
-    return filtered[0];
+    return smallest;
 }

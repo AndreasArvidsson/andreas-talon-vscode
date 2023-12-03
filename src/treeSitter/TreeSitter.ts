@@ -77,26 +77,28 @@ function getQueryFile(name: string): string {
     return path.join(__dirname, `queries/${name}.scm`);
 }
 
+const domainName = "_.domain";
+
 function matchesToScopes(matches: QueryMatch[]): Scope[] {
     const results: Scope[] = [];
 
     for (const match of matches) {
-        const domain = match.captures.find((capture) => capture.name === "_.domain");
+        const domain = match.captures.find((capture) => capture.name === domainName);
+        const domainRange = domain != null ? nodeToRange(domain.node) : undefined;
 
         for (const capture of match.captures) {
-            if (capture.name.endsWith(".domain")) {
+            if (capture.name === domainName) {
                 continue;
             }
 
             const { name, node } = capture;
             const range = nodeToRange(node);
-            const domainRange = domain != null ? nodeToRange(domain.node) : range;
 
             results.push({
                 name,
                 node,
                 range,
-                domain: domainRange
+                domain: domainRange ?? range
             });
         }
     }
