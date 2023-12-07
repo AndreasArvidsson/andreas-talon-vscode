@@ -131,7 +131,7 @@
             {
                 "command": "andreas.formatWorkspaceFiles",
                 "category": "Andreas",
-                "title": "Format workspace files"
+                "title": "Format workspace files."
             },
             {
                 "command": "andreas.formatSelectedFiles",
@@ -152,6 +152,11 @@
                 "command": "andreas.decrement",
                 "category": "Andreas",
                 "title": "Decrement selected number."
+            },
+            {
+                "command": "andreas.undoPhrase",
+                "category": "Andreas",
+                "title": "Undo phrase."
             },
             {
                 "command": "andreas.openEditorAtIndex",

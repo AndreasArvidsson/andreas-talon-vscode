@@ -28,7 +28,7 @@ Many of the commands take arguments and return values that can only be used with
 -   `andreas.moveFile()`  
     Move active file to new directory.
 -   `andreas.formatWorkspaceFiles()`  
-    Format workspace files
+    Format workspace files.
 -   `andreas.formatSelectedFiles()`  
     Format selected files. Used by file explorer context menu.
 
@@ -40,6 +40,8 @@ Many of the commands take arguments and return values that can only be used with
     Increment selected number.
 -   `andreas.decrement(value?: number)`  
     Decrement selected number.
+-   `andreas.undoPhrase()`  
+    Undo phrase. Undo an entire spoken phrase
 
 ### Navigation commands
 

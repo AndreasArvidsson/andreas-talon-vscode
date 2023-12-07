@@ -51,7 +51,7 @@ export const commandDescriptions = {
     renameFile: visible("File", "Rename active file.", undefined, "(name?: string)"),
     removeFile: visible("File", "Remove/delete the active file."),
     moveFile: visible("File", "Move active file to new directory."),
-    formatWorkspaceFiles: visible("File", "Format workspace files"),
+    formatWorkspaceFiles: visible("File", "Format workspace files."),
     formatSelectedFiles: visible(
         "File",
         "Format",
@@ -67,6 +67,7 @@ export const commandDescriptions = {
     ),
     increment: visible("Edit", "Increment selected number.", undefined, "(value?: number)"),
     decrement: visible("Edit", "Decrement selected number.", undefined, "(value?: number)"),
+    undoPhrase: visible("Edit", "Undo phrase.", "Undo an entire spoken phrase"),
 
     // Navigation commands
     openEditorAtIndex: visible(
