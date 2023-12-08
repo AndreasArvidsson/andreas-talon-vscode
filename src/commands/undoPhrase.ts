@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as path from "node:path";
 import type { CommandServerExtension } from "../typings/commandServer";
 
 interface DocumentState {
@@ -20,13 +21,21 @@ interface PhraseState {
 }
 
 export class UndoPhrase {
-    private disposable: vscode.Disposable;
+    private disposable?: vscode.Disposable;
     private documentStates: Map<vscode.Uri, DocumentState> = new Map();
     private phraseStates: PhraseState[] = [];
     private lastState?: PhraseState;
     private undoPhraseVersion?: string;
 
     constructor(private commandServerExtension: CommandServerExtension) {
+        const useUndoPhrase = vscode.workspace
+            .getConfiguration("andreas.private")
+            .get<boolean>("undoPhrase");
+
+        if (!useUndoPhrase) {
+            return;
+        }
+
         this.disposable = vscode.Disposable.from(
             vscode.workspace.onDidChangeTextDocument((event) =>
                 this.onDidChangeTextDocument(event)
@@ -35,12 +44,12 @@ export class UndoPhrase {
                 this.appendDocumentHistory(document)
             )
         );
+
+        vscode.workspace.textDocuments.forEach((document) => this.appendDocumentHistory(document));
     }
 
     async undo() {
         const phraseVersion = await this.commandServerExtension.signals.prePhrase.getVersion();
-
-        console.log("undo", phraseVersion);
 
         if (phraseVersion == null) {
             throw Error("Phrase level undo requires phrase version signal from the command server");
@@ -49,18 +58,16 @@ export class UndoPhrase {
         this.undoPhraseVersion = phraseVersion;
         const phraseState = this.phraseStates.pop();
 
-        console.log("undo state", phraseState?.version);
+        console.log("undo", phraseVersion, phraseState?.version);
 
         if (phraseState == null) {
             return;
         }
 
-        const documentVersions = getDesiredDocumentVersions(phraseState);
+        const desiredDocumentVersions = getDesiredDocumentVersions(phraseState);
 
-        for (const { uri, version } of documentVersions) {
+        for (const { uri, version } of desiredDocumentVersions) {
             const history = this.getDocumentHistory(uri, version);
-            // console.log("restore", uri.toString(), version);
-            // console.log(history);
             if (history != null) {
                 await restoreDocumentState(history.document, history.text);
             }
@@ -68,7 +75,7 @@ export class UndoPhrase {
     }
 
     dispose() {
-        this.disposable.dispose();
+        this.disposable?.dispose();
     }
 
     private getDocumentHistory(uri: vscode.Uri, version: number) {
@@ -95,8 +102,6 @@ export class UndoPhrase {
     }
 
     private appendDocumentHistory(document: vscode.TextDocument) {
-        console.log("appendDocumentHistory", document.uri.toString(), document.version);
-
         if (!this.documentStates.has(document.uri)) {
             this.documentStates.set(document.uri, {
                 document,
@@ -104,20 +109,24 @@ export class UndoPhrase {
             });
         }
 
-        this.documentStates.get(document.uri)!.history.push({
-            version: document.version,
-            text: document.getText()
-        });
+        const documentState = this.documentStates.get(document.uri)!;
+        const isNewVersion = documentState.history.at(-1)?.version !== document.version;
+
+        if (isNewVersion) {
+            console.log(
+                "appendDocumentHistory",
+                path.basename(document.fileName),
+                document.version
+            );
+
+            documentState.history.push({
+                version: document.version,
+                text: document.getText()
+            });
+        }
     }
 
     private appendPhraseHistory(document: vscode.TextDocument, phraseVersion: string) {
-        console.log(
-            "appendPhraseHistory",
-            phraseVersion,
-            document.uri.toString(),
-            document.version
-        );
-
         if (this.lastState?.version !== phraseVersion) {
             this.lastState = {
                 version: phraseVersion,
@@ -126,10 +135,23 @@ export class UndoPhrase {
             this.phraseStates.push(this.lastState);
         }
 
-        this.lastState.documents.push({
-            uri: document.uri,
-            version: document.version
-        });
+        const lastDocument = this.lastState.documents.at(-1);
+        const isNewVersion =
+            lastDocument?.uri !== document.uri || lastDocument?.version !== document.version;
+
+        if (isNewVersion) {
+            console.log(
+                "appendPhraseHistory",
+                phraseVersion,
+                path.basename(document.fileName),
+                document.version
+            );
+
+            this.lastState.documents.push({
+                uri: document.uri,
+                version: document.version
+            });
+        }
     }
 
     private async onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
@@ -142,7 +164,12 @@ export class UndoPhrase {
 
         const { document } = event;
 
-        console.log("onDidChangeTextDocument", phraseVersion, document.uri.toString());
+        console.log(
+            "onDidChangeTextDocument",
+            phraseVersion,
+            path.basename(document.fileName),
+            document.version
+        );
 
         this.appendDocumentHistory(document);
 
@@ -154,27 +181,28 @@ export class UndoPhrase {
 }
 
 function getDesiredDocumentVersions(phraseState: PhraseState): DocumentHistoryUri[] {
-    const lowestVersions = new Map<vscode.Uri, number>();
+    const used = new Set<vscode.Uri>();
+    const result: DocumentHistoryUri[] = [];
 
     for (const { uri, version } of phraseState.documents) {
-        const lowersVersion = Math.min(lowestVersions.get(uri) ?? Infinity, version);
-        lowestVersions.set(uri, lowersVersion);
+        // A phrase can contain multiple changes for the same document. We want the document version before the phrase.
+        if (!used.has(uri)) {
+            used.add(uri);
+            result.push({ uri, version: version - 1 });
+        }
     }
 
-    return Array.from(lowestVersions.entries()).map(([uri, version]) => ({
-        uri,
-        version: version - 1
-    }));
+    return result;
 }
 
 async function restoreDocumentState(document: vscode.TextDocument, text: string): Promise<void> {
-    console.log(text);
-
     if (document.isClosed || document.getText() === text) {
         return;
     }
 
     const editor = getEditorForDocument(document);
+
+    const selections = editor.selections;
 
     const documentRange = new vscode.Range(
         document.lineAt(0).range.start,
@@ -188,6 +216,8 @@ async function restoreDocumentState(document: vscode.TextDocument, text: string)
     if (!wereEditsApplied) {
         throw Error("Couldn't apply edits for phrase undo");
     }
+
+    editor.selections = selections;
 }
 
 function getEditorForDocument(document: vscode.TextDocument): vscode.TextEditor {
