@@ -2,12 +2,17 @@ import * as vscode from "vscode";
 import * as path from "node:path";
 import type { CommandServerExtension } from "../typings/commandServer";
 
-interface DocumentState {
-    document: vscode.TextDocument;
-    history: {
-        version: number;
-        text: string;
+interface DocumentHistory {
+    version: number;
+    text: string;
+    editors: {
+        editor: vscode.TextEditor;
+        selections: readonly vscode.Selection[];
     }[];
+}
+
+interface DocumentState {
+    history: DocumentHistory[];
 }
 
 interface DocumentHistoryUri {
@@ -69,7 +74,7 @@ export class UndoPhrase {
         for (const { uri, version } of desiredDocumentVersions) {
             const history = this.getDocumentHistory(uri, version);
             if (history != null) {
-                await restoreDocumentState(history.document, history.text);
+                await reveredDocument(history);
             }
         }
     }
@@ -78,7 +83,7 @@ export class UndoPhrase {
         this.disposable?.dispose();
     }
 
-    private getDocumentHistory(uri: vscode.Uri, version: number) {
+    private getDocumentHistory(uri: vscode.Uri, version: number): DocumentHistory | undefined {
         const documentState = this.documentStates.get(uri);
 
         if (documentState == null) {
@@ -98,13 +103,12 @@ export class UndoPhrase {
             throw Error(`Can't find document history: ${uri.toString()}, ${version}`);
         }
 
-        return { document: documentState.document, text: documentHistory.text };
+        return documentHistory;
     }
 
     private appendDocumentHistory(document: vscode.TextDocument) {
         if (!this.documentStates.has(document.uri)) {
             this.documentStates.set(document.uri, {
-                document,
                 history: []
             });
         }
@@ -119,9 +123,17 @@ export class UndoPhrase {
                 document.version
             );
 
+            const editors = vscode.window.visibleTextEditors.filter(
+                (editor) => editor.document === document
+            );
+
             documentState.history.push({
                 version: document.version,
-                text: document.getText()
+                text: document.getText(),
+                editors: editors.map((editor) => ({
+                    editor,
+                    selections: editor.selections.slice()
+                }))
             });
         }
     }
@@ -195,21 +207,21 @@ function getDesiredDocumentVersions(phraseState: PhraseState): DocumentHistoryUr
     return result;
 }
 
-async function restoreDocumentState(document: vscode.TextDocument, text: string): Promise<void> {
+async function reveredDocument(documentHistory: DocumentHistory): Promise<void> {
+    const { text, editors } = documentHistory;
+    const firstEditor = editors[0].editor;
+    const { document } = firstEditor;
+
     if (document.isClosed || document.getText() === text) {
         return;
     }
-
-    const editor = getEditorForDocument(document);
-
-    const selections = editor.selections;
 
     const documentRange = new vscode.Range(
         document.lineAt(0).range.start,
         document.lineAt(document.lineCount - 1).range.end
     );
 
-    const wereEditsApplied = await editor.edit((editBuilder) => {
+    const wereEditsApplied = await firstEditor.edit((editBuilder) => {
         editBuilder.replace(documentRange, text);
     });
 
@@ -217,15 +229,7 @@ async function restoreDocumentState(document: vscode.TextDocument, text: string)
         throw Error("Couldn't apply edits for phrase undo");
     }
 
-    editor.selections = selections;
-}
-
-function getEditorForDocument(document: vscode.TextDocument): vscode.TextEditor {
-    const editor = vscode.window.visibleTextEditors.find((editor) => editor.document === document);
-
-    if (!editor) {
-        throw Error(`Couldn't find editor for document: ${document.uri.toString()}`);
+    for (const editor of editors) {
+        editor.editor.selections = editor.selections;
     }
-
-    return editor;
 }
