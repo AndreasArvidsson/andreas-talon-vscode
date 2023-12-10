@@ -3,6 +3,7 @@ import * as path from "node:path";
 import type { CommandServerExtension } from "../typings/commandServer";
 
 interface DocumentState {
+    document: vscode.TextDocument;
     version: number;
     text: string;
     editors: {
@@ -22,7 +23,7 @@ export class UndoPhrase {
     private disposable?: vscode.Disposable;
     private documentStates: Map<vscode.Uri, DocumentState> = new Map();
     private phraseStates: PhraseState[] = [];
-    private lastState: PhraseState = { version: "", documents: new Map() };
+    private currentPhrase: PhraseState = { version: "", documents: new Map() };
     private undoPhraseVersion?: string;
 
     constructor(private commandServerExtension: CommandServerExtension) {
@@ -49,25 +50,6 @@ export class UndoPhrase {
         );
     }
 
-    private updateDocumentState(document: vscode.TextDocument) {
-        if (this.documentStates.get(document.uri)?.version === document.version) {
-            return;
-        }
-
-        console.log("updateDocumentState", path.basename(document.fileName), document.version);
-
-        this.documentStates.set(document.uri, {
-            version: document.version,
-            text: document.getText(),
-            editors: vscode.window.visibleTextEditors
-                .filter((editor) => editor.document === document)
-                .map((editor) => ({
-                    editor,
-                    selections: editor.selections.slice()
-                }))
-        });
-    }
-
     private async onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
         const phraseVersion = await this.commandServerExtension.signals.prePhrase.getVersion();
 
@@ -90,6 +72,26 @@ export class UndoPhrase {
         this.updateDocumentState(document);
     }
 
+    private updateDocumentState(document: vscode.TextDocument) {
+        if (this.documentStates.get(document.uri)?.version === document.version) {
+            return;
+        }
+
+        console.log("updateDocumentState", path.basename(document.fileName), document.version);
+
+        this.documentStates.set(document.uri, {
+            document,
+            version: document.version,
+            text: document.getText(),
+            editors: vscode.window.visibleTextEditors
+                .filter((editor) => editor.document === document)
+                .map((editor) => ({
+                    editor,
+                    selections: editor.selections.slice()
+                }))
+        });
+    }
+
     private appendPhraseHistory(document: vscode.TextDocument, phraseVersion: string) {
         // Don't append undo command phrase
         if (this.undoPhraseVersion === phraseVersion) {
@@ -104,12 +106,12 @@ export class UndoPhrase {
         );
 
         // Start of new phrase
-        if (this.lastState?.version !== phraseVersion) {
-            this.lastState = {
+        if (this.currentPhrase?.version !== phraseVersion) {
+            this.currentPhrase = {
                 version: phraseVersion,
                 documents: new Map()
             };
-            this.phraseStates.push(this.lastState);
+            this.phraseStates.push(this.currentPhrase);
 
             if (this.phraseStates.length > HISTORY_MAX_LENGTH) {
                 this.phraseStates.shift();
@@ -117,7 +119,7 @@ export class UndoPhrase {
         }
 
         // We want to catch the document state before the phrase/first change
-        if (this.lastState.documents.has(document.uri)) {
+        if (this.currentPhrase.documents.has(document.uri)) {
             return;
         }
 
@@ -130,16 +132,7 @@ export class UndoPhrase {
             return;
         }
 
-        if (documentState.version !== document.version - 1) {
-            void vscode.window.showErrorMessage(
-                `Expected previous document state version to be ${document.version - 1} but was ${
-                    documentState.version
-                }`
-            );
-            return;
-        }
-
-        this.lastState.documents.set(document.uri, documentState);
+        this.currentPhrase.documents.set(document.uri, documentState);
     }
 
     async undo() {
@@ -159,7 +152,7 @@ export class UndoPhrase {
         }
 
         for (const documentState of phraseState.documents.values()) {
-            await reveredDocument(documentState);
+            await revertDocument(documentState);
         }
     }
 
@@ -168,32 +161,25 @@ export class UndoPhrase {
     }
 }
 
-async function reveredDocument(documentState: DocumentState): Promise<void> {
-    const editors = documentState.editors.filter((editor) =>
-        vscode.window.visibleTextEditors.includes(editor.editor)
-    );
+async function revertDocument(documentState: DocumentState): Promise<void> {
+    const { document, text, editors } = documentState;
 
-    if (editors.length === 0) {
-        return;
-    }
-
-    const firstEditor = editors[0].editor;
-    const { document } = firstEditor;
-
-    const documentRange = new vscode.Range(
-        document.lineAt(0).range.start,
-        document.lineAt(document.lineCount - 1).range.end
-    );
-
-    const wereEditsApplied = await firstEditor.edit((editBuilder) => {
-        editBuilder.replace(documentRange, documentState.text);
-    });
+    const edit = new vscode.WorkspaceEdit();
+    edit.replace(document.uri, getDocumentRange(document), text);
+    const wereEditsApplied = await vscode.workspace.applyEdit(edit);
 
     if (!wereEditsApplied) {
-        throw Error("Couldn't apply edits for phrase undo");
+        throw Error("Couldn't apply edits for undo phrase");
     }
 
     for (const editor of editors) {
         editor.editor.selections = editor.selections;
     }
+}
+
+function getDocumentRange(document: vscode.TextDocument): vscode.Range {
+    return new vscode.Range(
+        document.lineAt(0).range.start,
+        document.lineAt(document.lineCount - 1).range.end
+    );
 }
