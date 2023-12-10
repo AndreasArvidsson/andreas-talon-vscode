@@ -16,7 +16,7 @@
             "script": "bundle-assets",
             "group": "build",
             "presentation": {
-                "reveal": "silent"
+                "reveal": "never"
             }
         },
 
@@ -28,7 +28,7 @@
             "isBackground": true,
             "group": "build",
             "presentation": {
-                "reveal": "silent"
+                "reveal": "never"
             }
         }
     ]
