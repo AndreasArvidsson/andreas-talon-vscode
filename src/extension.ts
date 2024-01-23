@@ -17,7 +17,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     try {
         await activateExtension(context);
     } catch (error) {
-        await vscode.window.showErrorMessage((error as Error).message);
+        void vscode.window.showErrorMessage((error as Error).message);
         throw error;
     }
 }

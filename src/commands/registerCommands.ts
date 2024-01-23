@@ -94,7 +94,7 @@ function registerCommand(command: CommandId, callback: Callback): vscode.Disposa
             return await Promise.resolve<unknown>(callback(...args));
         } catch (ex) {
             const err = ex as Error;
-            await vscode.window.showErrorMessage(err.message);
+            void vscode.window.showErrorMessage(err.message);
             console.error(err.stack);
         }
     });
