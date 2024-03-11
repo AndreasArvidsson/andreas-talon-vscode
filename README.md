@@ -40,8 +40,6 @@ Many of the commands take arguments and return values that can only be used with
     Increment selected number.
 -   `andreas.decrement(value?: number)`  
     Decrement selected number.
--   `andreas.undoPhrase()`  
-    Undo phrase. Undo an entire spoken phrase
 
 ### Navigation commands
 

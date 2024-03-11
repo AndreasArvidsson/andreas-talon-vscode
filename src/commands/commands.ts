@@ -1,6 +1,7 @@
 type Category = "File" | "Edit" | "Navigation" | "Text" | "Git" | "Other";
 
 interface CommandDescription {
+    readonly isPrivate: boolean;
     readonly isVisible: boolean;
     readonly category: Category;
     readonly title: string;
@@ -9,6 +10,7 @@ interface CommandDescription {
 }
 
 function create(
+    isPrivate: boolean,
     isVisible: boolean,
     category: Category,
     title: string,
@@ -16,6 +18,7 @@ function create(
     args?: string
 ): CommandDescription {
     return {
+        isPrivate,
         isVisible,
         category,
         title,
@@ -25,11 +28,15 @@ function create(
 }
 
 function visible(category: Category, title: string, description?: string, args?: string) {
-    return create(true, category, title, description, args);
+    return create(false, true, category, title, description, args);
 }
 
 function hidden(category: Category, title: string, description?: string, args?: string) {
-    return create(false, category, title, description, args);
+    return create(false, false, category, title, description, args);
+}
+
+function makePrivate(category: Category, title: string, description?: string, args?: string) {
+    return create(true, false, category, title, description, args);
 }
 
 export const commandDescriptions = {
@@ -67,7 +74,7 @@ export const commandDescriptions = {
     ),
     increment: visible("Edit", "Increment selected number.", undefined, "(value?: number)"),
     decrement: visible("Edit", "Decrement selected number.", undefined, "(value?: number)"),
-    undoPhrase: visible("Edit", "Undo phrase.", "Undo an entire spoken phrase"),
+    undoPhrase: makePrivate("Edit", "Undo phrase.", "Undo an entire spoken phrase"),
 
     // Navigation commands
     openEditorAtIndex: visible(

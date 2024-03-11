@@ -13,6 +13,9 @@ export function updateReadme(content: string): string {
     let category = "";
 
     for (const [command, desc] of Object.entries(commandDescriptions)) {
+        if (desc.isPrivate) {
+            continue;
+        }
         if (category !== desc.category) {
             category = desc.category;
             commands.push(`\n### ${category} commands\n`);

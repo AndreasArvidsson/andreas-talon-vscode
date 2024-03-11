@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.44.2",
+    "version": "3.44.3",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -152,11 +152,6 @@
                 "command": "andreas.decrement",
                 "category": "Andreas",
                 "title": "Decrement selected number."
-            },
-            {
-                "command": "andreas.undoPhrase",
-                "category": "Andreas",
-                "title": "Undo phrase."
             },
             {
                 "command": "andreas.openEditorAtIndex",

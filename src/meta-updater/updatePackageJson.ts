@@ -23,10 +23,12 @@ export function updatePackageJson(content: PackageJson): PackageJson {
 }
 
 function getCommands(): Command[] {
-    return Object.entries(commandDescriptions).map(([command, { title, isVisible }]) => ({
-        command: getFullCommand(command as CommandId),
-        category: `Andreas`,
-        title,
-        ...(isVisible ? {} : { enablement: "false" })
-    }));
+    return Object.entries(commandDescriptions)
+        .filter(([, { isPrivate }]) => !isPrivate)
+        .map(([command, { title, isVisible }]) => ({
+            command: getFullCommand(command as CommandId),
+            category: `Andreas`,
+            title,
+            ...(isVisible ? {} : { enablement: "false" })
+        }));
 }
