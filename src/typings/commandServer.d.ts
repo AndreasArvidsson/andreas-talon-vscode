@@ -1,5 +1,5 @@
 export interface CommandServerExtension {
-    getFocusedElementType: () => FocusedElementType | undefined;
+    getFocusedElementType: () => Promise<FocusedElementType | undefined>;
 
     signals: {
         prePhrase: {

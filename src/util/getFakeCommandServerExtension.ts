@@ -2,7 +2,7 @@ import { CommandServerExtension } from "../typings/commandServer";
 
 export function getFakeCommandServerExtension(): CommandServerExtension {
     return {
-        getFocusedElementType: () => "textEditor",
+        getFocusedElementType: () => Promise.resolve("textEditor"),
 
         signals: {
             prePhrase: {

@@ -12,27 +12,27 @@ export class GetText {
     getDocumentText(): string | null {
         const editor = vscode.window.activeTextEditor;
 
-        if (!editor) {
+        if (editor == null) {
             return null;
         }
 
         return editor.document.getText();
     }
 
-    getSelectedText(): string[] | null {
+    async getSelectedText(): Promise<string[] | null> {
         const editor = vscode.window.activeTextEditor;
 
-        if (!editor || !this.inTextEditor()) {
+        if (editor == null || !(await this.inTextEditor())) {
             return null;
         }
 
         return getSortedSelections(editor).map((selection) => editor.document.getText(selection));
     }
 
-    getDictationContext(): { before: string; after: string } | null {
+    async getDictationContext(): Promise<{ before: string; after: string } | null> {
         const editor = vscode.window.activeTextEditor;
 
-        if (editor == null || !this.validEditor(editor)) {
+        if (editor == null || !(await this.validEditor(editor))) {
             return null;
         }
 
@@ -47,10 +47,10 @@ export class GetText {
         };
     }
 
-    getClassName(): string | null {
+    async getClassName(): Promise<string | null> {
         const editor = vscode.window.activeTextEditor;
 
-        if (editor == null || !this.validEditor(editor)) {
+        if (editor == null || !(await this.validEditor(editor))) {
             return null;
         }
 
@@ -63,10 +63,10 @@ export class GetText {
         return nameNode?.node.text ?? null;
     }
 
-    getOpenTagName(): string | null {
+    async getOpenTagName(): Promise<string | null> {
         const editor = vscode.window.activeTextEditor;
 
-        if (editor == null || !this.validEditor(editor)) {
+        if (editor == null || !(await this.validEditor(editor))) {
             return null;
         }
 
@@ -79,11 +79,12 @@ export class GetText {
         return nameNode?.node.text ?? null;
     }
 
-    private validEditor(editor: vscode.TextEditor) {
-        return editor.selections.length === 1 && this.inTextEditor();
+    private async validEditor(editor: vscode.TextEditor) {
+        return editor.selections.length === 1 && (await this.inTextEditor());
     }
 
-    private inTextEditor(): boolean {
-        return this.commandServerExtension.getFocusedElementType() === "textEditor";
+    private async inTextEditor(): Promise<boolean> {
+        const focusedType = await this.commandServerExtension.getFocusedElementType();
+        return focusedType === "textEditor";
     }
 }
