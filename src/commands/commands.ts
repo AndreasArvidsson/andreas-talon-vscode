@@ -151,9 +151,9 @@ export const commandDescriptions = {
     ),
     setSetting: hidden(
         "Other",
-        "Set setting for vscode",
+        "Set setting for vscode, either globally or for the current workspace/folder",
         undefined,
-        "(section: string, value: any)"
+        "(section: string, value: any, configurationTarget: ConfigurationTarget)"
     ),
     executeCommands: hidden(
         "Other",
