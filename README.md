@@ -84,8 +84,8 @@ Many of the commands take arguments and return values that can only be used with
 
 -   `andreas.getSetting(section: string, defaultValue?: T): T | undefined`  
     Get setting from vscode
--   `andreas.setSetting(section: string, value: any)`  
-    Set setting for vscode
+-   `andreas.setSetting(section: string, value: any, configurationTarget?: "global" | "workspace" | "workspaceFolder")`  
+    Set setting for vscode, either globally or for the current workspace/folder
 -   `andreas.executeCommands(commands: string[])`  
     Sequentially execute multiple commands. Useful for keybindings.
 -   `andreas.printCommands()`  

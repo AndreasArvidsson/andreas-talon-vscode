@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.44.4",
+    "version": "3.45.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -247,7 +247,7 @@
             {
                 "command": "andreas.setSetting",
                 "category": "Andreas",
-                "title": "Set setting for vscode",
+                "title": "Set setting for vscode, either globally or for the current workspace/folder",
                 "enablement": "false"
             },
             {
