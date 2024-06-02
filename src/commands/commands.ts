@@ -74,7 +74,6 @@ export const commandDescriptions = {
     ),
     increment: visible("Edit", "Increment selected number.", undefined, "(value?: number)"),
     decrement: visible("Edit", "Decrement selected number.", undefined, "(value?: number)"),
-    undoPhrase: makePrivate("Edit", "Undo phrase.", "Undo an entire spoken phrase"),
 
     // Navigation commands
     openEditorAtIndex: visible(

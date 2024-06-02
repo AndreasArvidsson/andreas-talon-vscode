@@ -24,7 +24,6 @@ import { openEditorAtIndex } from "./openEditorAtIndex";
 import { printCommands } from "./printCommands";
 import { selectTo } from "./selectTo";
 import { getSetting, setSetting } from "./settings";
-import { UndoPhrase } from "./undoPhrase";
 
 type Callback = (...args: any[]) => any;
 
@@ -34,7 +33,6 @@ export function registerCommands(
     treeSitter: TreeSitter
 ): vscode.Disposable {
     const getText = new GetText(commandServerExtension, treeSitter);
-    const undoPhrase = new UndoPhrase(commandServerExtension);
     const git = new GitUtil(gitExtension);
 
     const commands: Record<CommandId, Callback> = {
@@ -52,7 +50,6 @@ export function registerCommands(
         generateRange,
         increment,
         decrement,
-        undoPhrase: () => undoPhrase.undo(),
         // Navigation
         openEditorAtIndex,
         focusTab,
@@ -81,8 +78,7 @@ export function registerCommands(
     return vscode.Disposable.from(
         ...Object.entries(commands).map(([command, callback]) =>
             registerCommand(command as CommandId, callback)
-        ),
-        undoPhrase
+        )
     );
 }
 
