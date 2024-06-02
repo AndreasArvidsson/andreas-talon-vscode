@@ -36,15 +36,29 @@ export function getNewFilenameContext(inputName?: string): RenameContext | undef
     };
 }
 
-function splitName(fullName: string) {
-    // Position 1 because we don't want dotfiles
-    const i = fullName.indexOf(".", 1);
-    const name = i < 0 ? fullName : fullName.substring(0, i);
-    const ext = i < 0 ? undefined : fullName.substring(i);
-    return {
-        name,
-        ext
-    };
+export function splitName(fullName: string) {
+    const i = fullName.lastIndexOf(".");
+
+    // Skip index 0 because we don't want dotfiles
+    if (i < 1) {
+        return {
+            name: fullName
+        };
+    }
+
+    let name = fullName.substring(0, i);
+    let ext = fullName.substring(i);
+
+    // For convenience treat .test as part of the extension
+    if (name.endsWith(".test")) {
+        const i2 = name.lastIndexOf(".", i - 1);
+        if (i2 > 0) {
+            name = name.substring(0, i2);
+            ext = fullName.substring(i2);
+        }
+    }
+
+    return { name, ext };
 }
 
 function getSelectedText(editor?: TextEditor): string {
