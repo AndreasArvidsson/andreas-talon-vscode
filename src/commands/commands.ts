@@ -35,9 +35,9 @@ function hidden(category: Category, title: string, description?: string, args?: 
     return create(false, false, category, title, description, args);
 }
 
-function makePrivate(category: Category, title: string, description?: string, args?: string) {
-    return create(true, false, category, title, description, args);
-}
+// function makePrivate(category: Category, title: string, description?: string, args?: string) {
+//     return create(true, false, category, title, description, args);
+// }
 
 export const commandDescriptions = {
     // File commands

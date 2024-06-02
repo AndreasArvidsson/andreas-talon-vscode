@@ -1,7 +1,8 @@
 import * as assert from "node:assert";
 import { splitName } from "../util/getRenameContext";
 
-const fixtures: [string, string, string][] = [
+const fixtures: [string, string, string | undefined][] = [
+    [".gitignore", ".gitignore", undefined],
     ["foo.txt", "foo", ".txt"],
     ["foo.bar.txt", "foo.bar", ".txt"],
     ["foo.test.txt", "foo", ".test.txt"]
