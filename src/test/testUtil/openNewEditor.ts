@@ -20,7 +20,7 @@ export default async function openNewEditor(options: Options): Promise<TextEdito
         await editor.edit((editBuilder) => editBuilder.setEndOfLine(eol));
     }
 
-    editor.options = { ...editor.options, tabSize: 4 };
+    editor.options = { ...editor.options, tabSize: 4, insertSpaces: true };
 
     return editor;
 }
