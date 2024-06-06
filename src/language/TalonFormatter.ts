@@ -1,17 +1,25 @@
 import type { SyntaxNode } from "web-tree-sitter";
 import type { LanguageFormatterTree } from "./registerLanguageFormatter";
+import { getConfiguration } from "../util/getConfiguration";
 
-const columnWidth = 28;
-
-export class TalonFormatter implements LanguageFormatterTree {
-    private lastRow = 0;
-    private ident = "";
-    private eol = "";
-
+export const talonFormatter: LanguageFormatterTree = {
     getText(ident: string, eol: string, node: SyntaxNode): string {
-        this.lastRow = 0;
-        this.ident = ident;
-        this.eol = eol;
+        const columnWidth = getConfiguration("talonFormatter.columnWidth");
+        const formatter = new TalonFormatter(ident, eol, columnWidth);
+        return formatter.getText(node);
+    }
+};
+
+class TalonFormatter {
+    private lastRow = 0;
+
+    constructor(
+        private ident: string,
+        private eol: string,
+        private columnWidth: number | null
+    ) {}
+
+    getText(node: SyntaxNode): string {
         return this.getNodeText(node) + this.eol;
     }
 
@@ -20,9 +28,15 @@ export class TalonFormatter implements LanguageFormatterTree {
         const isMultiline = children[2].startPosition.row > children[1].endPosition.row;
         const left = this.getNodeText(children[0]);
         const leftWithColon = `${left}:`;
-        const leftWithPadding = isMultiline
-            ? leftWithColon
-            : `${leftWithColon} `.padEnd(columnWidth);
+        const leftWithPadding = (() => {
+            if (isMultiline) {
+                return leftWithColon;
+            }
+            if (this.columnWidth == null) {
+                return `${leftWithColon} `;
+            }
+            return `${leftWithColon} `.padEnd(this.columnWidth);
+        })();
         const nl = isMultiline ? this.eol : "";
         const right = children
             .slice(2)

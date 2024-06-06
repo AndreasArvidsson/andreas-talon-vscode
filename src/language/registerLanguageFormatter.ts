@@ -10,9 +10,9 @@ import {
 } from "vscode";
 import type { SyntaxNode } from "web-tree-sitter";
 import { TreeSitter } from "../treeSitter/TreeSitter";
-import { SnippetFormatter } from "./SnippetFormatter";
-import { TalonFormatter } from "./TalonFormatter";
-import { TreeSitterFormatter } from "./TreeSitterFormatter";
+import { snippetFormatter } from "./SnippetFormatter";
+import { talonFormatter } from "./TalonFormatter";
+import { treeSitterFormatter } from "./TreeSitterFormatter";
 
 export interface LanguageFormatterTree {
     getText(ident: string, eol: string, node: SyntaxNode): string;
@@ -114,12 +114,7 @@ export function registerLanguageFormatter(treeSitter: TreeSitter): Disposable {
     return Disposable.from(
         languages.registerDocumentFormattingEditProvider("talon", {
             provideDocumentFormattingEdits: (document, options) =>
-                provideDocumentFormattingEditsForTree(
-                    treeSitter,
-                    document,
-                    options,
-                    new TalonFormatter()
-                )
+                provideDocumentFormattingEditsForTree(treeSitter, document, options, talonFormatter)
         }),
         languages.registerDocumentFormattingEditProvider("scm", {
             provideDocumentFormattingEdits: (document, options) =>
@@ -127,12 +122,12 @@ export function registerLanguageFormatter(treeSitter: TreeSitter): Disposable {
                     treeSitter,
                     document,
                     options,
-                    new TreeSitterFormatter()
+                    treeSitterFormatter
                 )
         }),
         languages.registerDocumentFormattingEditProvider("snippet", {
             provideDocumentFormattingEdits: (document, options) =>
-                provideDocumentFormattingEditsForText(document, options, new SnippetFormatter())
+                provideDocumentFormattingEditsForText(document, options, snippetFormatter)
         })
     );
 }

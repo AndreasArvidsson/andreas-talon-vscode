@@ -1,15 +1,22 @@
 import type { SyntaxNode } from "web-tree-sitter";
 import type { LanguageFormatterTree } from "./registerLanguageFormatter";
 
-export class TreeSitterFormatter implements LanguageFormatterTree {
-    private lastRow = 0;
-    private ident = "";
-    private eol = "";
-
+export const treeSitterFormatter: LanguageFormatterTree = {
     getText(ident: string, eol: string, node: SyntaxNode): string {
-        this.lastRow = 0;
-        this.ident = ident;
-        this.eol = eol;
+        const formatter = new TreeSitterFormatter(ident, eol);
+        return formatter.getText(node);
+    }
+};
+
+export class TreeSitterFormatter {
+    private lastRow = 0;
+
+    constructor(
+        private ident: string,
+        private eol: string
+    ) {}
+
+    getText(node: SyntaxNode): string {
         return this.getNodeText(node, 0) + this.eol;
     }
 

@@ -91,6 +91,18 @@
                 }
             ]
         },
+        "configuration": {
+            "properties": {
+                "andreas.talonFormatter.columnWidth": {
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "default": null,
+                    "description": "Column width for talon formatter."
+                }
+            }
+        },
         "commands": [
             {
                 "command": "andreas.getFilename",

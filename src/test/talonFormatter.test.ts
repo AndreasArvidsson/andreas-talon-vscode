@@ -131,7 +131,7 @@ gamepad(north):             "north"
 face(smile):                "smile"
 parrot(pop):                "pop"
 noise(pop):                 "noise"
-deck(  stuff  ):            "deck"
+deck(stuff):                "deck"
 
 slap:
     key(end)

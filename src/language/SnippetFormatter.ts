@@ -1,12 +1,21 @@
 import { SnippetDocument, SnippetVariable, parseSnippetFile } from "./SnippetParser";
 import type { LanguageFormatterText } from "./registerLanguageFormatter";
 
-export class SnippetFormatter implements LanguageFormatterText {
-    private eol = "";
-
+export const snippetFormatter: LanguageFormatterText = {
     getText(ident: string, eol: string, text: string): string {
-        this.eol = eol;
+        const formatter = new SnippetFormatter(ident, eol);
+        return formatter.getText(text);
+    }
+};
 
+class SnippetFormatter {
+    constructor(
+        private ident: string,
+        private eol: string
+    ) {}
+
+    getText(text: string): string {
+        const eol = this.eol;
         return (
             parseSnippetFile(text)
                 .map((s) => this.getDocumentText(s))
