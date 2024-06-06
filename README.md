@@ -98,6 +98,24 @@ Many of the commands take arguments and return values that can only be used with
 -   Adds hover for Talon actions, lists and captures.
 -   Adds code completion for Talon actions, lists and captures.
 
+### Column width setting for Talon formatter
+
+By applying the column width setting for the Talon formatter the left hand side of a command will be padded so the right hand column will be aligned
+
+`andreas.talonFormatter.columnWidth: null`
+
+```talon
+foo: "foo"
+foo bar baz: "foo bar baz"
+```
+
+`andreas.talonFormatter.columnWidth: 15`
+
+```talon
+foo:           "foo"
+foo bar baz:   "foo bar baz"
+```
+
 ### Disable formatting on save for Talon files
 
 ```json
