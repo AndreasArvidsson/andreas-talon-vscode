@@ -135,7 +135,6 @@ class TalonFormatter {
                 return this.pairWithChildren(node);
 
             case "seq":
-            case "choice":
                 // The Talon tree sitter doesn't support deck declaration syntax. Special case it here.
                 if (
                     node.children.length === 2 &&
@@ -144,6 +143,9 @@ class TalonFormatter {
                 ) {
                     return node.children[0].text + this.getNodeText(node.children[1]);
                 }
+                return node.children.map((n) => this.getNodeText(n)).join(" ");
+
+            case "choice":
                 return node.children.map((n) => this.getNodeText(n)).join(" ");
 
             case "tag_binding":
