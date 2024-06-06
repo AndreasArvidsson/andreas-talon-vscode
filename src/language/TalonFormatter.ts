@@ -39,6 +39,17 @@ export class TalonFormatter implements LanguageFormatterTree {
         return `${nl}${text}`;
     }
 
+    private pairWithChildren(node: SyntaxNode) {
+        const { children } = node;
+        const pre = children[0].text;
+        const post = children[children.length - 1].text;
+        const middle = children
+            .slice(1, -1)
+            .map((n) => this.getNodeText(n))
+            .join(" ");
+        return `${pre}${middle}${post}`;
+    }
+
     private getNodeTextInternal(node: SyntaxNode, isIndented = false): string {
         switch (node.type) {
             case "source_file":
@@ -84,6 +95,7 @@ export class TalonFormatter implements LanguageFormatterTree {
                 return isIndented ? `${this.ident}${text}` : text;
             }
 
+            case "rule":
             case "action":
             case "key_action":
             case "sleep_action":
@@ -104,9 +116,18 @@ export class TalonFormatter implements LanguageFormatterTree {
             case "implicit_string":
                 return node.text.trim();
 
-            case "rule":
+            case "parenthesized_rule":
+            case "optional":
+                return this.pairWithChildren(node);
+
+            case "seq":
+            case "choice":
+                return node.children.map((n) => this.getNodeText(n)).join(" ");
+
             case "tag_binding":
             case "settings_binding":
+            case "capture":
+            case "list":
             case "key(":
             case "sleep(":
             case "gamepad(":
@@ -115,14 +136,19 @@ export class TalonFormatter implements LanguageFormatterTree {
             case "noise(":
             case "identifier":
             case "variable":
+            case "word":
             case "binary_operator":
             case "string":
             case "integer":
             case "float":
+            case "start_anchor":
+            case "end_anchor":
+            case "repeat":
             case "(":
             case ")":
             case "=":
             case "-":
+            case "|":
                 return node.text;
 
             default:
