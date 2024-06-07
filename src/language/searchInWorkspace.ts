@@ -26,6 +26,9 @@ const classRegex = /^@[\w\d]+\.action_class(?:\("(\w+)"\))?/gm;
 const actionRegex = /^([ \t]+def\s+)([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:(\s+"{3}[\s\S]+?"{3})?/gm;
 // @ ID .capture ( ANY ) WS def NAME ( ANY ) -> TYPE :
 const captureRegex = /^(@\w+\.capture\([\s\S]*?\)\s+def\s+)([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:/gm;
+// @ ID .dynamic_list ( NAME ) def NAME ( ANY ) -> TYPE :
+const dynamicListRegex =
+    /^(@\w+\.dynamic_list\(")([\w.]+)"\)\s+def\s+([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:/gm;
 // ID .lists [ NAME ] WS = WS ([...]|{...}|[\w.()])
 const listRegex =
     /(\w+\.lists\[")([\w.]+)"\]\s*=\s*(?:(?:\{[\s\S]*?\})|(?:\[[\s\S]*?\])|[\w.()]+)/gm;
@@ -45,6 +48,8 @@ export async function searchInWorkspace(
                 return results.captures;
             case "list":
                 return results.lists;
+            case "dynamic_list":
+                throw Error(`Can't search specifically for dynamic lists`);
         }
     })();
     if ("name" in match) {
@@ -71,6 +76,10 @@ async function searchInWorkspaceInner(workspace: WorkspaceFolder) {
                 break;
             case "list":
                 lists.push(r);
+                break;
+            case "dynamic_list":
+                lists.push(r);
+                break;
         }
     });
     return { actions, captures, lists };
@@ -132,7 +141,8 @@ async function parsePythonFile(absolutePath: string): Promise<SearchResult[]> {
     return [
         ...parsePythonFileInner(uri, fileContent, "action", actionRegex),
         ...parsePythonFileInner(uri, fileContent, "capture", captureRegex),
-        ...parsePythonFileInner(uri, fileContent, "list", listRegex)
+        ...parsePythonFileInner(uri, fileContent, "list", listRegex),
+        ...parsePythonFileInner(uri, fileContent, "dynamic_list", dynamicListRegex)
     ];
 }
 

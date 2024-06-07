@@ -1,6 +1,6 @@
 import { Position, TextDocument, TextLine } from "vscode";
 
-export type TalonMatchType = "action" | "capture" | "list";
+export type TalonMatchType = "action" | "capture" | "list" | "dynamic_list";
 
 export interface TalonMatchName {
     type: TalonMatchType;
