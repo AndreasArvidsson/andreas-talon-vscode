@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { registerCommands } from "./commands/registerCommands";
 import { registerLanguageCodeActions } from "./language/registerLanguageCodeActions";
+import { registerLanguageCompletionProviders } from "./language/registerLanguageCompletionProviders";
 import { registerLanguageDefinitions } from "./language/registerLanguageDefinitions";
 import { registerLanguageFormatters } from "./language/registerLanguageFormatters";
 import { registerStateUpdater } from "./stateUpdater";
@@ -40,6 +41,7 @@ async function activateExtension(context: vscode.ExtensionContext): Promise<void
     context.subscriptions.push(
         registerCommands(commandServerExtension, gitExtension, treeSitter),
         registerLanguageDefinitions(),
+        registerLanguageCompletionProviders(),
         registerLanguageCodeActions(treeSitter),
         registerLanguageFormatters(treeSitter),
         createTabView(),

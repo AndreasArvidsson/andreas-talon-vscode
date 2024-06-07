@@ -1,8 +1,5 @@
 import {
     CancellationToken,
-    CompletionItem,
-    CompletionItemKind,
-    CompletionItemProvider,
     DefinitionLink,
     DefinitionProvider,
     Disposable,
@@ -11,23 +8,15 @@ import {
     languages,
     MarkdownString,
     Position,
-    Range,
     TextDocument,
     workspace
 } from "vscode";
 import { getFilename } from "../util/fileSystem";
-import { searchInDefaultTalonActions } from "./talonDefaultActions";
-import {
-    getPythonMatchAtPosition,
-    getPythonPrefixAtPosition,
-    getTalonMatchAtPosition,
-    getTalonPrefixAtPosition,
-    TalonMatchName,
-    TalonMatchPrefix
-} from "./matchers";
+import { getPythonMatchAtPosition, getTalonMatchAtPosition, TalonMatchName } from "./matchers";
 import { searchInWorkspace } from "./searchInWorkspace";
+import { searchInDefaultTalonActions } from "./talonDefaultActions";
 
-abstract class ProviderDefinition implements DefinitionProvider {
+abstract class DefinitionProviderBase implements DefinitionProvider {
     async provideDefinition(
         document: TextDocument,
         position: Position,
@@ -52,7 +41,7 @@ abstract class ProviderDefinition implements DefinitionProvider {
     ): TalonMatchName | undefined;
 }
 
-class ProviderDefinitionTalon extends ProviderDefinition {
+class TalonDefinitionProvider extends DefinitionProviderBase {
     protected getMatchAtPosition(
         document: TextDocument,
         position: Position
@@ -61,7 +50,7 @@ class ProviderDefinitionTalon extends ProviderDefinition {
     }
 }
 
-class ProviderDefinitionPython extends ProviderDefinition {
+class PythonDefinitionProvider extends DefinitionProviderBase {
     protected getMatchAtPosition(
         document: TextDocument,
         position: Position
@@ -70,7 +59,7 @@ class ProviderDefinitionPython extends ProviderDefinition {
     }
 }
 
-abstract class ProviderHover implements HoverProvider {
+abstract class HoverProviderBase implements HoverProvider {
     async provideHover(
         document: TextDocument,
         position: Position,
@@ -132,7 +121,7 @@ function cleanHoverCode(text: string): string {
         .join("\n");
 }
 
-class ProviderHoverTalon extends ProviderHover {
+class TalonHoverProvider extends HoverProviderBase {
     protected getMatchAtPosition(
         document: TextDocument,
         position: Position
@@ -141,7 +130,7 @@ class ProviderHoverTalon extends ProviderHover {
     }
 }
 
-class ProviderHoverPython extends ProviderHover {
+class PythonHoverProvider extends HoverProviderBase {
     protected getMatchAtPosition(
         document: TextDocument,
         position: Position
@@ -150,82 +139,11 @@ class ProviderHoverPython extends ProviderHover {
     }
 }
 
-abstract class ProviderCompletionItem implements CompletionItemProvider {
-    static readonly triggererCharacters = ["."];
-
-    async provideCompletionItems(
-        document: TextDocument,
-        position: Position
-    ): Promise<CompletionItem[]> {
-        const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
-        if (!workspaceFolder) {
-            return [];
-        }
-
-        const match = this.getPrefixAtPosition(document, position);
-        if (!match) {
-            return [];
-        }
-
-        const defaultValues = searchInDefaultTalonActions(match).map((a) => a.name);
-        const workspaceResults = await searchInWorkspace(workspaceFolder, match);
-        const workspaceValues = workspaceResults.map((r) => r.name);
-        const values = defaultValues.concat(workspaceValues);
-
-        const range = new Range(
-            position.translate(undefined, -match.prefix.length),
-            position.translate(undefined, -match.prefix.length)
-        );
-
-        const kind =
-            match.type === "action" ? CompletionItemKind.Function : CompletionItemKind.Value;
-
-        return Array.from(new Set(values)).map((label) => ({
-            kind,
-            range,
-            label
-        }));
-    }
-
-    protected abstract getPrefixAtPosition(
-        document: TextDocument,
-        position: Position
-    ): TalonMatchPrefix | undefined;
-}
-
-class ProviderCompletionItemTalon extends ProviderCompletionItem {
-    protected getPrefixAtPosition(
-        document: TextDocument,
-        position: Position
-    ): TalonMatchPrefix | undefined {
-        return getTalonPrefixAtPosition(document, position);
-    }
-}
-
-class ProviderCompletionItemPython extends ProviderCompletionItem {
-    protected getPrefixAtPosition(
-        document: TextDocument,
-        position: Position
-    ): TalonMatchPrefix | undefined {
-        return getPythonPrefixAtPosition(document, position);
-    }
-}
-
 export function registerLanguageDefinitions(): Disposable {
     return Disposable.from(
-        languages.registerDefinitionProvider("talon", new ProviderDefinitionTalon()),
-        languages.registerDefinitionProvider("python", new ProviderDefinitionPython()),
-        languages.registerHoverProvider("talon", new ProviderHoverTalon()),
-        languages.registerHoverProvider("python", new ProviderHoverPython()),
-        languages.registerCompletionItemProvider(
-            "talon",
-            new ProviderCompletionItemTalon(),
-            ...ProviderCompletionItem.triggererCharacters
-        ),
-        languages.registerCompletionItemProvider(
-            "python",
-            new ProviderCompletionItemPython(),
-            ...ProviderCompletionItem.triggererCharacters
-        )
+        languages.registerDefinitionProvider("talon", new TalonDefinitionProvider()),
+        languages.registerDefinitionProvider("python", new PythonDefinitionProvider()),
+        languages.registerHoverProvider("talon", new TalonHoverProvider()),
+        languages.registerHoverProvider("python", new PythonHoverProvider())
     );
 }
