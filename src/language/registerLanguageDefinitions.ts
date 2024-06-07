@@ -16,7 +16,7 @@ import {
     workspace
 } from "vscode";
 import { getFilename } from "../util/fileSystem";
-import { searchInDefaultActions } from "./defaultActions";
+import { searchInDefaultTalonActions } from "./talonDefaultActions";
 import {
     getPythonMatchAtPosition,
     getPythonPrefixAtPosition,
@@ -88,7 +88,7 @@ abstract class ProviderHover implements HoverProvider {
 
         const workspaceResults = await searchInWorkspace(workspaceFolder, match);
 
-        const defaultStrings = searchInDefaultActions(match).map((a) => {
+        const defaultStrings = searchInDefaultTalonActions(match).map((a) => {
             return new MarkdownString()
                 .appendMarkdown(a.path)
                 .appendCodeblock(a.targetText, a.language);
@@ -167,7 +167,7 @@ abstract class ProviderCompletionItem implements CompletionItemProvider {
             return [];
         }
 
-        const defaultValues = searchInDefaultActions(match).map((a) => a.name);
+        const defaultValues = searchInDefaultTalonActions(match).map((a) => a.name);
         const workspaceResults = await searchInWorkspace(workspaceFolder, match);
         const workspaceValues = workspaceResults.map((r) => r.name);
         const values = defaultValues.concat(workspaceValues);
