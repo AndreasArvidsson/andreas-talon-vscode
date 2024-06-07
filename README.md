@@ -94,8 +94,8 @@ Many of the commands take arguments and return values that can only be used with
 ## Talon language features
 
 -   Adds document formatter for Talon files.
--   Adds (go to) definitions for Talon actions, lists and captures.
--   Adds hover for Talon actions, lists and captures.
+-   Adds (go to) definitions for Talon actions, lists (incl dynamic) and captures.
+-   Adds hover for Talon actions, lists (incl dynamic) and captures.
 -   Adds code completion for Talon actions, lists and captures.
 
 ### Column width setting for Talon formatter
@@ -136,6 +136,7 @@ foo bar baz:   "foo bar baz"
 
 -   Adds syntax highlight for snippet files.
 -   Adds document formatter for snippet files.
+-   Adds code completion for fields in snippet files.
 
 ## Talon command examples
 
