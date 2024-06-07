@@ -1,10 +1,10 @@
 import type { SyntaxNode } from "web-tree-sitter";
 import type { LanguageFormatterTree } from "./registerLanguageFormatter";
-import { getConfiguration } from "../util/getConfiguration";
+import { configuration } from "../util/configuration";
 
 export const talonFormatter: LanguageFormatterTree = {
     getText(ident: string, eol: string, node: SyntaxNode): string {
-        const columnWidth = getConfiguration("talonFormatter.columnWidth");
+        const columnWidth = configuration.talonFormatter.columnWidth();
         const formatter = new TalonFormatter(ident, eol, columnWidth);
         return formatter.getText(node);
     }

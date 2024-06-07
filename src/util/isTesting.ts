@@ -1,1 +1,1 @@
-export const isTesting = () => process.env.ANDREAS_TEST != null;
+export const isTesting = process.env.ANDREAS_TEST != null;
