@@ -110,7 +110,7 @@ function createTextEdits(document: TextDocument, text: string): TextEdit[] {
     ];
 }
 
-export function registerLanguageFormatter(treeSitter: TreeSitter): Disposable {
+export function registerLanguageFormatters(treeSitter: TreeSitter): Disposable {
     return Disposable.from(
         languages.registerDocumentFormattingEditProvider("talon", {
             provideDocumentFormattingEdits: (document, options) =>

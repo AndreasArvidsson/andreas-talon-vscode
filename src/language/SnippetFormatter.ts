@@ -1,5 +1,5 @@
 import { SnippetDocument, SnippetVariable, parseSnippetFile } from "./SnippetParser";
-import type { LanguageFormatterText } from "./registerLanguageFormatter";
+import type { LanguageFormatterText } from "./registerLanguageFormatters";
 
 export const snippetFormatter: LanguageFormatterText = {
     getText(ident: string, eol: string, text: string): string {

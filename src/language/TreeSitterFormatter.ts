@@ -1,5 +1,5 @@
 import type { SyntaxNode } from "web-tree-sitter";
-import type { LanguageFormatterTree } from "./registerLanguageFormatter";
+import type { LanguageFormatterTree } from "./registerLanguageFormatters";
 
 export const treeSitterFormatter: LanguageFormatterTree = {
     getText(ident: string, eol: string, node: SyntaxNode): string {
