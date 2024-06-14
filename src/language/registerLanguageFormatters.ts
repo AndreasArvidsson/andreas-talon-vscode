@@ -30,7 +30,7 @@ function provideDocumentFormattingEditsForTree(
 ): TextEdit[] {
     const rootNode = treeSitter.getRootNode(document);
 
-    if (rootNode.hasError()) {
+    if (rootNode.hasError) {
         console.warn(`Abort document formatting: Syntax tree has error`);
         return [];
     }
