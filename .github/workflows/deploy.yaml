@@ -18,12 +18,12 @@ jobs:
         with:
           node-version: 21
       - run: npm --color install
-      - run: npm --color build
       - name: Publish to Open VSX Registry
         id: publishToOpenVSX
         uses: HaaLeo/publish-vscode-extension@v1
         with:
           pat: ${{ secrets.OPENVSX_PAT }}
+          packagePath: out
       - name: Publish to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@v1
         with:
