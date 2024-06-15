@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "NodeNext",
         "target": "ESNext",
         "lib": ["ESNext"],
-        "moduleResolution": "node",
+        "moduleResolution": "NodeNext",
         "esModuleInterop": true,
         "rootDir": "src",
         "outDir": "out",
