@@ -1,4 +1,3 @@
-// import * as cp from "child_process";
 import {
     downloadAndUnzipVSCode,
     resolveCliArgsFromVSCodeExecutablePath,
@@ -6,19 +5,14 @@ import {
 } from "@vscode/test-electron";
 import * as cp from "child_process";
 import * as path from "path";
-import * as fs from "fs";
 
 const extensionDependencies = [
     // Cursorless access to Tree sitter
-    "pokey.parse-tree"
+    "pokey.parse-tree",
 
     // Register necessary language-IDs for tests
-    // "scala-lang.scala", // scala
-    // "mrob95.vscode-talonscript", // talon
-    // "jrieken.vscode-tree-sitter-query", // scm
-
-    // Necessary for the `drink cell` and `pour cell` tests
-    // "ms-toolsai.jupyter",
+    "mrob95.vscode-talonscript", // talon
+    "jrieken.vscode-tree-sitter-query" // scm
 ];
 
 function installExtensionDependencies(vscodeExecutablePath: string) {
@@ -40,10 +34,14 @@ function installExtensionDependencies(vscodeExecutablePath: string) {
     });
 
     console.log("status: ", status);
-    console.log("signal: ", signal);
-    console.log("error: ", error);
+    if (signal) {
+        console.log("signal: ", signal);
+    }
+    if (error) {
+        console.log("error: ", error);
+    }
 
-    console.log("finished installing dependency extensions");
+    console.log("finished installing dependency extensions\n");
 }
 
 export async function launchVscodeAndRunTests() {
