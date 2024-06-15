@@ -4,7 +4,16 @@ import * as path from "path";
 
 export async function launchVscodeAndRunTests() {
     try {
+        const outDirPath = path.join(__dirname, "../../out");
+        const extensionTestsPath = path.join(outDirPath, "../test/testUtil/runAllTests.ts");
+        const extensionDevelopmentPath = outDirPath;
+
+        console.log(`extensionTestsPath: ${extensionTestsPath}`);
+        console.log(`extensionDevelopmentPath: ${extensionDevelopmentPath}`);
+
         const vscodeExecutablePath = await downloadAndUnzipVSCode("stable");
+
+        console.log(`vscodeExecutablePath: ${vscodeExecutablePath}`);
 
         // Install extension dependencies
         // const extensionInstallArgs = [
@@ -26,13 +35,6 @@ export async function launchVscodeAndRunTests() {
         // console.log("error: ", error);
 
         // console.log("finished installing dependency extensions");
-
-        const outDirPath = path.join(__dirname, "../../out");
-        const extensionTestsPath = path.join(outDirPath, "../test/testUtil/runAllTests.ts");
-        const extensionDevelopmentPath = outDirPath;
-
-        console.log(`extensionTestsPath: ${extensionTestsPath}`);
-        console.log(`extensionDevelopmentPath: ${extensionDevelopmentPath}`);
 
         // Run the integration test
         const code = await runTests({
