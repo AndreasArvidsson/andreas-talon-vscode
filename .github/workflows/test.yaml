@@ -19,4 +19,5 @@ jobs:
           node-version: 21
       - run: npm --color install
       - run: npm --color run test:meta
+      - run: npm --color run compile
       - run: xvfb-run -a npm --color run test:ci
