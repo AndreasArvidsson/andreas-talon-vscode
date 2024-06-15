@@ -25,11 +25,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 }
 
 async function activateExtension(context: vscode.ExtensionContext): Promise<void> {
-    console.log("Activating Talon extension");
-    console.log("isTesting: ", isTesting);
-    console.log(process.env.ANDREAS_TEST);
     if (isTesting) {
-        console.log("Running extension in test mode");
+        console.log("[ Running extension in test mode ]");
     }
 
     const parseTreeExtension = await getParseTreeExtension();

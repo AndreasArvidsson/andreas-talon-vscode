@@ -21,13 +21,6 @@ export async function launchVscodeAndRunTests() {
         const extensionTestsPath = path.join(workspaceFolder, "out/test/testUtil/runAllTests");
         const extensionDevelopmentPath = workspaceFolder;
 
-        console.log("rootPath: ", workspaceFolder);
-        console.log("extensionTestsPath: ", extensionTestsPath);
-        console.log("extensionDevelopmentPath: ", extensionDevelopmentPath);
-
-        // console.log(fs.readdirSync(extensionDevelopmentPath));
-        // console.log(process.env);
-
         const vscodeExecutablePath = await downloadAndUnzipVSCode("stable");
 
         installExtensionDependencies(vscodeExecutablePath);
