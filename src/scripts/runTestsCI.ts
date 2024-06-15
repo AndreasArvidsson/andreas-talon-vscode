@@ -32,7 +32,9 @@ export async function launchVscodeAndRunTests() {
             extensionTestsPath
         });
 
-        console.log(`Returned from "runTests" with value: ${code}`);
+        if (code !== 0) {
+            console.log(`Returned from "runAllTests" with value: ${code}`);
+        }
     } catch (err) {
         console.error("Test run threw exception:");
         console.error(err);
