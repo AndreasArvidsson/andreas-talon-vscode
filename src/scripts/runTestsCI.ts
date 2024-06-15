@@ -1,6 +1,7 @@
 // import * as cp from "child_process";
 import { downloadAndUnzipVSCode, runTests } from "@vscode/test-electron";
 import * as path from "path";
+import * as fs from "fs";
 
 export async function launchVscodeAndRunTests() {
     try {
@@ -10,6 +11,9 @@ export async function launchVscodeAndRunTests() {
 
         console.log(`extensionTestsPath: ${extensionTestsPath}`);
         console.log(`extensionDevelopmentPath: ${extensionDevelopmentPath}`);
+
+        console.log(fs.existsSync(outDirPath));
+        console.log(fs.readdirSync(outDirPath));
 
         const vscodeExecutablePath = await downloadAndUnzipVSCode("stable");
 
