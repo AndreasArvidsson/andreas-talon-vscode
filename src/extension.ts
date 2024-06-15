@@ -25,6 +25,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 }
 
 async function activateExtension(context: vscode.ExtensionContext): Promise<void> {
+    console.log("[[[[[[[[[[[[[[[ ACTIVATE EXTENSION ]]]]]]]]]]]]]]]");
     if (isTesting) {
         console.log("Running extension in test mode");
     }
