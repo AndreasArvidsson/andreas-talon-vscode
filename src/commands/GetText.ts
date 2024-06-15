@@ -34,19 +34,21 @@ export class GetText {
 
         console.log("----------getDictationContext");
 
-        if (editor == null || !(await this.validEditor(editor))) {
-            return null;
-        }
+        throw Error(`getDictationContext`);
 
-        const startLine = editor.document.lineAt(editor.selection.start);
-        const endLine = editor.document.lineAt(editor.selection.end);
-        const startChar = editor.selection.start.character;
-        const endChar = editor.selection.end.character;
+        // if (editor == null || !(await this.validEditor(editor))) {
+        //     return null;
+        // }
 
-        return {
-            before: startLine.text.slice(startChar - 2, startChar),
-            after: endLine.text.slice(endChar, endChar + 2)
-        };
+        // const startLine = editor.document.lineAt(editor.selection.start);
+        // const endLine = editor.document.lineAt(editor.selection.end);
+        // const startChar = editor.selection.start.character;
+        // const endChar = editor.selection.end.character;
+
+        // return {
+        //     before: startLine.text.slice(startChar - 2, startChar),
+        //     after: endLine.text.slice(endChar, endChar + 2)
+        // };
     }
 
     async getClassName(): Promise<string | null> {
