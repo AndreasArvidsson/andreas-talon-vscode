@@ -5,7 +5,7 @@ import * as path from "path";
 export async function launchVscodeAndRunTests() {
     try {
         const outDirPath = path.join(__dirname, "../../out");
-        const extensionTestsPath = path.join(outDirPath, "../test/testUtil/runAllTests.js");
+        const extensionTestsPath = path.join(outDirPath, "test/testUtil/runAllTests.js");
         const extensionDevelopmentPath = outDirPath;
 
         console.log(`extensionTestsPath: ${extensionTestsPath}`);
