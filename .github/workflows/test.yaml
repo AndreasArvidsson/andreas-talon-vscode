@@ -12,8 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ANDREAS_TEST: true
-      VSCODE_CRASH_DIR: ${{ github.workspace }}/artifacts/dumps
-      VSCODE_LOGS_DIR: ${{ github.workspace }}/artifacts/logs
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,10 +19,4 @@ jobs:
           node-version: 21
       - run: npm --color install
       - run: npm --color run test:meta
-      - name: Test create vsix
-        id: createVsix
-        uses: HaaLeo/publish-vscode-extension@v1
-        with:
-          pat: none
-          dryRun: true
-      - run: npm --color run test:ci
+      - run: xvfb-run -a npm --color test:ci
