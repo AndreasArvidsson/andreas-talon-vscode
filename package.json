@@ -294,13 +294,13 @@
         "compile": "tsc -p . && npm run bundle-assets",
         "bundle-assets": "tsx ./src/scripts/bundleAssets.ts",
         "clean": "rm -rf out",
-        "test": "eslint src && tsx src/meta-updater --test && prettier --check .",
-        "fix": "tsx src/meta-updater && prettier --write .",
+        "test:meta": "eslint src && tsx src/meta-updater --test && prettier --check .",
+        "fix:meta": "tsx src/meta-updater && prettier --write .",
+        "test:ci": "tsx src/scripts/runTestsCI.ts",
         "watch": "tsc -watch -p ."
     },
     "extensionDependencies": [
         "vscode.git",
-        "pokey.command-server",
         "pokey.parse-tree"
     ],
     "dependencies": {
@@ -315,6 +315,7 @@
         "@types/vscode": "1.68.0",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
         "@typescript-eslint/parser": "^6.0.0",
+        "@vscode/test-electron": "^2.3.9",
         "eslint": "^8.45.0",
         "fs-extra": "^11.2.0",
         "glob": "^10.3.3",

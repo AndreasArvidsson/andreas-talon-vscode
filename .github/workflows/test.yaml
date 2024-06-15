@@ -9,11 +9,21 @@ on:
 jobs:
   run-tests:
     name: Run tests
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      ANDREAS_TEST: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 16
-      - run: npm install
-      - run: npm run test
+          node-version-file: .nvmrc
+      - run: npm --color install
+      - run: npm --color run compile
+      - run: xvfb-run -a npm --color run test:ci
+        if: runner.os == 'Linux'
+      - run: npm --color run test:ci
+        if: runner.os != 'Linux'

@@ -20,7 +20,7 @@
             },
             "args": [
                 "--extensionDevelopmentPath=${workspaceFolder}",
-                "--extensionTestsPath=${workspaceFolder}/out/test/testUtil/runTests"
+                "--extensionTestsPath=${workspaceFolder}/out/test/testUtil/runAllTests"
             ],
             "outFiles": ["${workspaceFolder}/out/**/*.js"],
             "preLaunchTask": "${defaultBuildTask}"

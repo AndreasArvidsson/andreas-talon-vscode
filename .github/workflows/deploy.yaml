@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   workflow_run:
-    workflows: [Test]
+    workflows: [Test, Test-meta]
     types: [completed]
     branches: [master]
 
@@ -16,8 +16,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 16
-      - run: npm install
+          node-version-file: .nvmrc
+      - run: npm --color install
       - name: Publish to Open VSX Registry
         id: publishToOpenVSX
         uses: HaaLeo/publish-vscode-extension@v1

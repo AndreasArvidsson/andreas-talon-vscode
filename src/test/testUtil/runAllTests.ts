@@ -1,6 +1,6 @@
 import { globSync } from "glob";
 import Mocha from "mocha";
-import path from "node:path";
+import * as path from "node:path";
 
 export function run(): Promise<void> {
     const mocha = new Mocha({
