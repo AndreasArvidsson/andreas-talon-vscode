@@ -13,9 +13,9 @@ export async function run(): Promise<void> {
     for (const extension of vscode.extensions.all) {
         if (!extension.id.startsWith("vscode.")) {
             console.log(extension.id, extension.isActive);
-            if (extension.id.startsWith("AndreasArvidsson")) {
-                await extension.activate();
-            }
+            // if (extension.id.startsWith("AndreasArvidsson")) {
+            //     await extension.activate();
+            // }
         }
     }
 
