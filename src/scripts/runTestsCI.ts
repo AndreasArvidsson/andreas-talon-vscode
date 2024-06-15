@@ -48,7 +48,7 @@ export async function launchVscodeAndRunTests() {
     try {
         const rootPath = path.join(__dirname, "../..");
         const extensionTestsPath = path.join(rootPath, "out/test/testUtil/runAllTests.js");
-        const extensionDevelopmentPath = rootPath;
+        const extensionDevelopmentPath = path.join(rootPath, "out");
 
         console.log("rootPath: ", rootPath);
         console.log("extensionTestsPath: ", extensionTestsPath);
