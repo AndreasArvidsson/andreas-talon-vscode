@@ -12,6 +12,9 @@ export async function launchVscodeAndRunTests() {
         console.log(`extensionTestsPath: ${extensionTestsPath}`);
         console.log(`extensionDevelopmentPath: ${extensionDevelopmentPath}`);
 
+        console.log(__dirname);
+        console.log(fs.readdirSync(__dirname));
+
         console.log(fs.existsSync(outDirPath));
         console.log(fs.readdirSync(outDirPath));
 
