@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ANDREAS_TEST: true
+      VSCODE_CRASH_DIR: ${{ github.workspace }}/artifacts/dumps
+      VSCODE_LOGS_DIR: ${{ github.workspace }}/artifacts/logs
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

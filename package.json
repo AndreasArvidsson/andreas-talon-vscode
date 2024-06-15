@@ -316,6 +316,7 @@
         "@types/vscode": "1.68.0",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
         "@typescript-eslint/parser": "^6.0.0",
+        "@vscode/test-electron": "^2.3.9",
         "eslint": "^8.45.0",
         "fs-extra": "^11.2.0",
         "glob": "^10.3.3",
