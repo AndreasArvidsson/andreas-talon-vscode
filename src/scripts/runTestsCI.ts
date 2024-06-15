@@ -55,12 +55,12 @@ export async function launchVscodeAndRunTests() {
         console.log("extensionTestsPath: ", extensionTestsPath);
         console.log("extensionDevelopmentPath: ", extensionDevelopmentPath);
 
-        console.log(fs.readdirSync(extensionDevelopmentPath));
-        console.log(process.env);
+        // console.log(fs.readdirSync(extensionDevelopmentPath));
+        // console.log(process.env);
 
         const vscodeExecutablePath = await downloadAndUnzipVSCode("stable");
 
-        installExtensionDependencies(vscodeExecutablePath);
+        // installExtensionDependencies(vscodeExecutablePath);
 
         // Run the integration test
         const code = await runTests({
