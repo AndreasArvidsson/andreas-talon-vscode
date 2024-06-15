@@ -23,6 +23,5 @@ jobs:
         uses: HaaLeo/publish-vscode-extension@v1
         with:
           pat: none
-          packagePath: out
           dryRun: true
       - run: npm --color run test
