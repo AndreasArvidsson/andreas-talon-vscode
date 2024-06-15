@@ -16,7 +16,6 @@ import { getFakeCommandServerExtension } from "./util/getFakeCommandServerExtens
 import { isTesting } from "./util/isTesting";
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-    console.log("[[[[[[[[[[[[[[[ ACTIVATE ]]]]]]]]]]]]]]]");
     try {
         await activateExtension(context);
     } catch (error) {
