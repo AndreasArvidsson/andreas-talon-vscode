@@ -1,29 +1,10 @@
 // import * as cp from "child_process";
 import { downloadAndUnzipVSCode, runTests } from "@vscode/test-electron";
 import * as path from "path";
-import { getEnvironmentVariableStrict } from "./getEnvironmentVariableStrict";
 
 export async function launchVscodeAndRunTests() {
     try {
-        const extensionTestsPath = path.join(__dirname, "../test/testUtil/runAllTests.ts");
-        const extensionDevelopmentPath = path.join(__dirname, "../../out");
-
-        const crashDir = getEnvironmentVariableStrict("VSCODE_CRASH_DIR");
-        const logsDir = getEnvironmentVariableStrict("VSCODE_LOGS_DIR");
-
-        const vscodeVersion = "stable";
-        const vscodeExecutablePath = await downloadAndUnzipVSCode(vscodeVersion);
-
-        console.log(`extensionTestsPath: ${extensionTestsPath}`);
-        console.log(`extensionDevelopmentPath: ${extensionDevelopmentPath}`);
-
-        console.log(`crashDir: ${crashDir}`);
-        console.log(`logsDir: ${logsDir}`);
-
-        console.log(`__dirname: ${__dirname}`);
-
-        // const a = getEnvironmentVariableStrict("github.workspace");
-        // console.log(`github.workspace: ${a}`);
+        const vscodeExecutablePath = await downloadAndUnzipVSCode("stable");
 
         // Install extension dependencies
         // const extensionInstallArgs = [
@@ -44,14 +25,19 @@ export async function launchVscodeAndRunTests() {
         // console.log("signal: ", signal);
         // console.log("error: ", error);
 
-        console.log("finished installing dependency extensions");
+        // console.log("finished installing dependency extensions");
+
+        const extensionTestsPath = path.join(__dirname, "../test/testUtil/runAllTests.ts");
+        const extensionDevelopmentPath = path.join(__dirname, "../../out");
+
+        console.log(`extensionTestsPath: ${extensionTestsPath}`);
+        console.log(`extensionDevelopmentPath: ${extensionDevelopmentPath}`);
 
         // Run the integration test
         const code = await runTests({
             vscodeExecutablePath,
             extensionDevelopmentPath,
-            extensionTestsPath,
-            launchArgs: [`--crash-reporter-directory=${crashDir}`, `--logsPath=${logsDir}`]
+            extensionTestsPath
         });
 
         console.log(`Returned from "runTests" with value: ${code}`);
