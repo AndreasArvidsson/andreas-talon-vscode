@@ -3,14 +3,12 @@ import Mocha from "mocha";
 import * as path from "node:path";
 import * as vscode from "vscode";
 
-export async function run(): Promise<void> {
-    //  vscode.workspace
-    // .getConfiguration()
-    // .update(
-    //     "editor",
-    //     "detectIndentation",
+async function updateVscodeSettings() {
+    await vscode.workspace.getConfiguration().update("editor.detectIndentation", true);
+}
 
-    // );
+export async function run(): Promise<void> {
+    await updateVscodeSettings();
 
     const a = vscode.workspace.getConfiguration().get("editor.detectIndentation");
     console.log("editor.detectIndentation", a);

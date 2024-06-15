@@ -49,7 +49,7 @@ function installExtensionDependencies(vscodeExecutablePath: string) {
         ...extensionDependencies.flatMap((dependency) => ["--install-extension", dependency])
     ];
 
-    console.log("starting to install dependency extensions");
+    console.log("Installing dependency extensions...");
     console.log(`cli: ${cli}`);
     console.log(JSON.stringify(extensionInstallArgs, null, 2));
 
@@ -68,7 +68,7 @@ function installExtensionDependencies(vscodeExecutablePath: string) {
         console.log("error: ", error);
     }
 
-    console.log("finished installing dependency extensions");
+    console.log("Finished installing dependency extensions");
 }
 
 void launchVscodeAndRunTests();
