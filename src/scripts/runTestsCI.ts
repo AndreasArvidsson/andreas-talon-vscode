@@ -60,7 +60,7 @@ export async function launchVscodeAndRunTests() {
 
         const vscodeExecutablePath = await downloadAndUnzipVSCode("stable");
 
-        // installExtensionDependencies(vscodeExecutablePath);
+        installExtensionDependencies(vscodeExecutablePath);
 
         // Run the integration test
         const code = await runTests({
