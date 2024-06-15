@@ -34,21 +34,24 @@ export class GetText {
 
         console.log("----------getDictationContext");
 
-        throw Error(`getDictationContext`);
+        // eslint-disable-next-line no-constant-condition
+        if (1 === 1) {
+            throw Error(`getDictationContext`);
+        }
 
-        // if (editor == null || !(await this.validEditor(editor))) {
-        //     return null;
-        // }
+        if (editor == null || !(await this.validEditor(editor))) {
+            return null;
+        }
 
-        // const startLine = editor.document.lineAt(editor.selection.start);
-        // const endLine = editor.document.lineAt(editor.selection.end);
-        // const startChar = editor.selection.start.character;
-        // const endChar = editor.selection.end.character;
+        const startLine = editor.document.lineAt(editor.selection.start);
+        const endLine = editor.document.lineAt(editor.selection.end);
+        const startChar = editor.selection.start.character;
+        const endChar = editor.selection.end.character;
 
-        // return {
-        //     before: startLine.text.slice(startChar - 2, startChar),
-        //     after: endLine.text.slice(endChar, endChar + 2)
-        // };
+        return {
+            before: startLine.text.slice(startChar - 2, startChar),
+            after: endLine.text.slice(endChar, endChar + 2)
+        };
     }
 
     async getClassName(): Promise<string | null> {
