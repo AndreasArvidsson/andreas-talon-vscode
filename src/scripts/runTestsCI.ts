@@ -56,6 +56,7 @@ export async function launchVscodeAndRunTests() {
         console.log("extensionDevelopmentPath: ", extensionDevelopmentPath);
 
         console.log(fs.readdirSync(extensionDevelopmentPath));
+        console.log(process.env);
 
         const vscodeExecutablePath = await downloadAndUnzipVSCode("stable");
 
