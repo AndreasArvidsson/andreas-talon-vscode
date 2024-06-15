@@ -27,8 +27,9 @@ export async function launchVscodeAndRunTests() {
 
         // console.log("finished installing dependency extensions");
 
-        const extensionTestsPath = path.join(__dirname, "../test/testUtil/runAllTests.ts");
-        const extensionDevelopmentPath = path.join(__dirname, "../../out");
+        const outDirPath = path.join(__dirname, "../../out");
+        const extensionTestsPath = path.join(outDirPath, "../test/testUtil/runAllTests.ts");
+        const extensionDevelopmentPath = outDirPath;
 
         console.log(`extensionTestsPath: ${extensionTestsPath}`);
         console.log(`extensionDevelopmentPath: ${extensionDevelopmentPath}`);
