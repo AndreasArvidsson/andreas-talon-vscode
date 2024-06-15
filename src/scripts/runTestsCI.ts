@@ -5,6 +5,7 @@ import {
 } from "@vscode/test-electron";
 import * as cp from "child_process";
 import * as path from "path";
+import * as fs from "fs";
 
 const extensionDependencies = [
     // Cursorless access to Tree sitter
@@ -53,6 +54,8 @@ export async function launchVscodeAndRunTests() {
         console.log("rootPath: ", rootPath);
         console.log("extensionTestsPath: ", extensionTestsPath);
         console.log("extensionDevelopmentPath: ", extensionDevelopmentPath);
+
+        console.log(fs.readdirSync(extensionDevelopmentPath));
 
         const vscodeExecutablePath = await downloadAndUnzipVSCode("stable");
 
