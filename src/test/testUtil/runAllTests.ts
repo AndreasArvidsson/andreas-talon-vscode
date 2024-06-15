@@ -10,8 +10,6 @@ export function run(): Promise<void> {
 
     const cwd = path.resolve(__dirname, "..");
 
-    console.log("CWD: ", cwd);
-
     const files = globSync("**/**.test.js", { cwd }).sort();
 
     files.forEach((f) => mocha.addFile(path.resolve(cwd, f)));

@@ -17,8 +17,11 @@ import { isTesting } from "./util/isTesting";
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     try {
+        console.log("[[[[[[[[[[[[[[[ ACTIVATE ]]]]]]]]]]]]]]]");
         await activateExtension(context);
     } catch (error) {
+        console.log("[[[[[[[[[[[[[[[ error ]]]]]]]]]]]]]]]");
+        console.log(error);
         void vscode.window.showErrorMessage((error as Error).message);
         throw error;
     }
