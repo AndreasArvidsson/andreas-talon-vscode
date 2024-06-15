@@ -9,8 +9,8 @@ on:
 jobs:
   run-tests:
     name: Run tests
-    # runs-on: ubuntu-latest
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
+    # runs-on: macos-latest
     env:
       ANDREAS_TEST: true
     steps:
@@ -22,4 +22,8 @@ jobs:
       # - run: npm --color run test:meta
       - run: npm --color run compile
       # - run: xvfb-run -a npm --color run test:ci
-      - run: npm --color run test:ci
+      # - run: npm --color run test:ci
+      - run: xvfb-run -a pnpm --color test
+        if: runner.os == 'Linux'
+      - run: pnpm --color test
+        if: runner.os != 'Linux'

@@ -15,35 +15,6 @@ const extensionDependencies = [
     "jrieken.vscode-tree-sitter-query" // scm
 ];
 
-function installExtensionDependencies(vscodeExecutablePath: string) {
-    const [cli, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
-
-    // Install extension dependencies
-    const extensionInstallArgs = [
-        ...args,
-        ...extensionDependencies.flatMap((dependency) => ["--install-extension", dependency])
-    ];
-
-    console.log("starting to install dependency extensions");
-    console.log(`cli: ${cli}`);
-    console.log(JSON.stringify(extensionInstallArgs, null, 2));
-
-    const { status, signal, error } = cp.spawnSync(cli, extensionInstallArgs, {
-        encoding: "utf-8",
-        stdio: "inherit"
-    });
-
-    console.log("status: ", status);
-    if (signal) {
-        console.log("signal: ", signal);
-    }
-    if (error) {
-        console.log("error: ", error);
-    }
-
-    console.log("finished installing dependency extensions");
-}
-
 export async function launchVscodeAndRunTests() {
     try {
         const workspaceFolder = path.join(__dirname, "../..");
@@ -74,6 +45,37 @@ export async function launchVscodeAndRunTests() {
         console.error(err);
         process.exit(1);
     }
+}
+
+function installExtensionDependencies(vscodeExecutablePath: string) {
+    const [cli, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
+
+    // Install extension dependencies
+    const extensionInstallArgs = [
+        ...args,
+        ...extensionDependencies.flatMap((dependency) => ["--install-extension", dependency])
+    ];
+
+    console.log("starting to install dependency extensions");
+    console.log(`cli: ${cli}`);
+    console.log(JSON.stringify(extensionInstallArgs, null, 2));
+
+    const { status, signal, error } = cp.spawnSync(cli, extensionInstallArgs, {
+        encoding: "utf-8",
+        stdio: "inherit"
+    });
+
+    if (status !== 0) {
+        console.log("status: ", status);
+    }
+    if (signal) {
+        console.log("signal: ", signal);
+    }
+    if (error) {
+        console.log("error: ", error);
+    }
+
+    console.log("finished installing dependency extensions");
 }
 
 void launchVscodeAndRunTests();
