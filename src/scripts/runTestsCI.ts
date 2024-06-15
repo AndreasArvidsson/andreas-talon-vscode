@@ -20,8 +20,10 @@ export async function launchVscodeAndRunTests() {
         console.log(`crashDir: ${crashDir}`);
         console.log(`logsDir: ${logsDir}`);
 
-        const a = getEnvironmentVariableStrict("github.workspace");
-        console.log(`github.workspace: ${a}`);
+        console.log(`__dirname: ${__dirname}`);
+
+        // const a = getEnvironmentVariableStrict("github.workspace");
+        // console.log(`github.workspace: ${a}`);
 
         // Install extension dependencies
         // const extensionInstallArgs = [
