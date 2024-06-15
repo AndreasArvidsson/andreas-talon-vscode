@@ -46,9 +46,9 @@ function installExtensionDependencies(vscodeExecutablePath: string) {
 
 export async function launchVscodeAndRunTests() {
     try {
-        const outDirPath = path.join(__dirname, "../../out");
-        const extensionTestsPath = path.join(outDirPath, "test/testUtil/runAllTests.js");
-        const extensionDevelopmentPath = outDirPath;
+        const rootPath = path.join(__dirname, "../..");
+        const extensionTestsPath = path.join(rootPath, "out/test/testUtil/runAllTests.js");
+        const extensionDevelopmentPath = rootPath;
 
         const vscodeExecutablePath = await downloadAndUnzipVSCode("stable");
 
