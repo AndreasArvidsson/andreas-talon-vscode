@@ -294,8 +294,9 @@
         "compile": "tsc -p . && npm run bundle-assets",
         "bundle-assets": "tsx ./src/scripts/bundleAssets.ts",
         "clean": "rm -rf out",
-        "test": "eslint src && tsx src/meta-updater --test && prettier --check .",
-        "fix": "tsx src/meta-updater && prettier --write .",
+        "test:meta": "eslint src && tsx src/meta-updater --test && prettier --check .",
+        "fix:meta": "tsx src/meta-updater && prettier --write .",
+        "test:ci": "tsx src/scripts/runTestsCI.ts",
         "watch": "tsc -watch -p ."
     },
     "extensionDependencies": [

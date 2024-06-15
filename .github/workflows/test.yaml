@@ -18,10 +18,11 @@ jobs:
         with:
           node-version: 21
       - run: npm --color install
+      - run: npm --color run:meta
       - name: Test create vsix
         id: createVsix
         uses: HaaLeo/publish-vscode-extension@v1
         with:
           pat: none
           dryRun: true
-      - run: npm --color run test
+      - run: npm --color run test:ci
