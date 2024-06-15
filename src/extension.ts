@@ -25,6 +25,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 }
 
 async function activateExtension(context: vscode.ExtensionContext): Promise<void> {
+    if (isTesting) {
+        console.log("Running extension in test mode");
+    }
+
     const parseTreeExtension = await getParseTreeExtension();
     const gitExtension = await getGitExtension();
     const commandServerExtension = isTesting
