@@ -301,7 +301,6 @@
     },
     "extensionDependencies": [
         "vscode.git",
-        "pokey.command-server",
         "pokey.parse-tree"
     ],
     "dependencies": {
