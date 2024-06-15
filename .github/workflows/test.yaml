@@ -18,5 +18,5 @@ jobs:
         with:
           node-version: 21
       - run: npm --color install
-      - run: npm --color compile
+      - run: npm --color run compile
       - run: npm --color run test
