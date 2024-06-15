@@ -4,7 +4,9 @@ import * as path from "node:path";
 import * as vscode from "vscode";
 
 async function updateVscodeSettings() {
-    await vscode.workspace.getConfiguration().update("editor.detectIndentation", true);
+    await vscode.workspace
+        .getConfiguration()
+        .update("editor.detectIndentation", true, vscode.ConfigurationTarget.Global);
 }
 
 export async function run(): Promise<void> {
