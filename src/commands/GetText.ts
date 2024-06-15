@@ -32,6 +32,8 @@ export class GetText {
     async getDictationContext(): Promise<{ before: string; after: string } | null> {
         const editor = vscode.window.activeTextEditor;
 
+        console.log("----------getDictationContext");
+
         if (editor == null || !(await this.validEditor(editor))) {
             return null;
         }
