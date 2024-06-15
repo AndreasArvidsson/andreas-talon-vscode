@@ -47,11 +47,11 @@ function installExtensionDependencies(vscodeExecutablePath: string) {
 
 export async function launchVscodeAndRunTests() {
     try {
-        const rootPath = path.join(__dirname, "../..");
-        const extensionTestsPath = path.join(rootPath, "out/test/testUtil/runAllTests.js");
-        const extensionDevelopmentPath = path.join(rootPath);
+        const workspaceFolder = path.join(__dirname, "../..");
+        const extensionTestsPath = path.join(workspaceFolder, "out/test/testUtil/runAllTests.js");
+        const extensionDevelopmentPath = workspaceFolder;
 
-        console.log("rootPath: ", rootPath);
+        console.log("rootPath: ", workspaceFolder);
         console.log("extensionTestsPath: ", extensionTestsPath);
         console.log("extensionDevelopmentPath: ", extensionDevelopmentPath);
 
