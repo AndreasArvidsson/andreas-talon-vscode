@@ -16,19 +16,16 @@ import { getFakeCommandServerExtension } from "./util/getFakeCommandServerExtens
 import { isTesting } from "./util/isTesting";
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
+    console.log("[[[[[[[[[[[[[[[ ACTIVATE ]]]]]]]]]]]]]]]");
     try {
-        console.log("[[[[[[[[[[[[[[[ ACTIVATE ]]]]]]]]]]]]]]]");
         await activateExtension(context);
     } catch (error) {
-        console.log("[[[[[[[[[[[[[[[ error ]]]]]]]]]]]]]]]");
-        console.log(error);
         void vscode.window.showErrorMessage((error as Error).message);
         throw error;
     }
 }
 
 async function activateExtension(context: vscode.ExtensionContext): Promise<void> {
-    console.log("[[[[[[[[[[[[[[[ ACTIVATE EXTENSION ]]]]]]]]]]]]]]]");
     if (isTesting) {
         console.log("Running extension in test mode");
     }
