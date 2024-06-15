@@ -1,20 +1,8 @@
 import { globSync } from "glob";
 import Mocha from "mocha";
 import * as path from "node:path";
-import * as vscode from "vscode";
-
-async function updateVscodeSettings() {
-    await vscode.workspace
-        .getConfiguration()
-        .update("editor.detectIndentation", false, vscode.ConfigurationTarget.Global);
-}
 
 export async function run(): Promise<void> {
-    await updateVscodeSettings();
-
-    const a = vscode.workspace.getConfiguration().get("editor.detectIndentation");
-    console.log("editor.detectIndentation", a);
-
     const mocha = new Mocha({
         ui: "tdd",
         color: true
