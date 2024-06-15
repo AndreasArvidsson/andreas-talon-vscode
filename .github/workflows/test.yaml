@@ -21,7 +21,7 @@ jobs:
       - run: npm --color install
       # - run: npm --color run test:meta
       - run: npm --color run compile
-      - run: xvfb-run -a npm --color test:ci
+      - run: xvfb-run -a npm --color run test:ci
         if: runner.os == 'Linux'
-      - run: npm --color test:ci
+      - run: npm --color run test:ci
         if: runner.os != 'Linux'
