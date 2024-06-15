@@ -1,11 +1,17 @@
 import { globSync } from "glob";
 import Mocha from "mocha";
-import path from "node:path";
+import * as path from "node:path";
+import * as vscode from "vscode";
 
 export function run(): Promise<void> {
     const mocha = new Mocha({
         ui: "tdd",
         color: true
+    });
+
+    console.log("extensions");
+    vscode.extensions.all.forEach((extension) => {
+        console.log(extension.id);
     });
 
     const cwd = path.resolve(__dirname, "..");
