@@ -11,7 +11,9 @@ export function run(): Promise<void> {
 
     console.log("extensions");
     vscode.extensions.all.forEach((extension) => {
-        console.log(extension.id);
+        if (!extension.id.startsWith("vscode.")) {
+            console.log(extension.id, extension.isActive);
+        }
     });
 
     const cwd = path.resolve(__dirname, "..");
