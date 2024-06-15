@@ -160,6 +160,7 @@ class TalonFormatter {
             case "start_anchor":
             case "end_anchor":
             case "repeat":
+            case "deck(":
             case "(":
             case ")":
             case "=":
