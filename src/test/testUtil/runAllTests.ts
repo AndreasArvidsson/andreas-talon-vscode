@@ -3,18 +3,21 @@ import Mocha from "mocha";
 import * as path from "node:path";
 import * as vscode from "vscode";
 
-export function run(): Promise<void> {
+export async function run(): Promise<void> {
     const mocha = new Mocha({
         ui: "tdd",
         color: true
     });
 
     console.log("extensions");
-    vscode.extensions.all.forEach((extension) => {
+    for (const extension of vscode.extensions.all) {
         if (!extension.id.startsWith("vscode.")) {
             console.log(extension.id, extension.isActive);
+            if (extension.id.startsWith("AndreasArvidsson")) {
+                await extension.activate();
+            }
         }
-    });
+    }
 
     const cwd = path.resolve(__dirname, "..");
 
