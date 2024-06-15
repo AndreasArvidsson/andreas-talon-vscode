@@ -10,7 +10,6 @@ jobs:
   run-tests:
     name: Run tests
     runs-on: ubuntu-latest
-    # runs-on: macos-latest
     env:
       ANDREAS_TEST: true
     steps:
@@ -19,7 +18,7 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: npm --color install
-      # - run: npm --color run test:meta
+      - run: npm --color run test:meta
       - run: npm --color run compile
       - run: xvfb-run -a npm --color run test:ci
         if: runner.os == 'Linux'
