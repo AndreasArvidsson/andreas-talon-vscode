@@ -16,13 +16,12 @@ class SnippetFormatter {
 
     getText(text: string): string {
         const eol = this.eol;
-        return (
-            parseSnippetFile(text)
-                .map((s) => this.getDocumentText(s))
-                // Remove empty documents
-                .filter(Boolean)
-                .join(`${eol}---${eol}${eol}`) + `${eol}---${eol}`
-        );
+        const result = parseSnippetFile(text)
+            .map((s) => this.getDocumentText(s))
+            // Remove empty documents
+            .filter(Boolean)
+            .join(`${eol}---${eol}${eol}`);
+        return result ? result + `${eol}---${eol}` : "";
     }
 
     private getDocumentText(document: SnippetDocument): string {

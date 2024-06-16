@@ -55,7 +55,7 @@ baz
 `
     },
     {
-        title: "Empty document",
+        title: "Empty snippet document",
         pre: `\
 name: test
 ---
@@ -74,6 +74,11 @@ phrase: test
 test
 ---
 `
+    },
+    {
+        title: "Empty file",
+        pre: "",
+        post: ""
     },
     {
         title: "Large file",
