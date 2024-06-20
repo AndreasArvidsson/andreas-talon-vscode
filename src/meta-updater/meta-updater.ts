@@ -1,59 +1,105 @@
-import fs from "node:fs";
-import path from "node:path";
+import * as fs from "node:fs";
+import * as fsPromises from "node:fs/promises";
+import * as path from "node:path";
 
-export function json<T>(callback: (content: T) => T) {
-    return (content: string): string => {
-        const jsonContent = JSON.parse(content) as T;
-        const jsonContentUpdated = callback(jsonContent);
-        return JSON.stringify(jsonContentUpdated, null, 4) + "\n";
+type UpdaterCallback<T> = (content: T | null, filePath: string) => T | null | Promise<T | null>;
+
+interface UpdaterConfig<T> {
+    read(filePath: string): Promise<T | null>;
+    update: UpdaterCallback<T>;
+    equal(expected: T | null, actual: T | null): boolean;
+    write(filePath: string, expected: T | null): Promise<void>;
+}
+
+type Updater<T> = UpdaterConfig<T> | UpdaterCallback<string>;
+
+export function json<T>(callback: UpdaterCallback<T>): UpdaterConfig<T> {
+    return {
+        read: async (filePath) => {
+            const content = await readFile(filePath);
+            return content != null ? (JSON.parse(content) as T) : null;
+        },
+        update: (content, filePath) => {
+            return callback(content, filePath);
+        },
+        equal: (expected, actual) => {
+            return JSON.stringify(expected) === JSON.stringify(actual);
+        },
+        write: (filePath, expected) => {
+            if (expected == null) {
+                return removeFile(filePath);
+            } else {
+                const jsonString = JSON.stringify(expected, null, 4) + "\n";
+                return writeFile(filePath, jsonString);
+            }
+        }
     };
 }
 
-export function updater(replacers: Record<string, (content: string) => string>) {
-    if (isTest()) {
-        updaterTest(replacers);
-    } else {
-        updaterWrite(replacers);
-    }
+function text(callback: UpdaterCallback<string>): UpdaterConfig<string> {
+    return {
+        read: (filePath) => {
+            return readFile(filePath);
+        },
+        update: (content, filePath) => {
+            return callback(content, filePath);
+        },
+        equal: (expected, actual) => {
+            return expected === actual;
+        },
+        write: (filePath, expected) => {
+            if (expected == null) {
+                return removeFile(filePath);
+            } else {
+                return writeFile(filePath, expected);
+            }
+        }
+    };
 }
 
-function updaterTest(replacers: Record<string, (content: string) => string>) {
-    const files = updaterInner(replacers).filter((f) => f.didChange);
+export async function updater(replacers: Record<string, Updater<any>>) {
+    const replacersConfigs = convertCallbacksToConfigs(replacers);
+    const files = await updaterInner(replacersConfigs);
+    const changedFiles = files.filter((f) => f.didChange);
 
-    if (files.length) {
-        console.error(`Updater found changes to ${files.length} files:`);
-        for (const file of files) {
-            console.error(file.name);
+    if (changedFiles.length === 0) {
+        console.log("Updater found no changes to files.");
+        return;
+    }
+
+    const msg = `Updater found changes to ${changedFiles.length} files:`;
+
+    if (isTest()) {
+        console.error(`ERROR: ${msg}`);
+        for (const file of changedFiles) {
+            console.error(file.toString());
         }
         process.exit(1);
     }
-}
 
-function updaterWrite(replacers: Record<string, (content: string) => string>) {
-    const files = updaterInner(replacers);
-
-    for (const file of files) {
-        if (file.didChange) {
-            writeFile(file.path, file.contentUpdated);
-        }
+    console.log(msg);
+    for (const file of changedFiles) {
+        console.log(file.toString());
+        await file.write();
     }
 }
 
-function updaterInner(replacers: Record<string, (content: string) => string>) {
+function updaterInner(replacers: Record<string, UpdaterConfig<unknown>>) {
     const workspaceDir = getWorkspaceDir();
 
-    return Object.entries(replacers).map(([filename, callback]) => {
-        const filePath = path.join(workspaceDir, filename);
-        const fileContent = readFile(filePath);
-        const fileContentUpdated = callback(fileContent);
-        return {
-            name: filename,
-            path: filePath,
-            content: fileContent,
-            contentUpdated: fileContentUpdated,
-            didChange: fileContent !== fileContentUpdated
-        };
-    });
+    return Promise.all(
+        Object.entries(replacers).map(async ([filename, config]) => {
+            const filePath = path.join(workspaceDir, filename);
+            const contentActual = await Promise.resolve(config.read(filePath));
+            const contentExpected = config.update(contentActual, filePath);
+            const relativePath = path.relative(workspaceDir, filePath).replace(/\\/g, "/");
+            return {
+                didChange: !config.equal(contentExpected, contentActual),
+                write: () => config.write(filePath, contentExpected),
+                toString: () => `    ${relativePath}`
+            };
+        })
+    );
 }
 
 function getWorkspaceDir(): string {
@@ -71,14 +117,42 @@ function getWorkspaceDir(): string {
     }
 }
 
-function readFile(file: string): string {
-    return fs.readFileSync(file, "utf8");
+function convertCallbacksToConfigs(
+    replacers: Record<string, Updater<unknown>>
+): Record<string, UpdaterConfig<any>> {
+    return Object.fromEntries(
+        Object.entries(replacers).map(([filename, callback]) => {
+            return [filename, typeof callback === "function" ? text(callback) : callback];
+        })
+    );
 }
 
-function writeFile(file: string, data: string) {
-    fs.writeFileSync(file, data, "utf8");
+async function readFile(filePath: string): Promise<string | null> {
+    try {
+        return await fsPromises.readFile(filePath, "utf8");
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+            return null;
+        }
+        throw error;
+    }
 }
 
-function isTest() {
+function writeFile(filePath: string, data: string): Promise<void> {
+    return fsPromises.writeFile(filePath, data, "utf8");
+}
+
+function removeFile(filePath: string): Promise<void> {
+    try {
+        return fsPromises.unlink(filePath);
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+            return Promise.resolve();
+        }
+        throw error;
+    }
+}
+
+function isTest(): boolean {
     return process.argv.slice(2).includes("--test");
 }

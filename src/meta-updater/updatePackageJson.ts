@@ -13,13 +13,18 @@ interface PackageJson {
     };
 }
 
-export function updatePackageJson(content: PackageJson): PackageJson {
-    content.contributes = {
-        ...(content.contributes ?? {}),
-        commands: getCommands()
-    };
+export function updatePackageJson(content: PackageJson | null): PackageJson {
+    if (content == null) {
+        return {};
+    }
 
-    return content;
+    return {
+        ...content,
+        contributes: {
+            ...content.contributes,
+            commands: getCommands()
+        }
+    };
 }
 
 function getCommands(): Command[] {
