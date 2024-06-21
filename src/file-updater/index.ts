@@ -3,10 +3,8 @@ import { updatePackageJson } from "./updatePackageJson";
 import { updateReadme } from "./updateReadme";
 
 export function runFileUpdater() {
-    return updater(() => {
-        return {
-            ["package.json"]: json(updatePackageJson),
-            ["README.md"]: updateReadme
-        };
+    return updater({
+        ["package.json"]: json(updatePackageJson),
+        ["README.md"]: updateReadme
     });
 }

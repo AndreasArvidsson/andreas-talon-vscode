@@ -317,7 +317,7 @@
         "@typescript-eslint/parser": "^6.0.0",
         "@vscode/test-electron": "^2.3.9",
         "eslint": "^8.45.0",
-        "file-updater": "0.1.5",
+        "file-updater": "0.2.0",
         "fs-extra": "^11.2.0",
         "glob": "^10.3.3",
         "mocha": "^10.2.0",
