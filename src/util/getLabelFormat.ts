@@ -14,6 +14,8 @@ export function getLabelFormat(tab: vscode.Tab, uri: vscode.Uri): string | undef
             return getPathRelativeWorkspace(uri);
         case "long":
             return getAbsolutePath(uri);
+        default:
+            return undefined;
     }
 }
 

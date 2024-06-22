@@ -1,3 +1,4 @@
+import { json } from "file-updater";
 import { CommandId, commandDescriptions } from "../commands/commands";
 import { getFullCommand } from "../util/getFullCommand";
 
@@ -13,18 +14,20 @@ interface PackageJson {
     };
 }
 
-export function updatePackageJson(content: PackageJson | null): PackageJson {
-    if (content == null) {
-        return {};
-    }
-
-    return {
-        ...content,
-        contributes: {
-            ...content.contributes,
-            commands: getCommands()
+export function updatePackageJson() {
+    return json((content: PackageJson | null): PackageJson => {
+        if (content == null) {
+            return {};
         }
-    };
+
+        return {
+            ...content,
+            contributes: {
+                ...content.contributes,
+                commands: getCommands()
+            }
+        };
+    });
 }
 
 function getCommands(): Command[] {

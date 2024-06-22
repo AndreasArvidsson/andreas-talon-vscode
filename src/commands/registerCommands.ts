@@ -92,6 +92,7 @@ function registerCommand(command: CommandId, callback: Callback): vscode.Disposa
             const err = ex as Error;
             void vscode.window.showErrorMessage(err.message);
             console.error(err.stack);
+            return undefined;
         }
     });
 }

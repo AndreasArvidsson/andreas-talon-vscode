@@ -4,12 +4,16 @@
         "target": "ESNext",
         "lib": ["ESNext"],
         "moduleResolution": "NodeNext",
-        "esModuleInterop": true,
         "rootDir": "src",
         "outDir": "out",
+        "declarationDir": null,
+        "esModuleInterop": true,
+        "declaration": null,
         "sourceMap": true,
+        "noEmitOnError": true,
         "strict": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitReturns": true
     },
     "include": ["src"]
 }

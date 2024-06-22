@@ -317,11 +317,12 @@
         "@typescript-eslint/parser": "^6.0.0",
         "@vscode/test-electron": "^2.3.9",
         "eslint": "^8.45.0",
-        "file-updater": "0.3.0",
+        "file-updater": "0.4.0",
         "fs-extra": "^11.2.0",
         "glob": "^10.3.3",
         "mocha": "^10.2.0",
         "prettier": "^3.0.0",
+        "ts-archetype": "0.2.5",
         "tsx": "^3.12.7",
         "typescript": "^5.1.6"
     }

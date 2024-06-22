@@ -23,9 +23,9 @@ export function registerStateUpdater(): vscode.Disposable {
 
             disposable = vscode.Disposable.from(
                 vscode.workspace.onDidChangeWorkspaceFolders(() => updateState()),
-                vscode.window.onDidChangeWindowState((states) => {
+                vscode.window.onDidChangeWindowState(async (states) => {
                     if (states.focused) {
-                        return updateState();
+                        await updateState();
                     }
                 })
             );
@@ -39,9 +39,9 @@ export function registerStateUpdater(): vscode.Disposable {
     void evaluateSetting();
 
     return vscode.Disposable.from(
-        vscode.workspace.onDidChangeConfiguration(({ affectsConfiguration }) => {
+        vscode.workspace.onDidChangeConfiguration(async ({ affectsConfiguration }) => {
             if (affectsConfiguration(fullSettingName)) {
-                return evaluateSetting();
+                await evaluateSetting();
             }
         }),
         {

@@ -14,12 +14,12 @@
         "sourceType": "module"
     },
     "rules": {
-        "no-warning-comments": "warn",
         "@typescript-eslint/naming-convention": "error",
-        "@typescript-eslint/semi": "warn",
         "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/semi": "warn",
         "curly": "error",
         "no-throw-literal": "error",
+        "no-warning-comments": "warn",
         "eqeqeq": [
             "error",
             "always",
