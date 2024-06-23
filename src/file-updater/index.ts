@@ -12,15 +12,18 @@ import {
     updateTsconfig,
     updateVscodeSettings
 } from "ts-archetype";
+import type { Config } from "ts-archetype/lib/types/types";
 
-const config = {
+const config: Config = {
     author: "Andreas Arvidsson",
     authorRepository: "https://github.com/AndreasArvidsson",
+    funding: "https://github.com/sponsors/AndreasArvidsson",
     projectName: "example-project",
-    displayName: "Example project"
+    displayName: "Example project",
+    projectType: "vscodeExtension"
 };
 
-export async function runFileUpdater(workspaceDir: string) {
+export async function runFileUpdater() {
     await updater({
         "README.md": updateReadme,
         "package.json": updatePackageJson(),
