@@ -10,11 +10,11 @@ import {
     updatePrettierignore,
     updatePrettierrc,
     updateTsconfig,
-    updateVscodeSettings
+    updateVscodeSettings,
+    type UpdaterConfig
 } from "ts-archetype";
-import type { Config } from "ts-archetype/lib/types/types";
 
-const config: Config = {
+const config: UpdaterConfig = {
     author: "Andreas Arvidsson",
     authorRepository: "https://github.com/AndreasArvidsson",
     funding: "https://github.com/sponsors/AndreasArvidsson",

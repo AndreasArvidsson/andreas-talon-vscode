@@ -322,7 +322,7 @@
         "glob": "^10.3.3",
         "mocha": "^10.2.0",
         "prettier": "^3.0.0",
-        "ts-archetype": "0.3.1",
+        "ts-archetype": "0.4.0",
         "tsx": "^3.12.7",
         "typescript": "^5.1.6"
     }
