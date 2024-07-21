@@ -76,6 +76,24 @@ test
 `
     },
     {
+        title: "- in body",
+        pre: `\
+name: test
+-
+a
+-
+b
+`,
+        post: `\
+name: test
+-
+a
+-
+b
+---
+`
+    },
+    {
         title: "Empty file",
         pre: "",
         post: ""

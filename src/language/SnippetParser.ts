@@ -21,17 +21,15 @@ export function parseSnippetFile(content: string): SnippetDocument[] {
 
 function parseDocument(text: string): SnippetDocument | undefined {
     const parts = text.split(/^-$/m);
-    if (parts.length > 2) {
-        throw Error(`Found multiple '-' in snippet document '${text}'`);
-    }
     let document = parseContext(parts[0]);
-    if (parts.length === 2) {
-        const body = parseBody(parts[1]);
+    if (parts.length > 1) {
+        const bodyText = parts.slice(1).join("-");
+        const body = parseBody(bodyText);
         if (body != null) {
             if (document == null) {
                 document = { variables: [] };
             }
-            document.body = parseBody(parts[1]);
+            document.body = body;
         }
     }
     return document;
