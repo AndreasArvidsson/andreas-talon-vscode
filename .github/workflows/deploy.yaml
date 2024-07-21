@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   workflow_run:
-    workflows: [Test, Test-meta]
+    workflows: [Test, Test meta]
     types: [completed]
     branches: [master]
 
