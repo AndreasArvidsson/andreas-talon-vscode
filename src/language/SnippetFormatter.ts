@@ -2,7 +2,7 @@ import { SnippetDocument, SnippetVariable, parseSnippetFile } from "./SnippetPar
 import type { LanguageFormatterText } from "./registerLanguageFormatters";
 
 export const snippetFormatter: LanguageFormatterText = {
-    getText(ident: string, text: string): string {
+    getText(text: string, ident: string): string {
         const formatter = new SnippetFormatter(ident);
         return formatter.getText(text);
     }

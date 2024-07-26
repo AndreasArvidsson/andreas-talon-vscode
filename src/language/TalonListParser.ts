@@ -14,9 +14,14 @@ interface EmptyLine {
     type: "empty";
 }
 
+interface CommentLine {
+    type: "comment";
+    text: string;
+}
+
 export interface TalonList {
-    headers: TalonListHeader[];
-    items: (TalonListItem | EmptyLine)[];
+    headers: (TalonListHeader | CommentLine)[];
+    items: (TalonListItem | CommentLine | EmptyLine)[];
 }
 
 export function parseTalonList(text: string): TalonList {
@@ -46,6 +51,10 @@ export function parseTalonList(text: string): TalonList {
         if (line.length === 0) {
             continue;
         }
+        if (line.startsWith("#")) {
+            result.headers.push({ type: "comment", text: line });
+            continue;
+        }
         const [key, value] = splitLine(line);
         if (value === undefined) {
             throw Error("Header value missing");
@@ -56,6 +65,10 @@ export function parseTalonList(text: string): TalonList {
     for (const line of bodyLines) {
         if (line.length === 0) {
             result.items.push({ type: "empty" });
+            continue;
+        }
+        if (line.startsWith("#")) {
+            result.items.push({ type: "comment", text: line });
             continue;
         }
         const [key, value] = splitLine(line);

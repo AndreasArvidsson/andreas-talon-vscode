@@ -9,11 +9,13 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
         pre: ["app  :  vscode", "", "and  not  mode :  command", "-", ""],
         post: ["app: vscode", "", "and not mode: command", "-", ""]
     },
+
     {
         title: "command singe line",
         pre: "foo  :  edit.left(  )",
         post: ["foo:                        edit.left()", ""]
     },
+
     {
         title: "command multi line",
         pre: [
@@ -34,11 +36,13 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
             ""
         ]
     },
+
     {
         title: "settings declaration",
         pre: ["settings()  :  ", "  speech.timeout  =  0.400", "", "  speech.record_all=true"],
         post: ["settings():", "    speech.timeout = 0.400", "", "    speech.record_all = true", ""]
     },
+
     {
         title: "tag/key/gamepad/parrot/face declarations",
         pre: [
@@ -59,11 +63,19 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
             ""
         ]
     },
+
     {
         title: "CRLF comment",
         pre: "# Hello\r\nfoo: 'bar'",
         post: "# Hello\r\nfoo:                        'bar'\r\n"
     },
+
+    {
+        title: "Custom column width",
+        pre: "# fmt: columnWidth=5\nfoo: 'bar'",
+        post: "# fmt: columnWidth=5\nfoo: 'bar'\n"
+    },
+
     {
         title: "Large file",
         pre: `\

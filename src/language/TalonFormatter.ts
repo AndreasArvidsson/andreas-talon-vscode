@@ -3,8 +3,8 @@ import type { LanguageFormatterTree } from "./registerLanguageFormatters";
 import { configuration } from "../util/configuration";
 
 export const talonFormatter: LanguageFormatterTree = {
-    getText(ident: string, node: SyntaxNode): string {
-        const columnWidth = configuration.talonFormatter.columnWidth();
+    getText(node: SyntaxNode, ident: string): string {
+        const columnWidth = getColumnWidth(node.text);
         const formatter = new TalonFormatter(ident, columnWidth);
         return formatter.getText(node);
     }
@@ -172,4 +172,12 @@ class TalonFormatter {
                 return node.text;
         }
     }
+}
+
+function getColumnWidth(text: string) {
+    const match = text.match(/# fmt: columnWidth=(\d+)/);
+    if (match != null) {
+        return parseInt(match[1]);
+    }
+    return configuration.talonFormatter.columnWidth();
 }

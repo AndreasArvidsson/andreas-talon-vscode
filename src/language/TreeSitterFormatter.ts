@@ -2,7 +2,7 @@ import type { SyntaxNode } from "web-tree-sitter";
 import type { LanguageFormatterTree } from "./registerLanguageFormatters";
 
 export const treeSitterFormatter: LanguageFormatterTree = {
-    getText(ident: string, node: SyntaxNode): string {
+    getText(node: SyntaxNode, ident: string): string {
         const formatter = new TreeSitterFormatter(ident);
         return formatter.getText(node);
     }

@@ -35,9 +35,21 @@ bat:      b
     },
 
     {
+        title: "Comment",
+        pre: "\n\nlist: l\n-\n#c:c\na:b",
+        post: "list: l\n-\n\n#c:c\na:        b\n"
+    },
+
+    {
         title: "CRLF",
         pre: "list: l\r\n-\r\na:b",
         post: "list: l\r\n-\r\n\r\na:        b\r\n"
+    },
+
+    {
+        title: "Custom column width",
+        pre: "list: l\n-\n# fmt: columnWidth=5\na:b",
+        post: "list: l\n-\n\n# fmt: columnWidth=5\na:   b\n"
     }
 ];
 

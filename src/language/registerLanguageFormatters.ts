@@ -8,11 +8,11 @@ import { talonListFormatter } from "./TalonListFormatter";
 import { treeSitterFormatter } from "./TreeSitterFormatter";
 
 export interface LanguageFormatterTree {
-    getText(ident: string, node: SyntaxNode): string;
+    getText(node: SyntaxNode, ident: string): string;
 }
 
 export interface LanguageFormatterText {
-    getText(ident: string, text: string): string;
+    getText(text: string, ident: string): string;
 }
 
 function provideDocumentFormattingEditsForTree(
@@ -32,7 +32,7 @@ function provideDocumentFormattingEditsForTree(
             }
 
             const { indentation } = parseOptions(document, options);
-            const newText = formatter.getText(indentation, rootNode);
+            const newText = formatter.getText(rootNode, indentation);
             return createTextEdits(document, newText);
         }
     };
@@ -46,7 +46,7 @@ function provideDocumentFormattingEditsForText(formatter: LanguageFormatterText)
         ): TextEdit[] {
             const { indentation } = parseOptions(document, options);
             try {
-                const newText = formatter.getText(indentation, document.getText());
+                const newText = formatter.getText(document.getText(), indentation);
                 return createTextEdits(document, newText);
             } catch (error) {
                 console.warn((error as Error).message);
