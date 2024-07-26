@@ -2,8 +2,8 @@ import type { SyntaxNode } from "web-tree-sitter";
 import type { LanguageFormatterTree } from "./registerLanguageFormatters";
 
 export const treeSitterFormatter: LanguageFormatterTree = {
-    getText(ident: string, eol: string, node: SyntaxNode): string {
-        const formatter = new TreeSitterFormatter(ident, eol);
+    getText(ident: string, node: SyntaxNode): string {
+        const formatter = new TreeSitterFormatter(ident);
         return formatter.getText(node);
     }
 };
@@ -11,17 +11,14 @@ export const treeSitterFormatter: LanguageFormatterTree = {
 export class TreeSitterFormatter {
     private lastRow = 0;
 
-    constructor(
-        private ident: string,
-        private eol: string
-    ) {}
+    constructor(private ident: string) {}
 
     getText(node: SyntaxNode): string {
-        return this.getNodeText(node, 0) + this.eol;
+        return this.getNodeText(node, 0) + "\n";
     }
 
     private getNodeText(node: SyntaxNode, numIndents: number): string {
-        const nl = node.startPosition.row > this.lastRow + 1 ? this.eol : "";
+        const nl = node.startPosition.row > this.lastRow + 1 ? "\n" : "";
         this.lastRow = node.endPosition.row;
         const text = this.getNodeTextInternal(node, numIndents);
         this.lastRow = node.endPosition.row;
@@ -50,7 +47,7 @@ export class TreeSitterFormatter {
             `${this.getIndent(numIndents)}${first}`,
             ...interior,
             `${this.getIndent(numIndents)}${last}`
-        ].join(this.eol);
+        ].join("\n");
     }
 
     private getListText(node: SyntaxNode, numIndents: number): string {
@@ -65,7 +62,7 @@ export class TreeSitterFormatter {
             ...node.children.slice(1, index).map((n) => this.getNodeText(n, numIndents + 1)),
             `${this.getIndent(numIndents)}${last}`
         ];
-        return parts.join(this.eol);
+        return parts.join("\n");
     }
 
     private getPredicateText(node: SyntaxNode, numIndents: number): string {
@@ -88,7 +85,7 @@ export class TreeSitterFormatter {
             `${this.getIndent(numIndents)}${first}${parts[0]}`,
             ...parts.slice(1).map((s) => `${this.getIndent(numIndents + 1)}${s}`),
             `${this.getIndent(numIndents)}${last}`
-        ].join(this.eol);
+        ].join("\n");
     }
 
     private getFieldDefinitionText(node: SyntaxNode, numIndents: number): string {
@@ -104,10 +101,10 @@ export class TreeSitterFormatter {
     private getNodeTextInternal(node: SyntaxNode, numIndents: number): string {
         switch (node.type) {
             case "program":
-                return node.children.map((n) => this.getNodeText(n, 0)).join(this.eol);
+                return node.children.map((n) => this.getNodeText(n, 0)).join("\n");
 
             case "grouping":
-                return node.children.map((n) => this.getNodeText(n, numIndents + 1)).join(this.eol);
+                return node.children.map((n) => this.getNodeText(n, numIndents + 1)).join("\n");
 
             case "list":
                 return this.getListText(node, numIndents);

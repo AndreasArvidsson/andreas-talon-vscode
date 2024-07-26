@@ -15,11 +15,11 @@ import { talonFormatter } from "./TalonFormatter";
 import { treeSitterFormatter } from "./TreeSitterFormatter";
 
 export interface LanguageFormatterTree {
-    getText(ident: string, eol: string, node: SyntaxNode): string;
+    getText(ident: string, node: SyntaxNode): string;
 }
 
 export interface LanguageFormatterText {
-    getText(ident: string, eol: string, text: string): string;
+    getText(ident: string, text: string): string;
 }
 
 function provideDocumentFormattingEditsForTree(
@@ -55,7 +55,7 @@ function provideDocumentFormattingEditsForText(
     }
 }
 
-function parseOptions(document: TextDocument, options: FormattingOptions): [string, string] {
+function parseOptions(document: TextDocument, options: FormattingOptions) {
     const config = editorconfig.parseSync(document.uri.fsPath);
 
     const insertSpaces = (() => {
@@ -81,18 +81,7 @@ function parseOptions(document: TextDocument, options: FormattingOptions): [stri
 
     const indentation = insertSpaces ? new Array(tabSize).fill(" ").join("") : "\t";
 
-    const eol = (() => {
-        switch (config.end_of_line) {
-            case "lf":
-                return "\n";
-            case "crlf":
-                return "\r\n";
-            default:
-                return document.eol === EndOfLine.LF ? "\n" : "\r\n";
-        }
-    })();
-
-    return [indentation, eol];
+    return { indentation };
 }
 
 function createTextEdits(document: TextDocument, text: string): TextEdit[] {

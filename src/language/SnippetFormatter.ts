@@ -2,26 +2,22 @@ import { SnippetDocument, SnippetVariable, parseSnippetFile } from "./SnippetPar
 import type { LanguageFormatterText } from "./registerLanguageFormatters";
 
 export const snippetFormatter: LanguageFormatterText = {
-    getText(ident: string, eol: string, text: string): string {
-        const formatter = new SnippetFormatter(ident, eol);
+    getText(ident: string, text: string): string {
+        const formatter = new SnippetFormatter(ident);
         return formatter.getText(text);
     }
 };
 
 class SnippetFormatter {
-    constructor(
-        private ident: string,
-        private eol: string
-    ) {}
+    constructor(private ident: string) {}
 
     getText(text: string): string {
-        const eol = this.eol;
         const result = parseSnippetFile(text)
             .map((s) => this.getDocumentText(s))
             // Remove empty documents
             .filter(Boolean)
-            .join(`${eol}---${eol}${eol}`);
-        return result ? result + `${eol}---${eol}` : "";
+            .join("\n---\n\n");
+        return result ? result + "\n---\n" : "";
     }
 
     private getDocumentText(document: SnippetDocument): string {
@@ -43,7 +39,7 @@ class SnippetFormatter {
             parts.push("-", ...document.body);
         }
 
-        return parts.join(this.eol);
+        return parts.join("\n");
     }
 
     private getSortedVariables(variables: SnippetVariable[]): string[] {

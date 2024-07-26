@@ -3,9 +3,9 @@ import type { LanguageFormatterTree } from "./registerLanguageFormatters";
 import { configuration } from "../util/configuration";
 
 export const talonFormatter: LanguageFormatterTree = {
-    getText(ident: string, eol: string, node: SyntaxNode): string {
+    getText(ident: string, node: SyntaxNode): string {
         const columnWidth = configuration.talonFormatter.columnWidth();
-        const formatter = new TalonFormatter(ident, eol, columnWidth);
+        const formatter = new TalonFormatter(ident, columnWidth);
         return formatter.getText(node);
     }
 };
@@ -15,12 +15,11 @@ class TalonFormatter {
 
     constructor(
         private ident: string,
-        private eol: string,
-        private columnWidth: number | null
+        private columnWidth: number | undefined
     ) {}
 
     getText(node: SyntaxNode): string {
-        return this.getNodeText(node) + this.eol;
+        return this.getNodeText(node) + "\n";
     }
 
     private getLeftRightText(node: SyntaxNode): string {
@@ -37,16 +36,16 @@ class TalonFormatter {
             }
             return `${leftWithColon} `.padEnd(this.columnWidth);
         })();
-        const nl = isMultiline ? this.eol : "";
+        const nl = isMultiline ? "\n" : "";
         const right = children
             .slice(2)
             .map((n) => this.getNodeText(n, isMultiline))
-            .join(this.eol);
+            .join("\n");
         return `${leftWithPadding}${nl}${right}`;
     }
 
     private getNodeText(node: SyntaxNode, isIndented = false): string {
-        const nl = node.startPosition.row > this.lastRow + 1 ? this.eol : "";
+        const nl = node.startPosition.row > this.lastRow + 1 ? "\n" : "";
         this.lastRow = node.endPosition.row;
         const text = this.getNodeTextInternal(node, isIndented);
         this.lastRow = node.endPosition.row;
@@ -70,23 +69,23 @@ class TalonFormatter {
                 return node.children
                     .map((n) => this.getNodeText(n))
                     .filter(Boolean)
-                    .join(this.eol);
+                    .join("\n");
 
             case "matches": {
                 if (node.children.length < 2) {
                     return "";
                 }
-                return node.children.map((n) => this.getNodeText(n)).join(this.eol);
+                return node.children.map((n) => this.getNodeText(n)).join("\n");
             }
 
             case "declarations":
-                return node.children.map((n) => this.getNodeText(n)).join(this.eol);
+                return node.children.map((n) => this.getNodeText(n)).join("\n");
 
             case "match":
                 return node.children.map((n) => this.getNodeText(n)).join("");
 
             case "block":
-                return node.children.map((n) => this.getNodeText(n, isIndented)).join(this.eol);
+                return node.children.map((n) => this.getNodeText(n, isIndented)).join("\n");
 
             case "command_declaration":
             case "key_binding_declaration":
