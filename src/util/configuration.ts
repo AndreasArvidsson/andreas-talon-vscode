@@ -3,7 +3,10 @@ import { isTesting } from "./isTesting";
 
 interface Configuration {
     talonFormatter: {
-        columnWidth: () => number | null;
+        columnWidth: () => number | undefined;
+    };
+    talonListFormatter: {
+        columnWidth: () => number | undefined;
     };
 }
 
@@ -12,13 +15,20 @@ export const configuration: Configuration = (() => {
         return {
             talonFormatter: {
                 columnWidth: () => 28
+            },
+            talonListFormatter: {
+                columnWidth: () => 10
             }
         };
     }
 
     return {
         talonFormatter: {
-            columnWidth: () => getConfiguration<number>("talonFormatter.columnWidth") ?? null
+            columnWidth: () => getConfiguration<number>("talonFormatter.columnWidth") ?? undefined
+        },
+        talonListFormatter: {
+            columnWidth: () =>
+                getConfiguration<number>("talonListFormatter.columnWidth") ?? undefined
         }
     };
 })();

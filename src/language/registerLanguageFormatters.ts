@@ -1,17 +1,10 @@
 import * as editorconfig from "editorconfig";
-import {
-    Disposable,
-    EndOfLine,
-    FormattingOptions,
-    languages,
-    Range,
-    TextDocument,
-    TextEdit
-} from "vscode";
+import { Disposable, FormattingOptions, languages, Range, TextDocument, TextEdit } from "vscode";
 import type { SyntaxNode } from "web-tree-sitter";
 import { TreeSitter } from "../treeSitter/TreeSitter";
 import { snippetFormatter } from "./SnippetFormatter";
 import { talonFormatter } from "./TalonFormatter";
+import { talonListFormatter } from "./TalonListFormatter";
 import { treeSitterFormatter } from "./TreeSitterFormatter";
 
 export interface LanguageFormatterTree {
@@ -24,35 +17,43 @@ export interface LanguageFormatterText {
 
 function provideDocumentFormattingEditsForTree(
     treeSitter: TreeSitter,
-    document: TextDocument,
-    options: FormattingOptions,
     formatter: LanguageFormatterTree
-): TextEdit[] {
-    const rootNode = treeSitter.getRootNode(document);
+) {
+    return {
+        provideDocumentFormattingEdits(
+            document: TextDocument,
+            options: FormattingOptions
+        ): TextEdit[] {
+            const rootNode = treeSitter.getRootNode(document);
 
-    if (rootNode.hasError) {
-        console.warn(`Abort document formatting: Syntax tree has error`);
-        return [];
-    }
+            if (rootNode.hasError) {
+                console.warn(`Abort document formatting: Syntax tree has error`);
+                return [];
+            }
 
-    const [indentation, eol] = parseOptions(document, options);
-    const newText = formatter.getText(indentation, eol, rootNode);
-    return createTextEdits(document, newText);
+            const { indentation } = parseOptions(document, options);
+            const newText = formatter.getText(indentation, rootNode);
+            return createTextEdits(document, newText);
+        }
+    };
 }
 
-function provideDocumentFormattingEditsForText(
-    document: TextDocument,
-    options: FormattingOptions,
-    formatter: LanguageFormatterText
-): TextEdit[] {
-    const [indentation, eol] = parseOptions(document, options);
-    try {
-        const newText = formatter.getText(indentation, eol, document.getText());
-        return createTextEdits(document, newText);
-    } catch (error) {
-        console.warn((error as Error).message);
-        return [];
-    }
+function provideDocumentFormattingEditsForText(formatter: LanguageFormatterText) {
+    return {
+        provideDocumentFormattingEdits(
+            document: TextDocument,
+            options: FormattingOptions
+        ): TextEdit[] {
+            const { indentation } = parseOptions(document, options);
+            try {
+                const newText = formatter.getText(indentation, document.getText());
+                return createTextEdits(document, newText);
+            } catch (error) {
+                console.warn((error as Error).message);
+                return [];
+            }
+        }
+    };
 }
 
 function parseOptions(document: TextDocument, options: FormattingOptions) {
@@ -101,22 +102,21 @@ function createTextEdits(document: TextDocument, text: string): TextEdit[] {
 
 export function registerLanguageFormatters(treeSitter: TreeSitter): Disposable {
     return Disposable.from(
-        languages.registerDocumentFormattingEditProvider("talon", {
-            provideDocumentFormattingEdits: (document, options) =>
-                provideDocumentFormattingEditsForTree(treeSitter, document, options, talonFormatter)
-        }),
-        languages.registerDocumentFormattingEditProvider("scm", {
-            provideDocumentFormattingEdits: (document, options) =>
-                provideDocumentFormattingEditsForTree(
-                    treeSitter,
-                    document,
-                    options,
-                    treeSitterFormatter
-                )
-        }),
-        languages.registerDocumentFormattingEditProvider("snippet", {
-            provideDocumentFormattingEdits: (document, options) =>
-                provideDocumentFormattingEditsForText(document, options, snippetFormatter)
-        })
+        languages.registerDocumentFormattingEditProvider(
+            "talon",
+            provideDocumentFormattingEditsForTree(treeSitter, talonFormatter)
+        ),
+        languages.registerDocumentFormattingEditProvider(
+            "talon-list",
+            provideDocumentFormattingEditsForText(talonListFormatter)
+        ),
+        languages.registerDocumentFormattingEditProvider(
+            "scm",
+            provideDocumentFormattingEditsForTree(treeSitter, treeSitterFormatter)
+        ),
+        languages.registerDocumentFormattingEditProvider(
+            "snippet",
+            provideDocumentFormattingEditsForText(snippetFormatter)
+        )
     );
 }

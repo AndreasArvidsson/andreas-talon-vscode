@@ -116,10 +116,17 @@ foo:           "foo"
 foo bar baz:   "foo bar baz"
 ```
 
+The same setting exists for Talon list files
+
+`andreas.talonListFormatter.columnWidth: 15`
+
 ### Disable formatting on save for Talon files
 
 ```json
 "[talon]": {
+    "editor.formatOnSave": false
+},
+"[talon-list]": {
     "editor.formatOnSave": false
 }
 ```
