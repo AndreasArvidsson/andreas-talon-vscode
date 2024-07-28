@@ -20,10 +20,12 @@ export function parseSnippetFile(content: string): SnippetDocument[] {
 }
 
 function parseDocument(text: string): SnippetDocument | undefined {
-    const parts = text.split(/^-$/m);
-    let document = parseContext(parts[0]);
-    if (parts.length > 1) {
-        const bodyText = parts.slice(1).join("-");
+    const match = text.match(/^-$/m);
+    const contextText = match != null ? text.slice(0, match.index) : text;
+    const bodyText = match != null ? text.slice(match.index! + match[0].length) : null;
+    let document = parseContext(contextText);
+
+    if (bodyText != null) {
         const body = parseBody(bodyText);
         if (body != null) {
             if (document == null) {
