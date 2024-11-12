@@ -6,7 +6,7 @@ export const talonListFormatter: LanguageFormatterText = {
     getText(text: string, _ident: string): string {
         const columnWidth = getColumnWidth(text);
         const talonList = parseTalonList(text);
-        talonList.headers.sort((a, b) => (a.type === "header" && a.key === "list" ? -1 : 0));
+        talonList.headers.sort((a, _b) => (a.type === "header" && a.key === "list" ? -1 : 0));
         const result: string[] = [];
 
         for (const header of talonList.headers) {

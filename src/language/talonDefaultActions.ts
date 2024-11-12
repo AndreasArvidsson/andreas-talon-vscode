@@ -153,8 +153,8 @@ code.extend_scope_previous()
   Extend selection to start of previous sibling scope
 code.extend_scope_start()
   Extend selection to start of current scope
-code.language() -> str
-  Return the active programming language
+code.language() -> Union[str, set[str]]
+  Return the active programming language(s)
 code.rename(name: str)
   Rename selection to <name>
 code.scope_end()
@@ -460,7 +460,7 @@ sound.microphones() -> Sequence[str]
   Return a list of available microphone names
 sound.set_microphone(name: str)
   Set the currently active microphone
-win.file_ext() -> str
+win.file_ext() -> Union[str, set[str]]
   Return the open file's extension
 win.filename() -> str
   Return the open filename
@@ -482,7 +482,7 @@ math.atan2(x: float, y: float) -> float
   Compute the arc tangent of (x / y), in radians
 math.atanh(x: float) -> float
   Compute the inverse hyperbolic tangent of x
-math.bin(n: <function MathActions.int at 0x00000138FDA8AA20>) -> str
+math.bin(n: <function MathActions.int at 0x0000015D7ACE9EE0>) -> str
   Convert number to binary string
 math.cbrt(x: float) -> float
   Compute the cube root of x
@@ -522,7 +522,7 @@ math.frexp_m(x: float) -> float
   Get the floating point mantissa of x
 math.gamma(x: float) -> float
   Compute the gamma function of x
-math.hex(n: <function MathActions.int at 0x00000138FDA8AA20>) -> str
+math.hex(n: <function MathActions.int at 0x0000015D7ACE9EE0>) -> str
   Convert number to hex string
 math.inf() -> float
   Get the constant inf
@@ -562,7 +562,7 @@ math.modf_i(x: float) -> int
   Get the integer part of x
 math.nan() -> float
   Get the constant nan
-math.oct(n: <function MathActions.int at 0x00000138FDA8AA20>) -> str
+math.oct(n: <function MathActions.int at 0x0000015D7ACE9EE0>) -> str
   Convert number to octal string
 math.perm(n: int, k: Optional[int] = None) -> int
   Compute the ways to choose k items from n ordered
@@ -698,8 +698,6 @@ dict.copy(d: dict) -> dict
   Copy a dict
 dict.get(d: dict, key: Any, default: Any = None) -> Any
   Get dict[key]
-dict.new() -> dict
-  Create an empty dict
 dict.pop(d: dict, key: Any) -> Any
   Remove and return dict[key]
 dict.set(d: dict, key: Any, value: Any) -> None
@@ -724,8 +722,6 @@ list.index(l: list, value: Any) -> int
   Get the first index of value
 list.insert(l: list, index: int, value: Any) -> int
   Insert value into list at index
-list.new() -> list
-  Create an empty list
 list.pop(l: list, index: int = -1) -> Any
   Remove and return item from list at index
 list.remove(l: list, value: Any) -> None
@@ -756,8 +752,6 @@ set.issubset(a: set, b: set) -> bool
   True if b contains a
 set.issuperset(a: set, b: set) -> bool
   True if a contains b
-set.new() -> set
-  Create an empty set
 set.pop(s: set) -> Any
   Remove and return arbitrary set item
 set.remove(s: set, value: Any) -> None
@@ -774,21 +768,19 @@ tuple.count(t: tuple, value: Any) -> int
   Count the number of times value appears in tuple
 tuple.index(t: tuple, value: Any) -> int
   Get the first index of value
-tuple.new() -> tuple
-  Create an empty tuple
-types.bytes(v: Any = <object object at 0x00000138BFD1E0A0>) -> str
+types.bytes(v: Any = <object object at 0x0000015D4A335F00>) -> bytes
   Create a bytes object
 types.dict() -> dict
   Create a dict
-types.list(v: Any = <object object at 0x00000138BFD1E0A0>) -> <function TypesActions.str at 0x00000138FDABAD40>
+types.list(v: Any = <object object at 0x0000015D4A335F00>) -> list
   Create a list
 types.none() -> None
   Get an instance of None
-types.set(v: Any = <object object at 0x00000138BFD1E0A0>) -> set
+types.set(v: Any = <object object at 0x0000015D4A335F00>) -> set
   Create a set
-types.str(v: Any = <object object at 0x00000138BFD1E0A0>) -> str
+types.str(v: Any = <object object at 0x0000015D4A335F00>) -> str
   Create a string
-types.tuple(v: Any = <object object at 0x00000138BFD1E0A0>) -> tuple
+types.tuple(v: Any = <object object at 0x0000015D4A335F00>) -> tuple
   Create a tuple
 time.day(dt: datetime.datetime) -> int
   Get the day from a datetime
@@ -826,6 +818,24 @@ time.utctimestamp(dt: datetime.datetime) -> float
   Get UTC unix timestamp from datetime
 time.year(dt: datetime.datetime) -> int
   Get the year from a datetime
+deck.current_page(serial: str) -> int
+  Get current page number for a deck
+deck.goto(serial: str, path: str) -> None
+  Switch deck to a path or page number (a/b/c or :1 or a/b/c:1)
+deck.next_page(serial: str) -> None
+  Switch a deck to the next page
+deck.page_count(serial: str) -> int
+  Get page count for a deck
+deck.paths(serial: str) -> list[str]
+  Get list of folder paths for a deck
+deck.previous_page(serial: str) -> None
+  Switch a deck to the previous page
+deck.serials() -> list[str]
+  Get serials of connected decks
+deck.switch_page(serial: str, page: int) -> None
+  Switch a deck to a specific page
+deck.switch_path(serial: str, path: str) -> None
+  Switch active path for a deck
 `;
 
 interface ActionDesc {
