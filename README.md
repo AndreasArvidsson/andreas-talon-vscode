@@ -120,6 +120,17 @@ The same setting exists for Talon list files
 
 `andreas.talonListFormatter.columnWidth: 15`
 
+### Formatter column width comment
+
+The column width setting can be enabled on a per file basis using comments
+
+```talon
+# fmt: columnWidth=15
+
+foo:           "foo"
+foo bar baz:   "foo bar baz"
+```
+
 ### Disable formatting on save for Talon files
 
 ```json
