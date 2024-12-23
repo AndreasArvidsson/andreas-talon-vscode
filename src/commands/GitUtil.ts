@@ -1,5 +1,6 @@
-import { Range, TextDocument, TextEditor, window } from "vscode";
+import { Range, TextDocument } from "vscode";
 import { API, GitExtension, Remote, Repository } from "../typings/git";
+import { getActiveFileSchemaEditor } from "../util/getActiveEditor";
 
 export type GitParameters = {
     useSelection: boolean;
@@ -14,11 +15,10 @@ export class GitUtil {
     }
 
     getGitFileURL({ useSelection = false, useBranch = false }: GitParameters): string {
-        const { document, selections } = getEditor();
-        const filePath = getFilePath(document);
-        const repository = this.getRepository(filePath);
+        const { document, selections } = getActiveFileSchemaEditor();
+        const repository = this.getRepository();
         const platform = getPlatform(repository);
-        const relativeFilePath = getRelativeFilepath(repository, filePath);
+        const relativeFilePath = getRelativeFilepath(repository, document.uri.path);
         const range = useSelection ? selections[0] : undefined;
         const commitOrBranch = useBranch ? getBranch(repository) : getCommit(repository);
 
@@ -36,37 +36,39 @@ export class GitUtil {
     }
 
     getGitRepoURL(): string {
-        return this.getPlatformHelper().getRepoUrl();
+        const repository = this.getRepository();
+        return getPlatform(repository).getRepoUrl();
     }
 
     getGitIssuesURL(): string {
-        return this.getPlatformHelper().getIssuesUrl();
+        const repository = this.getRepository();
+        return getPlatform(repository).getIssuesUrl();
     }
 
     getGitNewIssueURL(): string {
-        return this.getPlatformHelper().getNewIssueUrl();
+        const repository = this.getRepository();
+        return getPlatform(repository).getNewIssueUrl();
     }
 
     getGitPullRequestsURL(): string {
-        return this.getPlatformHelper().getPullRequestsURL();
+        const repository = this.getRepository();
+        return getPlatform(repository).getPullRequestsURL();
     }
 
-    private getPlatformHelper(): Platform {
-        const { document } = getEditor();
-        const filePath = getFilePath(document);
-        const repository = this.getRepository(filePath);
-        return getPlatform(repository);
-    }
-
-    private getRepository(filePath: string): Repository {
+    private getRepository(): Repository {
         const { repositories } = this.gitApi;
+        if (repositories.length === 0) {
+            throw Error("No git repositories available");
+        }
         if (repositories.length === 1) {
             return repositories[0];
         }
+        const { document } = getActiveFileSchemaEditor();
+        const filePath = document.uri.path.toLowerCase();
         const repository = repositories.find((r) =>
-            filePath.toLowerCase().startsWith(r.rootUri.path.toLowerCase())
+            filePath.startsWith(r.rootUri.path.toLowerCase())
         );
-        if (!repository) {
+        if (repository == null) {
             throw Error("Can't find Git repository");
         }
         return repository;
@@ -75,22 +77,6 @@ export class GitUtil {
 
 function getRelativeFilepath(repository: Repository, filePath: string) {
     return filePath.substring(repository.rootUri.path.length + 1);
-}
-
-function getEditor(): TextEditor {
-    const editor = window.activeTextEditor;
-    if (!editor) {
-        throw Error("Can't find active text editor");
-    }
-    return editor;
-}
-
-function getFilePath(document: TextDocument): string {
-    const path = document.uri.path;
-    if (!path) {
-        throw Error("Can't find file path");
-    }
-    return path;
 }
 
 function validateUnchangedDocument(document: TextDocument, repository: Repository) {
@@ -114,8 +100,11 @@ function validateUnchangedDocument(document: TextDocument, repository: Repositor
 
 function getRemote(repository: Repository): Remote {
     const name = repository.state.HEAD?.upstream?.remote;
+    if (name == null) {
+        throw Error("Can't find Git remote name");
+    }
     const remote = repository.state.remotes.find((r) => r.name === name);
-    if (!remote) {
+    if (remote == null) {
         throw Error(`Can't find git remote '${name ?? ""}'`);
     }
     return remote;
@@ -156,7 +145,7 @@ function cleanGitUrl(url: string) {
     return url;
 }
 
-function getPlatform(repository: Repository): Platform {
+function getPlatform(repository: Repository): GitPlatform {
     const remoteUrl = getRemoteUrl(repository);
     if (remoteUrl.includes("github.com")) {
         return new Github(remoteUrl);
@@ -167,7 +156,7 @@ function getPlatform(repository: Repository): Platform {
     throw Error(`Can't find Git platform for remote url '${remoteUrl}'`);
 }
 
-interface Platform {
+interface GitPlatform {
     name: string;
     getFileUrl(commitOrBranch: string, filePath: string, range?: Range): string;
     getRepoUrl(): string;
@@ -176,7 +165,7 @@ interface Platform {
     getPullRequestsURL(): string;
 }
 
-class Github implements Platform {
+class Github implements GitPlatform {
     name = "GitHub";
     repoUrl: string;
 
@@ -213,7 +202,7 @@ class Github implements Platform {
     }
 }
 
-class Bitbucket implements Platform {
+class Bitbucket implements GitPlatform {
     name = "Bitbucket";
     repoUrl: string;
 
