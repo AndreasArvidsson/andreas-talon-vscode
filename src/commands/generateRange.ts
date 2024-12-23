@@ -1,12 +1,9 @@
-import { Selection, window } from "vscode";
+import { Selection } from "vscode";
+import { getActiveEditor } from "../util/getActiveEditor";
 import { getSortedSelections } from "../util/getSortedSelections";
 
 export async function generateRange(start = 1): Promise<void> {
-    const editor = window.activeTextEditor;
-
-    if (!editor) {
-        return;
-    }
+    const editor = getActiveEditor();
 
     const wereEditsApplied = await editor.edit((editBuilder) => {
         getSortedSelections(editor).forEach((selection, i) => {

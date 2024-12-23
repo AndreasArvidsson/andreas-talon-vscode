@@ -1,10 +1,8 @@
 import { Selection, window } from "vscode";
+import { getActiveEditor } from "../util/getActiveEditor";
 
 export async function selectTo(lineNumber?: number): Promise<void> {
-    const editor = window.activeTextEditor;
-    if (!editor) {
-        return;
-    }
+    const editor = getActiveEditor();
 
     if (lineNumber == null) {
         lineNumber = await showInputBox();

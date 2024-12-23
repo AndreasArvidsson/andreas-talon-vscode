@@ -9,8 +9,9 @@ import {
     workspace
 } from "vscode";
 import * as fileSystem from "../../util/fileSystem";
-import { getGitIgnore } from "../../util/gitIgnore";
 import { getDir, getFilename } from "../../util/fileSystem";
+import { getActiveFileSchemaEditor } from "../../util/getActiveEditor";
+import { getGitIgnore } from "../../util/gitIgnore";
 
 interface FileQuickPickItem extends QuickPickItem {
     path: string;
@@ -19,12 +20,8 @@ interface FileQuickPickItem extends QuickPickItem {
 }
 
 export async function moveFile(): Promise<void> {
-    const editor = window.activeTextEditor;
-    const uri = editor?.document?.uri;
-
-    if (uri?.scheme !== "file") {
-        throw Error("Can't move unsaved file");
-    }
+    const editor = getActiveFileSchemaEditor();
+    const uri = editor.document.uri;
 
     const folder = await showFolderPicker(uri);
 

@@ -1,10 +1,8 @@
-import { window, Selection } from "vscode";
+import { Selection } from "vscode";
+import { getActiveEditor } from "../util/getActiveEditor";
 
 export function lineMiddle(): void {
-    const editor = window.activeTextEditor;
-    if (!editor) {
-        return;
-    }
+    const editor = getActiveEditor();
 
     editor.selections = editor.selections.map((selection) => {
         const line = editor.document.lineAt(selection.active.line);

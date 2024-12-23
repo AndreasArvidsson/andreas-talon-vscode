@@ -1,13 +1,15 @@
 import path from "node:path";
 import { Uri } from "vscode";
 import { copyFile, openTextDocument } from "../../util/fileSystem";
+import { getActiveFileSchemaEditor } from "../../util/getActiveEditor";
 import { getNewFilenameContext } from "../../util/getRenameContext";
 import { showNewNameInputBox } from "../../util/showNewNameInputBox";
 
 export async function duplicateFile(name?: string): Promise<void> {
-    const context = getNewFilenameContext(name);
+    const editor = getActiveFileSchemaEditor();
+    const context = getNewFilenameContext(editor, name);
 
-    if (!context) {
+    if (context == null) {
         throw Error("Can't duplicate file");
     }
 

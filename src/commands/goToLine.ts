@@ -1,11 +1,8 @@
-import { Position, Selection, window } from "vscode";
+import { Position, Selection } from "vscode";
+import { getActiveEditor } from "../util/getActiveEditor";
 
 export function goToLine(line: number): void {
-    const editor = window.activeTextEditor;
-
-    if (!editor) {
-        return;
-    }
+    const editor = getActiveEditor();
 
     const documentLine = editor.document.lineAt(line);
 

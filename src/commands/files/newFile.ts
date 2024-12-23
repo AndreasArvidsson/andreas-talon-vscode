@@ -1,13 +1,14 @@
 import path from "node:path";
-import { Uri, commands } from "vscode";
+import { Uri, commands, window } from "vscode";
 import { showNewNameInputBox } from "../../util/showNewNameInputBox";
 import { createFile, openTextDocument } from "../../util/fileSystem";
 import { getNewFilenameContext } from "../../util/getRenameContext";
 
 export async function newFile(name?: string): Promise<void> {
-    const context = getNewFilenameContext(name);
+    const editor = window.activeTextEditor;
+    const context = editor != null ? getNewFilenameContext(editor, name) : undefined;
 
-    if (!context) {
+    if (context == null) {
         await commands.executeCommand("explorer.newFile");
         return;
     }

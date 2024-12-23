@@ -1,11 +1,7 @@
-import { window } from "vscode";
+import { getActiveEditor } from "../util/getActiveEditor";
 
 async function update(increment: boolean, value?: number) {
-    const editor = window.activeTextEditor;
-
-    if (!editor) {
-        return;
-    }
+    const editor = getActiveEditor();
 
     await editor.edit((editBuilder) => {
         editor.selections.forEach((selection) => {

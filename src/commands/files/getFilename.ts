@@ -1,12 +1,9 @@
-import { window } from "vscode";
 import { getFilename as fsGetFilename } from "../../util/fileSystem";
+import { getActiveEditor } from "../../util/getActiveEditor";
 
 export function getFilename(): string {
-    const uri = window.activeTextEditor?.document.uri;
-
-    if (!uri) {
-        throw Error("Can't get filename");
-    }
+    const editor = getActiveEditor();
+    const uri = editor.document.uri;
 
     return uri.scheme === "file" ? fsGetFilename(uri) : uri.fsPath;
 }

@@ -1,14 +1,9 @@
 import { window } from "vscode";
-import { deleteFile } from "../../util/fileSystem";
-import { getFilename } from "../../util/fileSystem";
+import { deleteFile, getFilename } from "../../util/fileSystem";
+import { getActiveFileSchemaEditor } from "../../util/getActiveEditor";
 
 export async function removeFile(): Promise<void> {
-    const editor = window.activeTextEditor;
-
-    if (editor?.document?.uri.scheme !== "file") {
-        throw Error("Can't remove file");
-    }
-
+    const editor = getActiveFileSchemaEditor();
     const uri = editor.document.uri;
     const filename = getFilename(uri);
 
