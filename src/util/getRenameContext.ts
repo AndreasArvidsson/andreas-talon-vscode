@@ -62,8 +62,8 @@ export function splitName(fullName: string) {
     return { name, ext };
 }
 
-function getSelectedText(editor?: TextEditor): string {
-    if (editor?.selections.length !== 1) {
+function getSelectedText(editor: TextEditor): string {
+    if (editor.selections.length !== 1) {
         return "";
     }
     const selectedText = editor.document.getText(editor.selection);
