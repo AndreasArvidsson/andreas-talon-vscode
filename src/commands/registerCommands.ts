@@ -63,6 +63,7 @@ export function registerCommands(
         getClassName: () => getText.getClassName(),
         getOpenTagName: () => getText.getOpenTagName(),
         // Git
+        gitCheckoutDefaultBranch: () => git.checkoutDefaultBranch(),
         getGitFileURL: (p: GitParameters) => git.getGitFileURL(p),
         getGitRepoURL: () => git.getGitRepoURL(),
         getGitIssuesURL: () => git.getGitIssuesURL(),

@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.56.1",
+    "version": "3.57.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -228,6 +228,11 @@
                 "category": "Andreas",
                 "title": "Get name for open tag.",
                 "enablement": "false"
+            },
+            {
+                "command": "andreas.gitCheckoutDefaultBranch",
+                "category": "Andreas",
+                "title": "Checkout default git branch."
             },
             {
                 "command": "andreas.getGitFileURL",

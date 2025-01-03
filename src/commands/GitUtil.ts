@@ -55,6 +55,16 @@ export class GitUtil {
         return getPlatform(repository).getPullRequestsURL();
     }
 
+    async checkoutDefaultBranch() {
+        const repository = this.getRepository();
+        const branches = await repository.getBranches({});
+        const defaultBranch = branches.find((b) => b.name === "master" || b.name === "main");
+        if (defaultBranch == null) {
+            throw Error("Can't find default branch");
+        }
+        await repository.checkout(defaultBranch.name!);
+    }
+
     private getRepository(): Repository {
         const { repositories } = this.gitApi;
         if (repositories.length === 0) {
