@@ -115,6 +115,7 @@ export const commandDescriptions = {
     ),
 
     // Git commands
+    gitCheckout: visible("Git", "Checkout git branch.", undefined, "(branch: string)"),
     gitCheckoutDefaultBranch: visible("Git", "Checkout default git branch."),
     getGitFileURL: hidden(
         "Git",

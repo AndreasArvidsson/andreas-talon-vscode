@@ -63,12 +63,13 @@ export function registerCommands(
         getClassName: () => getText.getClassName(),
         getOpenTagName: () => getText.getOpenTagName(),
         // Git
+        gitCheckout: (branch: string) => git.checkout(branch),
         gitCheckoutDefaultBranch: () => git.checkoutDefaultBranch(),
-        getGitFileURL: (p: GitParameters) => git.getGitFileURL(p),
-        getGitRepoURL: () => git.getGitRepoURL(),
-        getGitIssuesURL: () => git.getGitIssuesURL(),
-        getGitNewIssueURL: () => git.getGitNewIssueURL(),
-        getGitPullRequestsURL: () => git.getGitPullRequestsURL(),
+        getGitFileURL: (p: GitParameters) => git.getFileURL(p),
+        getGitRepoURL: () => git.getRepoURL(),
+        getGitIssuesURL: () => git.getIssuesURL(),
+        getGitNewIssueURL: () => git.getNewIssueURL(),
+        getGitPullRequestsURL: () => git.getPullRequestsURL(),
         // Other
         getSetting,
         setSetting,
@@ -86,14 +87,5 @@ export function registerCommands(
 function registerCommand(command: CommandId, callback: Callback): vscode.Disposable {
     const fullCommand = getFullCommand(command);
 
-    return vscode.commands.registerCommand(fullCommand, async (...args: unknown[]) => {
-        try {
-            return await Promise.resolve<unknown>(callback(...args));
-        } catch (ex) {
-            const err = ex as Error;
-            void vscode.window.showErrorMessage(err.message);
-            console.error(err.stack);
-            return undefined;
-        }
-    });
+    return vscode.commands.registerCommand(fullCommand, callback);
 }

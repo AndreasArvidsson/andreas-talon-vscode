@@ -14,7 +14,7 @@ export class GitUtil {
         this.gitApi = gitExtension.getAPI(1);
     }
 
-    getGitFileURL({ useSelection = false, useBranch = false }: GitParameters): string {
+    getFileURL({ useSelection = false, useBranch = false }: GitParameters): string {
         const { document, selections } = getActiveFileSchemaEditor();
         const repository = this.getRepository();
         const platform = getPlatform(repository);
@@ -35,24 +35,33 @@ export class GitUtil {
         return platform.getFileUrl(commitOrBranch, relativeFilePath, range);
     }
 
-    getGitRepoURL(): string {
+    getRepoURL(): string {
         const repository = this.getRepository();
         return getPlatform(repository).getRepoUrl();
     }
 
-    getGitIssuesURL(): string {
+    getIssuesURL(): string {
         const repository = this.getRepository();
         return getPlatform(repository).getIssuesUrl();
     }
 
-    getGitNewIssueURL(): string {
+    getNewIssueURL(): string {
         const repository = this.getRepository();
         return getPlatform(repository).getNewIssueUrl();
     }
 
-    getGitPullRequestsURL(): string {
+    getPullRequestsURL(): string {
         const repository = this.getRepository();
         return getPlatform(repository).getPullRequestsURL();
+    }
+
+    async checkout(branch: string) {
+        const repository = this.getRepository();
+        try {
+            await repository.checkout(branch);
+        } catch (_error) {
+            throw Error(`Can't checkout branch '${branch}'`);
+        }
     }
 
     async checkoutDefaultBranch() {
