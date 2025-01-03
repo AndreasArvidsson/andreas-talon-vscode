@@ -71,8 +71,6 @@ Many of the commands take arguments and return values that can only be used with
 
 -   `andreas.gitCheckout(branch: string)`  
     Checkout git branch.
--   `andreas.gitCheckoutDefaultBranch()`  
-    Checkout default git branch.
 -   `andreas.getGitFileURL({ useSelection: boolean, useBranch: boolean }): string`  
     Get URL to Git repository file webpage. Optionally include selected line numbers.
 -   `andreas.getGitRepoURL(): string`  

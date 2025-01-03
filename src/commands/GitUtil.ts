@@ -55,23 +55,17 @@ export class GitUtil {
         return getPlatform(repository).getPullRequestsURL();
     }
 
-    async checkout(branch: string) {
+    async checkout(branches: string[]) {
         const repository = this.getRepository();
-        try {
-            await repository.checkout(branch);
-        } catch (_error) {
-            throw Error(`Can't checkout branch '${branch}'`);
+        for (const branch of branches) {
+            try {
+                await repository.checkout(branch);
+                return;
+            } catch (_error) {
+                // Try the next branch
+            }
         }
-    }
-
-    async checkoutDefaultBranch() {
-        const repository = this.getRepository();
-        const branches = await repository.getBranches({});
-        const defaultBranch = branches.find((b) => b.name === "master" || b.name === "main");
-        if (defaultBranch == null) {
-            throw Error("Can't find default branch");
-        }
-        await repository.checkout(defaultBranch.name!);
+        throw Error(`Can't checkout branch '${branches.join(", ")}'`);
     }
 
     private getRepository(): Repository {
