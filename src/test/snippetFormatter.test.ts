@@ -18,9 +18,11 @@ $1.wrapperScope: statement
 insertionScope: statement
 phrase: try catch
 language: javascript
+description: My snippet
 name: mySnippet`,
         post: `\
 name: mySnippet
+description: My snippet
 language: javascript
 phrase: try catch
 insertionScope: statement

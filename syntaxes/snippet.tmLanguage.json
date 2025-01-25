@@ -38,7 +38,7 @@
             ]
         },
         "pair-scalar": {
-            "match": "^(name): ?(\\w+)$",
+            "match": "^(name|description):(.*)$",
             "captures": {
                 "1": {
                     "patterns": [
@@ -50,14 +50,14 @@
                 "2": {
                     "patterns": [
                         {
-                            "include": "#value"
+                            "include": "#value-scalar"
                         }
                     ]
                 }
             }
         },
         "pair-vector": {
-            "match": "^(phrase|insertionScope|language): ?([\\w| ]+)$",
+            "match": "^(phrase|insertionScope|language):(.*)$",
             "captures": {
                 "1": {
                     "patterns": [
@@ -69,14 +69,14 @@
                 "2": {
                     "patterns": [
                         {
-                            "include": "#value"
+                            "include": "#value-vector"
                         }
                     ]
                 }
             }
         },
         "pair-variable-scalar": {
-            "match": "^(\\$\\w+)\\.(wrapperScope): ?(\\w+)$",
+            "match": "^(\\$\\w+)\\.(wrapperScope):(.*)$",
             "captures": {
                 "1": {
                     "patterns": [
@@ -95,14 +95,14 @@
                 "3": {
                     "patterns": [
                         {
-                            "include": "#value"
+                            "include": "#value-scalar"
                         }
                     ]
                 }
             }
         },
         "pair-variable-vector": {
-            "match": "^(\\$\\w+)\\.(insertionFormatter|wrapperPhrase): ?([\\w| ]+)$",
+            "match": "^(\\$\\w+)\\.(insertionFormatter|wrapperPhrase):(.*)$",
             "captures": {
                 "1": {
                     "patterns": [
@@ -121,7 +121,7 @@
                 "3": {
                     "patterns": [
                         {
-                            "include": "#value"
+                            "include": "#value-vector"
                         }
                     ]
                 }
@@ -135,8 +135,12 @@
             "match": "\\w+",
             "name": "entity.name.tag.snippet"
         },
-        "value": {
-            "match": "\\w+",
+        "value-scalar": {
+            "match": ".+",
+            "name": "entity.name.function.snippet"
+        },
+        "value-vector": {
+            "match": "[^|]+",
             "name": "entity.name.function.snippet"
         }
     }
