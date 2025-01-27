@@ -320,7 +320,7 @@
     "dependencies": {
         "editorconfig": "^2.0.0",
         "ignore": "^5.2.4",
-        "talon-snippets": "1.2.0"
+        "talon-snippets": "1.3.0"
     },
     "devDependencies": {
         "@types/fs-extra": "^11.0.4",
