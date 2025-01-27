@@ -24,7 +24,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Install dependencies
-        run: npm --color install
+        run: npm --color ci
 
       - name: Publish to Open VSX Registry
         id: publishToOpenVSX
