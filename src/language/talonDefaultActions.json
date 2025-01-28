@@ -1,0 +1,1792 @@
+[
+    {
+        "name": "app.bundle",
+        "signature": "() -> str",
+        "docstr": "Get active app's bundle identifier"
+    },
+    {
+        "name": "app.executable",
+        "signature": "() -> str",
+        "docstr": "Get active app's executable name"
+    },
+    {
+        "name": "app.name",
+        "signature": "() -> str",
+        "docstr": "Get active app's name"
+    },
+    {
+        "name": "app.notify",
+        "signature": "(body: str = '', title: str = '', subtitle: str = '', sound: bool = False)",
+        "docstr": "Show a desktop notification"
+    },
+    {
+        "name": "app.path",
+        "signature": "() -> str",
+        "docstr": "Get active app's file path"
+    },
+    {
+        "name": "app.preferences",
+        "signature": "()",
+        "docstr": "Open app preferences"
+    },
+    {
+        "name": "app.tab_close",
+        "signature": "()",
+        "docstr": "Close the current tab"
+    },
+    {
+        "name": "app.tab_next",
+        "signature": "()",
+        "docstr": "Switch to next tab for this window"
+    },
+    {
+        "name": "app.tab_open",
+        "signature": "()",
+        "docstr": "Open a new tab"
+    },
+    {
+        "name": "app.tab_previous",
+        "signature": "()",
+        "docstr": "Switch to previous tab for this window"
+    },
+    {
+        "name": "app.tab_reopen",
+        "signature": "()",
+        "docstr": "Re-open the last-closed tab"
+    },
+    {
+        "name": "app.window_close",
+        "signature": "()",
+        "docstr": "Close the current window"
+    },
+    {
+        "name": "app.window_hide",
+        "signature": "()",
+        "docstr": "Hide the current window"
+    },
+    {
+        "name": "app.window_next",
+        "signature": "()",
+        "docstr": "Switch to next window for this app"
+    },
+    {
+        "name": "app.window_open",
+        "signature": "()",
+        "docstr": "Open a new window"
+    },
+    {
+        "name": "app.window_previous",
+        "signature": "()",
+        "docstr": "Switch to previous window for this app"
+    },
+    {
+        "name": "auto_format",
+        "signature": "(text: str) -> str",
+        "docstr": "Apply text formatting, such as auto spacing, for the native language"
+    },
+    {
+        "name": "auto_insert",
+        "signature": "(text: str)",
+        "docstr": "Insert text at the current cursor position, automatically formatting it using the actions.auto_format(text)"
+    },
+    {
+        "name": "browser.focus_search",
+        "signature": "()",
+        "docstr": "Focus the search box"
+    },
+    {
+        "name": "browser.go_blank",
+        "signature": "()",
+        "docstr": "Go to a blank page"
+    },
+    {
+        "name": "bytes.base64",
+        "signature": "(b: bytes) -> str",
+        "docstr": "Convert bytes to base64"
+    },
+    {
+        "name": "bytes.decode",
+        "signature": "(b: bytes, encoding: str = 'utf8', errors: str = 'strict') -> bytes",
+        "docstr": "Decode bytes to string"
+    },
+    {
+        "name": "bytes.frombase64",
+        "signature": "(s: str) -> bytes",
+        "docstr": "Convert base64 to bytes"
+    },
+    {
+        "name": "bytes.fromhex",
+        "signature": "(s: str) -> bytes",
+        "docstr": "Convert hex to bytes"
+    },
+    {
+        "name": "bytes.hex",
+        "signature": "(b: bytes) -> str",
+        "docstr": "Convert bytes to hex"
+    },
+    {
+        "name": "clip.capture_text",
+        "signature": "(key: str)",
+        "docstr": "Send key sequence and return resulting clipboard text"
+    },
+    {
+        "name": "clip.clear",
+        "signature": "() -> None",
+        "docstr": "Clear clipboard contents"
+    },
+    {
+        "name": "clip.image",
+        "signature": "() -> Optional[talon.skia.image.Image]",
+        "docstr": "Get clipboard image"
+    },
+    {
+        "name": "clip.set_image",
+        "signature": "(image: talon.skia.image.Image)",
+        "docstr": "Set clipboard image"
+    },
+    {
+        "name": "clip.set_text",
+        "signature": "(text: str)",
+        "docstr": "Set clipboard text"
+    },
+    {
+        "name": "clip.text",
+        "signature": "() -> str",
+        "docstr": "Get clipboard text"
+    },
+    {
+        "name": "clip.wait",
+        "signature": "(fmt: str = 'text', timeout: float = 0.5)",
+        "docstr": "Wait for the clipboard to change"
+    },
+    {
+        "name": "code.complete",
+        "signature": "()",
+        "docstr": "Trigger code autocomplete"
+    },
+    {
+        "name": "code.language",
+        "signature": "() -> Union[str, set[str]]",
+        "docstr": "Return the active programming language(s)"
+    },
+    {
+        "name": "code.toggle_comment",
+        "signature": "()",
+        "docstr": "Toggle comments on the current line(s)"
+    },
+    {
+        "name": "core.cancel_phrase__unstable",
+        "signature": "()",
+        "docstr": "Cancel the currently running phrase"
+    },
+    {
+        "name": "core.current_command__unstable",
+        "signature": "() -> tuple[talon.scripting.types.CommandImpl, talon.grammar.vm.Capture]",
+        "docstr": "Return the currently executing command"
+    },
+    {
+        "name": "core.last_command",
+        "signature": "() -> tuple[talon.scripting.types.CommandImpl, talon.grammar.vm.Capture]",
+        "docstr": "Return the last executed command"
+    },
+    {
+        "name": "core.last_phrase",
+        "signature": "() -> talon.grammar.vm.Capture",
+        "docstr": "Return the last-spoken phrase"
+    },
+    {
+        "name": "core.recent_commands",
+        "signature": "() -> Sequence[Sequence[tuple[talon.scripting.types.CommandImpl, talon.grammar.vm.Capture]]]",
+        "docstr": "Return recently executed commands (grouped by phrase)"
+    },
+    {
+        "name": "core.recent_phrases",
+        "signature": "() -> Sequence[talon.grammar.vm.Capture]",
+        "docstr": "Return recently-spoken phrases"
+    },
+    {
+        "name": "core.repeat_command",
+        "signature": "(times: int = 1)",
+        "docstr": "Repeat the last command N times"
+    },
+    {
+        "name": "core.repeat_partial_phrase",
+        "signature": "(times: int = 1)",
+        "docstr": "Repeat the previous phrase or current partial phrase N times"
+    },
+    {
+        "name": "core.repeat_phrase",
+        "signature": "(times: int = 1)",
+        "docstr": "Repeat the last phrase N times"
+    },
+    {
+        "name": "core.replace_command",
+        "signature": "(commands: Sequence[tuple[talon.scripting.types.CommandImpl, talon.grammar.vm.Capture]])",
+        "docstr": "Replace the current command in history with one or more commands"
+    },
+    {
+        "name": "core.run_command",
+        "signature": "(cmd: talon.scripting.types.CommandImpl, m: talon.grammar.vm.Capture)",
+        "docstr": "Run a single command for a recognized phrase"
+    },
+    {
+        "name": "core.run_hotkey",
+        "signature": "(hotkey: talon.scripting.types.ScriptImpl)",
+        "docstr": "Run all commands for a hotkey"
+    },
+    {
+        "name": "core.run_phrase",
+        "signature": "(phrase: talon.grammar.vm.Capture)",
+        "docstr": "Run all commands for a recognized phrase"
+    },
+    {
+        "name": "core.run_talon_script",
+        "signature": "(ctx: talon.scripting.rctx.ResourceContext, script: talon.scripting.talon_script.TalonScript, m: talon.grammar.vm.Capture)",
+        "docstr": "Run a single TalonScript for a recognized phrase"
+    },
+    {
+        "name": "deck.current_page",
+        "signature": "(serial: str) -> int",
+        "docstr": "Get current page number for a deck"
+    },
+    {
+        "name": "deck.goto",
+        "signature": "(serial: str, path: str) -> None",
+        "docstr": "Switch deck to a path or page number (a/b/c or :1 or a/b/c:1)"
+    },
+    {
+        "name": "deck.next_page",
+        "signature": "(serial: str) -> None",
+        "docstr": "Switch a deck to the next page"
+    },
+    {
+        "name": "deck.page_count",
+        "signature": "(serial: str) -> int",
+        "docstr": "Get page count for a deck"
+    },
+    {
+        "name": "deck.paths",
+        "signature": "(serial: str) -> list[str]",
+        "docstr": "Get list of folder paths for a deck"
+    },
+    {
+        "name": "deck.previous_page",
+        "signature": "(serial: str) -> None",
+        "docstr": "Switch a deck to the previous page"
+    },
+    {
+        "name": "deck.serials",
+        "signature": "() -> list[str]",
+        "docstr": "Get serials of connected decks"
+    },
+    {
+        "name": "deck.switch_page",
+        "signature": "(serial: str, page: int) -> None",
+        "docstr": "Switch a deck to a specific page"
+    },
+    {
+        "name": "deck.switch_path",
+        "signature": "(serial: str, path: str) -> None",
+        "docstr": "Switch active path for a deck"
+    },
+    {
+        "name": "dict.clear",
+        "signature": "(d: dict) -> None",
+        "docstr": "Clear a dict"
+    },
+    {
+        "name": "dict.contains",
+        "signature": "(d: dict, key: Any) -> bool",
+        "docstr": "Check if key appears in dict"
+    },
+    {
+        "name": "dict.copy",
+        "signature": "(d: dict) -> dict",
+        "docstr": "Copy a dict"
+    },
+    {
+        "name": "dict.get",
+        "signature": "(d: dict, key: Any, default: Any = None) -> Any",
+        "docstr": "Get dict[key]"
+    },
+    {
+        "name": "dict.pop",
+        "signature": "(d: dict, key: Any) -> Any",
+        "docstr": "Remove and return dict[key]"
+    },
+    {
+        "name": "dict.set",
+        "signature": "(d: dict, key: Any, value: Any) -> None",
+        "docstr": "Set dict[key] = value"
+    },
+    {
+        "name": "dict.update",
+        "signature": "(a: dict, b: dict) -> None",
+        "docstr": "Copy all key/value pairs from b into a"
+    },
+    {
+        "name": "dictate.join_words",
+        "signature": "(words: Sequence[str], separator: str = ' ') -> str",
+        "docstr": "Join a list of words into a single string for insertion"
+    },
+    {
+        "name": "dictate.lower",
+        "signature": "(p: talon.grammar.vm.Phrase)",
+        "docstr": "Insert lowercase text with auto_insert()"
+    },
+    {
+        "name": "dictate.natural",
+        "signature": "(p: talon.grammar.vm.Phrase)",
+        "docstr": "Insert naturally-capitalized text with auto_insert()"
+    },
+    {
+        "name": "dictate.parse_words",
+        "signature": "(p: talon.grammar.vm.Phrase) -> Sequence[str]",
+        "docstr": "Extract words from a spoken Capture"
+    },
+    {
+        "name": "dictate.replace_words",
+        "signature": "(words: Sequence[str]) -> Sequence[str]",
+        "docstr": "Replace words according to the dictate.word_map dictionary setting"
+    },
+    {
+        "name": "edit.copy",
+        "signature": "()",
+        "docstr": "Copy selection to clipboard"
+    },
+    {
+        "name": "edit.cut",
+        "signature": "()",
+        "docstr": "Cut selection to clipboard"
+    },
+    {
+        "name": "edit.delete",
+        "signature": "()",
+        "docstr": "Delete selection"
+    },
+    {
+        "name": "edit.delete_all",
+        "signature": "()",
+        "docstr": "Delete all text in document"
+    },
+    {
+        "name": "edit.delete_left",
+        "signature": "()",
+        "docstr": "Delete left of cursor"
+    },
+    {
+        "name": "edit.delete_line",
+        "signature": "()",
+        "docstr": "Delete line under cursor"
+    },
+    {
+        "name": "edit.delete_paragraph",
+        "signature": "()",
+        "docstr": "Delete paragraph under cursor"
+    },
+    {
+        "name": "edit.delete_right",
+        "signature": "()",
+        "docstr": "Delete right of cursor"
+    },
+    {
+        "name": "edit.delete_word",
+        "signature": "()",
+        "docstr": "Delete word under cursor"
+    },
+    {
+        "name": "edit.down",
+        "signature": "()",
+        "docstr": "Move cursor down one row"
+    },
+    {
+        "name": "edit.extend_down",
+        "signature": "()",
+        "docstr": "Extend selection down one row"
+    },
+    {
+        "name": "edit.extend_file_end",
+        "signature": "()",
+        "docstr": "Extend selection to end of file"
+    },
+    {
+        "name": "edit.extend_file_start",
+        "signature": "()",
+        "docstr": "Extend selection to start of file"
+    },
+    {
+        "name": "edit.extend_left",
+        "signature": "()",
+        "docstr": "Extend selection left one column"
+    },
+    {
+        "name": "edit.extend_line_down",
+        "signature": "()",
+        "docstr": "Extend selection down one full line"
+    },
+    {
+        "name": "edit.extend_line_end",
+        "signature": "()",
+        "docstr": "Extend selection to end of line"
+    },
+    {
+        "name": "edit.extend_line_start",
+        "signature": "()",
+        "docstr": "Extend selection to start of line"
+    },
+    {
+        "name": "edit.extend_line_up",
+        "signature": "()",
+        "docstr": "Extend selection up one full line"
+    },
+    {
+        "name": "edit.extend_paragraph_end",
+        "signature": "()",
+        "docstr": "Extend selection to the end of the current paragraph"
+    },
+    {
+        "name": "edit.extend_paragraph_start",
+        "signature": "()",
+        "docstr": "Extend selection to the start of the current paragraph"
+    },
+    {
+        "name": "edit.extend_right",
+        "signature": "()",
+        "docstr": "Extend selection right one column"
+    },
+    {
+        "name": "edit.extend_up",
+        "signature": "()",
+        "docstr": "Extend selection up one row"
+    },
+    {
+        "name": "edit.extend_word_left",
+        "signature": "()",
+        "docstr": "Extend selection left one word"
+    },
+    {
+        "name": "edit.extend_word_right",
+        "signature": "()",
+        "docstr": "Extend selection right one word"
+    },
+    {
+        "name": "edit.file_end",
+        "signature": "()",
+        "docstr": "Move cursor to end of file (start of line)"
+    },
+    {
+        "name": "edit.file_start",
+        "signature": "()",
+        "docstr": "Move cursor to start of file"
+    },
+    {
+        "name": "edit.find",
+        "signature": "(text: str = None)",
+        "docstr": "Open Find dialog, optionally searching for text"
+    },
+    {
+        "name": "edit.find_next",
+        "signature": "()",
+        "docstr": "Select next Find result"
+    },
+    {
+        "name": "edit.find_previous",
+        "signature": "()",
+        "docstr": "Select previous Find result"
+    },
+    {
+        "name": "edit.indent_less",
+        "signature": "()",
+        "docstr": "Remove a tab stop of indentation"
+    },
+    {
+        "name": "edit.indent_more",
+        "signature": "()",
+        "docstr": "Add a tab stop of indentation"
+    },
+    {
+        "name": "edit.jump_line",
+        "signature": "(n: int)",
+        "docstr": "Move cursor to line <n>"
+    },
+    {
+        "name": "edit.left",
+        "signature": "()",
+        "docstr": "Move cursor left one column"
+    },
+    {
+        "name": "edit.line_clone",
+        "signature": "()",
+        "docstr": "Create a new line identical to the current line"
+    },
+    {
+        "name": "edit.line_end",
+        "signature": "()",
+        "docstr": "Move cursor to end of line"
+    },
+    {
+        "name": "edit.line_insert_down",
+        "signature": "()",
+        "docstr": "Insert line below cursor"
+    },
+    {
+        "name": "edit.line_insert_up",
+        "signature": "()",
+        "docstr": "Insert line above cursor"
+    },
+    {
+        "name": "edit.line_start",
+        "signature": "()",
+        "docstr": "Move cursor to start of line"
+    },
+    {
+        "name": "edit.line_swap_down",
+        "signature": "()",
+        "docstr": "Swap the current line with the line below"
+    },
+    {
+        "name": "edit.line_swap_up",
+        "signature": "()",
+        "docstr": "Swap the current line with the line above"
+    },
+    {
+        "name": "edit.page_down",
+        "signature": "()",
+        "docstr": "Move cursor down one page"
+    },
+    {
+        "name": "edit.page_up",
+        "signature": "()",
+        "docstr": "Move cursor up one page"
+    },
+    {
+        "name": "edit.paragraph_end",
+        "signature": "()",
+        "docstr": "Move cursor to the end of the current paragraph"
+    },
+    {
+        "name": "edit.paragraph_start",
+        "signature": "()",
+        "docstr": "Move cursor to the start of the current paragraph"
+    },
+    {
+        "name": "edit.paste",
+        "signature": "()",
+        "docstr": "Paste clipboard at cursor"
+    },
+    {
+        "name": "edit.paste_match_style",
+        "signature": "()",
+        "docstr": "Paste clipboard without style information"
+    },
+    {
+        "name": "edit.redo",
+        "signature": "()",
+        "docstr": "Redo"
+    },
+    {
+        "name": "edit.right",
+        "signature": "()",
+        "docstr": "Move cursor right one column"
+    },
+    {
+        "name": "edit.save",
+        "signature": "()",
+        "docstr": "Save current document"
+    },
+    {
+        "name": "edit.select_all",
+        "signature": "()",
+        "docstr": "Select all text in the current document"
+    },
+    {
+        "name": "edit.select_line",
+        "signature": "(n: int = None)",
+        "docstr": "Select entire line <n>, or current line"
+    },
+    {
+        "name": "edit.select_lines",
+        "signature": "(a: int, b: int)",
+        "docstr": "Select entire lines from <a> to <b>"
+    },
+    {
+        "name": "edit.select_none",
+        "signature": "()",
+        "docstr": "Clear current selection"
+    },
+    {
+        "name": "edit.select_paragraph",
+        "signature": "()",
+        "docstr": "Select the entire nearest paragraph"
+    },
+    {
+        "name": "edit.select_word",
+        "signature": "()",
+        "docstr": "Select word under cursor"
+    },
+    {
+        "name": "edit.selected_text",
+        "signature": "() -> str",
+        "docstr": "Get currently selected text"
+    },
+    {
+        "name": "edit.selection_clone",
+        "signature": "()",
+        "docstr": "Insert a copy of the current selection"
+    },
+    {
+        "name": "edit.undo",
+        "signature": "()",
+        "docstr": "Undo"
+    },
+    {
+        "name": "edit.up",
+        "signature": "()",
+        "docstr": "Move cursor up one row"
+    },
+    {
+        "name": "edit.word_left",
+        "signature": "()",
+        "docstr": "Move cursor left one word"
+    },
+    {
+        "name": "edit.word_right",
+        "signature": "()",
+        "docstr": "Move cursor right one word"
+    },
+    {
+        "name": "edit.zoom_in",
+        "signature": "()",
+        "docstr": "Zoom in"
+    },
+    {
+        "name": "edit.zoom_out",
+        "signature": "()",
+        "docstr": "Zoom out"
+    },
+    {
+        "name": "edit.zoom_reset",
+        "signature": "()",
+        "docstr": "Zoom to original size"
+    },
+    {
+        "name": "insert",
+        "signature": "(text: str)",
+        "docstr": "Insert text at the current cursor position"
+    },
+    {
+        "name": "key",
+        "signature": "(key: str)",
+        "docstr": "Press one or more keys by name, space-separated"
+    },
+    {
+        "name": "list.append",
+        "signature": "(l: list, value: Any) -> None",
+        "docstr": "Append to a list"
+    },
+    {
+        "name": "list.clear",
+        "signature": "(l: list) -> None",
+        "docstr": "Clear a list"
+    },
+    {
+        "name": "list.contains",
+        "signature": "(l: list, value: Any) -> bool",
+        "docstr": "Check if value appears in list"
+    },
+    {
+        "name": "list.copy",
+        "signature": "(l: list) -> list",
+        "docstr": "Copy a list"
+    },
+    {
+        "name": "list.count",
+        "signature": "(l: list, value: Any) -> int",
+        "docstr": "Count the number of times value appears in a list"
+    },
+    {
+        "name": "list.extend",
+        "signature": "(a: list, b: list) -> None",
+        "docstr": "Append every item of b to a"
+    },
+    {
+        "name": "list.get",
+        "signature": "(l: list, index: int) -> Any",
+        "docstr": "Get list[index]"
+    },
+    {
+        "name": "list.index",
+        "signature": "(l: list, value: Any) -> int",
+        "docstr": "Get the first index of value"
+    },
+    {
+        "name": "list.insert",
+        "signature": "(l: list, index: int, value: Any) -> int",
+        "docstr": "Insert value into list at index"
+    },
+    {
+        "name": "list.pop",
+        "signature": "(l: list, index: int = -1) -> Any",
+        "docstr": "Remove and return item from list at index"
+    },
+    {
+        "name": "list.remove",
+        "signature": "(l: list, value: Any) -> None",
+        "docstr": "Remove value from list"
+    },
+    {
+        "name": "list.reverse",
+        "signature": "(l: list) -> None",
+        "docstr": "Reverse list in place"
+    },
+    {
+        "name": "list.set",
+        "signature": "(l: list, index: int, value: Any) -> None",
+        "docstr": "Set list[index] = value"
+    },
+    {
+        "name": "list.sort",
+        "signature": "(l: list) -> None",
+        "docstr": "Sort list in place"
+    },
+    {
+        "name": "math.abs",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the absolute value of x"
+    },
+    {
+        "name": "math.acos",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the arc cosine of x, in radians"
+    },
+    {
+        "name": "math.acosh",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the inverse hyperbolic cosine of x"
+    },
+    {
+        "name": "math.asin",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the arc sine of x, in radians"
+    },
+    {
+        "name": "math.asinh",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the inverse hyperbolic sine of x"
+    },
+    {
+        "name": "math.atan",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the arc tangent of x, in radians"
+    },
+    {
+        "name": "math.atan2",
+        "signature": "(x: float, y: float) -> float",
+        "docstr": "Compute the arc tangent of (x / y), in radians"
+    },
+    {
+        "name": "math.atanh",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the inverse hyperbolic tangent of x"
+    },
+    {
+        "name": "math.bin",
+        "signature": "(n: <function MathActions.int at 0x0000025280294AE0>) -> str",
+        "docstr": "Convert number to binary string"
+    },
+    {
+        "name": "math.cbrt",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the cube root of x"
+    },
+    {
+        "name": "math.ceil",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the smallest integer greater than or equal to x"
+    },
+    {
+        "name": "math.comb",
+        "signature": "(n: int, k: int) -> int",
+        "docstr": "Compute the number of ways to choose k from n unordered"
+    },
+    {
+        "name": "math.copysign",
+        "signature": "(x: float, y: float) -> float",
+        "docstr": "Compute the value of x with the sign of y"
+    },
+    {
+        "name": "math.cos",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the cosine of x, in radians"
+    },
+    {
+        "name": "math.cosh",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the hyperbolic cosine of x"
+    },
+    {
+        "name": "math.degrees",
+        "signature": "(x: float) -> float",
+        "docstr": "Convert the angle x from radians to degrees"
+    },
+    {
+        "name": "math.e",
+        "signature": "() -> float",
+        "docstr": "Get the constant e"
+    },
+    {
+        "name": "math.erf",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the error function of x"
+    },
+    {
+        "name": "math.erfc",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the complimentary error function of x"
+    },
+    {
+        "name": "math.exp",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute e ** x"
+    },
+    {
+        "name": "math.exp2",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute 2 ** x"
+    },
+    {
+        "name": "math.expm1",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute e ** x - 1"
+    },
+    {
+        "name": "math.factorial",
+        "signature": "(n: int) -> int",
+        "docstr": "Compute the factorial of n"
+    },
+    {
+        "name": "math.floor",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the largest integer less than or equal to x"
+    },
+    {
+        "name": "math.fmod",
+        "signature": "(x: float, y: float) -> float",
+        "docstr": "Compute floating point modulo of x % y"
+    },
+    {
+        "name": "math.frexp_e",
+        "signature": "(x: float) -> float",
+        "docstr": "Get the floating point exponent of x"
+    },
+    {
+        "name": "math.frexp_m",
+        "signature": "(x: float) -> float",
+        "docstr": "Get the floating point mantissa of x"
+    },
+    {
+        "name": "math.gamma",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the gamma function of x"
+    },
+    {
+        "name": "math.hex",
+        "signature": "(n: <function MathActions.int at 0x0000025280294AE0>) -> str",
+        "docstr": "Convert number to hex string"
+    },
+    {
+        "name": "math.inf",
+        "signature": "() -> float",
+        "docstr": "Get the constant inf"
+    },
+    {
+        "name": "math.int",
+        "signature": "(s: str, base: int = 10) -> int",
+        "docstr": "Convert string to integer"
+    },
+    {
+        "name": "math.isclose",
+        "signature": "(a: float, b: float) -> bool",
+        "docstr": "Check whether a is close to b"
+    },
+    {
+        "name": "math.isfinite",
+        "signature": "(x: float) -> bool",
+        "docstr": "Check whether x is a finite number"
+    },
+    {
+        "name": "math.isinf",
+        "signature": "(x: float) -> bool",
+        "docstr": "Check whether x is infinity"
+    },
+    {
+        "name": "math.isnan",
+        "signature": "(x: float) -> bool",
+        "docstr": "Check whether x is NaN"
+    },
+    {
+        "name": "math.isqrt",
+        "signature": "(n: int) -> int",
+        "docstr": "Compute integer square root of n"
+    },
+    {
+        "name": "math.ldexp",
+        "signature": "(m: float, e: int) -> float",
+        "docstr": "Combine a mantissa and exponent into a float"
+    },
+    {
+        "name": "math.lgamma",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the log gamma function of x"
+    },
+    {
+        "name": "math.log",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the natural log of x"
+    },
+    {
+        "name": "math.log1p",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the natural log of 1+x"
+    },
+    {
+        "name": "math.log2",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the base-2 log of x"
+    },
+    {
+        "name": "math.logn",
+        "signature": "(x: float, n: float) -> float",
+        "docstr": "Compute the base-n log of x"
+    },
+    {
+        "name": "math.max",
+        "signature": "(a: int, b: int) -> int",
+        "docstr": "Select the larger number"
+    },
+    {
+        "name": "math.min",
+        "signature": "(a: int, b: int) -> int",
+        "docstr": "Select the smaller number"
+    },
+    {
+        "name": "math.mod",
+        "signature": "(x: int, y: int) -> int",
+        "docstr": "Compute modulo of x % y"
+    },
+    {
+        "name": "math.modf_f",
+        "signature": "(x: float) -> int",
+        "docstr": "Get the fractional part of x"
+    },
+    {
+        "name": "math.modf_i",
+        "signature": "(x: float) -> int",
+        "docstr": "Get the integer part of x"
+    },
+    {
+        "name": "math.nan",
+        "signature": "() -> float",
+        "docstr": "Get the constant nan"
+    },
+    {
+        "name": "math.oct",
+        "signature": "(n: <function MathActions.int at 0x0000025280294AE0>) -> str",
+        "docstr": "Convert number to octal string"
+    },
+    {
+        "name": "math.perm",
+        "signature": "(n: int, k: Optional[int] = None) -> int",
+        "docstr": "Compute the ways to choose k items from n ordered"
+    },
+    {
+        "name": "math.pi",
+        "signature": "() -> float",
+        "docstr": "Get the constant pi"
+    },
+    {
+        "name": "math.pow",
+        "signature": "(x: float, y: float) -> float",
+        "docstr": "Compute x raised to the power y"
+    },
+    {
+        "name": "math.radians",
+        "signature": "(x: float) -> float",
+        "docstr": "Convert the angle x from degrees to radians"
+    },
+    {
+        "name": "math.random",
+        "signature": "() -> float",
+        "docstr": "Generate random number between 0.0 - 1.0"
+    },
+    {
+        "name": "math.randrange",
+        "signature": "(a: int, b: int) -> int",
+        "docstr": "Generate random number where a <= n < b"
+    },
+    {
+        "name": "math.remainder",
+        "signature": "(x: float, y: float) -> float",
+        "docstr": "Compute the remainder of x / y"
+    },
+    {
+        "name": "math.round",
+        "signature": "(n: float, precision: Optional[int] = None) -> float",
+        "docstr": "Round to nearest, with optional precision"
+    },
+    {
+        "name": "math.sin",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the sine of x, in radians"
+    },
+    {
+        "name": "math.sinh",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the hyperbolic sine of x"
+    },
+    {
+        "name": "math.sqrt",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the square root of x"
+    },
+    {
+        "name": "math.tan",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the tangent of x, in radians"
+    },
+    {
+        "name": "math.tanh",
+        "signature": "(x: float) -> float",
+        "docstr": "Compute the hyperbolic tangent of x"
+    },
+    {
+        "name": "math.tau",
+        "signature": "() -> float",
+        "docstr": "Get the constant tau"
+    },
+    {
+        "name": "math.trunc",
+        "signature": "(x: float) -> int",
+        "docstr": "Get the integer part of x"
+    },
+    {
+        "name": "math.urandom",
+        "signature": "(n: int) -> bytes",
+        "docstr": "Generate n cryptographically random bytes"
+    },
+    {
+        "name": "menu.check_for_updates",
+        "signature": "()",
+        "docstr": "Check for updates"
+    },
+    {
+        "name": "menu.open_debug_window",
+        "signature": "()",
+        "docstr": "Open Debug window"
+    },
+    {
+        "name": "menu.open_log",
+        "signature": "()",
+        "docstr": "Open Talon log"
+    },
+    {
+        "name": "menu.open_repl",
+        "signature": "()",
+        "docstr": "Open Talon REPL"
+    },
+    {
+        "name": "menu.open_talon_home",
+        "signature": "()",
+        "docstr": "Open Talon config folder"
+    },
+    {
+        "name": "migrate.backup_user",
+        "signature": "()",
+        "docstr": "Backup the .talon/user/ directory to a zip file in .talon/backups/"
+    },
+    {
+        "name": "migrate.v02_all",
+        "signature": "(prefix: str = '', verbose: bool = False)",
+        "docstr": "Perform migrations for Talon v0.2 on all files in user/"
+    },
+    {
+        "name": "migrate.v02_one",
+        "signature": "(path: str, verbose: bool = False)",
+        "docstr": "Migrate action() definitions from a .talon file to a new Python file."
+    },
+    {
+        "name": "mimic",
+        "signature": "(text: str)",
+        "docstr": "Simulate speaking {text}"
+    },
+    {
+        "name": "mode.disable",
+        "signature": "(mode: str)",
+        "docstr": "Disable a mode"
+    },
+    {
+        "name": "mode.enable",
+        "signature": "(mode: str)",
+        "docstr": "Enable a mode"
+    },
+    {
+        "name": "mode.restore",
+        "signature": "()",
+        "docstr": "Restore saved modes"
+    },
+    {
+        "name": "mode.save",
+        "signature": "()",
+        "docstr": "Save all active modes"
+    },
+    {
+        "name": "mode.toggle",
+        "signature": "(mode: str)",
+        "docstr": "Toggle a mode"
+    },
+    {
+        "name": "mouse_click",
+        "signature": "(button: int = 0)",
+        "docstr": "Press and release a mouse button"
+    },
+    {
+        "name": "mouse_drag",
+        "signature": "(button: int = 0)",
+        "docstr": "Hold down a mouse button"
+    },
+    {
+        "name": "mouse_move",
+        "signature": "(x: float, y: float)",
+        "docstr": "Move mouse to (x, y) coordinate"
+    },
+    {
+        "name": "mouse_nudge",
+        "signature": "(x: float, y: float)",
+        "docstr": "Move mouse to (+x, +y) offset from current position"
+    },
+    {
+        "name": "mouse_release",
+        "signature": "(button: int = 0)",
+        "docstr": "Release a mouse button"
+    },
+    {
+        "name": "mouse_scroll",
+        "signature": "(y: float = 0, x: float = 0, by_lines: bool = False)",
+        "docstr": "Scroll the mouse wheel"
+    },
+    {
+        "name": "mouse_x",
+        "signature": "() -> float",
+        "docstr": "Mouse X position"
+    },
+    {
+        "name": "mouse_y",
+        "signature": "() -> float",
+        "docstr": "Mouse Y position"
+    },
+    {
+        "name": "path.talon_app",
+        "signature": "() -> str",
+        "docstr": "Path to Talon application"
+    },
+    {
+        "name": "path.talon_home",
+        "signature": "() -> str",
+        "docstr": "Path to home/.talon"
+    },
+    {
+        "name": "path.talon_user",
+        "signature": "() -> str",
+        "docstr": "Path to Talon user"
+    },
+    {
+        "name": "path.user_home",
+        "signature": "() -> str",
+        "docstr": "Path to user home"
+    },
+    {
+        "name": "print",
+        "signature": "(obj: Any)",
+        "docstr": "Display an object in the log"
+    },
+    {
+        "name": "set.add",
+        "signature": "(s: set, value: Any) -> None",
+        "docstr": "Add value to set"
+    },
+    {
+        "name": "set.clear",
+        "signature": "(s: set) -> None",
+        "docstr": "Clear set"
+    },
+    {
+        "name": "set.contains",
+        "signature": "(s: set, value: Any) -> bool",
+        "docstr": "Check if value appears in set"
+    },
+    {
+        "name": "set.copy",
+        "signature": "(s: set) -> set",
+        "docstr": "Copy set"
+    },
+    {
+        "name": "set.difference",
+        "signature": "(a: set, b: set) -> set",
+        "docstr": "Get the difference of two sets"
+    },
+    {
+        "name": "set.discard",
+        "signature": "(s: set, value: Any) -> None",
+        "docstr": "Remove value from set if it exists"
+    },
+    {
+        "name": "set.intersection",
+        "signature": "(a: set, b: set) -> set",
+        "docstr": "Get the intersection of two sets"
+    },
+    {
+        "name": "set.isdisjoint",
+        "signature": "(a: set, b: set) -> bool",
+        "docstr": "True if a and b don't intersect"
+    },
+    {
+        "name": "set.issubset",
+        "signature": "(a: set, b: set) -> bool",
+        "docstr": "True if b contains a"
+    },
+    {
+        "name": "set.issuperset",
+        "signature": "(a: set, b: set) -> bool",
+        "docstr": "True if a contains b"
+    },
+    {
+        "name": "set.pop",
+        "signature": "(s: set) -> Any",
+        "docstr": "Remove and return arbitrary set item"
+    },
+    {
+        "name": "set.remove",
+        "signature": "(s: set, value: Any) -> None",
+        "docstr": "Remove value from set"
+    },
+    {
+        "name": "set.symmetric_difference",
+        "signature": "(a: set, b: set) -> set",
+        "docstr": "Get all values present in exactly one of the provided sets"
+    },
+    {
+        "name": "set.union",
+        "signature": "(a: set, b: set) -> set",
+        "docstr": "Get the union of a and b"
+    },
+    {
+        "name": "set.update",
+        "signature": "(a: set, b: set) -> None",
+        "docstr": "Add all items from b to a"
+    },
+    {
+        "name": "skip",
+        "signature": "()",
+        "docstr": "Do nothing"
+    },
+    {
+        "name": "sleep",
+        "signature": "(duration: Union[float, str])",
+        "docstr": "Pause for some duration.\nIf you use a number, it is seconds, e.g 1.5 seconds or 0.001 seconds.\nIf you use a string, it is a timespec, such as \"50ms\" or \"10s\"\nFor performance reasons, sleep() cannot be reimplemented by a Context."
+    },
+    {
+        "name": "sound.active_microphone",
+        "signature": "() -> str",
+        "docstr": "Return active microphone name"
+    },
+    {
+        "name": "sound.microphones",
+        "signature": "() -> Sequence[str]",
+        "docstr": "Return a list of available microphone names"
+    },
+    {
+        "name": "sound.set_microphone",
+        "signature": "(name: str)",
+        "docstr": "Set the currently active microphone"
+    },
+    {
+        "name": "speech.disable",
+        "signature": "()",
+        "docstr": "Disable speech recognition"
+    },
+    {
+        "name": "speech.enable",
+        "signature": "()",
+        "docstr": "Enable speech recognition"
+    },
+    {
+        "name": "speech.enabled",
+        "signature": "() -> bool",
+        "docstr": "Test if speech recognition is enabled"
+    },
+    {
+        "name": "speech.record_flac",
+        "signature": "()",
+        "docstr": "Record the phrase audio to a flac file"
+    },
+    {
+        "name": "speech.replay",
+        "signature": "(path: str)",
+        "docstr": "Replay a .flac or .wav file into the speech engine"
+    },
+    {
+        "name": "speech.set_microphone",
+        "signature": "(name: str)",
+        "docstr": "Set the currently active microphone - DEPRECATED: use sound.set_microphone()"
+    },
+    {
+        "name": "speech.toggle",
+        "signature": "(value: bool = None)",
+        "docstr": "Toggle speech recognition"
+    },
+    {
+        "name": "string.capitalize",
+        "signature": "(s: str) -> str",
+        "docstr": "Capitalize the first letter of string"
+    },
+    {
+        "name": "string.casefold",
+        "signature": "(s: str) -> str",
+        "docstr": "Case fold string"
+    },
+    {
+        "name": "string.center",
+        "signature": "(s: str, width: int, fillchar: Optional[str] = None) -> str",
+        "docstr": "Center string by padding to width"
+    },
+    {
+        "name": "string.chr",
+        "signature": "(i: int) -> str",
+        "docstr": "Convert a Unicode code point into a string"
+    },
+    {
+        "name": "string.contains",
+        "signature": "(haystack: str, needle: str) -> bool",
+        "docstr": "Check whether haystack contains needle"
+    },
+    {
+        "name": "string.count",
+        "signature": "(s: str, sub: str, start: Optional[int] = None, end: Optional[int] = None) -> str",
+        "docstr": "Count the number of instances of sub in string, with optional start/end"
+    },
+    {
+        "name": "string.encode",
+        "signature": "(s: str, encoding: str = 'utf8') -> bytes",
+        "docstr": "Encode string to bytes"
+    },
+    {
+        "name": "string.endswith",
+        "signature": "(s: str, suffix: str) -> bool",
+        "docstr": "Check whether string ends with suffix"
+    },
+    {
+        "name": "string.expandtabs",
+        "signature": "(s: str, tabsize: int = 8) -> str",
+        "docstr": "Expand tabs to spaces"
+    },
+    {
+        "name": "string.find",
+        "signature": "(s: str, sub: str, start: Optional[int] = None, end: Optional[int] = None)",
+        "docstr": "Find sub in string, with optional start/end"
+    },
+    {
+        "name": "string.index",
+        "signature": "(s: str, sub: str, start: Optional[int] = None, end: Optional[int] = None)",
+        "docstr": "Find sub in string, with optional start/end, raising an error if not found"
+    },
+    {
+        "name": "string.isalnum",
+        "signature": "(s: str) -> bool",
+        "docstr": "Check if string contains only alphanumeric characters"
+    },
+    {
+        "name": "string.isalpha",
+        "signature": "(s: str) -> bool",
+        "docstr": "Check if string contains only alphabet characters"
+    },
+    {
+        "name": "string.isascii",
+        "signature": "(s: str) -> bool",
+        "docstr": "Check if string contains only ascii characters"
+    },
+    {
+        "name": "string.isdecimal",
+        "signature": "(s: str) -> bool",
+        "docstr": "Check if string contains only decimal characters"
+    },
+    {
+        "name": "string.isdigit",
+        "signature": "(s: str) -> bool",
+        "docstr": "Check if string contains only digits"
+    },
+    {
+        "name": "string.islower",
+        "signature": "(s: str) -> bool",
+        "docstr": "Check if string is lowercase"
+    },
+    {
+        "name": "string.isprintable",
+        "signature": "(s: str) -> bool",
+        "docstr": "Check if string contains only printable characters"
+    },
+    {
+        "name": "string.isspace",
+        "signature": "(s: str) -> bool",
+        "docstr": "Check if string contains only whitespace characters"
+    },
+    {
+        "name": "string.istitle",
+        "signature": "(s: str) -> bool",
+        "docstr": "Check if string is title cased"
+    },
+    {
+        "name": "string.isupper",
+        "signature": "(s: str) -> bool",
+        "docstr": "Check if string is uppercase"
+    },
+    {
+        "name": "string.join",
+        "signature": "(s: str, sequence: Sequence[str]) -> str",
+        "docstr": "Join a sequence using string"
+    },
+    {
+        "name": "string.ljust",
+        "signature": "(s: str, width: int, fillchar: Optional[str] = None) -> str",
+        "docstr": "Left justify string by padding to width"
+    },
+    {
+        "name": "string.lower",
+        "signature": "(s: str) -> str",
+        "docstr": "Lowercase string"
+    },
+    {
+        "name": "string.lstrip",
+        "signature": "(s: str, chars: Optional[str] = None) -> str",
+        "docstr": "Strip characters from the left of string"
+    },
+    {
+        "name": "string.ord",
+        "signature": "(s: str) -> int",
+        "docstr": "Convert a character into a Unicode code point"
+    },
+    {
+        "name": "string.removeprefix",
+        "signature": "(s: str, prefix: str) -> str",
+        "docstr": "Remove prefix from string if present"
+    },
+    {
+        "name": "string.removesuffix",
+        "signature": "(s: str, suffix: str) -> str",
+        "docstr": "Remove suffix from string if present"
+    },
+    {
+        "name": "string.replace",
+        "signature": "(s: str, old: str, new: str, count: int = -1) -> str",
+        "docstr": "Replace [count] instances of old with new"
+    },
+    {
+        "name": "string.rfind",
+        "signature": "(s: str, sub: str, start: Optional[int] = None, end: Optional[int] = None)",
+        "docstr": "Find sub in string (from the right), with optional start/end"
+    },
+    {
+        "name": "string.rindex",
+        "signature": "(s: str, sub: str, start: Optional[int] = None, end: Optional[int] = None)",
+        "docstr": "Find sub in string (from the right), with optional start/end, raising an error if not found"
+    },
+    {
+        "name": "string.rjust",
+        "signature": "(s: str, width: int, fillchar: Optional[str] = None) -> str",
+        "docstr": "Right justify string by padding to width"
+    },
+    {
+        "name": "string.rsplit",
+        "signature": "(s: str, sep: Optional[str] = None, maxsplit: int = -1) -> str",
+        "docstr": "Split using separator or whitespace [maxsplit] times from the right"
+    },
+    {
+        "name": "string.rstrip",
+        "signature": "(s: str, chars: Optional[str] = None) -> str",
+        "docstr": "Strip characters from the right of string"
+    },
+    {
+        "name": "string.slice",
+        "signature": "(s: str, a: int, b: Optional[int] = None, c: Optional[int] = None)",
+        "docstr": "Slice string, following python slicing rules [a:b:c]"
+    },
+    {
+        "name": "string.split",
+        "signature": "(s: str, sep: Optional[str] = None, maxsplit: int = -1) -> str",
+        "docstr": "Split using separator or whitespace [maxsplit] times"
+    },
+    {
+        "name": "string.splitlines",
+        "signature": "(s: str, keepends: bool = False) -> list[str]",
+        "docstr": "Split string into a list of lines"
+    },
+    {
+        "name": "string.startswith",
+        "signature": "(s: str, prefix: str) -> bool",
+        "docstr": "Check whether string starts with prefix"
+    },
+    {
+        "name": "string.strip",
+        "signature": "(s: str, chars: Optional[str] = None) -> str",
+        "docstr": "Strip characters from both sides of string"
+    },
+    {
+        "name": "string.swapcase",
+        "signature": "(s: str) -> str",
+        "docstr": "Swap the case of string"
+    },
+    {
+        "name": "string.title",
+        "signature": "(s: str) -> str",
+        "docstr": "Titlecase string"
+    },
+    {
+        "name": "string.upper",
+        "signature": "(s: str) -> str",
+        "docstr": "Uppercase string"
+    },
+    {
+        "name": "time.day",
+        "signature": "(dt: datetime.datetime) -> int",
+        "docstr": "Get the day from a datetime"
+    },
+    {
+        "name": "time.format",
+        "signature": "(dt: datetime.datetime, fmt: str) -> str",
+        "docstr": "Format a datetime strftime-style"
+    },
+    {
+        "name": "time.fromisoformat",
+        "signature": "(s: str) -> datetime.datetime",
+        "docstr": "Get a datetime from ISO 8601 format"
+    },
+    {
+        "name": "time.fromtimestamp",
+        "signature": "(ts: float) -> datetime.datetime",
+        "docstr": "Get datetime from unix timestamp"
+    },
+    {
+        "name": "time.fromutctimestamp",
+        "signature": "(ts: float) -> datetime.datetime",
+        "docstr": "Get datetime from UTC unix timestamp"
+    },
+    {
+        "name": "time.hour",
+        "signature": "(dt: datetime.datetime) -> int",
+        "docstr": "Get the hour from a datetime"
+    },
+    {
+        "name": "time.isoformat",
+        "signature": "(dt: datetime.datetime) -> str",
+        "docstr": "Format a datetime using ISO 8601"
+    },
+    {
+        "name": "time.microsecond",
+        "signature": "(dt: datetime.datetime) -> int",
+        "docstr": "Get the microseconds from a datetime"
+    },
+    {
+        "name": "time.minute",
+        "signature": "(dt: datetime.datetime) -> int",
+        "docstr": "Get the minute from a datetime"
+    },
+    {
+        "name": "time.monotonic",
+        "signature": "() -> float",
+        "docstr": "Get monotonic system time"
+    },
+    {
+        "name": "time.month",
+        "signature": "(dt: datetime.datetime) -> int",
+        "docstr": "Get the month from a datetime"
+    },
+    {
+        "name": "time.now",
+        "signature": "() -> datetime.datetime",
+        "docstr": "Get the current date/time"
+    },
+    {
+        "name": "time.parse",
+        "signature": "(s: str, fmt: str) -> datetime.datetime",
+        "docstr": "Parse a datetime, strptime-style"
+    },
+    {
+        "name": "time.second",
+        "signature": "(dt: datetime.datetime) -> int",
+        "docstr": "Get the seconds from a datetime"
+    },
+    {
+        "name": "time.timestamp",
+        "signature": "(dt: datetime.datetime) -> float",
+        "docstr": "Get unix timestamp from datetime"
+    },
+    {
+        "name": "time.utcnow",
+        "signature": "() -> datetime.datetime",
+        "docstr": "Get the current date/time in UTC"
+    },
+    {
+        "name": "time.utctimestamp",
+        "signature": "(dt: datetime.datetime) -> float",
+        "docstr": "Get UTC unix timestamp from datetime"
+    },
+    {
+        "name": "time.year",
+        "signature": "(dt: datetime.datetime) -> int",
+        "docstr": "Get the year from a datetime"
+    },
+    {
+        "name": "tracking.calibrate",
+        "signature": "() -> None",
+        "docstr": "Calibrate Eye Tracking"
+    },
+    {
+        "name": "tracking.control1_enabled",
+        "signature": "() -> bool",
+        "docstr": "Is Control Mouse (Legacy) Enabled?"
+    },
+    {
+        "name": "tracking.control1_toggle",
+        "signature": "(state: bool = None) -> None",
+        "docstr": "Toggle Control Mouse (Legacy)"
+    },
+    {
+        "name": "tracking.control_always_on_toggle",
+        "signature": "(state: bool = None) -> None",
+        "docstr": "Toggle Control Mouse 2 (Always On)"
+    },
+    {
+        "name": "tracking.control_debug_toggle",
+        "signature": "(state: bool = None) -> None",
+        "docstr": "Toggle Control Mouse 2 (Debug View)"
+    },
+    {
+        "name": "tracking.control_enabled",
+        "signature": "() -> bool",
+        "docstr": "Is Control Mouse Enabled?"
+    },
+    {
+        "name": "tracking.control_gaze_focus_toggle",
+        "signature": "(state: bool = None) -> None",
+        "docstr": "Toggle Control Mouse 2 (Gaze Focus)"
+    },
+    {
+        "name": "tracking.control_gaze_toggle",
+        "signature": "(state: bool = None) -> None",
+        "docstr": "Toggle Control Mouse 2 (Gaze Control)"
+    },
+    {
+        "name": "tracking.control_head_toggle",
+        "signature": "(state: bool = None) -> None",
+        "docstr": "Toggle Control Mouse 2 (Head Control)"
+    },
+    {
+        "name": "tracking.control_mouse_jump_toggle",
+        "signature": "(state: bool = None) -> None",
+        "docstr": "Toggle Control Mouse 2 (Mouse Jump)"
+    },
+    {
+        "name": "tracking.control_toggle",
+        "signature": "(state: bool = None) -> None",
+        "docstr": "Toggle Control Mouse"
+    },
+    {
+        "name": "tracking.control_zoom_enabled",
+        "signature": "() -> bool",
+        "docstr": "Is Control Mouse (Zoom) Enabled?"
+    },
+    {
+        "name": "tracking.control_zoom_toggle",
+        "signature": "(state: bool = None) -> None",
+        "docstr": "Toggle Control Mouse (Zoom)"
+    },
+    {
+        "name": "tracking.jump",
+        "signature": "() -> None",
+        "docstr": "Jump mouse to current gaze"
+    },
+    {
+        "name": "tracking.zoom",
+        "signature": "() -> None",
+        "docstr": "Trigger Eye Zoom / Click"
+    },
+    {
+        "name": "tracking.zoom_cancel",
+        "signature": "() -> None",
+        "docstr": "Cancel Eye Zoom"
+    },
+    {
+        "name": "tuple.contains",
+        "signature": "(t: tuple, value: Any) -> bool",
+        "docstr": "Check if value appears in tuple"
+    },
+    {
+        "name": "tuple.count",
+        "signature": "(t: tuple, value: Any) -> int",
+        "docstr": "Count the number of times value appears in tuple"
+    },
+    {
+        "name": "tuple.index",
+        "signature": "(t: tuple, value: Any) -> int",
+        "docstr": "Get the first index of value"
+    },
+    {
+        "name": "types.bytes",
+        "signature": "(v: Any = NoValue) -> bytes",
+        "docstr": "Create a bytes object"
+    },
+    {
+        "name": "types.dict",
+        "signature": "() -> dict",
+        "docstr": "Create a dict"
+    },
+    {
+        "name": "types.list",
+        "signature": "(v: Any = NoValue) -> list",
+        "docstr": "Create a list"
+    },
+    {
+        "name": "types.none",
+        "signature": "() -> NoneType",
+        "docstr": "Get an instance of None"
+    },
+    {
+        "name": "types.set",
+        "signature": "(v: Any = NoValue) -> set",
+        "docstr": "Create a set"
+    },
+    {
+        "name": "types.str",
+        "signature": "(v: Any = NoValue) -> str",
+        "docstr": "Create a string"
+    },
+    {
+        "name": "types.tuple",
+        "signature": "(v: Any = NoValue) -> tuple",
+        "docstr": "Create a tuple"
+    },
+    {
+        "name": "win.file_ext",
+        "signature": "() -> Union[str, set[str]]",
+        "docstr": "Return the open file's extension"
+    },
+    {
+        "name": "win.filename",
+        "signature": "() -> str",
+        "docstr": "Return the open filename"
+    },
+    {
+        "name": "win.title",
+        "signature": "() -> str",
+        "docstr": "Get window title"
+    }
+]
