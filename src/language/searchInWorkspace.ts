@@ -256,7 +256,7 @@ function parsePythonMatches(
 
         // Format name and target text for display
         const name = match[2].replace(/^self\./, "user.");
-        const fullName = ns ? `${ns}.${name}` : name;
+        const fullName = ns ? `${ns === "self" ? "user" : ns}.${name}` : name;
         const indentation = match[0].match(/^\s+/)?.[0] ?? "";
         const targetText = indentation
             ? match[0].replace(new RegExp(`^${indentation}`, "gm"), "")
