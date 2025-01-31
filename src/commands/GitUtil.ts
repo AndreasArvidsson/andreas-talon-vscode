@@ -1,22 +1,27 @@
 import { Range, TextDocument } from "vscode";
-import { API, GitExtension, Remote, Repository } from "../typings/git";
+import { API, Remote, Repository } from "../typings/git";
 import { getActiveFileSchemaEditor } from "../util/getActiveEditor";
+import { getGitExtension } from "../util/getExtension";
 
 export type GitParameters = {
     useSelection: boolean;
     useBranch: boolean;
 };
 
-export class GitUtil {
-    private gitApi: API;
+let _gitApi: API;
 
-    constructor(gitExtension: GitExtension) {
-        this.gitApi = gitExtension.getAPI(1);
+async function gitApi(): Promise<API> {
+    if (_gitApi == null) {
+        const gitExtension = await getGitExtension();
+        _gitApi = gitExtension.getAPI(1);
     }
+    return _gitApi;
+}
 
-    getFileURL({ useSelection = false, useBranch = false }: GitParameters): string {
+export class GitUtil {
+    async getFileURL({ useSelection = false, useBranch = false }: GitParameters): Promise<string> {
         const { document, selections } = getActiveFileSchemaEditor();
-        const repository = this.getRepository();
+        const repository = await this.getRepository();
         const platform = getPlatform(repository);
         const relativeFilePath = getRelativeFilepath(repository, document.uri.path);
         const range = useSelection ? selections[0] : undefined;
@@ -35,28 +40,28 @@ export class GitUtil {
         return platform.getFileUrl(commitOrBranch, relativeFilePath, range);
     }
 
-    getRepoURL(): string {
-        const repository = this.getRepository();
+    async getRepoURL(): Promise<string> {
+        const repository = await this.getRepository();
         return getPlatform(repository).getRepoUrl();
     }
 
-    getIssuesURL(): string {
-        const repository = this.getRepository();
+    async getIssuesURL(): Promise<string> {
+        const repository = await this.getRepository();
         return getPlatform(repository).getIssuesUrl();
     }
 
-    getNewIssueURL(): string {
-        const repository = this.getRepository();
+    async getNewIssueURL(): Promise<string> {
+        const repository = await this.getRepository();
         return getPlatform(repository).getNewIssueUrl();
     }
 
-    getPullRequestsURL(): string {
-        const repository = this.getRepository();
+    async getPullRequestsURL(): Promise<string> {
+        const repository = await this.getRepository();
         return getPlatform(repository).getPullRequestsURL();
     }
 
     async checkout(branches: string[]) {
-        const repository = this.getRepository();
+        const repository = await this.getRepository();
         for (const branch of branches) {
             try {
                 await repository.checkout(branch);
@@ -68,8 +73,8 @@ export class GitUtil {
         throw Error(`Can't checkout branch '${branches.join(", ")}'`);
     }
 
-    private getRepository(): Repository {
-        const { repositories } = this.gitApi;
+    private async getRepository(): Promise<Repository> {
+        const { repositories } = await gitApi();
         if (repositories.length === 0) {
             throw Error("No git repositories available");
         }

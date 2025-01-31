@@ -7,11 +7,7 @@ import { registerLanguageFormatters } from "./language/registerLanguageFormatter
 import { registerStateUpdater } from "./stateUpdater";
 import { createTabView } from "./tabView";
 import { TreeSitter } from "./treeSitter/TreeSitter";
-import {
-    getCommandServerExtension,
-    getGitExtension,
-    getParseTreeExtension
-} from "./util/getExtension";
+import { getCommandServerExtension, getParseTreeExtension } from "./util/getExtension";
 import { getFakeCommandServerExtension } from "./util/getFakeCommandServerExtension";
 import { isTesting } from "./util/isTesting";
 
@@ -26,7 +22,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
 async function activateExtension(context: vscode.ExtensionContext): Promise<void> {
     const parseTreeExtension = await getParseTreeExtension();
-    const gitExtension = await getGitExtension();
     const commandServerExtension = isTesting
         ? getFakeCommandServerExtension()
         : await getCommandServerExtension();
@@ -39,7 +34,7 @@ async function activateExtension(context: vscode.ExtensionContext): Promise<void
     }
 
     context.subscriptions.push(
-        registerCommands(commandServerExtension, gitExtension, treeSitter),
+        registerCommands(commandServerExtension, treeSitter),
         registerLanguageDefinitions(),
         registerLanguageCompletionProviders(),
         registerLanguageCodeActions(treeSitter),

@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import type { TreeSitter } from "../treeSitter/TreeSitter";
 import type { CommandServerExtension } from "../typings/commandServer";
-import type { GitExtension } from "../typings/git";
 import { getFullCommand } from "../util/getFullCommand";
 import { GetText } from "./GetText";
 import { GitParameters, GitUtil } from "./GitUtil";
@@ -29,11 +28,10 @@ type Callback = (...args: any[]) => any;
 
 export function registerCommands(
     commandServerExtension: CommandServerExtension,
-    gitExtension: GitExtension,
     treeSitter: TreeSitter
 ): vscode.Disposable {
     const getText = new GetText(commandServerExtension, treeSitter);
-    const git = new GitUtil(gitExtension);
+    const git = new GitUtil();
 
     const commands: Record<CommandId, Callback> = {
         // Files
