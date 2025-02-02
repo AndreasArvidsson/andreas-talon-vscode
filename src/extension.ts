@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { registerFormatCommentsOnSave } from "./commands/formatComments/registerFormatCommentsOnSave";
 import { registerCommands } from "./commands/registerCommands";
 import { registerLanguageCodeActions } from "./language/registerLanguageCodeActions";
 import { registerLanguageCompletionProviders } from "./language/registerLanguageCompletionProviders";
@@ -39,6 +40,7 @@ async function activateExtension(context: vscode.ExtensionContext): Promise<void
         registerLanguageCompletionProviders(),
         registerLanguageCodeActions(treeSitter),
         registerLanguageFormatters(treeSitter),
+        registerFormatCommentsOnSave(),
         createTabView(),
         isTesting ? vscode.Disposable.from() : registerStateUpdater()
     );

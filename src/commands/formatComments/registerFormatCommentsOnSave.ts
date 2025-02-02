@@ -1,0 +1,50 @@
+import * as vscode from "vscode";
+import { formatCommentsEditor } from "./formatComments";
+
+const settingSection = "andreas";
+const settingName = "formatCommentsOnSave";
+const fullSettingName = `${settingSection}.${settingName}`;
+
+export function registerFormatCommentsOnSave(): vscode.Disposable {
+    let disposable: vscode.Disposable | undefined = undefined;
+
+    const evaluateSetting = () => {
+        if (readSetting()) {
+            if (disposable == null) {
+                // TODO: Remove debug log
+                console.log("Enabling format comments on save");
+                disposable = vscode.workspace.onDidSaveTextDocument(async (document) => {
+                    const editor = vscode.window.visibleTextEditors.find(
+                        (e) => e.document === document
+                    );
+                    if (editor != null) {
+                        await formatCommentsEditor(editor);
+                    }
+                });
+            }
+        } else if (disposable != null) {
+            disposable.dispose();
+            disposable = undefined;
+        }
+    };
+
+    // Evaluate when extension initializes. This happens whenever you change a workspace/session.
+    evaluateSetting();
+
+    return vscode.Disposable.from(
+        vscode.workspace.onDidChangeConfiguration(({ affectsConfiguration }) => {
+            if (affectsConfiguration(fullSettingName)) {
+                evaluateSetting();
+            }
+        }),
+        {
+            dispose: () => {
+                disposable?.dispose();
+            }
+        }
+    );
+}
+
+function readSetting(): boolean {
+    return vscode.workspace.getConfiguration(settingSection).get<boolean>(settingName) ?? false;
+}

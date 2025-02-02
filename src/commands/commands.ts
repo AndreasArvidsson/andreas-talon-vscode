@@ -74,6 +74,7 @@ export const commandDescriptions = {
     ),
     increment: visible("Edit", "Increment selected number.", undefined, "(value?: number)"),
     decrement: visible("Edit", "Decrement selected number.", undefined, "(value?: number)"),
+    formatComments: visible("Edit", "Format comments in active file."),
 
     // Navigation commands
     openEditorAtIndex: visible(
