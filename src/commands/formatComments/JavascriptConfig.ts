@@ -80,8 +80,11 @@ export class JavascriptConfig implements Configuration {
         const linePrefix = isJsDoc ? " *" : "";
         const lines = textContent.split("\n");
         const tokens = lines.flatMap((line, index) => {
-            // Extract the text after the optional "*"
-            const text = line.match(/[\t ]*\*?[\t ]*(.*)/)?.[1] ?? "";
+            let text = line.trim();
+            if (text[0] === "*") {
+                // Extract the text after the optional "*"
+                text = text.slice(1).trim();
+            }
             if (this.isValidLine(text)) {
                 // Split on spaces
                 return text.split(/[ ]+/g).map((token) => ({ text: token, preserve: false }));
@@ -98,6 +101,9 @@ export class JavascriptConfig implements Configuration {
             const start = isJsDoc ? "/**" : "/*";
             const end = isJsDoc ? " */" : "*/";
             if (lines.length === 1 && updatedLines.length === 1) {
+                if (isJsDoc) {
+                    return `${indentation}/*${updatedLines[0].trimStart()}${end}`;
+                }
                 return `${indentation}${start} ${updatedLines[0]} ${end}`;
             }
             return `${indentation}${start}\n${updatedLines.join("\n")}\n${indentation}${end}`;
@@ -160,8 +166,8 @@ export class JavascriptConfig implements Configuration {
 
 function joinLine(parts: string[], indentation: string, linePrefix: string): string {
     const text = parts.join(" ");
-    if (indentation.length === 0 && linePrefix.length === 0) {
-        return text;
+    if (linePrefix.length === 0) {
+        return `${indentation}${text}`;
     }
     return text.length > 0 ? `${indentation}${linePrefix} ${text}` : `${indentation}${linePrefix}`;
 }
