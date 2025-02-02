@@ -39,7 +39,7 @@ const languages: Language[] = [
                     "// elit"
                 ]
             },
-            { title: "Block | Preserve single line", pre: "/* a */", post: "/* a */" }
+            { title: "Block | Preserve single line", pre: "/*a*/", post: "/* a */" }
         ]
     }
 ];

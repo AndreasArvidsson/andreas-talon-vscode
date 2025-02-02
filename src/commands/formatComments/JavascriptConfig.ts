@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import type { Change, Configuration, Line, Token } from "./types";
 
 export class JavascriptConfig implements Configuration {
-    private commentsRegex = /(?:^[\t ]*)(?:(\/\*\*?[\s\S]*?)\*\/|(\/\/.*))/gm;
+    private commentsRegex = /(?:^[\t ]*)(?:(\/\*\*?[\s\S]*?\*\/)|(\/\/.*))/gm;
     private isValidLineRegex = /\w/;
 
     constructor(private lineWidth: number) {}
@@ -75,8 +75,8 @@ export class JavascriptConfig implements Configuration {
         indentation: string
     ): string | undefined {
         const isJsDoc = text.startsWith("/**");
-        // Extract the text after the "/**"
-        const textContent = isJsDoc ? text.slice(3) : text.slice(2);
+        // Extract the text between the "/**" and "*/"
+        const textContent = isJsDoc ? text.slice(3, -2) : text.slice(2, -2);
         const linePrefix = isJsDoc ? " *" : "";
         const lines = textContent.split("\n");
         const tokens = lines.flatMap((line, index) => {
@@ -93,17 +93,17 @@ export class JavascriptConfig implements Configuration {
         });
 
         const updatedLines = this.parseTokens(tokens, indentation, linePrefix);
-        const hasChanges =
-            lines.length !== updatedLines.length ||
-            lines.some((line, index) => line !== updatedLines[index]);
 
-        if (!hasChanges) {
-            return undefined;
-        }
+        const updatedText = (() => {
+            const start = isJsDoc ? "/**" : "/*";
+            const end = isJsDoc ? " */" : "*/";
+            if (lines.length === 1 && updatedLines.length === 1) {
+                return `${indentation}${start} ${updatedLines[0]} ${end}`;
+            }
+            return `${indentation}${start}\n${updatedLines.join("\n")}\n${indentation}${end}`;
+        })();
 
-        const start = isJsDoc ? "/**" : "/*";
-        const end = isJsDoc ? " */" : "*/";
-        return `${indentation}${start}\n${updatedLines.join("\n")}\n${indentation}${end}`;
+        return text !== updatedText ? updatedText : undefined;
     }
 
     private parseLineComment(lines: Line[]): string | undefined {
@@ -160,5 +160,8 @@ export class JavascriptConfig implements Configuration {
 
 function joinLine(parts: string[], indentation: string, linePrefix: string): string {
     const text = parts.join(" ");
+    if (indentation.length === 0 && linePrefix.length === 0) {
+        return text;
+    }
     return text.length > 0 ? `${indentation}${linePrefix} ${text}` : `${indentation}${linePrefix}`;
 }
