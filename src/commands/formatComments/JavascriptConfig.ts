@@ -98,13 +98,15 @@ export class JavascriptConfig implements Configuration {
         const updatedLines = this.parseTokens(tokens, indentation, linePrefix);
 
         const updatedText = (() => {
-            const start = isJsDoc ? "/**" : "/*";
+            const isSingleLine = lines.length === 1 && updatedLines.length === 1;
+            const start = isJsDoc && !isSingleLine ? "/**" : "/*";
             const end = isJsDoc ? " */" : "*/";
-            if (lines.length === 1 && updatedLines.length === 1) {
+            if (isSingleLine) {
+                const text = updatedLines[0].trimStart();
                 if (isJsDoc) {
-                    return `${indentation}/*${updatedLines[0].trimStart()}${end}`;
+                    return `${indentation}${start}${text}${end}`;
                 }
-                return `${indentation}${start} ${updatedLines[0]} ${end}`;
+                return `${indentation}${start} ${text} ${end}`;
             }
             return `${indentation}${start}\n${updatedLines.join("\n")}\n${indentation}${end}`;
         })();

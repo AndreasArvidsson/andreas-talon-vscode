@@ -39,7 +39,7 @@ const languages: Language[] = [
                     "// elit"
                 ]
             },
-            { title: "Block | Preserve single line", pre: "/*a*/", post: "/* a */" },
+            { title: "Block | Preserve single line", pre: "  /*a*/", post: "  /* a */" },
             {
                 title: "Block | With indentation",
                 pre: "  /*\naaa bbb ccc\n*/",
@@ -65,7 +65,7 @@ const languages: Language[] = [
                 pre: "/*\naaa\n-\nccc\n*/",
                 post: "/*\naaa\n-\nccc\n*/"
             },
-            { title: "JSDoc | Preserve single line", pre: "/**a*/", post: "/** a */" },
+            { title: "JSDoc | Preserve single line", pre: "  /**a*/", post: "  /** a */" },
             {
                 title: "JSDoc | With indentation",
                 pre: "  /**\naaa bbb ccc\n*/",
