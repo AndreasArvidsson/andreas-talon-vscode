@@ -318,8 +318,8 @@
         "pokey.parse-tree"
     ],
     "dependencies": {
-        "editorconfig": "^2.0.0",
         "ignore": "^5.2.4",
+        "prettier": "^3.4.2",
         "talon-snippets": "1.3.0"
     },
     "devDependencies": {

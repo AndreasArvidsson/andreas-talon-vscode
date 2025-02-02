@@ -1,4 +1,4 @@
-import * as editorconfig from "editorconfig";
+import * as prettier from "prettier";
 import { Disposable, FormattingOptions, languages, Range, TextDocument, TextEdit } from "vscode";
 import type { SyntaxNode } from "web-tree-sitter";
 import { TreeSitter } from "../treeSitter/TreeSitter";
@@ -20,10 +20,10 @@ function provideDocumentFormattingEditsForTree(
     formatter: LanguageFormatterTree
 ) {
     return {
-        provideDocumentFormattingEdits(
+        provideDocumentFormattingEdits: async (
             document: TextDocument,
             options: FormattingOptions
-        ): TextEdit[] {
+        ): Promise<TextEdit[]> => {
             const rootNode = treeSitter.getRootNode(document);
 
             if (rootNode.hasError) {
@@ -31,7 +31,7 @@ function provideDocumentFormattingEditsForTree(
                 return [];
             }
 
-            const { indentation } = parseOptions(document, options);
+            const { indentation } = await parseOptions(document, options);
             const newText = formatter.getText(rootNode, indentation);
             return createTextEdits(document, newText);
         }
@@ -40,11 +40,11 @@ function provideDocumentFormattingEditsForTree(
 
 function provideDocumentFormattingEditsForText(formatter: LanguageFormatterText) {
     return {
-        provideDocumentFormattingEdits(
+        provideDocumentFormattingEdits: async (
             document: TextDocument,
             options: FormattingOptions
-        ): TextEdit[] {
-            const { indentation } = parseOptions(document, options);
+        ): Promise<TextEdit[]> => {
+            const { indentation } = await parseOptions(document, options);
             try {
                 const newText = formatter.getText(document.getText(), indentation);
                 return createTextEdits(document, newText);
@@ -56,30 +56,13 @@ function provideDocumentFormattingEditsForText(formatter: LanguageFormatterText)
     };
 }
 
-function parseOptions(document: TextDocument, options: FormattingOptions) {
-    const config = editorconfig.parseSync(document.uri.fsPath);
+async function parseOptions(document: TextDocument, options: FormattingOptions) {
+    const config = await prettier.resolveConfig(document.uri.fsPath, {
+        editorconfig: true
+    });
 
-    const insertSpaces = (() => {
-        switch (config.indent_style) {
-            case "space":
-                return true;
-            case "tab":
-                return false;
-            default:
-                return options.insertSpaces;
-        }
-    })();
-
-    const tabSize = (() => {
-        if (typeof config.indent_size === "number") {
-            return config.indent_size;
-        }
-        if (config.indent_size === "tab" && typeof config.tab_width === "number") {
-            return config.tab_width;
-        }
-        return options.tabSize;
-    })();
-
+    const insertSpaces = config != null ? !config.useTabs : options.insertSpaces;
+    const tabSize = config?.tabWidth ?? options.tabSize;
     const indentation = insertSpaces ? new Array(tabSize).fill(" ").join("") : "\t";
 
     return { indentation };
