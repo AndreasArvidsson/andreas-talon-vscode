@@ -38,7 +38,8 @@ const languages: Language[] = [
                     "// adipiscing",
                     "// elit"
                 ]
-            }
+            },
+            { title: "Block | Preserve single line", pre: "/* a */", post: "/* a */" }
         ]
     }
 ];

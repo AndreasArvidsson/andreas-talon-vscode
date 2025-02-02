@@ -11,5 +11,11 @@ export interface Change {
 
 export interface Line {
     text: string;
+    indentation: string;
     range: vscode.Range;
+}
+
+export interface Token {
+    text: string;
+    preserve: boolean;
 }

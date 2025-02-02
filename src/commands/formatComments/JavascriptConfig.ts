@@ -1,13 +1,9 @@
 import * as vscode from "vscode";
-import type { Change, Configuration, Line } from "./types";
-
-const LINE_PREFIX = "//";
+import type { Change, Configuration, Line, Token } from "./types";
 
 export class JavascriptConfig implements Configuration {
-    private commentsRegex = /\/\*[\s\S]*?\*\/|^[\t ]*\/\/.*/gm;
+    private commentsRegex = /(?:^[\t ]*)(?:(\/\*\*?[\s\S]*?)\*\/|(\/\/.*))/gm;
     private isValidLineRegex = /\w/;
-    // regex: /(?:\/\*[\s\S]*?\*\/|(?:^[\t ]*\/\/.*\n?)+)/gm
-    // (?:\/\*[\s\S]*?\*\/|(?:\/\/.*\n?)+)
 
     constructor(private lineWidth: number) {}
 
@@ -31,14 +27,18 @@ export class JavascriptConfig implements Configuration {
             if (match.index == null) {
                 continue;
             }
-            const text = match[0];
+            const matchText = match[0];
             const range = new vscode.Range(
                 document.positionAt(match.index),
-                document.positionAt(match.index + text.length)
+                document.positionAt(match.index + matchText.length)
             );
 
-            if (text.startsWith("/*")) {
-                const newText = this.parseBlockComment(range, text);
+            const isBlockComment = match[1] != null;
+            const text = isBlockComment ? match[1] : match[2];
+            const indentation = matchText.slice(0, matchText.length - text.length);
+
+            if (isBlockComment) {
+                const newText = this.parseBlockComment(range, text, indentation);
                 if (newText != null) {
                     changes.push({ range, newText });
                 }
@@ -54,7 +54,7 @@ export class JavascriptConfig implements Configuration {
                 processLines();
             }
 
-            unprocessedLines.push({ text, range });
+            unprocessedLines.push({ range, text, indentation });
         }
 
         // Process any remaining lines
@@ -69,40 +69,79 @@ export class JavascriptConfig implements Configuration {
         return this.isValidLineRegex.test(text);
     }
 
-    private parseBlockComment(range: vscode.Range, text: string): string | undefined {
-        const lines = text.split("\n");
-        lines.forEach((line) => {
-            console.log(line);
+    private parseBlockComment(
+        range: vscode.Range,
+        text: string,
+        indentation: string
+    ): string | undefined {
+        const isJsDoc = text.startsWith("/**");
+        // Extract the text after the "/**"
+        const textContent = isJsDoc ? text.slice(3) : text.slice(2);
+        const linePrefix = isJsDoc ? " *" : "";
+        const lines = textContent.split("\n");
+        const tokens = lines.flatMap((line, index) => {
+            // Extract the text after the optional "*"
+            const text = line.match(/[\t ]*\*?[\t ]*(.*)/)?.[1] ?? "";
+            if (this.isValidLine(text)) {
+                // Split on spaces
+                return text.split(/[ ]+/g).map((token) => ({ text: token, preserve: false }));
+            }
+            if (text.length === 0 && (index === 0 || index === lines.length - 1)) {
+                return [];
+            }
+            return [{ text, preserve: true }];
         });
-        return text;
+
+        const updatedLines = this.parseTokens(tokens, indentation, linePrefix);
+        const hasChanges =
+            lines.length !== updatedLines.length ||
+            lines.some((line, index) => line !== updatedLines[index]);
+
+        if (!hasChanges) {
+            return undefined;
+        }
+
+        const start = isJsDoc ? "/**" : "/*";
+        const end = isJsDoc ? " */" : "*/";
+        return `${indentation}${start}\n${updatedLines.join("\n")}\n${indentation}${end}`;
     }
 
     private parseLineComment(lines: Line[]): string | undefined {
+        const indentation = lines[0].indentation;
         const tokens = lines.flatMap((line) => {
             // Extract the text after the "//"
-            const text = line.text.match(/\/\/\s*(.*)/)?.[1] ?? "";
+            const text = line.text.slice(2).trimStart();
             if (this.isValidLine(text)) {
                 // Split on spaces
                 return text.split(/[ ]+/g).map((token) => ({ text: token, preserve: false }));
             }
             return [{ text, preserve: true }];
         });
-        const indentation = lines[0].text.match(/^\s*/)?.[0] ?? "";
+
+        const updatedLines = this.parseTokens(tokens, indentation, "//");
+        const hasChanges =
+            lines.length !== updatedLines.length ||
+            lines.some((line, index) => line.text !== updatedLines[index]);
+
+        return hasChanges ? updatedLines.join("\n") : undefined;
+    }
+
+    private parseTokens(tokens: Token[], indentation: string, linePrefix: string): string[] {
         const updatedLines: string[] = [];
         const currentLine: string[] = [];
-        let currentLineLength = indentation.length + LINE_PREFIX.length;
+        let currentLineLength = indentation.length + linePrefix.length;
 
         for (const { text, preserve } of tokens) {
             if (preserve || currentLineLength + text.length + 1 > this.lineWidth) {
                 if (currentLine.length > 0) {
-                    updatedLines.push(joinLine(currentLine, indentation));
+                    updatedLines.push(joinLine(currentLine, indentation, linePrefix));
                 }
                 currentLine.length = 0;
-                currentLineLength = indentation.length + LINE_PREFIX.length;
+                currentLineLength = indentation.length + linePrefix.length;
             }
 
             if (preserve) {
-                updatedLines.push(joinLine([text], indentation));
+                updatedLines.push(joinLine([text], indentation, linePrefix));
                 continue;
             }
 
@@ -112,20 +151,14 @@ export class JavascriptConfig implements Configuration {
         }
 
         if (currentLine.length > 0) {
-            updatedLines.push(joinLine(currentLine, indentation));
+            updatedLines.push(joinLine(currentLine, indentation, linePrefix));
         }
 
-        const hasChanges =
-            lines.length !== updatedLines.length ||
-            lines.some((line, index) => line.text !== updatedLines[index]);
-
-        return hasChanges ? updatedLines.join("\n") : undefined;
+        return updatedLines;
     }
 }
 
-function joinLine(parts: string[], indentation: string): string {
+function joinLine(parts: string[], indentation: string, linePrefix: string): string {
     const text = parts.join(" ");
-    return text.length > 0
-        ? `${indentation}${LINE_PREFIX} ${text}`
-        : `${indentation}${LINE_PREFIX}`;
+    return text.length > 0 ? `${indentation}${linePrefix} ${text}` : `${indentation}${linePrefix}`;
 }
