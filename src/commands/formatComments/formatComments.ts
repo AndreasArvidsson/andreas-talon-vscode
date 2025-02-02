@@ -2,18 +2,19 @@ import * as prettier from "prettier";
 import * as vscode from "vscode";
 import { getActiveEditor } from "../../util/getActiveEditor";
 import { isTesting } from "../../util/isTesting";
-import { JavascriptConfig } from "./JavascriptConfig";
-import type { Configuration } from "./types";
+import { JavascriptFormatter } from "./JavascriptFormatter";
+import { PythonFormatter } from "./PythonFormatter";
+import type { CommentFormatter } from "./types";
 
 export function formatComments(): Promise<void> {
     const editor = getActiveEditor();
-    return formatCommentsEditor(editor);
+    return formatCommentsForEditor(editor);
 }
 
-export async function formatCommentsEditor(editor: vscode.TextEditor) {
+export async function formatCommentsForEditor(editor: vscode.TextEditor) {
     const { document } = editor;
     const lineWidth = await getLineWidth(document);
-    const configuration = getConfiguration(document.languageId, lineWidth);
+    const configuration = getFormatter(document.languageId, lineWidth);
 
     if (configuration == null) {
         return;
@@ -27,15 +28,21 @@ export async function formatCommentsEditor(editor: vscode.TextEditor) {
 
     await editor.edit((editBuilder) => {
         changes.forEach((change) => {
-            editBuilder.replace(change.range, change.newText);
+            editBuilder.replace(change.range, change.text);
         });
     });
 }
 
-function getConfiguration(languageId: string, lineWidth: number): Configuration | undefined {
+function getFormatter(languageId: string, lineWidth: number): CommentFormatter | undefined {
     switch (languageId) {
         case "javascript":
-            return new JavascriptConfig(lineWidth);
+        case "typescript":
+        case "javascriptreact":
+        case "typescriptreact":
+        case "java":
+            return new JavascriptFormatter(lineWidth);
+        case "python":
+            return new PythonFormatter(lineWidth);
         default:
             return undefined;
     }

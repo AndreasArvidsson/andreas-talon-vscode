@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { formatCommentsEditor } from "./formatComments";
+import { formatCommentsForEditor } from "./formatComments";
 
 const settingSection = "andreas";
 const settingName = "formatCommentsOnSave";
@@ -18,7 +18,7 @@ export function registerFormatCommentsOnSave(): vscode.Disposable {
                         (e) => e.document === document
                     );
                     if (editor != null) {
-                        await formatCommentsEditor(editor);
+                        await formatCommentsForEditor(editor);
                     }
                 });
             }

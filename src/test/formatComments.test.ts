@@ -16,6 +16,10 @@ interface Language {
 
 const languages: Language[] = [
     {
+        id: "python",
+        fixtures: [{ title: "Line | Missing leading space", pre: "#aaa", post: "# aaa" }]
+    },
+    {
         id: "javascript",
         fixtures: [
             { title: "Line | Missing leading space", pre: "//aaa", post: "// aaa" },

@@ -1,12 +1,17 @@
 import * as vscode from "vscode";
 
-export interface Configuration {
+export interface CommentFormatter {
     parse(document: vscode.TextDocument): Change[];
+}
+
+export interface CommentMatch {
+    text: string;
+    isBlockComment: boolean;
 }
 
 export interface Change {
     range: vscode.Range;
-    newText: string;
+    text: string;
 }
 
 export interface Line {

@@ -1,13 +1,16 @@
 import * as vscode from "vscode";
-import type { Change, Configuration, Line, Token } from "./types";
+import type { Change, CommentFormatter, CommentMatch, Line, Token } from "./types";
 
-export class JavascriptConfig implements Configuration {
-    private commentsRegex = /(?:^[\t ]*)(?:(\/\*\*?[\s\S]*?\*\/)|(\/\/.*))/gm;
+export abstract class BaseCommentFormatter implements CommentFormatter {
+    protected commentsRegex: RegExp = /./;
+    protected linePrefix: string = "";
     private isValidLineRegex = /\w/;
 
     constructor(private lineWidth: number) {}
 
-    parse(document: vscode.TextDocument): Change[] {
+    protected abstract parseMatch(match: RegExpExecArray): CommentMatch;
+
+    public parse(document: vscode.TextDocument): Change[] {
         const matches = document.getText().matchAll(this.commentsRegex);
         const changes: Change[] = [];
         const unprocessedLines: Line[] = [];
@@ -18,7 +21,7 @@ export class JavascriptConfig implements Configuration {
                 const range = unprocessedLines[0].range.union(
                     unprocessedLines[unprocessedLines.length - 1].range
                 );
-                changes.push({ range, newText });
+                changes.push({ range, text: newText });
             }
             unprocessedLines.length = 0;
         };
@@ -33,14 +36,13 @@ export class JavascriptConfig implements Configuration {
                 document.positionAt(match.index + matchText.length)
             );
 
-            const isBlockComment = match[1] != null;
-            const text = isBlockComment ? match[1] : match[2];
+            const { text, isBlockComment } = this.parseMatch(match as RegExpExecArray);
             const indentation = matchText.slice(0, matchText.length - text.length);
 
             if (isBlockComment) {
                 const newText = this.parseBlockComment(range, text, indentation);
                 if (newText != null) {
-                    changes.push({ range, newText });
+                    changes.push({ range, text: newText });
                 }
                 continue;
             }
@@ -65,60 +67,21 @@ export class JavascriptConfig implements Configuration {
         return changes;
     }
 
-    private isValidLine(text: string): boolean {
+    protected isValidLine(text: string): boolean {
         return this.isValidLineRegex.test(text);
     }
 
-    private parseBlockComment(
+    protected abstract parseBlockComment(
         range: vscode.Range,
         text: string,
         indentation: string
-    ): string | undefined {
-        const isJsDoc = text.startsWith("/**");
-        // Extract the text between the "/**" and "*/"
-        const textContent = isJsDoc ? text.slice(3, -2) : text.slice(2, -2);
-        const linePrefix = isJsDoc ? " *" : "";
-        const lines = textContent.split("\n");
-        const tokens = lines.flatMap((line, index) => {
-            let text = line.trim();
-            if (text[0] === "*") {
-                // Extract the text after the optional "*"
-                text = text.slice(1).trim();
-            }
-            if (this.isValidLine(text)) {
-                // Split on spaces
-                return text.split(/[ ]+/g).map((token) => ({ text: token, preserve: false }));
-            }
-            if (text.length === 0 && (index === 0 || index === lines.length - 1)) {
-                return [];
-            }
-            return [{ text, preserve: true }];
-        });
-
-        const updatedLines = this.parseTokens(tokens, indentation, linePrefix);
-
-        const updatedText = (() => {
-            const isSingleLine = lines.length === 1 && updatedLines.length === 1;
-            const start = isJsDoc && !isSingleLine ? "/**" : "/*";
-            const end = isJsDoc ? " */" : "*/";
-            if (isSingleLine) {
-                const text = updatedLines[0].trimStart();
-                if (isJsDoc) {
-                    return `${indentation}${start}${text}${end}`;
-                }
-                return `${indentation}${start} ${text} ${end}`;
-            }
-            return `${indentation}${start}\n${updatedLines.join("\n")}\n${indentation}${end}`;
-        })();
-
-        return text !== updatedText ? updatedText : undefined;
-    }
+    ): string | undefined;
 
     private parseLineComment(lines: Line[]): string | undefined {
         const indentation = lines[0].indentation;
         const tokens = lines.flatMap((line) => {
             // Extract the text after the "//"
-            const text = line.text.slice(2).trimStart();
+            const text = line.text.slice(this.linePrefix.length).trimStart();
             if (this.isValidLine(text)) {
                 // Split on spaces
                 return text.split(/[ ]+/g).map((token) => ({ text: token, preserve: false }));
@@ -126,7 +89,7 @@ export class JavascriptConfig implements Configuration {
             return [{ text, preserve: true }];
         });
 
-        const updatedLines = this.parseTokens(tokens, indentation, "//");
+        const updatedLines = this.parseTokens(tokens, indentation, this.linePrefix);
         const hasChanges =
             lines.length !== updatedLines.length ||
             lines.some((line, index) => line.text !== updatedLines[index]);
@@ -134,7 +97,7 @@ export class JavascriptConfig implements Configuration {
         return hasChanges ? updatedLines.join("\n") : undefined;
     }
 
-    private parseTokens(tokens: Token[], indentation: string, linePrefix: string): string[] {
+    protected parseTokens(tokens: Token[], indentation: string, linePrefix: string): string[] {
         const updatedLines: string[] = [];
         const currentLine: string[] = [];
         let currentLineLength = indentation.length + linePrefix.length;
