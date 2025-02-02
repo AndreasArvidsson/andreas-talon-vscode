@@ -43,7 +43,7 @@ function getConfiguration(languageId: string, lineWidth: number): Configuration 
 
 async function getLineWidth(document: vscode.TextDocument): Promise<number> {
     if (isTesting) {
-        return 5;
+        return 8;
     }
 
     const prettierConfig = await prettier.resolveConfig(document.uri.fsPath, {

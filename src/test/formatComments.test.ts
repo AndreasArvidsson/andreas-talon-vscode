@@ -18,16 +18,27 @@ const languages: Language[] = [
     {
         id: "javascript",
         fixtures: [
-            { title: "Missing leading space", pre: "//aaa", post: "// aaa" },
-            { title: "Extra leading space", pre: "//  aaa", post: "// aaa" },
-            { title: "Wrapping", pre: "// aaa bbb", post: "// aaa\n// bbb" }
-            // { title: "", pre: "", post: "" },
-            // { title: "", pre: "", post: "" },
-            // { title: "", pre: "", post: "" },
-            // { title: "", pre: "", post: "" },
-            // { title: "", pre: "", post: "" },
-            // { title: "", pre: "", post: "" },
-            // { title: "", pre: "", post: "" },
+            { title: "Line | Missing leading space", pre: "//aaa", post: "// aaa" },
+            { title: "Line | Extra leading space", pre: "//  aaa", post: "// aaa" },
+            { title: "Line | With indentation", pre: "  //aaa bbb", post: "  // aaa\n  // bbb" },
+            { title: "Line | Splitting", pre: "// aaa bbb", post: "// aaa\n// bbb" },
+            { title: "Line | Joining", pre: "// a\n// b", post: "// a b" },
+            { title: "Line | Preserve empty", pre: "// a\n//\n// b", post: "// a\n//\n// b" },
+            { title: "Line | Preserve dash", pre: "// a\n//-\n// b", post: "// a\n// -\n// b" },
+            {
+                title: "Line | Long",
+                pre: "// Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+                post: [
+                    "// Lorem",
+                    "// ipsum",
+                    "// dolor",
+                    "// sit",
+                    "// amet,",
+                    "// consectetur",
+                    "// adipiscing",
+                    "// elit"
+                ]
+            }
         ]
     }
 ];
@@ -36,7 +47,7 @@ suite.only("Comment formatter", () => {
     for (const language of languages) {
         for (const fixture of language.fixtures) {
             runTest({
-                title: `${language.id}: ${fixture.title}`,
+                title: `${language.id} | ${fixture.title}`,
                 callback: () => commands.executeCommand("andreas.formatComments"),
                 pre: {
                     language: language.id,
