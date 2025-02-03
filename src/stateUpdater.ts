@@ -6,16 +6,10 @@ import { Debouncer } from "./util/debounce";
 
 const file = vscode.Uri.file(path.join(os.tmpdir(), "vscodeState.json"));
 
-interface Editor {
-    fileName: string;
-    languageId: string;
-    path: string | undefined;
-    isActive: boolean;
-}
-
 interface State {
     workspaceFolders: string[];
-    editors: Editor[];
+    languageIds: string[];
+    extensions: string[];
 }
 
 const settingSection = "andreas.private";
@@ -45,14 +39,13 @@ export function registerStateUpdater(): vscode.Disposable {
                 vscode.window.onDidChangeWindowState(run),
                 // Switch workspace
                 vscode.workspace.onDidChangeWorkspaceFolders(run),
-                // Close editor. This can be done without changing focus.
-                vscode.workspace.onDidCloseTextDocument(() => {
-                    console.log("onDidCloseTextDocument");
+                // Open editor. Also triggers on language change.
+                vscode.workspace.onDidOpenTextDocument(() => {
+                    console.log("onDidOpenTextDocument");
                     debouncer.run();
                 }),
-                // Focus editor
-                vscode.window.onDidChangeActiveTextEditor(() => {
-                    console.log("onDidChangeActiveTextEditor");
+                vscode.window.onDidChangeVisibleTextEditors(() => {
+                    console.log("onDidChangeVisibleTextEditors");
                     debouncer.run();
                 })
             );
@@ -85,43 +78,51 @@ function readSetting(): boolean {
 }
 
 function updateState() {
-    console.log("updateState");
+    if (!vscode.window.state.focused) {
+        return;
+    }
+    console.log(
+        "updateState",
+        vscode.window.visibleTextEditors.length,
+        vscode.extensions.all.length
+    );
+
     const workspaceFolders =
         vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath) ?? [];
 
-    console.log(vscode.window.visibleTextEditors.length);
+    const languageIds = [
+        ...new Set(
+            vscode.window.visibleTextEditors.map((editor) => editor.document.languageId)
+        ).values()
+    ].sort();
 
-    const editors = vscode.window.visibleTextEditors.map(
-        (editor): Editor => ({
-            // Do we need all of this?
-            fileName: editor.document.fileName,
-            languageId: editor.document.languageId,
-            path: editor.document.uri.fsPath,
-            isActive: editor === vscode.window.activeTextEditor
-        })
-    );
-
-    // Extension?
+    const extensions = vscode.extensions.all
+        .filter((extension) => extension.isActive && !extension.id.startsWith("vscode."))
+        .map((extension) => extension.id)
+        .sort();
 
     void updateStateFile({
         workspaceFolders,
-        editors
+        languageIds,
+        extensions
     });
 }
 
 async function resetState() {
     await updateStateFile({
         workspaceFolders: [],
-        editors: []
+        languageIds: [],
+        extensions: []
     });
 }
 
 async function updateStateFile(state: State) {
-    if (!vscode.window.state.focused || deepEqual(currentState, state)) {
-        return;
-    }
+    // TODO: This causes problem focusingBetweenWindows.
+    // if (deepEqual(currentState, state)) {
+    //     return;
+    // }
+    currentState = state;
     const updatedJson = JSON.stringify(state, null, 4);
     const bytes = new TextEncoder().encode(updatedJson);
     await vscode.workspace.fs.writeFile(file, bytes);
-    currentState = state;
 }
