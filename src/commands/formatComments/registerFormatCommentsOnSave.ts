@@ -11,8 +11,6 @@ export function registerFormatCommentsOnSave(): vscode.Disposable {
     const evaluateSetting = () => {
         if (readSetting()) {
             if (disposable == null) {
-                // TODO: Remove debug log
-                console.log("Enabling format comments on save");
                 disposable = vscode.workspace.onDidSaveTextDocument(async (document) => {
                     const editor = vscode.window.visibleTextEditors.find(
                         (e) => e.document === document
