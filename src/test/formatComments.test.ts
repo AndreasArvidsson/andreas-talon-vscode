@@ -46,6 +46,7 @@ const pythonLineTests: Test[] = [
     { title: "Line | Joining", pre: "# a\n# b\n# c", post: "# a b c" },
     { title: "Line | Preserve empty", pre: "# a\n#\n# b", post: "# a\n#\n# b" },
     { title: "Line | Preserve dash", pre: "# a\n# -\n# b", post: "# a\n# -\n# b" },
+    { title: "Line | Separate comments", pre: "# a\n\n# b", post: "# a\n\n# b" },
     { title: "Line | CRLF", pre: "# a\r\n# -\r\n# b", post: "# a\r\n# -\r\n# b" },
     {
         title: "Line | Long",
