@@ -1,5 +1,6 @@
 import * as prettier from "prettier";
 import * as vscode from "vscode";
+import { getConfiguration } from "../../util/configuration";
 import { getActiveEditor } from "../../util/getActiveEditor";
 import { isTesting } from "../../util/isTesting";
 import { JavaFormatter } from "./JavaFormatter";
@@ -82,5 +83,17 @@ async function getLineWidth(document: vscode.TextDocument): Promise<number> {
         editorconfig: true
     });
 
-    return prettierConfig?.printWidth ?? 80;
+    if (prettierConfig?.printWidth != null) {
+        return prettierConfig.printWidth;
+    }
+
+    const defaultFormatter = getConfiguration(document, "editor", "defaultFormatter");
+
+    switch (defaultFormatter) {
+        case "ms-python.black-formatter":
+        case "black":
+            return 88;
+    }
+
+    return 80;
 }

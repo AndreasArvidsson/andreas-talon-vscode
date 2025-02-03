@@ -27,29 +27,42 @@ export const configuration: Configuration = (() => {
 
     return {
         formatCommentsOnSave: (document) => {
-            return getConfiguration<boolean>(document, "formatCommentsOnSave") ?? false;
+            return getMyConfiguration<boolean>(document, "formatCommentsOnSave") ?? false;
         },
         talonFormatter: {
             columnWidth: (document) => {
-                return getConfiguration<number>(document, "talonFormatter.columnWidth");
+                return getMyConfiguration<number>(document, "talonFormatter.columnWidth");
             }
         },
         talonListFormatter: {
             columnWidth: (document) => {
-                return getConfiguration<number>(document, "talonListFormatter.columnWidth");
+                return getMyConfiguration<number>(document, "talonListFormatter.columnWidth");
             }
         }
     };
 })();
 
-function getConfiguration<T>(document: TextDocument, key: string): T | undefined {
+function getMyConfiguration<T>(document: TextDocument, key: string): T | undefined {
+    return getConfiguration(document, "andreas", key);
+}
+
+export function getConfiguration<T>(
+    document: TextDocument,
+    section: string,
+    key: string
+): T | undefined {
     return (
-        getLanguageConfiguration(document, key) ?? workspace.getConfiguration("andreas").get<T>(key)
+        getLanguageConfiguration(document, section, key) ??
+        workspace.getConfiguration(section).get<T>(key)
     );
 }
 
-function getLanguageConfiguration<T>(document: TextDocument, key: string): T | undefined {
+function getLanguageConfiguration<T>(
+    document: TextDocument,
+    section: string,
+    key: string
+): T | undefined {
     const langConfig = workspace.getConfiguration(`[${document.languageId}]`);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return
-    return (langConfig as any)[`andreas.${key}`];
+    return (langConfig as any)[`${section}.${key}`];
 }
