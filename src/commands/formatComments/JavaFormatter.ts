@@ -1,14 +1,11 @@
 import * as vscode from "vscode";
 import { BaseCommentFormatter } from "./BaseCommentFormatter";
 import type { CommentMatch } from "./types";
+import { isValidLine, parseTokens } from "./utils";
 
 export class JavaFormatter extends BaseCommentFormatter {
-    protected commentsRegex = /(?:^[\t ]*)(?:(\/\*\*?[\s\S]*?\*\/)|(\/\/.*))/gm;
+    protected regex = /(?:^[\t ]*)(?:(\/\*\*?[\s\S]*?\*\/)|(\/\/.*))/gm;
     protected linePrefix: string = "//";
-
-    constructor(lineWidth: number) {
-        super(lineWidth);
-    }
 
     protected parseMatch(match: RegExpExecArray): CommentMatch {
         const isBlockComment = match[1] != null;
@@ -32,7 +29,7 @@ export class JavaFormatter extends BaseCommentFormatter {
                 // Extract the text after the optional "*"
                 text = text.slice(1).trim();
             }
-            if (this.isValidLine(text)) {
+            if (isValidLine(text)) {
                 // Split on spaces
                 return text.split(/[ ]+/g).map((token) => ({ text: token, preserve: false }));
             }
@@ -42,7 +39,7 @@ export class JavaFormatter extends BaseCommentFormatter {
             return [{ text, preserve: true }];
         });
 
-        const updatedLines = this.parseTokens(tokens, indentation, linePrefix);
+        const updatedLines = parseTokens(tokens, this.lineWidth, indentation, linePrefix);
 
         const updatedText = (() => {
             const isSingleLine = lines.length === 1 && updatedLines.length === 1;

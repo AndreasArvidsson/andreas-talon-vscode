@@ -22,6 +22,14 @@ function createLineTests(prefix: string): Test[] {
     }));
 }
 
+function createBlockTests(prefix: string, suffix: string): Test[] {
+    return cBlockTests.map((test) => ({
+        title: test.title,
+        pre: getContentString(test.pre).replaceAll("/*", prefix).replaceAll("*/", suffix),
+        post: getContentString(test.post).replaceAll("/*", prefix).replaceAll("*/", suffix)
+    }));
+}
+
 function tests(languageIds: string[], tests: Test[]): Language[] {
     return languageIds.map((id) => ({
         id,
@@ -121,14 +129,20 @@ const javaDocTests: Test[] = [
     }
 ];
 
+const xmlBlockTests: Test[] = createBlockTests("<!--", "-->");
+
 const languages: Language[] = [
     ...tests(["lua"], luaLineTests),
 
     ...tests(["python", "talon", "talon-list", "yaml"], pythonLineTests),
 
+    ...tests(["xml", "html"], [...xmlBlockTests]),
+
     ...tests(["json", "jsonc", "jsonl"], cLineTests),
 
     ...tests(["c", "cpp", "csharp"], [...cLineTests, ...cBlockTests]),
+
+    ...tests(["css"], [...cBlockTests]),
 
     ...tests(
         ["java", "javascript", "typescript", "javascriptreact", "typescriptreact"],
@@ -136,8 +150,7 @@ const languages: Language[] = [
     )
 ];
 
-// TODO: Reactivate all tests
-suite.only("Comment formatter", () => {
+suite("Comment formatter", () => {
     for (const language of languages) {
         for (const fixture of language.tests) {
             runTest({

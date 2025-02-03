@@ -1,17 +1,17 @@
 import * as vscode from "vscode";
-import type { Change, CommentFormatter, CommentMatch, Line, Token } from "./types";
+import type { Change, CommentFormatter, CommentMatch, Line } from "./types";
+import { isValidLine, parseTokens } from "./utils";
 
 export abstract class BaseCommentFormatter implements CommentFormatter {
-    protected commentsRegex: RegExp = /./;
-    protected linePrefix: string = "";
-    private isValidLineRegex = /\w/;
+    protected abstract regex: RegExp;
+    protected abstract linePrefix: string;
 
-    constructor(private lineWidth: number) {}
+    constructor(protected lineWidth: number) {}
 
     protected abstract parseMatch(match: RegExpExecArray): CommentMatch;
 
     public parse(document: vscode.TextDocument): Change[] {
-        const matches = document.getText().matchAll(this.commentsRegex);
+        const matches = document.getText().matchAll(this.regex);
         const changes: Change[] = [];
         const unprocessedLines: Line[] = [];
 
@@ -67,10 +67,6 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
         return changes;
     }
 
-    protected isValidLine(text: string): boolean {
-        return this.isValidLineRegex.test(text);
-    }
-
     protected abstract parseBlockComment(
         range: vscode.Range,
         text: string,
@@ -82,57 +78,18 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
         const tokens = lines.flatMap((line) => {
             // Extract the text after the "//"
             const text = line.text.slice(this.linePrefix.length).trimStart();
-            if (this.isValidLine(text)) {
+            if (isValidLine(text)) {
                 // Split on spaces
                 return text.split(/[ ]+/g).map((token) => ({ text: token, preserve: false }));
             }
             return [{ text, preserve: true }];
         });
 
-        const updatedLines = this.parseTokens(tokens, indentation, this.linePrefix);
+        const updatedLines = parseTokens(tokens, this.lineWidth, indentation, this.linePrefix);
         const hasChanges =
             lines.length !== updatedLines.length ||
             lines.some((line, index) => line.text !== updatedLines[index]);
 
         return hasChanges ? updatedLines.join("\n") : undefined;
     }
-
-    protected parseTokens(tokens: Token[], indentation: string, linePrefix: string): string[] {
-        const updatedLines: string[] = [];
-        const currentLine: string[] = [];
-        let currentLineLength = indentation.length + linePrefix.length;
-
-        for (const { text, preserve } of tokens) {
-            if (preserve || currentLineLength + text.length + 1 > this.lineWidth) {
-                if (currentLine.length > 0) {
-                    updatedLines.push(joinLine(currentLine, indentation, linePrefix));
-                }
-                currentLine.length = 0;
-                currentLineLength = indentation.length + linePrefix.length;
-            }
-
-            if (preserve) {
-                updatedLines.push(joinLine([text], indentation, linePrefix));
-                continue;
-            }
-
-            currentLine.push(text);
-            // Add 1 for the space between tokens
-            currentLineLength += text.length + 1;
-        }
-
-        if (currentLine.length > 0) {
-            updatedLines.push(joinLine(currentLine, indentation, linePrefix));
-        }
-
-        return updatedLines;
-    }
-}
-
-function joinLine(parts: string[], indentation: string, linePrefix: string): string {
-    const text = parts.join(" ");
-    if (linePrefix.length === 0) {
-        return `${indentation}${text}`;
-    }
-    return text.length > 0 ? `${indentation}${linePrefix} ${text}` : `${indentation}${linePrefix}`;
 }

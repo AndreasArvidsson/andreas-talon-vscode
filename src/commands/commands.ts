@@ -35,9 +35,9 @@ function hidden(category: Category, title: string, description?: string, args?: 
     return create(false, false, category, title, description, args);
 }
 
-// function makePrivate(category: Category, title: string, description?: string, args?: string) {
-//     return create(true, false, category, title, description, args);
-// }
+function makePrivate(category: Category, title: string, description?: string, args?: string) {
+    return create(true, false, category, title, description, args);
+}
 
 export const commandDescriptions = {
     // File commands
@@ -74,7 +74,7 @@ export const commandDescriptions = {
     ),
     increment: visible("Edit", "Increment selected number.", undefined, "(value?: number)"),
     decrement: visible("Edit", "Decrement selected number.", undefined, "(value?: number)"),
-    formatComments: visible("Edit", "Format comments in active file."),
+    formatComments: makePrivate("Edit", "Format comments in active file."),
 
     // Navigation commands
     openEditorAtIndex: visible(

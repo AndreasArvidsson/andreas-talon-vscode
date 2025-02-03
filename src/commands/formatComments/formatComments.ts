@@ -6,6 +6,7 @@ import { JavaFormatter } from "./JavaFormatter";
 import { LuaFormatter } from "./LuaFormatter";
 import { PythonFormatter } from "./PythonFormatter";
 import type { CommentFormatter } from "./types";
+import { XmlFormatter } from "./XmlFormatter";
 
 export function formatComments(): Promise<void> {
     const editor = getActiveEditor();
@@ -44,17 +45,25 @@ function getFormatter(languageId: string, lineWidth: number): CommentFormatter |
         case "c":
         case "cpp":
         case "csharp":
+        case "css":
         case "json":
         case "jsonc":
         case "jsonl":
             return new JavaFormatter(lineWidth);
+
         case "python":
         case "talon":
         case "talon-list":
         case "yaml":
             return new PythonFormatter(lineWidth);
+
+        case "xml":
+        case "html":
+            return new XmlFormatter(lineWidth);
+
         case "lua":
             return new LuaFormatter(lineWidth);
+
         default:
             return undefined;
     }
