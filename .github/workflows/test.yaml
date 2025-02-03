@@ -31,6 +31,10 @@ jobs:
       - name: Compile
         run: npm --color run compile
 
+      - name: Run meta tests (Linux)
+        run: npm --color run test:meta
+        if: runner.os == 'Linux'
+
       - name: Run tests (Linux)
         run: xvfb-run -a npm --color run test:ci
         if: runner.os == 'Linux'
