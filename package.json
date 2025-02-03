@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.64.2",
+    "version": "3.64.3",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
