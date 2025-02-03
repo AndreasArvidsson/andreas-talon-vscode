@@ -1,11 +1,12 @@
+import type { TextDocument } from "vscode";
 import type { SyntaxNode } from "web-tree-sitter";
-import type { LanguageFormatterTree } from "./registerLanguageFormatters";
 import { configuration } from "../util/configuration";
+import type { LanguageFormatterTree } from "./registerLanguageFormatters";
 
 export const talonFormatter: LanguageFormatterTree = {
-    getText(node: SyntaxNode, ident: string): string {
-        const columnWidth = getColumnWidth(node.text);
-        const formatter = new TalonFormatter(ident, columnWidth);
+    getText(document: TextDocument, node: SyntaxNode, indentation: string): string {
+        const columnWidth = getColumnWidth(document, node.text);
+        const formatter = new TalonFormatter(indentation, columnWidth);
         return formatter.getText(node);
     }
 };
@@ -14,7 +15,7 @@ class TalonFormatter {
     private lastRow = 0;
 
     constructor(
-        private ident: string,
+        private indent: string,
         private columnWidth: number | undefined
     ) {}
 
@@ -100,13 +101,13 @@ class TalonFormatter {
             case "comment": {
                 // When using crlf eol comments have a trailing `\r`
                 const text = node.text.trimEnd();
-                return isIndented ? `${this.ident}${text}` : text;
+                return isIndented ? `${this.indent}${text}` : text;
             }
 
             case "expression_statement":
             case "assignment_statement": {
                 const text = node.children.map((n) => this.getNodeText(n)).join(" ");
-                return isIndented ? `${this.ident}${text}` : text;
+                return isIndented ? `${this.indent}${text}` : text;
             }
 
             case "rule":
@@ -174,10 +175,10 @@ class TalonFormatter {
     }
 }
 
-function getColumnWidth(text: string) {
+function getColumnWidth(document: TextDocument, text: string) {
     const match = text.match(/# fmt: columnWidth=(\d+)/);
     if (match != null) {
         return parseInt(match[1]);
     }
-    return configuration.talonFormatter.columnWidth();
+    return configuration.talonFormatter.columnWidth(document);
 }

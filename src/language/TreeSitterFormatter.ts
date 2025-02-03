@@ -1,9 +1,10 @@
+import type { TextDocument } from "vscode";
 import type { SyntaxNode } from "web-tree-sitter";
 import type { LanguageFormatterTree } from "./registerLanguageFormatters";
 
 export const treeSitterFormatter: LanguageFormatterTree = {
-    getText(node: SyntaxNode, ident: string): string {
-        const formatter = new TreeSitterFormatter(ident);
+    getText(document: TextDocument, node: SyntaxNode, indentation: string): string {
+        const formatter = new TreeSitterFormatter(indentation);
         return formatter.getText(node);
     }
 };
@@ -11,7 +12,7 @@ export const treeSitterFormatter: LanguageFormatterTree = {
 export class TreeSitterFormatter {
     private lastRow = 0;
 
-    constructor(private ident: string) {}
+    constructor(private indentation: string) {}
 
     getText(node: SyntaxNode): string {
         return this.getNodeText(node, 0) + "\n";
@@ -155,6 +156,6 @@ export class TreeSitterFormatter {
     }
 
     private getIndent(length: number): string {
-        return length < 1 ? "" : new Array(length).fill(this.ident).join("");
+        return length < 1 ? "" : new Array(length).fill(this.indentation).join("");
     }
 }

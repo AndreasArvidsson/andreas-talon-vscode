@@ -1,10 +1,12 @@
+import type { TextDocument } from "vscode";
 import { configuration } from "../util/configuration";
 import type { LanguageFormatterText } from "./registerLanguageFormatters";
 import { parseTalonList } from "./TalonListParser";
 
 export const talonListFormatter: LanguageFormatterText = {
-    getText(text: string, _ident: string): string {
-        const columnWidth = getColumnWidth(text);
+    getText(document: TextDocument, _indentation: string): string {
+        const text = document.getText();
+        const columnWidth = getColumnWidth(document, text);
         const talonList = parseTalonList(text);
         talonList.headers.sort((a, _b) => (a.type === "header" && a.key === "list" ? -1 : 0));
         const result: string[] = [];
@@ -43,10 +45,10 @@ export const talonListFormatter: LanguageFormatterText = {
     }
 };
 
-function getColumnWidth(text: string) {
+function getColumnWidth(document: TextDocument, text: string) {
     const match = text.match(/# fmt: columnWidth=(\d+)/);
     if (match != null) {
         return parseInt(match[1]);
     }
-    return configuration.talonListFormatter.columnWidth();
+    return configuration.talonListFormatter.columnWidth(document);
 }

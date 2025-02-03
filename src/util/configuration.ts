@@ -1,18 +1,21 @@
-import * as vscode from "vscode";
+import type { TextDocument } from "vscode";
+import { workspace } from "vscode";
 import { isTesting } from "./isTesting";
 
 interface Configuration {
+    formatCommentsOnSave: (document: TextDocument) => boolean;
     talonFormatter: {
-        columnWidth: () => number | undefined;
+        columnWidth: (document: TextDocument) => number | undefined;
     };
     talonListFormatter: {
-        columnWidth: () => number | undefined;
+        columnWidth: (document: TextDocument) => number | undefined;
     };
 }
 
 export const configuration: Configuration = (() => {
     if (isTesting) {
         return {
+            formatCommentsOnSave: () => false,
             talonFormatter: {
                 columnWidth: () => 28
             },
@@ -23,16 +26,30 @@ export const configuration: Configuration = (() => {
     }
 
     return {
+        formatCommentsOnSave: (document) => {
+            return getConfiguration<boolean>(document, "formatCommentsOnSave") ?? false;
+        },
         talonFormatter: {
-            columnWidth: () => getConfiguration<number>("talonFormatter.columnWidth") ?? undefined
+            columnWidth: (document) => {
+                return getConfiguration<number>(document, "talonFormatter.columnWidth");
+            }
         },
         talonListFormatter: {
-            columnWidth: () =>
-                getConfiguration<number>("talonListFormatter.columnWidth") ?? undefined
+            columnWidth: (document) => {
+                return getConfiguration<number>(document, "talonListFormatter.columnWidth");
+            }
         }
     };
 })();
 
-function getConfiguration<T>(key: string) {
-    return vscode.workspace.getConfiguration("andreas").get<T>(key);
+function getConfiguration<T>(document: TextDocument, key: string): T | undefined {
+    return (
+        getLanguageConfiguration(document, key) ?? workspace.getConfiguration("andreas").get<T>(key)
+    );
+}
+
+function getLanguageConfiguration<T>(document: TextDocument, key: string): T | undefined {
+    const langConfig = workspace.getConfiguration(`[${document.languageId}]`);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return
+    return (langConfig as any)[`andreas.${key}`];
 }

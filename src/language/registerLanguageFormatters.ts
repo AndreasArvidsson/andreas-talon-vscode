@@ -1,18 +1,19 @@
 import * as prettier from "prettier";
-import { Disposable, FormattingOptions, languages, Range, TextDocument, TextEdit } from "vscode";
+import type { FormattingOptions, TextDocument } from "vscode";
+import { Disposable, languages, Range, TextEdit } from "vscode";
 import type { SyntaxNode } from "web-tree-sitter";
-import { TreeSitter } from "../treeSitter/TreeSitter";
+import type { TreeSitter } from "../treeSitter/TreeSitter";
 import { snippetFormatter } from "./SnippetFormatter";
 import { talonFormatter } from "./TalonFormatter";
 import { talonListFormatter } from "./TalonListFormatter";
 import { treeSitterFormatter } from "./TreeSitterFormatter";
 
 export interface LanguageFormatterTree {
-    getText(node: SyntaxNode, ident: string): string;
+    getText(document: TextDocument, node: SyntaxNode, indentation: string): string;
 }
 
 export interface LanguageFormatterText {
-    getText(text: string, ident: string): string;
+    getText(document: TextDocument, indentation: string): string;
 }
 
 function provideDocumentFormattingEditsForTree(
@@ -32,7 +33,7 @@ function provideDocumentFormattingEditsForTree(
             }
 
             const { indentation } = await parseOptions(document, options);
-            const newText = formatter.getText(rootNode, indentation);
+            const newText = formatter.getText(document, rootNode, indentation);
             return createTextEdits(document, newText);
         }
     };
@@ -46,7 +47,7 @@ function provideDocumentFormattingEditsForText(formatter: LanguageFormatterText)
         ): Promise<TextEdit[]> => {
             const { indentation } = await parseOptions(document, options);
             try {
-                const newText = formatter.getText(document.getText(), indentation);
+                const newText = formatter.getText(document, indentation);
                 return createTextEdits(document, newText);
             } catch (error) {
                 console.warn((error as Error).message);
