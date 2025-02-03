@@ -1,41 +1,69 @@
-import * as vscode from "vscode";
+import deepEqual from "fast-deep-equal";
 import * as os from "node:os";
 import * as path from "node:path";
+import * as vscode from "vscode";
+import { Debouncer } from "./util/debounce";
 
 const file = vscode.Uri.file(path.join(os.tmpdir(), "vscodeState.json"));
 
+interface Editor {
+    fileName: string;
+    languageId: string;
+    path: string | undefined;
+    isActive: boolean;
+}
+
 interface State {
     workspaceFolders: string[];
+    editors: Editor[];
 }
 
 const settingSection = "andreas.private";
 const settingName = "trackState";
 const fullSettingName = `${settingSection}.${settingName}`;
 
+let currentState: State | undefined = undefined;
+
+const debouncer = new Debouncer(16, updateState);
+
 export function registerStateUpdater(): vscode.Disposable {
     let disposable: vscode.Disposable | undefined = undefined;
 
     const evaluateSetting = async () => {
-        disposable?.dispose();
-
         if (readSetting()) {
-            await updateState();
+            if (disposable != null) {
+                return;
+            }
+
+            const run = () => debouncer.run();
+
+            // Initial state
+            run();
 
             disposable = vscode.Disposable.from(
-                vscode.workspace.onDidChangeWorkspaceFolders(() => updateState()),
-                vscode.window.onDidChangeWindowState(async (states) => {
-                    if (states.focused) {
-                        await updateState();
-                    }
+                // Switch window / vscode instance
+                vscode.window.onDidChangeWindowState(run),
+                // Switch workspace
+                vscode.workspace.onDidChangeWorkspaceFolders(run),
+                // Close editor. This can be done without changing focus.
+                vscode.workspace.onDidCloseTextDocument(() => {
+                    console.log("onDidCloseTextDocument");
+                    debouncer.run();
+                }),
+                // Focus editor
+                vscode.window.onDidChangeActiveTextEditor(() => {
+                    console.log("onDidChangeActiveTextEditor");
+                    debouncer.run();
                 })
             );
-        } else {
+        } else if (disposable != null) {
+            disposable.dispose();
             disposable = undefined;
             await resetState();
         }
     };
 
-    // Update state when extension initializes. This happens whenever you change a workspace/session.
+    // Update state when extension initializes. This happens whenever you change workspace/session.
     void evaluateSetting();
 
     return vscode.Disposable.from(
@@ -56,35 +84,44 @@ function readSetting(): boolean {
     return vscode.workspace.getConfiguration(settingSection).get<boolean>(settingName) ?? false;
 }
 
-async function updateState() {
+function updateState() {
+    console.log("updateState");
     const workspaceFolders =
         vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath) ?? [];
 
-    await updateStateFile({
-        workspaceFolders
+    console.log(vscode.window.visibleTextEditors.length);
+
+    const editors = vscode.window.visibleTextEditors.map(
+        (editor): Editor => ({
+            // Do we need all of this?
+            fileName: editor.document.fileName,
+            languageId: editor.document.languageId,
+            path: editor.document.uri.fsPath,
+            isActive: editor === vscode.window.activeTextEditor
+        })
+    );
+
+    // Extension?
+
+    void updateStateFile({
+        workspaceFolders,
+        editors
     });
 }
 
 async function resetState() {
     await updateStateFile({
-        workspaceFolders: []
+        workspaceFolders: [],
+        editors: []
     });
 }
 
-async function getCurrentJson(): Promise<string | undefined> {
-    try {
-        const buffer = await vscode.workspace.fs.readFile(file);
-        return buffer.toString();
-    } catch (error) {
-        return undefined;
-    }
-}
-
 async function updateStateFile(state: State) {
-    const currentJson = await getCurrentJson();
-    const updatedJson = JSON.stringify(state, null, 4);
-
-    if (currentJson !== updatedJson) {
-        await vscode.workspace.fs.writeFile(file, Buffer.from(updatedJson));
+    if (!vscode.window.state.focused || deepEqual(currentState, state)) {
+        return;
     }
+    const updatedJson = JSON.stringify(state, null, 4);
+    const bytes = new TextEncoder().encode(updatedJson);
+    await vscode.workspace.fs.writeFile(file, bytes);
+    currentState = state;
 }
