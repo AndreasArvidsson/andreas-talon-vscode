@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { BaseCommentFormatter } from "./BaseCommentFormatter";
 import type { CommentMatch } from "./types";
 
-export class JavascriptFormatter extends BaseCommentFormatter {
+export class JavaFormatter extends BaseCommentFormatter {
     protected commentsRegex = /(?:^[\t ]*)(?:(\/\*\*?[\s\S]*?\*\/)|(\/\/.*))/gm;
     protected linePrefix: string = "//";
 
@@ -21,10 +21,10 @@ export class JavascriptFormatter extends BaseCommentFormatter {
         text: string,
         indentation: string
     ): string | undefined {
-        const isJsDoc = text.startsWith("/**");
+        const isDoc = text.startsWith("/**");
         // Extract the text between the "/**" and "*/"
-        const textContent = isJsDoc ? text.slice(3, -2) : text.slice(2, -2);
-        const linePrefix = isJsDoc ? " *" : "";
+        const textContent = isDoc ? text.slice(3, -2) : text.slice(2, -2);
+        const linePrefix = isDoc ? " *" : "";
         const lines = textContent.split("\n");
         const tokens = lines.flatMap((line, index) => {
             let text = line.trim();
@@ -46,11 +46,11 @@ export class JavascriptFormatter extends BaseCommentFormatter {
 
         const updatedText = (() => {
             const isSingleLine = lines.length === 1 && updatedLines.length === 1;
-            const start = isJsDoc && !isSingleLine ? "/**" : "/*";
-            const end = isJsDoc ? " */" : "*/";
+            const start = isDoc && !isSingleLine ? "/**" : "/*";
+            const end = isDoc ? " */" : "*/";
             if (isSingleLine) {
                 const text = updatedLines[0].trimStart();
-                if (isJsDoc) {
+                if (isDoc) {
                     return `${indentation}${start}${text}${end}`;
                 }
                 return `${indentation}${start} ${text} ${end}`;

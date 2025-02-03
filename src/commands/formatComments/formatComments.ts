@@ -2,7 +2,8 @@ import * as prettier from "prettier";
 import * as vscode from "vscode";
 import { getActiveEditor } from "../../util/getActiveEditor";
 import { isTesting } from "../../util/isTesting";
-import { JavascriptFormatter } from "./JavascriptFormatter";
+import { JavaFormatter } from "./JavaFormatter";
+import { LuaFormatter } from "./LuaFormatter";
 import { PythonFormatter } from "./PythonFormatter";
 import type { CommentFormatter } from "./types";
 
@@ -35,14 +36,25 @@ export async function formatCommentsForEditor(editor: vscode.TextEditor) {
 
 function getFormatter(languageId: string, lineWidth: number): CommentFormatter | undefined {
     switch (languageId) {
+        case "java":
         case "javascript":
         case "typescript":
         case "javascriptreact":
         case "typescriptreact":
-        case "java":
-            return new JavascriptFormatter(lineWidth);
+        case "c":
+        case "cpp":
+        case "csharp":
+        case "json":
+        case "jsonc":
+        case "jsonl":
+            return new JavaFormatter(lineWidth);
         case "python":
+        case "talon":
+        case "talon-list":
+        case "yaml":
             return new PythonFormatter(lineWidth);
+        case "lua":
+            return new LuaFormatter(lineWidth);
         default:
             return undefined;
     }
