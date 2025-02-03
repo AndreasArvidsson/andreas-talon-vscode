@@ -1,0 +1,12 @@
+.github/
+.vscode/
+src/
+out/test/
+out/file-updater/
+out/scripts/
+
+.file-updater.mjs
+.gitignore
+.nvmrc
+.prettierignore
+tsconfig.json
