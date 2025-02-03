@@ -55,6 +55,9 @@ export class JavaFormatter extends BaseCommentFormatter {
             return `${indentation}${start}\n${updatedLines.join("\n")}\n${indentation}${end}`;
         })();
 
-        return text !== updatedText ? updatedText : undefined;
+        // The indentation is not part of the text being passed in.
+        const hasChanges = `${indentation}${text}` !== updatedText;
+
+        return hasChanges ? updatedText : undefined;
     }
 }

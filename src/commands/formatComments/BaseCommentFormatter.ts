@@ -88,7 +88,8 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
         const updatedLines = parseTokens(tokens, this.lineWidth, indentation, this.linePrefix);
         const hasChanges =
             lines.length !== updatedLines.length ||
-            lines.some((line, index) => line.text !== updatedLines[index]);
+            // The indentation is not part of the text being passed in.
+            lines.some((line, index) => `${indentation}${line.text}` !== updatedLines[index]);
 
         return hasChanges ? updatedLines.join("\n") : undefined;
     }

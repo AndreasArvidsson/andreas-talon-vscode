@@ -13,7 +13,7 @@ export function formatComments(): Promise<void> {
     return formatCommentsForEditor(editor);
 }
 
-export async function formatCommentsForEditor(editor: vscode.TextEditor) {
+export async function formatCommentsForEditor(editor: vscode.TextEditor, doSave = false) {
     const { document } = editor;
     const lineWidth = await getLineWidth(document);
     const configuration = getFormatter(document.languageId, lineWidth);
@@ -33,6 +33,10 @@ export async function formatCommentsForEditor(editor: vscode.TextEditor) {
             editBuilder.replace(change.range, change.text);
         });
     });
+
+    if (doSave && document.isDirty) {
+        await vscode.commands.executeCommand("workbench.action.files.save", document.uri);
+    }
 }
 
 function getFormatter(languageId: string, lineWidth: number): CommentFormatter | undefined {
