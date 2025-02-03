@@ -15,7 +15,7 @@ interface Language {
 }
 
 function createLineTests(prefix: string): Test[] {
-    return pythonLineTests.map((test) => ({
+    return templateLineTests.map((test) => ({
         title: test.title,
         pre: getContentString(test.pre).replaceAll("#", prefix),
         post: getContentString(test.post).replaceAll("#", prefix)
@@ -23,7 +23,7 @@ function createLineTests(prefix: string): Test[] {
 }
 
 function createBlockTests(prefix: string, suffix: string): Test[] {
-    return cBlockTests.map((test) => ({
+    return templateBlockTests.map((test) => ({
         title: test.title,
         pre: getContentString(test.pre).replaceAll("/*", prefix).replaceAll("*/", suffix),
         post: getContentString(test.post).replaceAll("/*", prefix).replaceAll("*/", suffix)
@@ -37,7 +37,7 @@ function tests(languageIds: string[], tests: Test[]): Language[] {
     }));
 }
 
-const pythonLineTests: Test[] = [
+const templateLineTests: Test[] = [
     { title: "Line | Missing leading space", pre: "#aaa", post: "# aaa" },
     { title: "Line | Extra leading space", pre: "#  aaa", post: "# aaa" },
     { title: "Line | With indentation", pre: "  #aaa bbb", post: "  # aaa\n  # bbb" },
@@ -64,10 +64,11 @@ const pythonLineTests: Test[] = [
     }
 ];
 
+const pythonLineTests = templateLineTests;
 const cLineTests = createLineTests("//");
 const luaLineTests = createLineTests("--");
 
-const cBlockTests: Test[] = [
+const templateBlockTests: Test[] = [
     { title: "Block | Preserve single line", pre: "  /*a*/", post: "  /* a */" },
     {
         title: "Block | With indentation",
@@ -131,6 +132,20 @@ const javaDocTests: Test[] = [
 ];
 
 const xmlBlockTests: Test[] = createBlockTests("<!--", "-->");
+
+const cBlockTests: Test[] = [
+    ...templateBlockTests,
+    {
+        title: "Block | Line leading",
+        pre: "// a\n/* b */",
+        post: "// a\n/* b */"
+    },
+    {
+        title: "Block | Line trailing",
+        pre: "/* a */\n// b",
+        post: "/* a */\n// b"
+    }
+];
 
 const languages: Language[] = [
     ...tests(["lua"], luaLineTests),
