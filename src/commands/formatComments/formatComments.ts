@@ -9,21 +9,32 @@ import { PythonFormatter } from "./PythonFormatter";
 import type { CommentFormatter } from "./types";
 import { XmlFormatter } from "./XmlFormatter";
 
-export function formatComments(): Promise<void> {
-    const editor = getActiveEditor();
-    return formatCommentsForEditor(editor);
+interface Properties {
+    editor: vscode.TextEditor;
+    doSave?: boolean;
+    onlySelected?: boolean;
 }
 
-export async function formatCommentsForEditor(editor: vscode.TextEditor, doSave = false) {
+export function formatComments(): Promise<void> {
+    return formatCommentsRunner({ editor: getActiveEditor(), onlySelected: true });
+}
+
+export function formatAllComments(): Promise<void> {
+    return formatCommentsRunner({ editor: getActiveEditor() });
+}
+
+export async function formatCommentsRunner(properties: Properties): Promise<void> {
+    const { editor, doSave, onlySelected } = properties;
     const { document } = editor;
     const lineWidth = await getLineWidth(document);
     const configuration = getFormatter(document.languageId, lineWidth);
+    const selections = onlySelected ? editor.selections : undefined;
 
     if (configuration == null) {
         return;
     }
 
-    const changes = configuration.parse(document);
+    const changes = configuration.parse(document, selections);
 
     if (changes.length === 0) {
         return;

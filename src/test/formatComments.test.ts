@@ -1,5 +1,6 @@
 import { commands } from "vscode";
 import { runTest } from "./testUtil/runTest";
+import type { NumberSelection } from "./testUtil/test.types";
 
 type Content = string | string[];
 
@@ -7,6 +8,8 @@ interface Test {
     title: string;
     pre: Content;
     post: Content;
+    preSelections?: NumberSelection;
+    postSelections?: NumberSelection;
 }
 
 interface Language {
@@ -64,7 +67,17 @@ const templateLineTests: Test[] = [
     }
 ];
 
-const pythonLineTests = templateLineTests;
+const pythonLineTests: Test[] = [
+    ...templateLineTests,
+    {
+        title: "Line | Selection",
+        pre: "# a\n# b\n# c",
+        post: "# a b\n# c",
+        preSelections: [0, 0, 1, 0],
+        postSelections: [0, 0, 0, 4]
+    }
+];
+
 const cLineTests = createLineTests("//");
 const luaLineTests = createLineTests("--");
 
@@ -166,18 +179,25 @@ const languages: Language[] = [
     )
 ];
 
-suite("Comment formatter", () => {
+suite("Format comments", () => {
     for (const language of languages) {
         for (const fixture of language.tests) {
             runTest({
                 title: `${language.id} | ${fixture.title}`,
-                callback: () => commands.executeCommand("andreas.formatComments"),
+                callback: () =>
+                    commands.executeCommand(
+                        fixture.preSelections
+                            ? "andreas.formatComments"
+                            : "andreas.formatAllComments"
+                    ),
                 pre: {
                     language: language.id,
-                    content: getContentString(fixture.pre)
+                    content: getContentString(fixture.pre),
+                    selections: fixture.preSelections
                 },
                 post: {
-                    content: getContentString(fixture.post)
+                    content: getContentString(fixture.post),
+                    selections: fixture.postSelections
                 }
             });
         }

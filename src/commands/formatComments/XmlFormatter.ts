@@ -1,6 +1,7 @@
-import * as vscode from "vscode";
+import type { Selection, TextDocument } from "vscode";
+import { Range } from "vscode";
 import type { Change, CommentFormatter, CommentMatch } from "./types";
-import { isValidLine, parseTokens } from "./utils";
+import { isValidLine, matchAll, parseTokens } from "./utils";
 
 const prefix = "<!--";
 const suffix = "-->";
@@ -10,20 +11,11 @@ export class XmlFormatter implements CommentFormatter {
 
     constructor(private lineWidth: number) {}
 
-    public parse(document: vscode.TextDocument): Change[] {
-        const matches = document.getText().matchAll(this.regex);
+    public parse(document: TextDocument, selections?: readonly Selection[]): Change[] {
         const changes: Change[] = [];
 
-        for (const match of matches) {
-            if (match.index == null) {
-                continue;
-            }
+        matchAll(document, selections, this.regex, (match, range) => {
             const matchText = match[0];
-            const range = new vscode.Range(
-                document.positionAt(match.index),
-                document.positionAt(match.index + matchText.length)
-            );
-
             const text = match[1];
             const indentation = matchText.slice(0, matchText.length - text.length);
 
@@ -31,7 +23,7 @@ export class XmlFormatter implements CommentFormatter {
             if (newText != null) {
                 changes.push({ range, text: newText });
             }
-        }
+        });
 
         return changes;
     }
@@ -42,11 +34,7 @@ export class XmlFormatter implements CommentFormatter {
         return { text, isBlockComment };
     }
 
-    private parseBlockComment(
-        range: vscode.Range,
-        text: string,
-        indentation: string
-    ): string | undefined {
+    private parseBlockComment(range: Range, text: string, indentation: string): string | undefined {
         // Extract the text between the "<!--" and "-->"
         const textContent = text.slice(prefix.length, -suffix.length);
         const linePrefix = "";

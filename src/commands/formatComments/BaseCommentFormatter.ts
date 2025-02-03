@@ -1,6 +1,7 @@
-import * as vscode from "vscode";
+import type { Selection, TextDocument } from "vscode";
+import { Range } from "vscode";
 import type { Change, CommentFormatter, CommentMatch, Line } from "./types";
-import { isValidLine, parseTokens } from "./utils";
+import { isValidLine, matchAll, parseTokens } from "./utils";
 
 export abstract class BaseCommentFormatter implements CommentFormatter {
     protected abstract regex: RegExp;
@@ -10,8 +11,7 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
 
     protected abstract parseMatch(match: RegExpExecArray): CommentMatch;
 
-    public parse(document: vscode.TextDocument): Change[] {
-        const matches = document.getText().matchAll(this.regex);
+    public parse(document: TextDocument, selections?: readonly Selection[]): Change[] {
         const changes: Change[] = [];
         const unprocessedLines: Line[] = [];
 
@@ -26,17 +26,9 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
             unprocessedLines.length = 0;
         };
 
-        for (const match of matches) {
-            if (match.index == null) {
-                continue;
-            }
+        matchAll(document, selections, this.regex, (match, range) => {
             const matchText = match[0];
-            const range = new vscode.Range(
-                document.positionAt(match.index),
-                document.positionAt(match.index + matchText.length)
-            );
-
-            const { text, isBlockComment } = this.parseMatch(match as RegExpExecArray);
+            const { text, isBlockComment } = this.parseMatch(match);
             const indentation = matchText.slice(0, matchText.length - text.length);
 
             if (isBlockComment) {
@@ -44,7 +36,7 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
                 if (newText != null) {
                     changes.push({ range, text: newText });
                 }
-                continue;
+                return;
             }
 
             // Non consecutive line comments. Process the previous lines.
@@ -57,7 +49,7 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
             }
 
             unprocessedLines.push({ range, text, indentation });
-        }
+        });
 
         // Process any remaining lines
         if (unprocessedLines.length > 0) {
@@ -68,7 +60,7 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
     }
 
     protected abstract parseBlockComment(
-        range: vscode.Range,
+        range: Range,
         text: string,
         indentation: string
     ): string | undefined;

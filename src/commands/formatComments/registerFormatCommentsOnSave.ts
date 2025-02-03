@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { formatCommentsForEditor } from "./formatComments";
 import { configuration } from "../../util/configuration";
+import { formatCommentsRunner } from "./formatComments";
 
 export function registerFormatCommentsOnSave(): vscode.Disposable {
     // onWillSaveTextDocument does not tree ge on "Save without formatting"
@@ -11,7 +11,7 @@ export function registerFormatCommentsOnSave(): vscode.Disposable {
         ) {
             const editor = vscode.window.visibleTextEditors.find((e) => e.document === e.document);
             if (editor != null) {
-                await formatCommentsForEditor(editor, true);
+                await formatCommentsRunner({ editor, doSave: true });
             }
         }
     });

@@ -14,7 +14,7 @@ import { newFile } from "./files/newFile";
 import { removeFile } from "./files/removeFile";
 import { renameFile } from "./files/renameFile";
 import { focusTab } from "./focusTab";
-import { formatComments } from "./formatComments/formatComments";
+import { formatAllComments, formatComments } from "./formatComments/formatComments";
 import { formatSelectedFiles, formatWorkspaceFiles } from "./formatFiles";
 import { generateRange } from "./generateRange";
 import { goToLine } from "./goToLine";
@@ -50,6 +50,7 @@ export function registerCommands(
         increment,
         decrement,
         formatComments,
+        formatAllComments,
         // Navigation
         openEditorAtIndex,
         focusTab,

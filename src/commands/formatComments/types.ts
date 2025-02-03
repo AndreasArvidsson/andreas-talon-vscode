@@ -1,7 +1,7 @@
-import * as vscode from "vscode";
+import type { Range, Selection, TextDocument } from "vscode";
 
 export interface CommentFormatter {
-    parse(document: vscode.TextDocument): Change[];
+    parse(document: TextDocument, selections?: readonly Selection[]): Change[];
 }
 
 export interface CommentMatch {
@@ -10,14 +10,14 @@ export interface CommentMatch {
 }
 
 export interface Change {
-    range: vscode.Range;
+    range: Range;
     text: string;
 }
 
 export interface Line {
     text: string;
     indentation: string;
-    range: vscode.Range;
+    range: Range;
 }
 
 export interface Token {
