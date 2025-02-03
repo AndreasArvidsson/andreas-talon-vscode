@@ -35,6 +35,6 @@ jobs:
         run: xvfb-run -a npm --color run test:ci
         if: runner.os == 'Linux'
 
-      - name: Run tests (Other)
+      - name: Run tests (Windows, macOS)
         run: npm --color run test:ci
         if: runner.os != 'Linux'
