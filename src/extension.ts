@@ -1,11 +1,9 @@
 import * as vscode from "vscode";
-import { registerFormatCommentsOnSave } from "./commands/formatComments/registerFormatCommentsOnSave";
 import { registerCommands } from "./commands/registerCommands";
 import { registerLanguageCodeActions } from "./language/registerLanguageCodeActions";
 import { registerLanguageCompletionProviders } from "./language/registerLanguageCompletionProviders";
 import { registerLanguageDefinitions } from "./language/registerLanguageDefinitions";
 import { registerLanguageFormatters } from "./language/registerLanguageFormatters";
-import { registerStateUpdater } from "./stateUpdater";
 import { createTabView } from "./tabView";
 import { TreeSitter } from "./treeSitter/TreeSitter";
 import { getCommandServerExtension, getParseTreeExtension } from "./util/getExtension";
@@ -40,8 +38,6 @@ async function activateExtension(context: vscode.ExtensionContext): Promise<void
         registerLanguageCompletionProviders(),
         registerLanguageCodeActions(treeSitter),
         registerLanguageFormatters(treeSitter),
-        registerFormatCommentsOnSave(),
-        createTabView(),
-        isTesting ? vscode.Disposable.from() : registerStateUpdater()
+        createTabView()
     );
 }
