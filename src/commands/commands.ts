@@ -85,7 +85,7 @@ export const commandDescriptions = {
         "(index: number)"
     ),
     focusTab: visible("Navigation", "Focus tab by hint.", "Hints range [A-ZZ].", "(hint: string)"),
-    goToLine: visible("Navigation", "Go to line number.", undefined, "(line: number)"),
+    goToLine: visible("Navigation", "Go to line number. The number is treated as an index, so to reach line x send the number x - 1.", undefined, "(line: number)"),
     selectTo: visible(
         "Navigation",
         "Select from current location to specified line.",
