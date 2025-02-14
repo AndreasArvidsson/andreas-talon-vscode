@@ -15,6 +15,18 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
         post: '";"? @namedFunction.end @functionName.domain.end\n'
     },
     {
+        title: "Trailing ?",
+        pre: '(("." (type))?)?',
+        post: `\
+(
+    (
+        "."
+        (type)
+    )?
+)?
+`
+    },
+    {
         title: "Large file",
         pre: `\
 ;; Define this here because the 'field_definition' node type doesn't exist
