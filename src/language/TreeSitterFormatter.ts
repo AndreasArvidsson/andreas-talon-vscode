@@ -101,10 +101,10 @@ export class TreeSitterFormatter {
     private getNodeTextInternal(node: SyntaxNode, numIndents: number): string {
         switch (node.type) {
             case "program":
-                return joinLines(node.children.map((n) => this.getNodeText(n, 0)));
+                return this.joinLines(node.children, 0);
 
             case "grouping":
-                return joinLines(node.children.map((n) => this.getNodeText(n, numIndents + 1)));
+                return this.joinLines(node.children, numIndents + 1);
 
             case "list":
                 return this.getListText(node, numIndents);
@@ -154,17 +154,17 @@ export class TreeSitterFormatter {
         }
     }
 
+    private joinLines(nodes: SyntaxNode[], numIndents: number): string {
+        if (nodes.length === 0) {
+            return "";
+        }
+        const lastIsQuantifier = nodes[nodes.length - 1].type === "quantifier";
+        const nodesToUse = lastIsQuantifier ? nodes.slice(0, -1) : nodes;
+        const text = nodesToUse.map((n) => this.getNodeText(n, numIndents)).join("\n");
+        return lastIsQuantifier ? `${text}${nodes[nodes.length - 1].text}` : text;
+    }
+
     private getIndent(length: number): string {
         return length < 1 ? "" : new Array(length).fill(this.indentation).join("");
     }
-}
-
-function joinLines(lines: string[]): string {
-    if (lines.length === 0) {
-        return "";
-    }
-    if (lines[lines.length - 1] === "?") {
-        return lines.slice(0, -1).join("\n") + "?";
-    }
-    return lines.join("\n");
 }
