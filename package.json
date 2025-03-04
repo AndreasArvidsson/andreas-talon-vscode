@@ -187,7 +187,7 @@
             {
                 "command": "andreas.goToLine",
                 "category": "Andreas",
-                "title": "Go to line number."
+                "title": "Go to line number. 0-based index."
             },
             {
                 "command": "andreas.selectTo",
