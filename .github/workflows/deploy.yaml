@@ -24,6 +24,16 @@ jobs:
       - name: Install dependencies
         run: npm --color ci
 
+      - name: Read version from package.json
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_ENV
+
+      - name: Create Git tag
+        run: |
+          git tag ${{ env.version }}
+          git push origin ${{ env.version }}
+
       - name: Publish to Open VSX Registry
         id: publishToOpenVSX
         uses: HaaLeo/publish-vscode-extension@v1
