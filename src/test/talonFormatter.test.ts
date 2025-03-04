@@ -71,6 +71,12 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
     },
 
     {
+        title: "Indented comment",
+        pre: "# settings():\n # insert_wait = 10",
+        post: "# settings():\n    # insert_wait = 10\n"
+    },
+
+    {
         title: "Custom column width",
         pre: "# fmt: columnWidth=5\nfoo: 'bar'",
         post: "# fmt: columnWidth=5\nfoo: 'bar'\n"

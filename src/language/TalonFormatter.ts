@@ -100,7 +100,7 @@ class TalonFormatter {
             case "comment": {
                 // When using crlf eol comments have a trailing `\r`
                 const text = node.text.trimEnd();
-                return isIndented ? `${this.indent}${text}` : text;
+                return isIndented || node.startPosition.column > 0 ? `${this.indent}${text}` : text;
             }
 
             case "expression_statement":
