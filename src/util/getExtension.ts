@@ -5,8 +5,14 @@ import { ParseTreeExtension } from "../typings/parserTree";
 
 async function getExtension<T>(name: string): Promise<T> {
     const extension = vscode.extensions.getExtension(name);
+
     if (!extension) {
-        throw Error(`Depends on extension '${name}'`);
+        console.log("Available extensions:");
+        for (const extension of vscode.extensions.all.map((e) => e.id).sort()) {
+            console.log(`  ${extension}`);
+        }
+
+        throw Error(`Depends on missing extension '${name}'`);
     }
 
     return extension.activate();
