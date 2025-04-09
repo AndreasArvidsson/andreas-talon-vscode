@@ -283,6 +283,12 @@
                 "enablement": "false"
             },
             {
+                "command": "andreas.getWorkspaceFolders",
+                "category": "Andreas",
+                "title": "Get an array of file system paths for workspace folders",
+                "enablement": "false"
+            },
+            {
                 "command": "andreas.printCommands",
                 "category": "Andreas",
                 "title": "Print available commands."
