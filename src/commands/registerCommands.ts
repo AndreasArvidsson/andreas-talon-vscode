@@ -74,6 +74,18 @@ export function registerCommands(
         getSetting,
         setSetting,
         executeCommands,
+        getWorkspaceFolders: () => {
+            if (!vscode.workspace.workspaceFolders) {
+                return undefined;
+            }
+            return vscode.workspace.workspaceFolders.map((folder) => {
+                const uri = folder.uri;
+                if (uri.scheme !== "file") {
+                    throw new Error(`Expected file URI but got ${uri.scheme} URI`);
+                }
+                return uri.fsPath;
+            });
+        },
         printCommands
     } as const;
 

@@ -90,6 +90,8 @@ Many of the commands take arguments and return values that can only be used with
   Set setting for vscode, either globally or for the current workspace/folder
 - `andreas.executeCommands(commands: string[])`  
   Sequentially execute multiple commands. Useful for keybindings.
+- `andreas.getWorkspaceFolders(): string[] | undefined`  
+  Get an array of file system paths for workspace folders
 - `andreas.printCommands()`  
   Print available commands.
 

@@ -168,6 +168,12 @@ export const commandDescriptions = {
         "Useful for keybindings.",
         "(commands: string[])"
     ),
+    getWorkspaceFolders: hidden(
+        "Other",
+        "Get an array of file system paths for workspace folders",
+        undefined,
+        "(): string[] | undefined"
+    ),
     printCommands: visible("Other", "Print available commands.")
 } as const;
 
