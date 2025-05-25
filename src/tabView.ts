@@ -52,8 +52,8 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
                 this.onTabChangeDisposable = vscode.Disposable.from(
                     vscode.window.tabGroups.onDidChangeTabGroups(() => onTabChange()),
                     vscode.window.tabGroups.onDidChangeTabs(() => onTabChange()),
-                    vscode.workspace.onDidChangeConfiguration(({ affectsConfiguration }) => {
-                        if (affectsConfiguration(labelFormatSetting)) {
+                    vscode.workspace.onDidChangeConfiguration((scope) => {
+                        if (scope.affectsConfiguration(labelFormatSetting)) {
                             onTabChange();
                         }
                     })

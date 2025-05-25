@@ -15,7 +15,7 @@ async function getExtension<T>(name: string): Promise<T> {
         throw Error(`Depends on missing extension '${name}'`);
     }
 
-    return extension.activate();
+    return extension.activate() as Promise<T>;
 }
 
 export function getParseTreeExtension(): Promise<ParseTreeExtension> {

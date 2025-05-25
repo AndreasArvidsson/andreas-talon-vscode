@@ -78,7 +78,7 @@ export function matchAll(
                 continue;
             }
             callback(
-                match as RegExpExecArray,
+                match,
                 new Range(
                     document.positionAt(offset + match.index),
                     document.positionAt(offset + match.index + match[0].length)

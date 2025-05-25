@@ -18,7 +18,6 @@
     "rules": {
         "@typescript-eslint/naming-convention": "error",
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/semi": "warn",
         "curly": "error",
         "no-throw-literal": "error",
         "no-warning-comments": "warn",
@@ -32,7 +31,8 @@
         "@typescript-eslint/no-unused-vars": [
             "warn",
             {
-                "argsIgnorePattern": "^_"
+                "argsIgnorePattern": "^_",
+                "caughtErrorsIgnorePattern": "^_"
             }
         ]
     }

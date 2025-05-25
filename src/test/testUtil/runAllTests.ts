@@ -26,6 +26,7 @@ export function run(): Promise<void> {
             });
         } catch (err) {
             console.error(err);
+            // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
             reject(err);
         }
     });

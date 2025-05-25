@@ -4,7 +4,6 @@ import { updatePackageJson } from "./updatePackageJson";
 import { updateReadme } from "./updateReadme";
 
 import {
-    updateEslintrc,
     updateGitignore,
     updateLicense,
     updatePrettierignore,
@@ -27,7 +26,8 @@ export async function runFileUpdater() {
     await updater({
         "README.md": updateReadme,
         "package.json": updatePackageJson(),
-        ".eslintrc.json": updateEslintrc(config),
+        // This needs to be updated to support a newer eslint version
+        // ".eslintrc.json": updateEslintrc(config),
         ".gitignore": updateGitignore(config),
         ".prettierignore": updatePrettierignore(config),
         ".prettierrc.json": updatePrettierrc(config),
