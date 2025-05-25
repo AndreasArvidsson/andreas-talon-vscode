@@ -99,5 +99,16 @@ export function registerCommands(
 function registerCommand(command: CommandId, callback: Callback): vscode.Disposable {
     const fullCommand = getFullCommand(command);
 
-    return vscode.commands.registerCommand(fullCommand, callback);
+    const safeCallback = async (...args: any[]) => {
+        try {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return
+            return await Promise.resolve(callback(...args));
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            void vscode.window.showErrorMessage(errorMessage);
+            throw error;
+        }
+    };
+
+    return vscode.commands.registerCommand(fullCommand, safeCallback);
 }
