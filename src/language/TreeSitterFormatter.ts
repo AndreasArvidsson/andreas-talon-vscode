@@ -141,6 +141,7 @@ export class TreeSitterFormatter {
             case "predicate_type":
             case "identifier":
             case "quantifier":
+            case "string":
                 return node.text;
 
             case "parameters": {
