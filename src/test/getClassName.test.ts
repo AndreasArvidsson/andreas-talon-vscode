@@ -9,10 +9,10 @@ suite(command, () => {
         pre: {
             language: "java",
             content: "class MyClass {\n\n}",
-            selections: [1, 0]
+            selections: [1, 0],
         },
         post: {
-            returnValue: "MyClass"
-        }
+            returnValue: "MyClass",
+        },
     });
 });

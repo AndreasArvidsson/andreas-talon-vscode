@@ -5,7 +5,7 @@ export const treeSitterFormatter: LanguageFormatterTree = {
     getText(node: Node, indentation: string): string {
         const formatter = new TreeSitterFormatter(indentation);
         return formatter.getText(node);
-    }
+    },
 };
 
 export class TreeSitterFormatter {
@@ -46,7 +46,7 @@ export class TreeSitterFormatter {
         return [
             `${this.getIndent(numIndents)}${first}`,
             ...interior,
-            `${this.getIndent(numIndents)}${last}`
+            `${this.getIndent(numIndents)}${last}`,
         ].join("\n");
     }
 
@@ -60,7 +60,7 @@ export class TreeSitterFormatter {
         const parts = [
             `${this.getIndent(numIndents)}${first}`,
             ...node.children.slice(1, index).map((n) => this.getNodeText(n, numIndents + 1)),
-            `${this.getIndent(numIndents)}${last}`
+            `${this.getIndent(numIndents)}${last}`,
         ];
         return parts.join("\n");
     }
@@ -73,7 +73,7 @@ export class TreeSitterFormatter {
                 .slice(1, 4)
                 .map((n) => n.text)
                 .join(""),
-            ...node.children[node.children.length - 2].children.map((n) => n.text)
+            ...node.children[node.children.length - 2].children.map((n) => n.text),
         ];
         // Inline predicate
         if (node.startPosition.row === node.endPosition.row) {
@@ -84,7 +84,7 @@ export class TreeSitterFormatter {
         return [
             `${this.getIndent(numIndents)}${first}${parts[0]}`,
             ...parts.slice(1).map((s) => `${this.getIndent(numIndents + 1)}${s}`),
-            `${this.getIndent(numIndents)}${last}`
+            `${this.getIndent(numIndents)}${last}`,
         ].join("\n");
     }
 
@@ -94,7 +94,7 @@ export class TreeSitterFormatter {
             node.children[0].text,
             node.children[1].text,
             " ",
-            this.getNodeText(node.children[2], numIndents).trimStart()
+            this.getNodeText(node.children[2], numIndents).trimStart(),
         ].join("");
     }
 

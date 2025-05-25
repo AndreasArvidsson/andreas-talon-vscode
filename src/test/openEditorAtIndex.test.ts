@@ -8,6 +8,6 @@ suite(command, () => {
         title: command,
         command: { id: command, args: [0] },
         pre: {},
-        post: {}
+        post: {},
     });
 });

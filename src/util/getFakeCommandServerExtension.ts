@@ -6,8 +6,8 @@ export function getFakeCommandServerExtension(): CommandServerExtension {
 
         signals: {
             prePhrase: {
-                getVersion: () => Promise.resolve(null)
-            }
-        }
+                getVersion: () => Promise.resolve(null),
+            },
+        },
     };
 }

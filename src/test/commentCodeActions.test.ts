@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import {
     blockCommentToDocComment,
-    lineCommentToDocComment
+    lineCommentToDocComment,
 } from "../language/registerLanguageCodeActions";
 
 type Fixture = [string, string];
@@ -9,14 +9,14 @@ type Fixture = [string, string];
 const lineFixtures: Fixture[] = [
     ["// foo", "/**\n* foo\n*/"],
     ["  // bar", "  /**\n  * bar\n  */"],
-    ["  // foo\n  //bar", "  /**\n  * foo\n  * bar\n  */"]
+    ["  // foo\n  //bar", "  /**\n  * foo\n  * bar\n  */"],
 ];
 
 const blockFixtures: Fixture[] = [
     ["  /*foo/*", "  /**foo/*"],
     ["  /* foo /*", "  /** foo /*"],
     ["  /*\n  foo\n  bar\n  */", "  /**\n  * foo\n  * bar\n  */"],
-    ["  /*\n  * foo\n  *bar\n  baz\n  */", "  /**\n  * foo\n  *bar\n  * baz\n  */"]
+    ["  /*\n  * foo\n  *bar\n  baz\n  */", "  /**\n  * foo\n  *bar\n  * baz\n  */"],
 ];
 
 suite("Line comment code actions", () => {

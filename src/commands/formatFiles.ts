@@ -20,7 +20,7 @@ async function recursivelyGetFileUris(uris: vscode.Uri[]) {
         }
         if (fs.lstatSync(uri.fsPath).isDirectory()) {
             const children = await vscode.workspace.findFiles(
-                new vscode.RelativePattern(uri, "**/*")
+                new vscode.RelativePattern(uri, "**/*"),
             );
             result.push(...children);
         } else {
@@ -38,7 +38,7 @@ async function formatDocuments(uris: vscode.Uri[]) {
         {
             location: vscode.ProgressLocation.Notification,
             title: "Formatting files",
-            cancellable: true
+            cancellable: true,
         },
         async (progress, cancellationToken) => {
             for (let i = 0; i < uris.length; ++i) {
@@ -54,7 +54,7 @@ async function formatDocuments(uris: vscode.Uri[]) {
 
                 progress.report({ increment });
             }
-        }
+        },
     );
 }
 
@@ -62,7 +62,7 @@ async function formatDocument(uri: vscode.Uri) {
     try {
         const editor = await vscode.window.showTextDocument(uri, {
             preserveFocus: false,
-            preview: true
+            preview: true,
         });
 
         await vscode.commands.executeCommand("editor.action.formatDocument", uri);
@@ -78,7 +78,7 @@ async function formatDocument(uri: vscode.Uri) {
         // This message will be thrown for binary files
         if (!message.endsWith("Detail: File seems to be binary and cannot be opened as text")) {
             void vscode.window.showWarningMessage(
-                `Could not format file: ${uri.fsPath}. ${message}`
+                `Could not format file: ${uri.fsPath}. ${message}`,
             );
         }
     }

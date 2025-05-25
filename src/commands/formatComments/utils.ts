@@ -12,7 +12,7 @@ export function parseTokens(
     tokens: Token[],
     lineWidth: number,
     indentation: string,
-    linePrefix: string
+    linePrefix: string,
 ): string[] {
     const updatedLines: string[] = [];
     const currentLine: string[] = [];
@@ -56,7 +56,7 @@ export function matchAll(
     document: TextDocument,
     selections: readonly Selection[] | undefined,
     regex: RegExp,
-    callback: (match: RegExpExecArray, range: Range) => void
+    callback: (match: RegExpExecArray, range: Range) => void,
 ) {
     // Ranges are always the full line. We don't format parts of a comment.
     const ranges = selections?.map((selection) => {
@@ -65,7 +65,7 @@ export function matchAll(
         }
         return new Range(
             selection.start.with(undefined, 0),
-            document.lineAt(selection.end.line).range.end
+            document.lineAt(selection.end.line).range.end,
         );
     });
 
@@ -81,8 +81,8 @@ export function matchAll(
                 match,
                 new Range(
                     document.positionAt(offset + match.index),
-                    document.positionAt(offset + match.index + match[0].length)
-                )
+                    document.positionAt(offset + match.index + match[0].length),
+                ),
             );
         }
     }

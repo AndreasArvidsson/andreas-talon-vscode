@@ -6,11 +6,11 @@ suite("increment / decrement", () => {
         command: "increment",
         pre: {
             content: "1",
-            selections: [0, 0, 0, 1]
+            selections: [0, 0, 0, 1],
         },
         post: {
-            content: "2"
-        }
+            content: "2",
+        },
     });
 
     runTest({
@@ -18,12 +18,12 @@ suite("increment / decrement", () => {
         command: "increment",
         pre: {
             content: "-1",
-            selections: [0, 0, 0, 2]
+            selections: [0, 0, 0, 2],
         },
         post: {
             content: "0",
-            selections: [0, 0, 0, 1]
-        }
+            selections: [0, 0, 0, 1],
+        },
     });
 
     runTest({
@@ -31,11 +31,11 @@ suite("increment / decrement", () => {
         command: "increment",
         pre: {
             content: "0.5",
-            selections: [0, 0, 0, 3]
+            selections: [0, 0, 0, 3],
         },
         post: {
-            content: "0.6"
-        }
+            content: "0.6",
+        },
     });
 
     runTest({
@@ -43,11 +43,11 @@ suite("increment / decrement", () => {
         command: "increment",
         pre: {
             content: "-0.5",
-            selections: [0, 0, 0, 4]
+            selections: [0, 0, 0, 4],
         },
         post: {
-            content: "-0.4"
-        }
+            content: "-0.4",
+        },
     });
 
     runTest({
@@ -55,11 +55,11 @@ suite("increment / decrement", () => {
         command: "increment",
         pre: {
             content: "a1b2c",
-            selections: [0, 0, 0, 5]
+            selections: [0, 0, 0, 5],
         },
         post: {
-            content: "a2b3c"
-        }
+            content: "a2b3c",
+        },
     });
 
     runTest({
@@ -67,11 +67,11 @@ suite("increment / decrement", () => {
         command: "decrement",
         pre: {
             content: "1",
-            selections: [0, 0, 0, 1]
+            selections: [0, 0, 0, 1],
         },
         post: {
-            content: "0"
-        }
+            content: "0",
+        },
     });
 
     runTest({
@@ -79,11 +79,11 @@ suite("increment / decrement", () => {
         command: "decrement",
         pre: {
             content: "-1",
-            selections: [0, 0, 0, 2]
+            selections: [0, 0, 0, 2],
         },
         post: {
-            content: "-2"
-        }
+            content: "-2",
+        },
     });
 
     runTest({
@@ -91,11 +91,11 @@ suite("increment / decrement", () => {
         command: "decrement",
         pre: {
             content: "0.5",
-            selections: [0, 0, 0, 3]
+            selections: [0, 0, 0, 3],
         },
         post: {
-            content: "0.4"
-        }
+            content: "0.4",
+        },
     });
 
     runTest({
@@ -103,11 +103,11 @@ suite("increment / decrement", () => {
         command: "decrement",
         pre: {
             content: "-0.5",
-            selections: [0, 0, 0, 4]
+            selections: [0, 0, 0, 4],
         },
         post: {
-            content: "-0.6"
-        }
+            content: "-0.6",
+        },
     });
 
     runTest({
@@ -115,11 +115,11 @@ suite("increment / decrement", () => {
         command: { id: "increment", args: [2] },
         pre: {
             content: "1",
-            selections: [0, 0, 0, 1]
+            selections: [0, 0, 0, 1],
         },
         post: {
-            content: "3"
-        }
+            content: "3",
+        },
     });
 
     runTest({
@@ -127,12 +127,12 @@ suite("increment / decrement", () => {
         command: { id: "decrement", args: [0.5] },
         pre: {
             content: "1.5",
-            selections: [0, 0, 0, 3]
+            selections: [0, 0, 0, 3],
         },
         post: {
             content: "1",
-            selections: [0, 0, 0, 1]
-        }
+            selections: [0, 0, 0, 1],
+        },
     });
 
     runTest({
@@ -140,10 +140,10 @@ suite("increment / decrement", () => {
         command: "decrement",
         pre: {
             content: "a1b2c",
-            selections: [0, 0, 0, 5]
+            selections: [0, 0, 0, 5],
         },
         post: {
-            content: "a0b1c"
-        }
+            content: "a0b1c",
+        },
     });
 });

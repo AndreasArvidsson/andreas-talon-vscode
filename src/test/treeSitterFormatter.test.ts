@@ -7,12 +7,12 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
     {
         title: "Named nodes",
         pre: ["(aaa", "    (bbb", "      (ccc)", "    ", ")", ")"],
-        post: ["(aaa", "    (bbb", "        (ccc)", "    )", ")", ""]
+        post: ["(aaa", "    (bbb", "        (ccc)", "    )", ")", ""],
     },
     {
         title: "Anonymous node",
         pre: '";" ?  @namedFunction.end  @functionName.domain.end',
-        post: '";"? @namedFunction.end @functionName.domain.end\n'
+        post: '";"? @namedFunction.end @functionName.domain.end\n',
     },
     {
         title: "Trailing ?",
@@ -24,7 +24,7 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
         (type)
     )?
 )?
-`
+`,
     },
     {
         title: "Large file",
@@ -82,8 +82,8 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
     .
     ";"? @namedFunction.end @functionName.domain.end
 )
-`
-    }
+`,
+    },
 ];
 
 suite("Tree-sitter formatter", () => {
@@ -93,11 +93,11 @@ suite("Tree-sitter formatter", () => {
             callback: () => commands.executeCommand("editor.action.formatDocument"),
             pre: {
                 language: "scm",
-                content: getContentString(fixture.pre)
+                content: getContentString(fixture.pre),
             },
             post: {
-                content: getContentString(fixture.post)
-            }
+                content: getContentString(fixture.post),
+            },
         });
     }
 });

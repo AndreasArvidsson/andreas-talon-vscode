@@ -2,7 +2,7 @@ import { window } from "vscode";
 
 export async function showNewNameInputBox(
     suggestedName: string,
-    suggestedExt: string
+    suggestedExt: string,
 ): Promise<string | undefined> {
     const filename = await window.showInputBox({
         prompt: "New name",
@@ -15,7 +15,7 @@ export async function showNewNameInputBox(
                 return null;
             }
             return "Can't be empty";
-        }
+        },
     });
     return filename ? filename.trim() : undefined;
 }

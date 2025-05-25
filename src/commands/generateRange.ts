@@ -18,6 +18,6 @@ export async function generateRange(start = 1): Promise<void> {
 
     // Replace edits will select the new content. Move selection after.
     editor.selections = editor.selections.map(
-        (selection) => new Selection(selection.end, selection.end)
+        (selection) => new Selection(selection.end, selection.end),
     );
 }

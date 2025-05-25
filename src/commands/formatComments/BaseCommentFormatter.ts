@@ -19,7 +19,7 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
             const newText = this.parseLineComment(unprocessedLines);
             if (newText != null) {
                 const range = unprocessedLines[0].range.union(
-                    unprocessedLines[unprocessedLines.length - 1].range
+                    unprocessedLines[unprocessedLines.length - 1].range,
                 );
                 changes.push({ range, text: newText });
             }
@@ -62,7 +62,7 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
     protected abstract parseBlockComment(
         range: Range,
         text: string,
-        indentation: string
+        indentation: string,
     ): string | undefined;
 
     private parseLineComment(lines: Line[]): string | undefined {

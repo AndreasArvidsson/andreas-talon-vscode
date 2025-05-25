@@ -38,6 +38,6 @@ async function activateExtension(context: vscode.ExtensionContext): Promise<void
         registerLanguageCompletionProviders(),
         registerLanguageCodeActions(treeSitter),
         registerLanguageFormatters(treeSitter),
-        createTabView()
+        createTabView(),
     );
 }

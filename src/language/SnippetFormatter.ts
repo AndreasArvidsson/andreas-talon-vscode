@@ -5,5 +5,5 @@ export const snippetFormatter: LanguageFormatterText = {
     getText(text: string, _indentation: string): string {
         const documents = parseSnippetFile(text);
         return serializeSnippetFile(documents);
-    }
+    },
 };

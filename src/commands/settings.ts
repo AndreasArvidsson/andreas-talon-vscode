@@ -12,12 +12,12 @@ export function setSetting(section: string, value: any, configurationTarget?: Co
         .update(
             section,
             value,
-            configurationTarget != null ? getConfigurationTarget(configurationTarget) : undefined
+            configurationTarget != null ? getConfigurationTarget(configurationTarget) : undefined,
         );
 }
 
 function getConfigurationTarget(
-    configurationTarget: ConfigurationTarget
+    configurationTarget: ConfigurationTarget,
 ): vscode.ConfigurationTarget {
     switch (configurationTarget) {
         case "global":

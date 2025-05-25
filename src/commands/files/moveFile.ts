@@ -6,7 +6,7 @@ import {
     Uri,
     WorkspaceFolder,
     window,
-    workspace
+    workspace,
 } from "vscode";
 import * as fileSystem from "../../util/fileSystem";
 import { getDir, getFilename } from "../../util/fileSystem";
@@ -50,7 +50,7 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
                 items.push({
                     label: "$(folder) ..",
                     path: path.dirname(dir),
-                    select: dir
+                    select: dir,
                 });
             }
 
@@ -64,7 +64,7 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
                     if (!gitIgnore(relativePath)) {
                         items.push({
                             label: `$(folder) ${name}`,
-                            path: folderPath
+                            path: folderPath,
                         });
                     }
                 }

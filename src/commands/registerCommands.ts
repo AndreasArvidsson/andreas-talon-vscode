@@ -29,7 +29,7 @@ type Callback = (...args: any[]) => any;
 
 export function registerCommands(
     commandServerExtension: CommandServerExtension,
-    treeSitter: TreeSitter
+    treeSitter: TreeSitter,
 ): vscode.Disposable {
     const getText = new GetText(commandServerExtension, treeSitter);
     const git = new GitUtil();
@@ -86,13 +86,13 @@ export function registerCommands(
                 return uri.fsPath;
             });
         },
-        printCommands
+        printCommands,
     } as const;
 
     return vscode.Disposable.from(
         ...Object.entries(commands).map(([command, callback]) =>
-            registerCommand(command as CommandId, callback)
-        )
+            registerCommand(command as CommandId, callback),
+        ),
     );
 }
 

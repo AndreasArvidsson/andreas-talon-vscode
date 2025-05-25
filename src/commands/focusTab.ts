@@ -47,7 +47,7 @@ async function showInputBox(): Promise<string | undefined> {
                 return null;
             }
             return "Must be one or two letters: [a-zA-Z]{1,2}";
-        }
+        },
     });
     if (value != null) {
         return value.trim();

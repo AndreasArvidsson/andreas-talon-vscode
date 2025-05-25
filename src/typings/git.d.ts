@@ -16,13 +16,13 @@ export interface InputBox {
 
 export const enum ForcePushMode {
     Force,
-    ForceWithLease
+    ForceWithLease,
 }
 
 export const enum RefType {
     Head,
     RemoteHead,
-    Tag
+    Tag,
 }
 
 export interface Ref {
@@ -85,7 +85,7 @@ export const enum Status {
     DELETED_BY_THEM,
     BOTH_ADDED,
     BOTH_DELETED,
-    BOTH_MODIFIED
+    BOTH_MODIFIED,
 }
 
 export interface Change {
@@ -166,7 +166,7 @@ export interface Repository {
 
     getObjectDetails(
         treeish: string,
-        path: string
+        path: string,
     ): Promise<{ mode: string; object: string; size: number }>;
     detectObjectType(object: string): Promise<{ mimetype: string; encoding?: string }>;
     buffer(ref: string, path: string): Promise<Buffer>;
@@ -213,7 +213,7 @@ export interface Repository {
         remoteName?: string,
         branchName?: string,
         setUpstream?: boolean,
-        force?: ForcePushMode
+        force?: ForcePushMode,
     ): Promise<void>;
 
     blame(path: string): Promise<string>;
@@ -251,7 +251,7 @@ export interface PushErrorHandler {
         repository: Repository,
         remote: Remote,
         refspec: string,
-        error: Error & { gitErrorCode: GitErrorCodes }
+        error: Error & { gitErrorCode: GitErrorCodes },
     ): Promise<boolean>;
 }
 
@@ -333,5 +333,5 @@ export const enum GitErrorCodes {
     CantRebaseMultipleBranches = "CantRebaseMultipleBranches",
     PatchDoesNotApply = "PatchDoesNotApply",
     NoPathFound = "NoPathFound",
-    UnknownPath = "UnknownPath"
+    UnknownPath = "UnknownPath",
 }

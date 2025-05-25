@@ -10,12 +10,12 @@ suite(command, () => {
             content: "ab",
             selections: [
                 [0, 0],
-                [1, 1]
-            ]
+                [1, 1],
+            ],
         },
         post: {
-            returnValue: null
-        }
+            returnValue: null,
+        },
     });
 
     runTest({
@@ -23,11 +23,11 @@ suite(command, () => {
         command,
         pre: {
             content: "abcd",
-            selections: [0, 2]
+            selections: [0, 2],
         },
         post: {
-            returnValue: { before: "ab", after: "cd" }
-        }
+            returnValue: { before: "ab", after: "cd" },
+        },
     });
 
     runTest({
@@ -35,10 +35,10 @@ suite(command, () => {
         command,
         pre: {
             content: "ab_cd",
-            selections: [0, 2, 0, 3]
+            selections: [0, 2, 0, 3],
         },
         post: {
-            returnValue: { before: "ab", after: "cd" }
-        }
+            returnValue: { before: "ab", after: "cd" },
+        },
     });
 });

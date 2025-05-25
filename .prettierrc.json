@@ -1,7 +1,6 @@
 {
     "tabWidth": 4,
     "printWidth": 100,
-    "trailingComma": "none",
     "overrides": [
         {
             "files": "*.yaml",

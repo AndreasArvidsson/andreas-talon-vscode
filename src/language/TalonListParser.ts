@@ -44,7 +44,7 @@ export function parseTalonList(text: string): TalonList {
 
     const result: TalonList = {
         headers: [],
-        items: []
+        items: [],
     };
 
     for (const line of headerLines) {

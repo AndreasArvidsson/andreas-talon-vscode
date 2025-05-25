@@ -7,21 +7,21 @@ suite(command, () => {
         title: "Single line",
         command,
         pre: {
-            content: "_abc_"
+            content: "_abc_",
         },
         post: {
-            returnValue: "_abc_"
-        }
+            returnValue: "_abc_",
+        },
     });
 
     runTest({
         title: "Multiple lines",
         command,
         pre: {
-            content: "foo\nbar"
+            content: "foo\nbar",
         },
         post: {
-            returnValue: "foo\nbar"
-        }
+            returnValue: "foo\nbar",
+        },
     });
 });

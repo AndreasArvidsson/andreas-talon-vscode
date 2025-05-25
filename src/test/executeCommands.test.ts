@@ -12,17 +12,17 @@ suite(command, () => {
                 [
                     "editor.action.insertLineAfter",
                     "editor.action.insertLineAfter",
-                    getFullCommand("getFilename")
-                ]
-            ]
+                    getFullCommand("getFilename"),
+                ],
+            ],
         },
         pre: {
-            content: ""
+            content: "",
         },
         post: {
             content: "\n\n",
             selections: [2, 0],
-            returnValue: [undefined, undefined, "Untitled-1"]
-        }
+            returnValue: [undefined, undefined, "Untitled-1"],
+        },
     });
 });

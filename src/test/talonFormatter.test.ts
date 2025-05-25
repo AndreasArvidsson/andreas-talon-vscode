@@ -7,13 +7,13 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
     {
         title: "matchers",
         pre: ["app  :  vscode", "", "and  not  mode :  command", "-", ""],
-        post: ["app: vscode", "", "and not mode: command", "-", ""]
+        post: ["app: vscode", "", "and not mode: command", "-", ""],
     },
 
     {
         title: "command singe line",
         pre: "foo  :  edit.left(  )",
-        post: ["foo:                        edit.left()", ""]
+        post: ["foo:                        edit.left()", ""],
     },
 
     {
@@ -24,7 +24,7 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
             "  edit.left(  )",
             "  key(  enter  )",
             "  sleep(   200ms  )",
-            "  user.too_stuff(  5  ,  7  ,  true  ,  false  )"
+            "  user.too_stuff(  5  ,  7  ,  true  ,  false  )",
         ],
         post: [
             "foo:",
@@ -33,14 +33,14 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
             "    key(enter)",
             "    sleep(200ms)",
             "    user.too_stuff(5, 7, true, false)",
-            ""
-        ]
+            "",
+        ],
     },
 
     {
         title: "settings declaration",
         pre: ["settings()  :  ", "  speech.timeout  =  0.400", "", "  speech.record_all=true"],
-        post: ["settings():", "    speech.timeout = 0.400", "", "    speech.record_all = true", ""]
+        post: ["settings():", "    speech.timeout = 0.400", "", "    speech.record_all = true", ""],
     },
 
     {
@@ -51,7 +51,7 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
             "gamepad( north )  :  'gamepad'",
             "parrot( pop )  :  'parrot'",
             "noise( pop )  :  'noise'",
-            "face( smile )  :  'face'"
+            "face( smile )  :  'face'",
         ],
         post: [
             "tag(): user.some_tag",
@@ -60,26 +60,26 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
             "parrot(pop):                'parrot'",
             "noise(pop):                 'noise'",
             "face(smile):                'face'",
-            ""
-        ]
+            "",
+        ],
     },
 
     {
         title: "CRLF comment",
         pre: "# Hello\r\nfoo: 'bar'",
-        post: "# Hello\r\nfoo:                        'bar'\r\n"
+        post: "# Hello\r\nfoo:                        'bar'\r\n",
     },
 
     {
         title: "Indented comment",
         pre: "# settings():\n # insert_wait = 10",
-        post: "# settings():\n    # insert_wait = 10\n"
+        post: "# settings():\n    # insert_wait = 10\n",
     },
 
     {
         title: "Custom column width",
         pre: "# fmt: columnWidth=5\nfoo: 'bar'",
-        post: "# fmt: columnWidth=5\nfoo: 'bar'\n"
+        post: "# fmt: columnWidth=5\nfoo: 'bar'\n",
     },
 
     {
@@ -157,8 +157,8 @@ slap:
 
 # Uncomment this to enable the curse yes/curse no commands (show hide mouse cursor). See issue #688.
 # tag(): user.mouse_cursor_commands_enable
-`
-    }
+`,
+    },
 ];
 
 suite("Talon formatter", () => {
@@ -168,11 +168,11 @@ suite("Talon formatter", () => {
             callback: () => commands.executeCommand("editor.action.formatDocument"),
             pre: {
                 language: "talon",
-                content: getContentString(fixture.pre)
+                content: getContentString(fixture.pre),
             },
             post: {
-                content: getContentString(fixture.post)
-            }
+                content: getContentString(fixture.post),
+            },
         });
     }
 });

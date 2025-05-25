@@ -18,8 +18,8 @@ export default eslintTs.config(
             ecmaVersion: "latest",
             sourceType: "module",
             parserOptions: {
-                project: "./tsconfig.json"
-            }
+                project: "./tsconfig.json",
+            },
         },
 
         rules: {
@@ -32,16 +32,16 @@ export default eslintTs.config(
                 "error",
                 "always",
                 {
-                    null: "never"
-                }
+                    null: "never",
+                },
             ],
             "@typescript-eslint/no-unused-vars": [
                 "warn",
                 {
                     argsIgnorePattern: "^_",
-                    caughtErrorsIgnorePattern: "^_"
-                }
-            ]
-        }
-    }
+                    caughtErrorsIgnorePattern: "^_",
+                },
+            ],
+        },
+    },
 );

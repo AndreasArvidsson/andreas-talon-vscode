@@ -17,7 +17,7 @@ interface RenameContext {
 
 export function getNewFilenameContext(
     editor: TextEditor,
-    inputName?: string
+    inputName?: string,
 ): RenameContext | undefined {
     if (editor.document.uri.scheme !== "file") {
         return undefined;
@@ -33,7 +33,7 @@ export function getNewFilenameContext(
         filename,
         file: splitName(filename),
         input: inputName ? splitName(inputName) : undefined,
-        selected: selected ? splitName(selected) : undefined
+        selected: selected ? splitName(selected) : undefined,
     };
 }
 
@@ -43,7 +43,7 @@ export function splitName(fullName: string) {
     // Skip index 0 because we don't want dotfiles
     if (i < 1) {
         return {
-            name: fullName
+            name: fullName,
         };
     }
 

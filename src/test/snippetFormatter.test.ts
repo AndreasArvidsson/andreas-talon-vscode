@@ -34,7 +34,7 @@ $0.insertionFormatter: PASCAL_CASE
 $0.wrapperPhrase: try
 $0.wrapperScope: statement
 ---
-`
+`,
     },
     {
         title: "Empty lines",
@@ -54,7 +54,7 @@ name: foo
  bar
 baz
 ---
-`
+`,
     },
     {
         title: "Empty snippet document",
@@ -75,7 +75,7 @@ phrase: test
 -
 test
 ---
-`
+`,
     },
     {
         title: "- in body",
@@ -93,12 +93,12 @@ a
 -
 b
 ---
-`
+`,
     },
     {
         title: "Empty file",
         pre: "",
-        post: ""
+        post: "",
     },
     {
         title: "Large file",
@@ -164,8 +164,8 @@ try:
 except Exception as ex:
     $0
 ---
-`
-    }
+`,
+    },
 ];
 
 suite("Snippet formatter", () => {
@@ -175,12 +175,12 @@ suite("Snippet formatter", () => {
             callback: () => commands.executeCommand("editor.action.formatDocument"),
             pre: {
                 language: "snippet",
-                content: getContentString(fixture.pre)
+                content: getContentString(fixture.pre),
             },
             post: {
                 content: getContentString(fixture.post),
-                selections: fixture.selections
-            }
+                selections: fixture.selections,
+            },
         });
     }
 });

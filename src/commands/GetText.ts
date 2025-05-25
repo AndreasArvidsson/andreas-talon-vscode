@@ -6,7 +6,7 @@ import { getSortedSelections } from "../util/getSortedSelections";
 export class GetText {
     constructor(
         private commandServerExtension: CommandServerExtension,
-        private treeSitter: TreeSitter
+        private treeSitter: TreeSitter,
     ) {}
 
     getDocumentText(): string | null {
@@ -43,7 +43,7 @@ export class GetText {
 
         return {
             before: startLine.text.slice(startChar - 2, startChar),
-            after: endLine.text.slice(endChar, endChar + 2)
+            after: endLine.text.slice(endChar, endChar + 2),
         };
     }
 
@@ -57,7 +57,7 @@ export class GetText {
         const nameNode = this.treeSitter.findsSmallestContainingPosition(
             editor.document,
             "class.name",
-            editor.selection.active
+            editor.selection.active,
         );
 
         return nameNode?.node.text ?? null;
@@ -73,7 +73,7 @@ export class GetText {
         const nameNode = this.treeSitter.findsSmallestContainingPosition(
             editor.document,
             "startTag.name",
-            editor.selection.active
+            editor.selection.active,
         );
 
         return nameNode?.node.text ?? null;

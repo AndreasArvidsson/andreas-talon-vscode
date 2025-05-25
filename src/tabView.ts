@@ -36,12 +36,12 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
 
     constructor() {
         const treeView = vscode.window.createTreeView(getFullCommand("tabs"), {
-            treeDataProvider: this
+            treeDataProvider: this,
         });
 
         this.mainDisposable = vscode.Disposable.from(
             treeView.onDidChangeVisibility(() => this.onVisibilityChange(treeView.visible)),
-            treeView
+            treeView,
         );
     }
 
@@ -56,7 +56,7 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
                         if (scope.affectsConfiguration(labelFormatSetting)) {
                             onTabChange();
                         }
-                    })
+                    }),
                 );
             }
         } else {
@@ -71,7 +71,7 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
         if (element.type === "group") {
             return {
                 label: `GROUP ${element.groupIndex + 1}`,
-                collapsibleState: vscode.TreeItemCollapsibleState.Expanded
+                collapsibleState: vscode.TreeItemCollapsibleState.Expanded,
             };
         }
         if (element.type === "padding") {
@@ -95,7 +95,7 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
             return element.tabGroup.tabs.map((tab, index) => ({
                 type: "tab",
                 index: element.tabIndex + index,
-                tab
+                tab,
             }));
         }
 
@@ -116,14 +116,14 @@ function createItem(tab: vscode.Tab, index: number): vscode.TreeItem {
     const command: vscode.Command = {
         title: `Focus tab ${hint}`,
         command: getFullCommand("focusTab"),
-        arguments: [hint]
+        arguments: [hint],
     };
 
     return {
         resourceUri,
         label,
         command,
-        description: getDescription(tab, resourceUri)
+        description: getDescription(tab, resourceUri),
     };
 }
 

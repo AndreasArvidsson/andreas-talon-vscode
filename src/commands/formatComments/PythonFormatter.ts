@@ -9,14 +9,14 @@ export class PythonFormatter extends BaseCommentFormatter {
     protected parseMatch(match: RegExpExecArray): CommentMatch {
         return {
             text: match[1],
-            isBlockComment: false
+            isBlockComment: false,
         };
     }
 
     protected parseBlockComment(
         _range: vscode.Range,
         _text: string,
-        _indentation: string
+        _indentation: string,
     ): string | undefined {
         throw Error("Block comments are not supported for Python");
     }

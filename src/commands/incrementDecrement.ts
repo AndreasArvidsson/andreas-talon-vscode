@@ -10,7 +10,7 @@ async function update(increment: boolean, value?: number) {
             const updatedText = selectionText.replace(/-?\d+(\.\d+)?/g, (text) =>
                 text.includes(".")
                     ? updateFloat(increment, text, value).toString()
-                    : updateInteger(increment, text, value).toString()
+                    : updateInteger(increment, text, value).toString(),
             );
 
             if (selectionText !== updatedText) {

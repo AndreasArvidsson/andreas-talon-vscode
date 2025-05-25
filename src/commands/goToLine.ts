@@ -12,7 +12,7 @@ export function goToLine(line: number): void {
 
     const position = new Position(
         documentLine.lineNumber,
-        documentLine.firstNonWhitespaceCharacterIndex
+        documentLine.firstNonWhitespaceCharacterIndex,
     );
 
     const selection = new Selection(position, position);

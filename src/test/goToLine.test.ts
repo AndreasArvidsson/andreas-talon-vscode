@@ -8,10 +8,10 @@ suite(command, () => {
         command: { id: command, args: [1] },
         pre: {
             content: "a\n  b",
-            selections: [0, 0]
+            selections: [0, 0],
         },
         post: {
-            selections: [1, 2]
-        }
+            selections: [1, 2],
+        },
     });
 });

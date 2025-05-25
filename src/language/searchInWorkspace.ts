@@ -37,7 +37,7 @@ const captureNameRegex = /^@[\s\S]*?\((?:path=)?"([\w.]+)"/;
 
 export async function searchInWorkspace(
     workspace: WorkspaceFolder,
-    match: TalonMatch
+    match: TalonMatch,
 ): Promise<SearchResult[]> {
     const results = await searchInWorkspaceInner(workspace);
     const resultsForType = (() => {
@@ -88,7 +88,7 @@ async function searchInWorkspaceInner(workspace: WorkspaceFolder) {
 async function searchInDirectory(
     gitIgnore: GitIgnore,
     absolutePath: string,
-    relativePath: string
+    relativePath: string,
 ): Promise<SearchResult[]> {
     const files = await fs.readdir(absolutePath);
     const definitions = await Promise.all(
@@ -97,9 +97,9 @@ async function searchInDirectory(
                 gitIgnore,
                 path.join(absolutePath, filename),
                 path.join(relativePath, filename),
-                filename
-            )
-        )
+                filename,
+            ),
+        ),
     );
     return definitions.flat();
 }
@@ -108,7 +108,7 @@ async function searchInPath(
     gitIgnore: GitIgnore,
     absolutePath: string,
     relativePath: string,
-    filename: string
+    filename: string,
 ): Promise<SearchResult[]> {
     // Filenames starting with `.` are ignored by Talon.
     if (filename.startsWith(".") || gitIgnore(relativePath)) {
@@ -142,7 +142,7 @@ async function parsePythonFile(absolutePath: string): Promise<SearchResult[]> {
         ...parsePythonFileInner(uri, fileContent, "action", actionRegex),
         ...parsePythonFileInner(uri, fileContent, "capture", captureRegex),
         ...parsePythonFileInner(uri, fileContent, "list", listRegex),
-        ...parsePythonFileInner(uri, fileContent, "dynamic_list", dynamicListRegex)
+        ...parsePythonFileInner(uri, fileContent, "dynamic_list", dynamicListRegex),
     ];
 }
 
@@ -151,7 +151,7 @@ function getTalonNamespacesFromPython(regex: RegExp, fileContent: string): Names
     return matches
         .map((m) => ({
             name: m[1] ?? "user",
-            line: fileContent.slice(0, m.index ?? 0).split("\n").length - 1
+            line: fileContent.slice(0, m.index ?? 0).split("\n").length - 1,
         }))
         .sort((a, b) => a.line - b.line);
 }
@@ -160,7 +160,7 @@ function parsePythonFileInner(
     uri: Uri,
     fileContent: string,
     type: TalonMatchType,
-    regex: RegExp
+    regex: RegExp,
 ): SearchResult[] {
     const matches = Array.from(fileContent.matchAll(regex));
     if (!matches.length) {
@@ -218,7 +218,7 @@ function parsePythonMatches(
     fileContent: string,
     matches: RegExpMatchArray[],
     type: TalonMatchType,
-    getNamespace?: GetNamespace
+    getNamespace?: GetNamespace,
 ): SearchResult[] {
     const results: SearchResult[] = [];
 
@@ -240,7 +240,7 @@ function parsePythonMatches(
             indentationLength,
             line + matchLines.length - 1,
             (matchLines.length === 1 ? indentationLength : 0) +
-                matchLines[matchLines.length - 1].length
+                matchLines[matchLines.length - 1].length,
         );
 
         // This is just the function name
@@ -251,7 +251,7 @@ function parsePythonMatches(
             line + nameOffsetRow,
             indentationLength + nameOffsetCol,
             line + nameOffsetRow,
-            indentationLength + nameOffsetCol + match[2].length
+            indentationLength + nameOffsetCol + match[2].length,
         );
 
         // Format name and target text for display
@@ -269,7 +269,7 @@ function parsePythonMatches(
             targetRange,
             targetSelectionRange,
             targetText,
-            name: fullName
+            name: fullName,
         });
     });
 
@@ -279,7 +279,7 @@ function parsePythonMatches(
 function parseTalonListMatch(
     uri: Uri,
     fileContent: string,
-    match: RegExpMatchArray
+    match: RegExpMatchArray,
 ): SearchResult[] {
     const lines = fileContent.split("\n");
     const lastLineIndex = lines.length - 1;
@@ -288,7 +288,7 @@ function parseTalonListMatch(
         0,
         match[1].length,
         0,
-        match[1].length + match[2].length
+        match[1].length + match[2].length,
     );
     return [
         {
@@ -298,7 +298,7 @@ function parseTalonListMatch(
             targetRange,
             targetSelectionRange,
             targetText: fileContent,
-            name: match[2].replace(/^self\./, "user.")
-        }
+            name: match[2].replace(/^self\./, "user."),
+        },
     ];
 }

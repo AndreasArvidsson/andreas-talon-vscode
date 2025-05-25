@@ -21,5 +21,5 @@ const columnFocusCommands = {
     [ViewColumn.Eight]: "workbench.action.focusEighthEditorGroup",
     [ViewColumn.Nine]: "workbench.action.focusNinthEditorGroup",
     [ViewColumn.Active]: undefined,
-    [ViewColumn.Beside]: undefined
+    [ViewColumn.Beside]: undefined,
 };

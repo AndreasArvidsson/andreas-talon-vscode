@@ -10,11 +10,11 @@ suite(command, () => {
             pre: {
                 language: languageId,
                 content: "<div><span></div>\n",
-                selections: [0, 11]
+                selections: [0, 11],
             },
             post: {
-                returnValue: "span"
-            }
+                returnValue: "span",
+            },
         });
     }
 

@@ -16,7 +16,7 @@ export class JavaFormatter extends BaseCommentFormatter {
     protected parseBlockComment(
         range: vscode.Range,
         text: string,
-        indentation: string
+        indentation: string,
     ): string | undefined {
         const isDoc = text.startsWith("/**");
         // Extract the text between the "/**" and "*/"

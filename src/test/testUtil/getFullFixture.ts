@@ -11,14 +11,14 @@ export function getFullFixture(fixture: TestFixture): FullTestFixture {
         pre: {
             language: pre.language ?? "plaintext",
             content: pre.content ?? "",
-            selections: getSelections(pre.selections)
+            selections: getSelections(pre.selections),
         },
         post: {
             language: post.language ?? pre.language ?? "plaintext",
             content: post.content ?? pre.content ?? "",
             selections: getSelections(post.selections ?? pre.selections),
-            returnValue: post.returnValue
-        }
+            returnValue: post.returnValue,
+        },
     };
 }
 

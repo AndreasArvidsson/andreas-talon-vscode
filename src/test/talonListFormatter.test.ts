@@ -18,39 +18,39 @@ bat: b`,
 air:      a
 
 bat:      b
-`
+`,
     },
 
     {
         title: "Multiple headers",
         pre: "app: app\nlist: l\n-\na:b",
         post: "list: l\napp: app\n-\n\na:        b\n",
-        selections: [1, 0]
+        selections: [1, 0],
     },
 
     {
         title: "To much whitespace",
         pre: "\n\nlist: l\n\n\n-\n\n\na:b\n\n",
-        post: "list: l\n-\n\na:        b\n"
+        post: "list: l\n-\n\na:        b\n",
     },
 
     {
         title: "Comment",
         pre: "\n\nlist: l\n-\n#c:c\na:b",
-        post: "list: l\n-\n\n#c:c\na:        b\n"
+        post: "list: l\n-\n\n#c:c\na:        b\n",
     },
 
     {
         title: "CRLF",
         pre: "list: l\r\n-\r\na:b",
-        post: "list: l\r\n-\r\n\r\na:        b\r\n"
+        post: "list: l\r\n-\r\n\r\na:        b\r\n",
     },
 
     {
         title: "Custom column width",
         pre: "list: l\n-\n# fmt: columnWidth=5\na:b",
-        post: "list: l\n-\n\n# fmt: columnWidth=5\na:   b\n"
-    }
+        post: "list: l\n-\n\n# fmt: columnWidth=5\na:   b\n",
+    },
 ];
 
 suite("Talon list formatter", () => {
@@ -60,12 +60,12 @@ suite("Talon list formatter", () => {
             callback: () => commands.executeCommand("editor.action.formatDocument"),
             pre: {
                 language: "talon-list",
-                content: fixture.pre
+                content: fixture.pre,
             },
             post: {
                 content: fixture.post,
-                selections: fixture.selections
-            }
+                selections: fixture.selections,
+            },
         });
     }
 });

@@ -8,7 +8,7 @@ suite(command, () => {
         command,
         pre: {},
         post: {
-            returnValue: "Untitled-1"
-        }
+            returnValue: "Untitled-1",
+        },
     });
 });

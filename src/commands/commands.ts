@@ -15,7 +15,7 @@ function create(
     category: Category,
     title: string,
     description?: string,
-    args?: string
+    args?: string,
 ): CommandDescription {
     return {
         isPrivate,
@@ -23,7 +23,7 @@ function create(
         category,
         title,
         description: title + (description ? ` ${description}` : ""),
-        args: args ?? "()"
+        args: args ?? "()",
     };
 }
 
@@ -47,13 +47,13 @@ export const commandDescriptions = {
         "File",
         "Create new file.",
         "Uses selected text and current file extension as suggestion.",
-        "(name?: string)"
+        "(name?: string)",
     ),
     duplicateFile: visible(
         "File",
         "Create duplicate/copy of active file.",
         undefined,
-        "(name?: string)"
+        "(name?: string)",
     ),
     renameFile: visible("File", "Rename active file.", undefined, "(name?: string)"),
     removeFile: visible("File", "Remove/delete the active file."),
@@ -62,7 +62,7 @@ export const commandDescriptions = {
     formatSelectedFiles: visible(
         "File",
         "Format",
-        "selected files. Used by file explorer context menu."
+        "selected files. Used by file explorer context menu.",
     ),
 
     // Edit commands
@@ -70,7 +70,7 @@ export const commandDescriptions = {
         "Edit",
         "Generate numerical range.",
         "Starts from 1 by default",
-        "(start: number = 1)"
+        "(start: number = 1)",
     ),
     increment: visible("Edit", "Increment selected number.", undefined, "(value?: number)"),
     decrement: visible("Edit", "Decrement selected number.", undefined, "(value?: number)"),
@@ -82,20 +82,20 @@ export const commandDescriptions = {
         "Navigation",
         "Open editor/tab at given index.",
         "Negative indices are counted from the back.",
-        "(index: number)"
+        "(index: number)",
     ),
     focusTab: visible("Navigation", "Focus tab by hint.", "Hints range [A-ZZ].", "(hint: string)"),
     goToLine: visible(
         "Navigation",
         "Go to line number. 0-based index.",
         undefined,
-        "(line: number)"
+        "(line: number)",
     ),
     selectTo: visible(
         "Navigation",
         "Select from current location to specified line.",
         undefined,
-        "(line: number)"
+        "(line: number)",
     ),
     lineMiddle: visible("Navigation", "Move cursor to middle of the current line."),
 
@@ -106,19 +106,19 @@ export const commandDescriptions = {
         "Text",
         "Get text before and after selection.",
         "Used for context sensitive dictation.",
-        "(): {before: string, after: string} | null"
+        "(): {before: string, after: string} | null",
     ),
     getClassName: hidden(
         "Text",
         "Get class name.",
         "Useful for inserting constructors in C++/Java.",
-        "(): string | null"
+        "(): string | null",
     ),
     getOpenTagName: hidden(
         "Text",
         "Get name for open tag.",
         "Useful to close tag in HTML/XML.",
-        "(): string | null"
+        "(): string | null",
     ),
 
     // Git commands
@@ -127,26 +127,26 @@ export const commandDescriptions = {
         "Git",
         "Get URL to Git repository file webpage.",
         "Optionally include selected line numbers.",
-        "({ useSelection: boolean, useBranch: boolean }): string"
+        "({ useSelection: boolean, useBranch: boolean }): string",
     ),
     getGitRepoURL: hidden("Git", "Get URL to Git repository webpage.", undefined, "(): string"),
     getGitIssuesURL: hidden(
         "Git",
         "Get URL to Git repository issues webpage.",
         undefined,
-        "(): string"
+        "(): string",
     ),
     getGitNewIssueURL: hidden(
         "Git",
         "Get URL to Git repository new issue webpage.",
         undefined,
-        "(): string"
+        "(): string",
     ),
     getGitPullRequestsURL: hidden(
         "Git",
         "Get URL to Git repository pull requests webpage.",
         undefined,
-        "(): string"
+        "(): string",
     ),
 
     // Other commands
@@ -154,27 +154,27 @@ export const commandDescriptions = {
         "Other",
         "Get setting from vscode",
         undefined,
-        "(section: string, defaultValue?: T): T | undefined"
+        "(section: string, defaultValue?: T): T | undefined",
     ),
     setSetting: hidden(
         "Other",
         "Set setting for vscode, either globally or for the current workspace/folder",
         undefined,
-        '(section: string, value: any, configurationTarget?: "global" | "workspace" | "workspaceFolder")'
+        '(section: string, value: any, configurationTarget?: "global" | "workspace" | "workspaceFolder")',
     ),
     executeCommands: hidden(
         "Other",
         "Sequentially execute multiple commands.",
         "Useful for keybindings.",
-        "(commands: string[])"
+        "(commands: string[])",
     ),
     getWorkspaceFolders: hidden(
         "Other",
         "Get an array of file system paths for workspace folders",
         undefined,
-        "(): string[] | undefined"
+        "(): string[] | undefined",
     ),
-    printCommands: visible("Other", "Print available commands.")
+    printCommands: visible("Other", "Print available commands."),
 } as const;
 
 export type CommandId = keyof typeof commandDescriptions;

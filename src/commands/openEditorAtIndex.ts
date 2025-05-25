@@ -26,7 +26,7 @@ async function showInputBox(): Promise<number | undefined> {
                 return null;
             }
             return "Must be integer";
-        }
+        },
     });
     if (value != null) {
         return parseInt(value.trim());

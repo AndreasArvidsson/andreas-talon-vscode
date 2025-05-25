@@ -25,7 +25,7 @@ export class TreeSitter {
     findsSmallestContainingPosition(
         document: vscode.TextDocument,
         name: ScopeName,
-        position: vscode.Position
+        position: vscode.Position,
     ): Scope | undefined {
         const scopes = this.parse(document);
 
@@ -114,7 +114,7 @@ function matchesToScopes(matches: QueryMatch[]): Scope[] {
                 name: name as ScopeName,
                 node,
                 range,
-                domain: domainRange ?? range
+                domain: domainRange ?? range,
             });
         }
     }

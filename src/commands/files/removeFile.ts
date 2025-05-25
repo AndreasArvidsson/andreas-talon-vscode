@@ -10,7 +10,7 @@ export async function removeFile(): Promise<void> {
     const remove = await window.showInformationMessage(
         `Are you sure you want to remove '${filename}'?`,
         { modal: true },
-        "Remove file"
+        "Remove file",
     );
 
     if (remove) {

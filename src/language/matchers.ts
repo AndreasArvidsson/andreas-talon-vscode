@@ -16,28 +16,28 @@ export type TalonMatch = TalonMatchName | TalonMatchPrefix;
 
 export function getTalonMatchAtPosition(
     document: TextDocument,
-    position: Position
+    position: Position,
 ): TalonMatchName | undefined {
     return getMatchAtPosition(document, position, true);
 }
 
 export function getPythonMatchAtPosition(
     document: TextDocument,
-    position: Position
+    position: Position,
 ): TalonMatchName | undefined {
     return getMatchAtPosition(document, position, false);
 }
 
 export function getTalonPrefixAtPosition(
     document: TextDocument,
-    position: Position
+    position: Position,
 ): TalonMatchPrefix | undefined {
     return getPrefixAtPosition(document, position, true);
 }
 
 export function getPythonPrefixAtPosition(
     document: TextDocument,
-    position: Position
+    position: Position,
 ): TalonMatchPrefix | undefined {
     return getPrefixAtPosition(document, position, false);
 }
@@ -45,7 +45,7 @@ export function getPythonPrefixAtPosition(
 function getMatchAtPosition(
     document: TextDocument,
     position: Position,
-    inTalon: boolean
+    inTalon: boolean,
 ): TalonMatchName | undefined {
     const name = getNameAtPosition(document, position);
     if (!name) {
@@ -61,7 +61,7 @@ function getMatchAtPosition(
             if (testRegexAtPosition(position, lineText, actionRegex)) {
                 return {
                     type: "action",
-                    name
+                    name,
                 };
             }
             return undefined;
@@ -71,7 +71,7 @@ function getMatchAtPosition(
         if (testRegexAtPosition(position, lineText, actionRegex)) {
             return {
                 type: "action",
-                name
+                name,
             };
         }
     }
@@ -80,7 +80,7 @@ function getMatchAtPosition(
     if (testRegexAtPosition(position, lineText, captureRegex)) {
         return {
             type: "capture",
-            name: name
+            name: name,
         };
     }
 
@@ -88,7 +88,7 @@ function getMatchAtPosition(
     if (testRegexAtPosition(position, lineText, listRegex)) {
         return {
             type: "list",
-            name
+            name,
         };
     }
 
@@ -98,7 +98,7 @@ function getMatchAtPosition(
 function getPrefixAtPosition(
     document: TextDocument,
     position: Position,
-    inTalon: boolean
+    inTalon: boolean,
 ): TalonMatchPrefix | undefined {
     const line = document.lineAt(position.line);
     const precedingText = line.text.substring(0, position.character);
@@ -149,6 +149,6 @@ function testRegexAtPosition(position: Position, lineText: string, regex: RegExp
         (match) =>
             match.index != null &&
             position.character >= match.index &&
-            position.character <= match.index + match[0].length
+            position.character <= match.index + match[0].length,
     );
 }

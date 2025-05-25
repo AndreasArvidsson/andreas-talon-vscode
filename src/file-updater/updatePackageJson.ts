@@ -24,8 +24,8 @@ export function updatePackageJson() {
             ...content,
             contributes: {
                 ...content.contributes,
-                commands: getCommands()
-            }
+                commands: getCommands(),
+            },
         };
     });
 }
@@ -37,6 +37,6 @@ function getCommands(): Command[] {
             command: getFullCommand(command as CommandId),
             category: `Andreas`,
             title,
-            ...(isVisible ? {} : { enablement: "false" })
+            ...(isVisible ? {} : { enablement: "false" }),
         }));
 }

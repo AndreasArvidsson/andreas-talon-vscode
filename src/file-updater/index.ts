@@ -10,7 +10,7 @@ import {
     updatePrettierrc,
     updateTsconfig,
     updateVscodeSettings,
-    type UpdaterConfig
+    type UpdaterConfig,
 } from "ts-archetype";
 
 const config: UpdaterConfig = {
@@ -19,7 +19,7 @@ const config: UpdaterConfig = {
     funding: "https://github.com/sponsors/AndreasArvidsson",
     projectName: "example-project",
     displayName: "Example project",
-    projectType: "vscodeExtension"
+    projectType: "vscodeExtension",
 };
 
 export async function runFileUpdater() {
@@ -33,6 +33,6 @@ export async function runFileUpdater() {
         ".prettierrc.json": updatePrettierrc(config),
         ".vscode/settings.json": updateVscodeSettings(config),
         LICENSE: updateLicense(config),
-        "tsconfig.json": updateTsconfig(config)
+        "tsconfig.json": updateTsconfig(config),
     });
 }

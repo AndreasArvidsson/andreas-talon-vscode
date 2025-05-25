@@ -5,7 +5,7 @@ import openNewEditor from "./openNewEditor";
 import {
     numbersToPlainSelections,
     numbersToSelections,
-    selectionsToPlainSelections
+    selectionsToPlainSelections,
 } from "./selectionUtil";
 import { FullTestFixture, TestFixture } from "./test.types";
 
@@ -34,7 +34,7 @@ async function openEditor(fixture: FullTestFixture) {
 function assertPost(
     fixture: FullTestFixture,
     editor: vscode.TextEditor,
-    actualReturnValue: unknown
+    actualReturnValue: unknown,
 ) {
     const { language, content, selections, returnValue } = fixture.post;
 
@@ -44,6 +44,6 @@ function assertPost(
 
     assert.deepEqual(
         selectionsToPlainSelections(editor.selections),
-        numbersToPlainSelections(selections)
+        numbersToPlainSelections(selections),
     );
 }

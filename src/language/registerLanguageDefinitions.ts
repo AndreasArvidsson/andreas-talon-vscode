@@ -9,7 +9,7 @@ import {
     MarkdownString,
     Position,
     TextDocument,
-    workspace
+    workspace,
 } from "vscode";
 import { getFilename } from "../util/fileSystem";
 import { getPythonMatchAtPosition, getTalonMatchAtPosition, TalonMatchName } from "./matchers";
@@ -20,7 +20,7 @@ abstract class DefinitionProviderBase implements DefinitionProvider {
     async provideDefinition(
         document: TextDocument,
         position: Position,
-        _token: CancellationToken
+        _token: CancellationToken,
     ): Promise<DefinitionLink[]> {
         const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
         if (!workspaceFolder) {
@@ -37,14 +37,14 @@ abstract class DefinitionProviderBase implements DefinitionProvider {
 
     protected abstract getMatchAtPosition(
         document: TextDocument,
-        position: Position
+        position: Position,
     ): TalonMatchName | undefined;
 }
 
 class TalonDefinitionProvider extends DefinitionProviderBase {
     protected getMatchAtPosition(
         document: TextDocument,
-        position: Position
+        position: Position,
     ): TalonMatchName | undefined {
         return getTalonMatchAtPosition(document, position);
     }
@@ -53,7 +53,7 @@ class TalonDefinitionProvider extends DefinitionProviderBase {
 class PythonDefinitionProvider extends DefinitionProviderBase {
     protected getMatchAtPosition(
         document: TextDocument,
-        position: Position
+        position: Position,
     ): TalonMatchName | undefined {
         return getPythonMatchAtPosition(document, position);
     }
@@ -63,7 +63,7 @@ abstract class HoverProviderBase implements HoverProvider {
     async provideHover(
         document: TextDocument,
         position: Position,
-        _token: CancellationToken
+        _token: CancellationToken,
     ): Promise<Hover | undefined> {
         const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
         if (!workspaceFolder) {
@@ -99,7 +99,7 @@ abstract class HoverProviderBase implements HoverProvider {
 
     protected abstract getMatchAtPosition(
         document: TextDocument,
-        position: Position
+        position: Position,
     ): TalonMatchName | undefined;
 }
 
@@ -124,7 +124,7 @@ function cleanHoverCode(text: string): string {
 class TalonHoverProvider extends HoverProviderBase {
     protected getMatchAtPosition(
         document: TextDocument,
-        position: Position
+        position: Position,
     ): TalonMatchName | undefined {
         return getTalonMatchAtPosition(document, position);
     }
@@ -133,7 +133,7 @@ class TalonHoverProvider extends HoverProviderBase {
 class PythonHoverProvider extends HoverProviderBase {
     protected getMatchAtPosition(
         document: TextDocument,
-        position: Position
+        position: Position,
     ): TalonMatchName | undefined {
         return getPythonMatchAtPosition(document, position);
     }
@@ -144,6 +144,6 @@ export function registerLanguageDefinitions(): Disposable {
         languages.registerDefinitionProvider("talon", new TalonDefinitionProvider()),
         languages.registerDefinitionProvider("python", new PythonDefinitionProvider()),
         languages.registerHoverProvider("talon", new TalonHoverProvider()),
-        languages.registerHoverProvider("python", new PythonHoverProvider())
+        languages.registerHoverProvider("python", new PythonHoverProvider()),
     );
 }

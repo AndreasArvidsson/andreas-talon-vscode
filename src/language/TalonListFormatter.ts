@@ -40,7 +40,7 @@ export const talonListFormatter: LanguageFormatterText = {
         result.push("");
 
         return result.join("\n");
-    }
+    },
 };
 
 function getColumnWidth(text: string) {

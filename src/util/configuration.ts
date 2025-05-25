@@ -14,11 +14,11 @@ export const configuration: Configuration = (() => {
     if (isTesting) {
         return {
             talonFormatter: {
-                columnWidth: () => 28
+                columnWidth: () => 28,
             },
             talonListFormatter: {
-                columnWidth: () => 10
-            }
+                columnWidth: () => 10,
+            },
         };
     }
 
@@ -26,13 +26,13 @@ export const configuration: Configuration = (() => {
         talonFormatter: {
             columnWidth: () => {
                 return getConfiguration<number>("talonFormatter.columnWidth");
-            }
+            },
         },
         talonListFormatter: {
             columnWidth: () => {
                 return getConfiguration<number>("talonListFormatter.columnWidth");
-            }
-        }
+            },
+        },
     };
 })();
 

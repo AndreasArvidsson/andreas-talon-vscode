@@ -18,12 +18,12 @@ export interface LanguageFormatterText {
 
 function provideDocumentFormattingEditsForTree(
     treeSitter: TreeSitter,
-    formatter: LanguageFormatterTree
+    formatter: LanguageFormatterTree,
 ) {
     return {
         provideDocumentFormattingEdits: async (
             document: TextDocument,
-            options: FormattingOptions
+            options: FormattingOptions,
         ): Promise<TextEdit[]> => {
             const rootNode = treeSitter.getRootNode(document);
 
@@ -35,7 +35,7 @@ function provideDocumentFormattingEditsForTree(
             const { indentation } = await parseOptions(document, options);
             const newText = formatter.getText(rootNode, indentation);
             return createTextEdits(document, newText);
-        }
+        },
     };
 }
 
@@ -43,7 +43,7 @@ function provideDocumentFormattingEditsForText(formatter: LanguageFormatterText)
     return {
         provideDocumentFormattingEdits: async (
             document: TextDocument,
-            options: FormattingOptions
+            options: FormattingOptions,
         ): Promise<TextEdit[]> => {
             const { indentation } = await parseOptions(document, options);
             try {
@@ -53,13 +53,13 @@ function provideDocumentFormattingEditsForText(formatter: LanguageFormatterText)
                 console.warn((error as Error).message);
                 return [];
             }
-        }
+        },
     };
 }
 
 async function parseOptions(document: TextDocument, options: FormattingOptions) {
     const config = await prettier.resolveConfig(document.uri.fsPath, {
-        editorconfig: true
+        editorconfig: true,
     });
 
     const insertSpaces = config != null ? !config.useTabs : options.insertSpaces;
@@ -77,10 +77,10 @@ function createTextEdits(document: TextDocument, text: string): TextEdit[] {
         TextEdit.replace(
             new Range(
                 document.lineAt(0).range.start,
-                document.lineAt(document.lineCount - 1).range.end
+                document.lineAt(document.lineCount - 1).range.end,
             ),
-            text
-        )
+            text,
+        ),
     ];
 }
 
@@ -88,19 +88,19 @@ export function registerLanguageFormatters(treeSitter: TreeSitter): Disposable {
     return Disposable.from(
         languages.registerDocumentFormattingEditProvider(
             "talon",
-            provideDocumentFormattingEditsForTree(treeSitter, talonFormatter)
+            provideDocumentFormattingEditsForTree(treeSitter, talonFormatter),
         ),
         languages.registerDocumentFormattingEditProvider(
             "talon-list",
-            provideDocumentFormattingEditsForText(talonListFormatter)
+            provideDocumentFormattingEditsForText(talonListFormatter),
         ),
         languages.registerDocumentFormattingEditProvider(
             "scm",
-            provideDocumentFormattingEditsForTree(treeSitter, treeSitterFormatter)
+            provideDocumentFormattingEditsForTree(treeSitter, treeSitterFormatter),
         ),
         languages.registerDocumentFormattingEditProvider(
             "snippet",
-            provideDocumentFormattingEditsForText(snippetFormatter)
-        )
+            provideDocumentFormattingEditsForText(snippetFormatter),
+        ),
     );
 }

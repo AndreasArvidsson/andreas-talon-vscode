@@ -21,7 +21,7 @@ function createLineTests(prefix: string): Test[] {
     return templateLineTests.map((test) => ({
         title: test.title,
         pre: getContentString(test.pre).replaceAll("#", prefix),
-        post: getContentString(test.post).replaceAll("#", prefix)
+        post: getContentString(test.post).replaceAll("#", prefix),
     }));
 }
 
@@ -29,14 +29,14 @@ function createBlockTests(prefix: string, suffix: string): Test[] {
     return templateBlockTests.map((test) => ({
         title: test.title,
         pre: getContentString(test.pre).replaceAll("/*", prefix).replaceAll("*/", suffix),
-        post: getContentString(test.post).replaceAll("/*", prefix).replaceAll("*/", suffix)
+        post: getContentString(test.post).replaceAll("/*", prefix).replaceAll("*/", suffix),
     }));
 }
 
 function tests(languageIds: string[], tests: Test[]): Language[] {
     return languageIds.map((id) => ({
         id,
-        tests
+        tests,
     }));
 }
 
@@ -62,9 +62,9 @@ const templateLineTests: Test[] = [
             "# amet,",
             "# consectetur",
             "# adipiscing",
-            "# elit"
-        ]
-    }
+            "# elit",
+        ],
+    },
 ];
 
 const pythonLineTests: Test[] = [
@@ -74,8 +74,8 @@ const pythonLineTests: Test[] = [
         pre: "# a\n# b\n# c",
         post: "# a b\n# c",
         preSelections: [0, 0, 1, 0],
-        postSelections: [0, 0, 0, 4]
-    }
+        postSelections: [0, 0, 0, 4],
+    },
 ];
 
 const cLineTests = createLineTests("//");
@@ -86,28 +86,28 @@ const templateBlockTests: Test[] = [
     {
         title: "Block | With indentation",
         pre: "  /*\naaa bbb ccc\n*/",
-        post: "  /*\n  aaa bbb\n  ccc\n  */"
+        post: "  /*\n  aaa bbb\n  ccc\n  */",
     },
     {
         title: "Block | Splitting",
         pre: "/* aaa bbb ccc */",
-        post: "/*\naaa bbb\nccc\n*/"
+        post: "/*\naaa bbb\nccc\n*/",
     },
     {
         title: "Block | Joining",
         pre: "/*\naaa\nbbb\nccc\n*/",
-        post: "/*\naaa bbb\nccc\n*/"
+        post: "/*\naaa bbb\nccc\n*/",
     },
     {
         title: "Block | Preserve empty",
         pre: "/*\naaa\n\nccc\n*/",
-        post: "/*\naaa\n\nccc\n*/"
+        post: "/*\naaa\n\nccc\n*/",
     },
     {
         title: "Block | Preserve dash",
         pre: "/*\naaa\n-\nccc\n*/",
-        post: "/*\naaa\n-\nccc\n*/"
-    }
+        post: "/*\naaa\n-\nccc\n*/",
+    },
 ];
 
 const javaDocTests: Test[] = [
@@ -115,33 +115,33 @@ const javaDocTests: Test[] = [
     {
         title: "Doc | With indentation",
         pre: "  /**\naaa bbb ccc\n*/",
-        post: "  /**\n   * aaa\n   * bbb\n   * ccc\n   */"
+        post: "  /**\n   * aaa\n   * bbb\n   * ccc\n   */",
     },
     {
         title: "Doc | Splitting",
         pre: "/** aaa bbb ccc */",
-        post: "/**\n * aaa bbb\n * ccc\n */"
+        post: "/**\n * aaa bbb\n * ccc\n */",
     },
     {
         title: "Doc | Joining",
         pre: "/**\naaa\nbbb\nccc\n*/",
-        post: "/**\n * aaa bbb\n * ccc\n */"
+        post: "/**\n * aaa bbb\n * ccc\n */",
     },
     {
         title: "Doc | Preserve empty",
         pre: "/**\n*aaa\n*\n*ccc\n*/",
-        post: "/**\n * aaa\n *\n * ccc\n */"
+        post: "/**\n * aaa\n *\n * ccc\n */",
     },
     {
         title: "Doc | Preserve dash",
         pre: "/**\n*aaa\n*-\n*ccc\n*/",
-        post: "/**\n * aaa\n * -\n * ccc\n */"
+        post: "/**\n * aaa\n * -\n * ccc\n */",
     },
     {
         title: "Doc | Add asterisks",
         pre: "/**\naaa\n\nccc\n*/",
-        post: "/**\n * aaa\n *\n * ccc\n */"
-    }
+        post: "/**\n * aaa\n *\n * ccc\n */",
+    },
 ];
 
 const xmlBlockTests: Test[] = createBlockTests("<!--", "-->");
@@ -151,13 +151,13 @@ const cBlockTests: Test[] = [
     {
         title: "Block | Line leading",
         pre: "// a\n/* b */",
-        post: "// a\n/* b */"
+        post: "// a\n/* b */",
     },
     {
         title: "Block | Line trailing",
         pre: "/* a */\n// b",
-        post: "/* a */\n// b"
-    }
+        post: "/* a */\n// b",
+    },
 ];
 
 const languages: Language[] = [
@@ -175,8 +175,8 @@ const languages: Language[] = [
 
     ...tests(
         ["java", "javascript", "typescript", "javascriptreact", "typescriptreact"],
-        [...cLineTests, ...cBlockTests, ...javaDocTests]
-    )
+        [...cLineTests, ...cBlockTests, ...javaDocTests],
+    ),
 ];
 
 suite("Format comments", () => {
@@ -188,17 +188,17 @@ suite("Format comments", () => {
                     commands.executeCommand(
                         fixture.preSelections
                             ? "andreas.formatComments"
-                            : "andreas.formatAllComments"
+                            : "andreas.formatAllComments",
                     ),
                 pre: {
                     language: language.id,
                     content: getContentString(fixture.pre),
-                    selections: fixture.preSelections
+                    selections: fixture.preSelections,
                 },
                 post: {
                     content: getContentString(fixture.post),
-                    selections: fixture.postSelections
-                }
+                    selections: fixture.postSelections,
+                },
             });
         }
     }

@@ -90,7 +90,7 @@ async function getLineWidth(document: vscode.TextDocument): Promise<number> {
     }
 
     const prettierConfig = await prettier.resolveConfig(document.uri.fsPath, {
-        editorconfig: true
+        editorconfig: true,
     });
 
     if (prettierConfig?.printWidth != null) {

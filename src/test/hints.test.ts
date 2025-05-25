@@ -11,7 +11,7 @@ const fixtures: Record<string, number> = {
     az: 51,
     ba: 52,
     bz: 77,
-    zz: 701
+    zz: 701,
 };
 
 suite("hints", () => {

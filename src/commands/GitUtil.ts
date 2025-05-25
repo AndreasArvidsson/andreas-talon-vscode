@@ -84,7 +84,7 @@ export class GitUtil {
         const { document } = getActiveFileSchemaEditor();
         const filePath = document.uri.path.toLowerCase();
         const repository = repositories.find((r) =>
-            filePath.startsWith(r.rootUri.path.toLowerCase())
+            filePath.startsWith(r.rootUri.path.toLowerCase()),
         );
         if (repository == null) {
             throw Error("Can't find Git repository");
@@ -108,7 +108,7 @@ function validateUnchangedDocument(document: TextDocument, repository: Repositor
     const changes = [
         ...repository.state.workingTreeChanges,
         ...repository.state.indexChanges,
-        ...repository.state.mergeChanges
+        ...repository.state.mergeChanges,
     ];
     const hasGitChange = changes.some((c) => c.uri.path === document.uri.path);
     if (hasGitChange) {

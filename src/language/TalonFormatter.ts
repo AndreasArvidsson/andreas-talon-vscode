@@ -7,7 +7,7 @@ export const talonFormatter: LanguageFormatterTree = {
         const columnWidth = getColumnWidth(node.text);
         const formatter = new TalonFormatter(indentation, columnWidth);
         return formatter.getText(node);
-    }
+    },
 };
 
 class TalonFormatter {
@@ -15,7 +15,7 @@ class TalonFormatter {
 
     constructor(
         private indent: string,
-        private columnWidth: number | undefined
+        private columnWidth: number | undefined,
     ) {}
 
     getText(node: Node): string {

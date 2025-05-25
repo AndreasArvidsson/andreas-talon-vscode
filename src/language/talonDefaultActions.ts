@@ -23,7 +23,7 @@ const actionsList = rawActionsList.map((action): ActionDesc => {
         path: "Talon default",
         name: action.name,
         docstr: action.docstr,
-        targetText: getTargetText(action)
+        targetText: getTargetText(action),
     };
 });
 

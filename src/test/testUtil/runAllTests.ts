@@ -5,7 +5,7 @@ import * as path from "node:path";
 export function run(): Promise<void> {
     const mocha = new Mocha({
         ui: "tdd",
-        color: true
+        color: true,
     });
 
     const cwd = path.resolve(__dirname, "..");

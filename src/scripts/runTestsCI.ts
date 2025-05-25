@@ -1,7 +1,7 @@
 import {
     downloadAndUnzipVSCode,
     resolveCliArgsFromVSCodeExecutablePath,
-    runTests
+    runTests,
 } from "@vscode/test-electron";
 import * as cp from "child_process";
 import * as path from "path";
@@ -12,7 +12,7 @@ const extensionDependencies = [
 
     // Register necessary language-IDs for tests
     "mrob95.vscode-talonscript", // talon
-    "jrieken.vscode-tree-sitter-query" // scm
+    "jrieken.vscode-tree-sitter-query", // scm
 ];
 
 export async function launchVscodeAndRunTests() {
@@ -29,7 +29,7 @@ export async function launchVscodeAndRunTests() {
         const code = await runTests({
             vscodeExecutablePath,
             extensionDevelopmentPath,
-            extensionTestsPath
+            extensionTestsPath,
         });
 
         if (code !== 0) {
@@ -48,7 +48,7 @@ function installExtensionDependencies(vscodeExecutablePath: string) {
     // Install extension dependencies
     const extensionInstallArgs = [
         ...args,
-        ...extensionDependencies.flatMap((dependency) => ["--install-extension", dependency])
+        ...extensionDependencies.flatMap((dependency) => ["--install-extension", dependency]),
     ];
 
     console.log("Installing dependency extensions...");
@@ -57,7 +57,7 @@ function installExtensionDependencies(vscodeExecutablePath: string) {
 
     const { status, signal, error } = cp.spawnSync(cli, extensionInstallArgs, {
         encoding: "utf-8",
-        stdio: "inherit"
+        stdio: "inherit",
     });
 
     if (status !== 0) {

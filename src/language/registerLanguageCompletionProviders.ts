@@ -7,7 +7,7 @@ import {
     Position,
     Range,
     TextDocument,
-    workspace
+    workspace,
 } from "vscode";
 import { getPythonPrefixAtPosition, getTalonPrefixAtPosition, TalonMatchPrefix } from "./matchers";
 import { searchInWorkspace } from "./searchInWorkspace";
@@ -24,7 +24,7 @@ abstract class TalonBaseCompletionProvider implements LanguageCompletionProvider
 
     async provideCompletionItems(
         document: TextDocument,
-        position: Position
+        position: Position,
     ): Promise<CompletionItem[]> {
         const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
         if (!workspaceFolder) {
@@ -43,7 +43,7 @@ abstract class TalonBaseCompletionProvider implements LanguageCompletionProvider
 
         const range = new Range(
             position.translate(undefined, -match.prefix.length),
-            position.translate(undefined, -match.prefix.length)
+            position.translate(undefined, -match.prefix.length),
         );
 
         const kind =
@@ -52,13 +52,13 @@ abstract class TalonBaseCompletionProvider implements LanguageCompletionProvider
         return Array.from(new Set(values)).map((label) => ({
             kind,
             range,
-            label
+            label,
         }));
     }
 
     protected abstract getPrefixAtPosition(
         document: TextDocument,
-        position: Position
+        position: Position,
     ): TalonMatchPrefix | undefined;
 }
 
@@ -67,7 +67,7 @@ class TalonCompletionProvider extends TalonBaseCompletionProvider {
 
     protected getPrefixAtPosition(
         document: TextDocument,
-        position: Position
+        position: Position,
     ): TalonMatchPrefix | undefined {
         return getTalonPrefixAtPosition(document, position);
     }
@@ -78,7 +78,7 @@ class PythonCompletionProvider extends TalonBaseCompletionProvider {
 
     protected getPrefixAtPosition(
         document: TextDocument,
-        position: Position
+        position: Position,
     ): TalonMatchPrefix | undefined {
         return getPythonPrefixAtPosition(document, position);
     }
@@ -104,7 +104,7 @@ class SnippetCompletionProvider implements LanguageCompletionProvider {
                 const fields = ["insertionFormatter", "wrapperPhrase", "wrapperScope"];
                 const range = new Range(
                     position.translate(undefined, -prefix.length),
-                    position.translate(undefined, -prefix.length)
+                    position.translate(undefined, -prefix.length),
                 );
                 return { fields, prefix, range };
             }
@@ -120,7 +120,7 @@ class SnippetCompletionProvider implements LanguageCompletionProvider {
                 kind: CompletionItemKind.Field,
                 range,
                 label: field,
-                insertText: `${field}: `
+                insertText: `${field}: `,
             }));
     }
 }
@@ -129,7 +129,7 @@ function registerCompletionProvider(provider: LanguageCompletionProvider): Dispo
     return languages.registerCompletionItemProvider(
         provider.languageId,
         provider,
-        ...provider.triggererCharacters
+        ...provider.triggererCharacters,
     );
 }
 
@@ -137,6 +137,6 @@ export function registerLanguageCompletionProviders(): Disposable {
     return Disposable.from(
         registerCompletionProvider(new TalonCompletionProvider()),
         registerCompletionProvider(new PythonCompletionProvider()),
-        registerCompletionProvider(new SnippetCompletionProvider())
+        registerCompletionProvider(new SnippetCompletionProvider()),
     );
 }

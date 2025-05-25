@@ -9,7 +9,7 @@ import {
     languages,
     Range,
     TextDocument,
-    WorkspaceEdit
+    WorkspaceEdit,
 } from "vscode";
 import type { TreeSitter } from "../treeSitter/TreeSitter";
 
@@ -22,7 +22,7 @@ abstract class ProviderCodeActions implements CodeActionProvider {
         document: TextDocument,
         range: Range,
         context: CodeActionContext,
-        _token: CancellationToken
+        _token: CancellationToken,
     ): CodeAction[] {
         if (context.triggerKind === CodeActionTriggerKind.Automatic) {
             return [];
@@ -41,12 +41,12 @@ abstract class ProviderCodeActions implements CodeActionProvider {
         const nodeStart = this.treeSitter.findsSmallestContainingPosition(
             document,
             "comment",
-            range.start
+            range.start,
         )?.node;
         const nodeEnd = this.treeSitter.findsSmallestContainingPosition(
             document,
             "comment",
-            range.end
+            range.end,
         )?.node;
 
         if (nodeStart == null || nodeEnd == null) {
@@ -58,7 +58,7 @@ abstract class ProviderCodeActions implements CodeActionProvider {
                 nodeStart.startPosition.row,
                 0,
                 nodeEnd.endPosition.row,
-                nodeEnd.endPosition.column
+                nodeEnd.endPosition.column,
             );
             let text = document.getText(commentRange);
 
@@ -74,7 +74,7 @@ abstract class ProviderCodeActions implements CodeActionProvider {
 
             const action = new CodeAction(
                 `Convert to ${this.docActionName} comment`,
-                CodeActionKind.RefactorRewrite
+                CodeActionKind.RefactorRewrite,
             );
             action.edit = new WorkspaceEdit();
             action.edit.replace(document.uri, commentRange, text);
@@ -150,6 +150,6 @@ export function registerLanguageCodeActions(treeSitter: TreeSitter): Disposable 
         languages.registerCodeActionsProvider("javascript", codeActionsProviderJs),
         languages.registerCodeActionsProvider("typescript", codeActionsProviderJs),
         languages.registerCodeActionsProvider("javascriptreact", codeActionsProviderJs),
-        languages.registerCodeActionsProvider("typescriptreact", codeActionsProviderJs)
+        languages.registerCodeActionsProvider("typescriptreact", codeActionsProviderJs),
     );
 }
