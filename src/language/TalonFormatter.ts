@@ -1,9 +1,9 @@
-import type { SyntaxNode } from "web-tree-sitter";
+import type { Node } from "web-tree-sitter";
 import { configuration } from "../util/configuration";
 import type { LanguageFormatterTree } from "./registerLanguageFormatters";
 
 export const talonFormatter: LanguageFormatterTree = {
-    getText(node: SyntaxNode, indentation: string): string {
+    getText(node: Node, indentation: string): string {
         const columnWidth = getColumnWidth(node.text);
         const formatter = new TalonFormatter(indentation, columnWidth);
         return formatter.getText(node);
@@ -18,11 +18,11 @@ class TalonFormatter {
         private columnWidth: number | undefined
     ) {}
 
-    getText(node: SyntaxNode): string {
+    getText(node: Node): string {
         return this.getNodeText(node) + "\n";
     }
 
-    private getLeftRightText(node: SyntaxNode): string {
+    private getLeftRightText(node: Node): string {
         const { children } = node;
         const isMultiline = children[2].startPosition.row > children[1].endPosition.row;
         const left = this.getNodeText(children[0]);
@@ -44,7 +44,7 @@ class TalonFormatter {
         return `${leftWithPadding}${nl}${right}`;
     }
 
-    private getNodeText(node: SyntaxNode, isIndented = false): string {
+    private getNodeText(node: Node, isIndented = false): string {
         const nl = node.startPosition.row > this.lastRow + 1 ? "\n" : "";
         this.lastRow = node.endPosition.row;
         const text = this.getNodeTextInternal(node, isIndented);
@@ -52,7 +52,7 @@ class TalonFormatter {
         return `${nl}${text}`;
     }
 
-    private pairWithChildren(node: SyntaxNode) {
+    private pairWithChildren(node: Node) {
         const { children } = node;
         const pre = children[0].text;
         const post = children[children.length - 1].text;
@@ -63,7 +63,7 @@ class TalonFormatter {
         return `${pre}${middle}${post}`;
     }
 
-    private getNodeTextInternal(node: SyntaxNode, isIndented = false): string {
+    private getNodeTextInternal(node: Node, isIndented = false): string {
         switch (node.type) {
             case "source_file":
                 return node.children

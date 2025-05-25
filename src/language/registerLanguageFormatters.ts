@@ -1,7 +1,7 @@
 import * as prettier from "prettier";
 import type { FormattingOptions, TextDocument } from "vscode";
 import { Disposable, languages, Range, TextEdit } from "vscode";
-import type { SyntaxNode } from "web-tree-sitter";
+import type { Node } from "web-tree-sitter";
 import type { TreeSitter } from "../treeSitter/TreeSitter";
 import { snippetFormatter } from "./SnippetFormatter";
 import { talonFormatter } from "./TalonFormatter";
@@ -9,7 +9,7 @@ import { talonListFormatter } from "./TalonListFormatter";
 import { treeSitterFormatter } from "./TreeSitterFormatter";
 
 export interface LanguageFormatterTree {
-    getText(node: SyntaxNode, indentation: string): string;
+    getText(node: Node, indentation: string): string;
 }
 
 export interface LanguageFormatterText {

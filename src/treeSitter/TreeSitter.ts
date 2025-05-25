@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import * as vscode from "vscode";
-import type { Point, Query, QueryMatch, SyntaxNode } from "web-tree-sitter";
+import type { Node, Point, Query, QueryMatch } from "web-tree-sitter";
 import type { ParseTreeExtension } from "../typings/parserTree";
 
 export type ScopeName = "class.name" | "startTag.name" | "comment";
@@ -10,7 +10,7 @@ export interface Scope {
     name: ScopeName;
     range: vscode.Range;
     domain: vscode.Range;
-    node: SyntaxNode;
+    node: Node;
 }
 
 export class TreeSitter {
@@ -18,7 +18,7 @@ export class TreeSitter {
 
     constructor(private parseTreeExtension: ParseTreeExtension) {}
 
-    getRootNode(document: vscode.TextDocument): SyntaxNode {
+    getRootNode(document: vscode.TextDocument): Node {
         return this.parseTreeExtension.getTree(document).rootNode;
     }
 
@@ -68,7 +68,7 @@ export class TreeSitter {
             return undefined;
         }
 
-        return this.parseTreeExtension.getLanguage(languageId)?.query(querySource);
+        return this.parseTreeExtension.createQuery(languageId, querySource);
     }
 }
 
@@ -122,7 +122,7 @@ function matchesToScopes(matches: QueryMatch[]): Scope[] {
     return results;
 }
 
-function nodeToRange(node: SyntaxNode): vscode.Range {
+function nodeToRange(node: Node): vscode.Range {
     return new vscode.Range(pointToPosition(node.startPosition), pointToPosition(node.endPosition));
 }
 
