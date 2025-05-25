@@ -31,8 +31,8 @@ jobs:
       - name: Compile
         run: npm --color run compile
 
-      - name: Run meta tests (Linux)
-        run: npm --color run test:meta
+      - name: Run lint (Linux)
+        run: npm --color run lint
         if: runner.os == 'Linux'
 
       - name: Run tests (Linux)

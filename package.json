@@ -314,10 +314,16 @@
         "compile": "tsc -p . && npm run bundle-assets",
         "bundle-assets": "tsx ./src/scripts/bundleAssets.ts",
         "clean": "rm -rf out",
-        "test:meta": "eslint src && file-updater --test && prettier --check .",
-        "fix:meta": "file-updater && prettier --write .",
-        "test:ci": "tsx src/scripts/runTestsCI.ts",
-        "watch": "tsc -watch -p ."
+        "watch": "tsc -watch -p .",
+        "lint": "npm run lint:meta && npm run lint:fmt && npm run lint:ts",
+        "lint:meta": "file-updater --test",
+        "lint:fmt": "prettier --check .",
+        "lint:ts": "eslint src",
+        "fix": "npm run fix:meta && npm run fix:fmt && npm run fix:ts",
+        "fix:meta": "file-updater",
+        "fix:fmt": "prettier --write .",
+        "fix:ts": "eslint src --fix",
+        "test:ci": "tsx src/scripts/runTestsCI.ts"
     },
     "extensionDependencies": [
         "pokey.parse-tree"
@@ -336,6 +342,8 @@
         "@typescript-eslint/eslint-plugin": "^6.0.0",
         "@typescript-eslint/parser": "^6.0.0",
         "@vscode/test-electron": "^2.3.9",
+        "eslint-config-prettier": "10.1.5",
+        "eslint-plugin-import": "2.31.0",
         "eslint": "^8.45.0",
         "file-updater": "0.5.0",
         "fs-extra": "^11.2.0",
