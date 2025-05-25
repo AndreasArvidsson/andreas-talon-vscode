@@ -162,10 +162,16 @@ foo bar baz:   "foo bar baz"
 
 ## Talon command examples
 
+### Focus tabs view
+
+```talon
+bar tabs: user.run_rpc_command("andreas.tabs.focus")
+```
+
 ### Focus tab
 
 ```talon
-tab {self.letter} [{self.letter}]:
+tab {user.letter} [{user.letter}]:
     user.run_rpc_command("andreas.focusTab", "{letter_1}{letter_2 or ''}")
 ```
 
