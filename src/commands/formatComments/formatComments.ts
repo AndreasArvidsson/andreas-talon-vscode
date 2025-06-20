@@ -1,7 +1,6 @@
-import * as prettier from "prettier";
 import * as vscode from "vscode";
 import { getActiveEditor } from "../../util/getActiveEditor";
-import { isTesting } from "../../util/isTesting";
+import { getFormattingOptions } from "../../util/getFormattingOptions";
 import { JavaFormatter } from "./JavaFormatter";
 import { LuaFormatter } from "./LuaFormatter";
 import { PythonFormatter } from "./PythonFormatter";
@@ -25,7 +24,7 @@ export function formatAllComments(): Promise<void> {
 export async function formatCommentsRunner(properties: Properties): Promise<void> {
     const { editor, doSave, onlySelected } = properties;
     const { document } = editor;
-    const lineWidth = await getLineWidth(document);
+    const { lineWidth } = await getFormattingOptions(document, editor.options);
     const configuration = getFormatter(document.languageId, lineWidth);
     const selections = onlySelected ? editor.selections : undefined;
 
@@ -82,32 +81,4 @@ function getFormatter(languageId: string, lineWidth: number): CommentFormatter |
         default:
             return undefined;
     }
-}
-
-async function getLineWidth(document: vscode.TextDocument): Promise<number> {
-    if (isTesting) {
-        return 10;
-    }
-
-    const prettierConfig = await prettier.resolveConfig(document.uri.fsPath, {
-        editorconfig: true,
-    });
-
-    if (prettierConfig?.printWidth != null) {
-        return prettierConfig.printWidth;
-    }
-
-    const defaultFormatter = getConfiguration("editor", "defaultFormatter");
-
-    switch (defaultFormatter) {
-        case "ms-python.black-formatter":
-        case "black":
-            return 88;
-    }
-
-    return 80;
-}
-
-function getConfiguration<T>(section: string, key: string): T | undefined {
-    return vscode.workspace.getConfiguration(section).get<T>(key);
 }

@@ -1,12 +1,12 @@
-import { workspace } from "vscode";
+import { workspace, type TextDocument } from "vscode";
 import { isTesting } from "./isTesting";
 
 interface Configuration {
     talonFormatter: {
-        columnWidth: () => number | undefined;
+        columnWidth: (document: TextDocument) => number | undefined;
     };
     talonListFormatter: {
-        columnWidth: () => number | undefined;
+        columnWidth: (document: TextDocument) => number | undefined;
     };
 }
 
@@ -24,18 +24,18 @@ export const configuration: Configuration = (() => {
 
     return {
         talonFormatter: {
-            columnWidth: () => {
-                return getConfiguration<number>("talonFormatter.columnWidth");
+            columnWidth: (document: TextDocument) => {
+                return getConfiguration<number>(document, "talonFormatter.columnWidth");
             },
         },
         talonListFormatter: {
-            columnWidth: () => {
-                return getConfiguration<number>("talonListFormatter.columnWidth");
+            columnWidth: (document: TextDocument) => {
+                return getConfiguration<number>(document, "talonListFormatter.columnWidth");
             },
         },
     };
 })();
 
-function getConfiguration<T>(key: string): T | undefined {
-    return workspace.getConfiguration("andreas").get<T>(key);
+function getConfiguration<T>(document: TextDocument, key: string): T | undefined {
+    return workspace.getConfiguration("andreas", document).get<T>(key);
 }

@@ -1,10 +1,11 @@
+import type { TextDocument } from "vscode";
 import type { Node } from "web-tree-sitter";
 import { configuration } from "../util/configuration";
 import type { LanguageFormatterTree } from "./registerLanguageFormatters";
 
 export const talonFormatter: LanguageFormatterTree = {
-    getText(node: Node, indentation: string): string {
-        const columnWidth = getColumnWidth(node.text);
+    getText(document: TextDocument, node: Node, indentation: string): string {
+        const columnWidth = getColumnWidth(document, node.text);
         const formatter = new TalonFormatter(indentation, columnWidth);
         return formatter.getText(node);
     },
@@ -174,10 +175,10 @@ class TalonFormatter {
     }
 }
 
-function getColumnWidth(text: string) {
+function getColumnWidth(document: TextDocument, text: string) {
     const match = text.match(/# fmt: columnWidth=(\d+)/);
     if (match != null) {
         return parseInt(match[1]);
     }
-    return configuration.talonFormatter.columnWidth();
+    return configuration.talonFormatter.columnWidth(document);
 }

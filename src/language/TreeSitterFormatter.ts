@@ -1,8 +1,9 @@
+import type { TextDocument } from "vscode";
 import type { Node } from "web-tree-sitter";
 import type { LanguageFormatterTree } from "./registerLanguageFormatters";
 
 export const treeSitterFormatter: LanguageFormatterTree = {
-    getText(node: Node, indentation: string): string {
+    getText(document: TextDocument, node: Node, indentation: string): string {
         const formatter = new TreeSitterFormatter(indentation);
         return formatter.getText(node);
     },
