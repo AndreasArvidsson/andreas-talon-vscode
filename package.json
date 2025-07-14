@@ -16,7 +16,7 @@
     },
     "funding": "https://github.com/sponsors/AndreasArvidsson",
     "engines": {
-        "vscode": "^1.68.0"
+        "vscode": "^1.95.3"
     },
     "extensionKind": [
         "ui",
@@ -352,27 +352,27 @@
         "pokey.parse-tree"
     ],
     "dependencies": {
-        "glob": "11.0.2",
-        "ignore": "7.0.4",
+        "glob": "11.0.3",
+        "ignore": "7.0.5",
         "prettier": "3.5.3",
         "talon-snippets": "1.3.0"
     },
     "devDependencies": {
-        "@eslint/js": "9.27.0",
-        "@types/fs-extra": "11.0.4",
-        "@types/mocha": "10.0.10",
-        "@types/node": "22.15.21",
-        "@types/vscode": "1.68.0",
-        "@vscode/test-electron": "2.5.2",
-        "eslint-config-prettier": "10.1.5",
-        "eslint-plugin-import": "2.31.0",
-        "eslint": "9.27.0",
-        "file-updater": "0.5.0",
-        "fs-extra": "11.3.0",
-        "mocha": "11.5.0",
-        "ts-archetype": "0.5.0",
-        "tsx": "4.19.4",
-        "typescript-eslint": "8.32.1",
-        "typescript": "5.8.3"
+        "@eslint/js": "^9.31.0",
+        "@types/fs-extra": "^11.0.4",
+        "@types/mocha": "^10.0.10",
+        "@types/node": "^24.0.13",
+        "@types/vscode": "1.95.0",
+        "@vscode/test-electron": "^2.5.2",
+        "eslint-config-prettier": "^10.1.5",
+        "eslint-plugin-import": "^2.32.0",
+        "eslint": "^9.31.0",
+        "file-updater": "^0.5.0",
+        "fs-extra": "^11.3.0",
+        "mocha": "^11.7.1",
+        "ts-archetype": "^0.5.0",
+        "tsx": "^4.20.3",
+        "typescript-eslint": "^8.36.0",
+        "typescript": "^5.8.3"
     }
 }

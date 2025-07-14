@@ -1,6 +1,7 @@
 .github/
 .vscode/
 src/
+stuff/
 out/test/
 out/file-updater/
 out/scripts/
