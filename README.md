@@ -31,6 +31,12 @@ Many of the commands take arguments and return values that can only be used with
   Format workspace files.
 - `andreas.formatSelectedFiles()`  
   Format selected files. Used by file explorer context menu.
+- `andreas.searchFiles(query?: string)`  
+  Search files Search files in workspace.
+- `andreas.searchFilesOpenSelected()`  
+  Open selected Open selected files in search result.
+- `andreas.searchFilesDeleteSelected()`  
+  Delete selected Delete selected files in search result.
 
 ### Edit commands
 

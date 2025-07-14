@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.75.1",
+    "version": "3.76.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -74,6 +74,12 @@
                 ],
                 "extensions": [
                     ".snippet"
+                ]
+            },
+            {
+                "id": "search-results",
+                "aliases": [
+                    "Search results"
                 ]
             }
         ],
@@ -160,6 +166,21 @@
                 "command": "andreas.formatSelectedFiles",
                 "category": "Andreas",
                 "title": "Format"
+            },
+            {
+                "command": "andreas.searchFiles",
+                "category": "Andreas",
+                "title": "Search files"
+            },
+            {
+                "command": "andreas.searchFilesOpenSelected",
+                "category": "Andreas",
+                "title": "Open selected"
+            },
+            {
+                "command": "andreas.searchFilesDeleteSelected",
+                "category": "Andreas",
+                "title": "Delete selected"
             },
             {
                 "command": "andreas.generateRange",
@@ -331,6 +352,7 @@
         "pokey.parse-tree"
     ],
     "dependencies": {
+        "glob": "11.0.2",
         "ignore": "7.0.4",
         "prettier": "3.5.3",
         "talon-snippets": "1.3.0"
@@ -347,7 +369,6 @@
         "eslint": "9.27.0",
         "file-updater": "0.5.0",
         "fs-extra": "11.3.0",
-        "glob": "11.0.2",
         "mocha": "11.5.0",
         "ts-archetype": "0.5.0",
         "tsx": "4.19.4",

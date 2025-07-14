@@ -8,9 +8,9 @@ export async function removeFile(): Promise<void> {
     const filename = getFilename(uri);
 
     const remove = await window.showInformationMessage(
-        `Are you sure you want to remove '${filename}'?`,
+        `Are you sure you want to delete '${filename}'?`,
         { modal: true },
-        "Remove file",
+        "Move to Recycle Bin",
     );
 
     if (remove) {

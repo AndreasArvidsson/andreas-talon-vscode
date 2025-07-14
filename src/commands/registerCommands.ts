@@ -13,6 +13,11 @@ import { moveFile } from "./files/moveFile";
 import { newFile } from "./files/newFile";
 import { removeFile } from "./files/removeFile";
 import { renameFile } from "./files/renameFile";
+import {
+    searchFiles,
+    searchFilesDeleteSelected,
+    searchFilesOpenSelected,
+} from "./files/searchFiles";
 import { focusTab } from "./focusTab";
 import { formatAllComments, formatComments } from "./formatComments/formatComments";
 import { formatSelectedFiles, formatWorkspaceFiles } from "./formatFiles";
@@ -45,6 +50,9 @@ export function registerCommands(
         moveFile,
         formatWorkspaceFiles,
         formatSelectedFiles,
+        searchFiles,
+        searchFilesOpenSelected,
+        searchFilesDeleteSelected,
         // Edits
         generateRange,
         increment,

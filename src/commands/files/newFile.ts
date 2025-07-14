@@ -1,15 +1,15 @@
-import path from "node:path";
-import { Uri, commands, window } from "vscode";
-import { showNewNameInputBox } from "../../util/showNewNameInputBox";
-import { createFile, openTextDocument } from "../../util/fileSystem";
+import * as path from "node:path";
+import * as vscode from "vscode";
+import { createFile } from "../../util/fileSystem";
 import { getNewFilenameContext } from "../../util/getRenameContext";
+import { showNewNameInputBox } from "../../util/showNewNameInputBox";
 
 export async function newFile(name?: string): Promise<void> {
-    const editor = window.activeTextEditor;
+    const editor = vscode.window.activeTextEditor;
     const context = editor != null ? getNewFilenameContext(editor, name) : undefined;
 
     if (context == null) {
-        await commands.executeCommand("explorer.newFile");
+        await vscode.commands.executeCommand("explorer.newFile");
         return;
     }
 
@@ -20,8 +20,8 @@ export async function newFile(name?: string): Promise<void> {
     const filename = await showNewNameInputBox(suggestedName, suggestedExt);
 
     if (filename) {
-        const uri = Uri.file(path.join(context.dir, filename));
+        const uri = vscode.Uri.file(path.join(context.dir, filename));
         await createFile(uri);
-        await openTextDocument(uri);
+        await vscode.window.showTextDocument(uri);
     }
 }

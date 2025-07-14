@@ -1,6 +1,6 @@
-import path from "node:path";
-import { Uri } from "vscode";
-import { copyFile, openTextDocument } from "../../util/fileSystem";
+import * as path from "node:path";
+import * as vscode from "vscode";
+import { copyFile } from "../../util/fileSystem";
 import { getActiveFileSchemaEditor } from "../../util/getActiveEditor";
 import { getNewFilenameContext } from "../../util/getRenameContext";
 import { showNewNameInputBox } from "../../util/showNewNameInputBox";
@@ -19,8 +19,8 @@ export async function duplicateFile(name?: string): Promise<void> {
     const filename = await showNewNameInputBox(suggestedName, suggestedExt);
 
     if (filename) {
-        const uri = Uri.file(path.join(context.dir, filename));
+        const uri = vscode.Uri.file(path.join(context.dir, filename));
         await copyFile(context.uri, uri);
-        await openTextDocument(uri);
+        await vscode.window.showTextDocument(uri);
     }
 }
