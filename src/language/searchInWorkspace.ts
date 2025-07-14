@@ -98,7 +98,10 @@ async function searchInDirectory(
                 path.join(absolutePath, filename),
                 path.join(relativePath, filename),
                 filename,
-            ),
+            ).catch((error) => {
+                console.error(error);
+                return [];
+            }),
         ),
     );
     return definitions.flat();
