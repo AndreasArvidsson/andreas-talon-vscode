@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default eslintTs.config(
-    { ignores: ["src/typings"] },
+    { ignores: ["src/typings", "eslint.config.mts"] },
     eslintJs.configs.recommended,
     eslintTs.configs.recommendedTypeChecked,
     eslintPrettier,
