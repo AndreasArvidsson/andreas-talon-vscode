@@ -58,6 +58,7 @@ function installExtensionDependencies(vscodeExecutablePath: string) {
     const { status, signal, error } = cp.spawnSync(cli, extensionInstallArgs, {
         encoding: "utf-8",
         stdio: "inherit",
+        shell: process.platform === "win32",
     });
 
     const messageParts: string[] = [];
