@@ -1,11 +1,7 @@
 import eslintJs from "@eslint/js";
 import eslintPrettier from "eslint-config-prettier/flat";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import eslintTs from "typescript-eslint";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export default eslintTs.config(
     { ignores: ["src/typings", "eslint.config.mts"] },
