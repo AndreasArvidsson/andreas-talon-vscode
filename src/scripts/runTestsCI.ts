@@ -60,14 +60,23 @@ function installExtensionDependencies(vscodeExecutablePath: string) {
         stdio: "inherit",
     });
 
-    if (status !== 0) {
-        console.log("status: ", status);
+    const messageParts: string[] = [];
+
+    if (status != null && status !== 0) {
+        messageParts.push(`Status: ${status}`);
     }
-    if (signal) {
-        console.log("signal: ", signal);
+    if (signal != null) {
+        messageParts.push(`Signal: ${signal}`);
     }
-    if (error) {
-        console.log("error: ", error);
+    if (messageParts.length > 0) {
+        const message = `Extension installation failed. ${messageParts.join(", ")}`;
+        if (error == null) {
+            throw new Error(message);
+        }
+        console.error(message);
+    }
+    if (error != null) {
+        throw error;
     }
 
     console.log("Finished installing dependency extensions");
