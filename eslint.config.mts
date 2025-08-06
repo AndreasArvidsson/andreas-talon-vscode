@@ -1,6 +1,5 @@
 import eslintJs from "@eslint/js";
 import eslintPrettier from "eslint-config-prettier/flat";
-import path from "node:path";
 import eslintTs from "typescript-eslint";
 
 export default eslintTs.config(
