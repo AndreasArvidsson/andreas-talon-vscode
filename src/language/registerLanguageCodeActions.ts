@@ -1,14 +1,16 @@
-import {
+import type {
     CancellationToken,
-    CodeAction,
     CodeActionContext,
-    CodeActionKind,
     CodeActionProvider,
+    TextDocument,
+} from "vscode";
+import {
+    CodeAction,
+    CodeActionKind,
     CodeActionTriggerKind,
     Disposable,
     languages,
     Range,
-    TextDocument,
     WorkspaceEdit,
 } from "vscode";
 import type { TreeSitter } from "../treeSitter/TreeSitter";

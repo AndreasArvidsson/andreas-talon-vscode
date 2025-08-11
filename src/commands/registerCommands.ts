@@ -3,8 +3,9 @@ import type { TreeSitter } from "../treeSitter/TreeSitter";
 import type { CommandServerExtension } from "../typings/commandServer";
 import { getFullCommand } from "../util/getFullCommand";
 import { GetText } from "./GetText";
-import { GitParameters, GitUtil } from "./GitUtil";
-import { CommandId } from "./commands";
+import type { GitParameters } from "./GitUtil";
+import { GitUtil } from "./GitUtil";
+import type { CommandId } from "./commands";
 import { executeCommands } from "./executeCommands";
 import { copyFilename } from "./files/copyFilename";
 import { duplicateFile } from "./files/duplicateFile";
@@ -33,6 +34,7 @@ import { printCommands } from "./printCommands";
 import { selectTo } from "./selectTo";
 import { getSetting, setSetting } from "./settings";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Callback = (...args: any[]) => any;
 
 export function registerCommands(
@@ -115,9 +117,9 @@ function registerCommand(
 ): vscode.Disposable {
     const fullCommand = getFullCommand(command);
 
-    const safeCallback = async (...args: any[]) => {
+    const safeCallback = async (...args: unknown[]) => {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             return await Promise.resolve(callback(...args));
         } catch (error) {
             const errorMessage =

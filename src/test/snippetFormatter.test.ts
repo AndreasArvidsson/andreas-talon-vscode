@@ -1,6 +1,6 @@
 import { commands } from "vscode";
 import { runTest } from "./testUtil/runTest";
-import { NumberSelection } from "./testUtil/test.types";
+import type { NumberSelection } from "./testUtil/test.types";
 
 type Content = string | string[];
 

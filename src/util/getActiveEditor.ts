@@ -1,4 +1,5 @@
-import { window, TextEditor } from "vscode";
+import type { TextEditor } from "vscode";
+import { window } from "vscode";
 
 export function getActiveEditor(): TextEditor {
     const editor = window.activeTextEditor;

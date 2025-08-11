@@ -1,8 +1,9 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { DefinitionLink, Range, Uri, WorkspaceFolder } from "vscode";
+import type { DefinitionLink, WorkspaceFolder } from "vscode";
+import { Range, Uri } from "vscode";
 import { getGitIgnore } from "../util/gitIgnore";
-import { TalonMatch, TalonMatchType } from "./matchers";
+import type { TalonMatch, TalonMatchType } from "./matchers";
 
 export interface SearchResult extends DefinitionLink {
     targetText: string;

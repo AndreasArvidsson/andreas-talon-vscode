@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { CommandServerExtension } from "../typings/commandServer";
-import { GitExtension } from "../typings/git";
-import { ParseTreeExtension } from "../typings/parserTree";
+import type { CommandServerExtension } from "../typings/commandServer";
+import type { GitExtension } from "../typings/git";
+import type { ParseTreeExtension } from "../typings/parserTree";
 
 async function getExtension<T>(name: string): Promise<T> {
     const extension = vscode.extensions.getExtension(name);

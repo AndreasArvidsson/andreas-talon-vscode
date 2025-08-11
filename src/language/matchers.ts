@@ -1,4 +1,4 @@
-import { Position, TextDocument, TextLine } from "vscode";
+import type { Position, TextDocument, TextLine } from "vscode";
 
 export type TalonMatchType = "action" | "capture" | "list" | "dynamic_list";
 

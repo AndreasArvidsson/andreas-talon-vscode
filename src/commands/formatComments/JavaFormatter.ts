@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import type * as vscode from "vscode";
 import { BaseCommentFormatter } from "./BaseCommentFormatter";
 import type { CommentMatch } from "./types";
 import { isValidLine, parseTokens } from "./utils";

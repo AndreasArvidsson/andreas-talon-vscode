@@ -1,5 +1,9 @@
 import * as vscode from "vscode";
-import { NumberSelection, PlainPosition, PlainSelection } from "./test.types";
+import type {
+    NumberSelection,
+    PlainPosition,
+    PlainSelection,
+} from "./test.types";
 
 export function selectionsToPlainSelections(
     selections: readonly vscode.Selection[],

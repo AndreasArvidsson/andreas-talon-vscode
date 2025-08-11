@@ -1,5 +1,4 @@
-import type { Selection, TextDocument } from "vscode";
-import { Range } from "vscode";
+import type { Range, Selection, TextDocument } from "vscode";
 import type { Change, CommentFormatter, CommentMatch } from "./types";
 import { isValidLine, matchAll, parseTokens } from "./utils";
 

@@ -11,7 +11,7 @@ type ConfigurationTarget = "global" | "workspace" | "workspaceFolder";
 
 export function setSetting(
     section: string,
-    value: any,
+    value: unknown,
     configurationTarget?: ConfigurationTarget,
 ) {
     return vscode.workspace
@@ -36,8 +36,8 @@ function getConfigurationTarget(
         case "workspaceFolder":
             return vscode.ConfigurationTarget.WorkspaceFolder;
         default:
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             throw new Error(
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                 `Unknown configuration target: ${configurationTarget}`,
             );
     }

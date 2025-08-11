@@ -1,4 +1,5 @@
-import { CommandId, commandDescriptions } from "../commands/commands";
+import type { CommandId } from "../commands/commands";
+import { commandDescriptions } from "../commands/commands";
 import { getFullCommand } from "../util/getFullCommand";
 
 export function updateReadme(content: string | null): string {

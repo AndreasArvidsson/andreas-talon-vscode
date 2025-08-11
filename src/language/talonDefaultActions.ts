@@ -1,4 +1,4 @@
-import { TalonMatch } from "./matchers";
+import type { TalonMatch } from "./matchers";
 import actionsJson from "./talonDefaultActions.json";
 
 interface RawActionDesc {

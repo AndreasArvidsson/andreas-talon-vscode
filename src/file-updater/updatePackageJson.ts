@@ -1,5 +1,6 @@
 import { json } from "file-updater";
-import { CommandId, commandDescriptions } from "../commands/commands";
+import type { CommandId } from "../commands/commands";
+import { commandDescriptions } from "../commands/commands";
 import { getFullCommand } from "../util/getFullCommand";
 
 interface Command {

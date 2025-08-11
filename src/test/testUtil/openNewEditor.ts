@@ -1,4 +1,5 @@
-import { commands, EndOfLine, TextEditor, window, workspace } from "vscode";
+import type { TextEditor } from "vscode";
+import { commands, EndOfLine, window, workspace } from "vscode";
 import { getParseTreeExtension } from "../../util/getExtension";
 
 interface Options {

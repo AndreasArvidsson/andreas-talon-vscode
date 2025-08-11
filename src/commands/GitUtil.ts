@@ -1,5 +1,5 @@
-import { Range, TextDocument } from "vscode";
-import { API, Remote, Repository } from "../typings/git";
+import type { Range, TextDocument } from "vscode";
+import type { API, Remote, Repository } from "../typings/git";
 import { getActiveFileSchemaEditor } from "../util/getActiveEditor";
 import { getGitExtension } from "../util/getExtension";
 

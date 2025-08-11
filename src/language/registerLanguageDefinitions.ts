@@ -1,22 +1,21 @@
-import {
+import type {
     CancellationToken,
     DefinitionLink,
     DefinitionProvider,
-    Disposable,
-    Hover,
     HoverProvider,
-    languages,
-    MarkdownString,
     Position,
     TextDocument,
+} from "vscode";
+import {
+    Disposable,
+    Hover,
+    languages,
+    MarkdownString,
     workspace,
 } from "vscode";
 import { getFilename } from "../util/fileSystem";
-import {
-    getPythonMatchAtPosition,
-    getTalonMatchAtPosition,
-    TalonMatchName,
-} from "./matchers";
+import type { TalonMatchName } from "./matchers";
+import { getPythonMatchAtPosition, getTalonMatchAtPosition } from "./matchers";
 import { searchInWorkspace } from "./searchInWorkspace";
 import { searchInDefaultTalonActions } from "./talonDefaultActions";
 

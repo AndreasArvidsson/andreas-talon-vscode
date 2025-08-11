@@ -1,4 +1,5 @@
-import { TabGroup, commands, window } from "vscode";
+import type { TabGroup } from "vscode";
+import { commands, window } from "vscode";
 import { focusViewColumn } from "../util/focusViewColumn";
 import { hintToIndex } from "../util/hints";
 

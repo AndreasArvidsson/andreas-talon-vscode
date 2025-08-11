@@ -1,13 +1,6 @@
 import path from "node:path";
-import {
-    FileType,
-    QuickPickItem,
-    QuickPickItemKind,
-    Uri,
-    WorkspaceFolder,
-    window,
-    workspace,
-} from "vscode";
+import type { QuickPickItem, WorkspaceFolder } from "vscode";
+import { FileType, QuickPickItemKind, Uri, window, workspace } from "vscode";
 import * as fileSystem from "../../util/fileSystem";
 import { getDir, getFilename } from "../../util/fileSystem";
 import { getActiveFileSchemaEditor } from "../../util/getActiveEditor";

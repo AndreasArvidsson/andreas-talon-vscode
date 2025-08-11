@@ -1,18 +1,20 @@
-import {
+import type {
     CompletionItem,
-    CompletionItemKind,
     CompletionItemProvider,
+    Position,
+    TextDocument,
+} from "vscode";
+import {
+    CompletionItemKind,
     Disposable,
     languages,
-    Position,
     Range,
-    TextDocument,
     workspace,
 } from "vscode";
+import type { TalonMatchPrefix } from "./matchers";
 import {
     getPythonPrefixAtPosition,
     getTalonPrefixAtPosition,
-    TalonMatchPrefix,
 } from "./matchers";
 import { searchInWorkspace } from "./searchInWorkspace";
 import { searchInDefaultTalonActions } from "./talonDefaultActions";

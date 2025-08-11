@@ -18,10 +18,9 @@ export default eslintTs.config(
         },
 
         rules: {
+            "@typescript-eslint/consistent-type-imports": "error",
             "@typescript-eslint/naming-convention": "error",
-            "@typescript-eslint/no-explicit-any": "off",
             curly: "error",
-            "no-throw-literal": "error",
             "no-warning-comments": "warn",
             eqeqeq: [
                 "error",
