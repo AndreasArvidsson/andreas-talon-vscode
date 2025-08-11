@@ -6,7 +6,8 @@ import { showNewNameInputBox } from "../../util/showNewNameInputBox";
 
 export async function newFile(name?: string): Promise<void> {
     const editor = vscode.window.activeTextEditor;
-    const context = editor != null ? getNewFilenameContext(editor, name) : undefined;
+    const context =
+        editor != null ? getNewFilenameContext(editor, name) : undefined;
 
     if (context == null) {
         await vscode.commands.executeCommand("explorer.newFile");

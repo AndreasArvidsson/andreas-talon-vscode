@@ -11,7 +11,10 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
 
     protected abstract parseMatch(match: RegExpExecArray): CommentMatch;
 
-    public parse(document: TextDocument, selections?: readonly Selection[]): Change[] {
+    public parse(
+        document: TextDocument,
+        selections?: readonly Selection[],
+    ): Change[] {
         const changes: Change[] = [];
         const unprocessedLines: Line[] = [];
 
@@ -29,10 +32,17 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
         matchAll(document, selections, this.regex, (match, range) => {
             const matchText = match[0];
             const { text, isBlockComment } = this.parseMatch(match);
-            const indentation = matchText.slice(0, matchText.length - text.length);
+            const indentation = matchText.slice(
+                0,
+                matchText.length - text.length,
+            );
 
             if (isBlockComment) {
-                const newText = this.parseBlockComment(range, text, indentation);
+                const newText = this.parseBlockComment(
+                    range,
+                    text,
+                    indentation,
+                );
                 if (newText != null) {
                     changes.push({ range, text: newText });
                 }
@@ -72,16 +82,26 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
             const text = line.text.slice(this.linePrefix.length).trimStart();
             if (isValidLine(text)) {
                 // Split on spaces
-                return text.split(/[ ]+/g).map((token) => ({ text: token, preserve: false }));
+                return text
+                    .split(/[ ]+/g)
+                    .map((token) => ({ text: token, preserve: false }));
             }
             return [{ text, preserve: true }];
         });
 
-        const updatedLines = parseTokens(tokens, this.lineWidth, indentation, this.linePrefix);
+        const updatedLines = parseTokens(
+            tokens,
+            this.lineWidth,
+            indentation,
+            this.linePrefix,
+        );
         const hasChanges =
             lines.length !== updatedLines.length ||
             // The indentation is not part of the text being passed in.
-            lines.some((line, index) => `${indentation}${line.text}` !== updatedLines[index]);
+            lines.some(
+                (line, index) =>
+                    `${indentation}${line.text}` !== updatedLines[index],
+            );
 
         return hasChanges ? updatedLines.join("\n") : undefined;
     }

@@ -39,8 +39,19 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
 
     {
         title: "settings declaration",
-        pre: ["settings()  :  ", "  speech.timeout  =  0.400", "", "  speech.record_all=true"],
-        post: ["settings():", "    speech.timeout = 0.400", "", "    speech.record_all = true", ""],
+        pre: [
+            "settings()  :  ",
+            "  speech.timeout  =  0.400",
+            "",
+            "  speech.record_all=true",
+        ],
+        post: [
+            "settings():",
+            "    speech.timeout = 0.400",
+            "",
+            "    speech.record_all = true",
+            "",
+        ],
     },
 
     {
@@ -165,7 +176,8 @@ suite("Talon formatter", () => {
     for (const fixture of fixtures) {
         runTest({
             title: fixture.title,
-            callback: () => commands.executeCommand("editor.action.formatDocument"),
+            callback: () =>
+                commands.executeCommand("editor.action.formatDocument"),
             pre: {
                 language: "talon",
                 content: getContentString(fixture.pre),

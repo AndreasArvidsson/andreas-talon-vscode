@@ -43,8 +43,16 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
         async function changeDirectory(dir: string, select?: string) {
             const items: FileQuickPickItem[] = [];
 
-            items.push({ label: "$(file) Move file here", path: dir, move: true });
-            items.push({ label: "", path: "", kind: QuickPickItemKind.Separator });
+            items.push({
+                label: "$(file) Move file here",
+                path: dir,
+                move: true,
+            });
+            items.push({
+                label: "",
+                path: "",
+                kind: QuickPickItemKind.Separator,
+            });
 
             if (dir !== workspaceDir) {
                 items.push({
@@ -60,7 +68,10 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
             for (const [name, type] of files) {
                 if (type === FileType.Directory) {
                     const folderPath = path.join(dir, name);
-                    const relativePath = path.relative(workspaceDir, folderPath);
+                    const relativePath = path.relative(
+                        workspaceDir,
+                        folderPath,
+                    );
                     if (!gitIgnore(relativePath)) {
                         items.push({
                             label: `$(folder) ${name}`,
@@ -77,7 +88,9 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
             quickPick.title = title;
             quickPick.value = "";
             quickPick.items = items;
-            quickPick.activeItems = [items.find((i) => i.path === select) ?? items[2]];
+            quickPick.activeItems = [
+                items.find((i) => i.path === select) ?? items[2],
+            ];
         }
 
         quickPick.onDidAccept(async () => {

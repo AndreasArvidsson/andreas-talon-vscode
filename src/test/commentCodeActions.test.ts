@@ -16,7 +16,10 @@ const blockFixtures: Fixture[] = [
     ["  /*foo/*", "  /**foo/*"],
     ["  /* foo /*", "  /** foo /*"],
     ["  /*\n  foo\n  bar\n  */", "  /**\n  * foo\n  * bar\n  */"],
-    ["  /*\n  * foo\n  *bar\n  baz\n  */", "  /**\n  * foo\n  *bar\n  * baz\n  */"],
+    [
+        "  /*\n  * foo\n  *bar\n  baz\n  */",
+        "  /**\n  * foo\n  *bar\n  * baz\n  */",
+    ],
 ];
 
 suite("Line comment code actions", () => {

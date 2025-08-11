@@ -7,11 +7,16 @@ import { registerLanguageDefinitions } from "./language/registerLanguageDefiniti
 import { registerLanguageFormatters } from "./language/registerLanguageFormatters";
 import { createTabView } from "./tabView";
 import { TreeSitter } from "./treeSitter/TreeSitter";
-import { getCommandServerExtension, getParseTreeExtension } from "./util/getExtension";
+import {
+    getCommandServerExtension,
+    getParseTreeExtension,
+} from "./util/getExtension";
 import { getFakeCommandServerExtension } from "./util/getFakeCommandServerExtension";
 import { isTesting } from "./util/isTesting";
 
-export async function activate(context: vscode.ExtensionContext): Promise<void> {
+export async function activate(
+    context: vscode.ExtensionContext,
+): Promise<void> {
     try {
         await activateExtension(context);
     } catch (error) {
@@ -20,7 +25,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     }
 }
 
-async function activateExtension(context: vscode.ExtensionContext): Promise<void> {
+async function activateExtension(
+    context: vscode.ExtensionContext,
+): Promise<void> {
     const parseTreeExtension = await getParseTreeExtension();
     const commandServerExtension = isTesting
         ? getFakeCommandServerExtension()

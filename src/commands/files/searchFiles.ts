@@ -92,7 +92,9 @@ export function registerSearchResults(): vscode.Disposable {
     return vscode.languages.registerDocumentLinkProvider(
         { language: languageId },
         {
-            provideDocumentLinks(document: vscode.TextDocument): vscode.DocumentLink[] {
+            provideDocumentLinks(
+                document: vscode.TextDocument,
+            ): vscode.DocumentLink[] {
                 return parseDocument(document).map(
                     (link) => new vscode.DocumentLink(link.range, link.uri),
                 );
@@ -102,7 +104,9 @@ export function registerSearchResults(): vscode.Disposable {
 }
 
 function getSelectedLinks() {
-    return parseDocument(getActiveEditor().document).filter((link) => link.selected);
+    return parseDocument(getActiveEditor().document).filter(
+        (link) => link.selected,
+    );
 }
 
 function parseDocument(document: vscode.TextDocument): Link[] {
@@ -119,8 +123,9 @@ function parseDocument(document: vscode.TextDocument): Link[] {
     wsTexts.forEach((wsText, index) => {
         const lines = wsText.split("\n");
         const wsName = lines[0];
-        const wsPath = vscode.workspace.workspaceFolders?.find((ws) => ws.name === wsName)?.uri
-            .fsPath;
+        const wsPath = vscode.workspace.workspaceFolders?.find(
+            (ws) => ws.name === wsName,
+        )?.uri.fsPath;
 
         if (index === wsTexts.length - 1) {
             if (!hasSelectedLink) {
@@ -128,7 +133,12 @@ function parseDocument(document: vscode.TextDocument): Link[] {
             }
 
             for (const lineText of lines) {
-                const range = new vscode.Range(lineNumber, 0, lineNumber, 0 + lineText.length);
+                const range = new vscode.Range(
+                    lineNumber,
+                    0,
+                    lineNumber,
+                    0 + lineText.length,
+                );
 
                 lineNumber++;
 
@@ -150,7 +160,9 @@ function parseDocument(document: vscode.TextDocument): Link[] {
                     continue;
                 }
 
-                const uri = vscode.Uri.parse(`command:${getFullCommand(command)}`);
+                const uri = vscode.Uri.parse(
+                    `command:${getFullCommand(command)}`,
+                );
 
                 links.push({ range, uri, selected: false });
             }

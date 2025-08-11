@@ -36,7 +36,9 @@ function getCallback(fixture: TestFixture): () => Thenable<unknown> {
     };
 }
 
-function getSelections(selections?: NumberSelection[] | NumberSelection): NumberSelection[] {
+function getSelections(
+    selections?: NumberSelection[] | NumberSelection,
+): NumberSelection[] {
     if (selections == null) {
         return [[0, 0, 0, 0]];
     }

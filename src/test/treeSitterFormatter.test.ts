@@ -90,7 +90,8 @@ suite("Tree-sitter formatter", () => {
     for (const fixture of fixtures) {
         runTest({
             title: fixture.title,
-            callback: () => commands.executeCommand("editor.action.formatDocument"),
+            callback: () =>
+                commands.executeCommand("editor.action.formatDocument"),
             pre: {
                 language: "scm",
                 content: getContentString(fixture.pre),

@@ -9,7 +9,10 @@ export function updateReadme(content: string | null): string {
             return { pre: "", post: "" };
         }
         const indexHeader = content.indexOf(header);
-        const indexStart = content.indexOf("\n### ", indexHeader + header.length);
+        const indexStart = content.indexOf(
+            "\n### ",
+            indexHeader + header.length,
+        );
         const indexEnd = content.indexOf("\n## ", indexStart + 4);
         const pre = content.substring(0, indexStart);
         const post = content.substring(indexEnd);

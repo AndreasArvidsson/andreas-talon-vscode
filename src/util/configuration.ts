@@ -25,17 +25,26 @@ export const configuration: Configuration = (() => {
     return {
         talonFormatter: {
             columnWidth: (document: TextDocument) => {
-                return getConfiguration<number>(document, "talonFormatter.columnWidth");
+                return getConfiguration<number>(
+                    document,
+                    "talonFormatter.columnWidth",
+                );
             },
         },
         talonListFormatter: {
             columnWidth: (document: TextDocument) => {
-                return getConfiguration<number>(document, "talonListFormatter.columnWidth");
+                return getConfiguration<number>(
+                    document,
+                    "talonListFormatter.columnWidth",
+                );
             },
         },
     };
 })();
 
-function getConfiguration<T>(document: TextDocument, key: string): T | undefined {
+function getConfiguration<T>(
+    document: TextDocument,
+    key: string,
+): T | undefined {
     return workspace.getConfiguration("andreas", document).get<T>(key);
 }

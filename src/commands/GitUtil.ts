@@ -19,13 +19,21 @@ async function gitApi(): Promise<API> {
 }
 
 export class GitUtil {
-    async getFileURL({ useSelection = false, useBranch = false }: GitParameters): Promise<string> {
+    async getFileURL({
+        useSelection = false,
+        useBranch = false,
+    }: GitParameters): Promise<string> {
         const { document, selections } = getActiveFileSchemaEditor();
         const repository = await this.getRepository();
         const platform = getPlatform(repository);
-        const relativeFilePath = getRelativeFilepath(repository, document.uri.path);
+        const relativeFilePath = getRelativeFilepath(
+            repository,
+            document.uri.path,
+        );
         const range = useSelection ? selections[0] : undefined;
-        const commitOrBranch = useBranch ? getBranch(repository) : getCommit(repository);
+        const commitOrBranch = useBranch
+            ? getBranch(repository)
+            : getCommit(repository);
 
         // If we're going to use the commit sha there can't be any changes
         if (!useBranch) {
@@ -97,7 +105,10 @@ function getRelativeFilepath(repository: Repository, filePath: string) {
     return filePath.substring(repository.rootUri.path.length + 1);
 }
 
-function validateUnchangedDocument(document: TextDocument, repository: Repository) {
+function validateUnchangedDocument(
+    document: TextDocument,
+    repository: Repository,
+) {
     if (document.uri.scheme !== "file") {
         throw Error("Document scheme is not file");
     }
@@ -191,7 +202,11 @@ class Github implements GitPlatform {
         this.repoUrl = cleanGitUrl(remoteUrl);
     }
 
-    getFileUrl(commitOrBranch: string, filePath: string, range?: Range): string {
+    getFileUrl(
+        commitOrBranch: string,
+        filePath: string,
+        range?: Range,
+    ): string {
         let url = `${this.repoUrl}/blob/${commitOrBranch}/${filePath}`;
 
         if (range != null) {
@@ -228,7 +243,11 @@ class Bitbucket implements GitPlatform {
         this.repoUrl = cleanGitUrl(remoteUrl);
     }
 
-    getFileUrl(commitOrBranch: string, filePath: string, range?: Range): string {
+    getFileUrl(
+        commitOrBranch: string,
+        filePath: string,
+        range?: Range,
+    ): string {
         let url = `${this.repoUrl}/src/${commitOrBranch}/${filePath}`;
 
         if (range != null) {

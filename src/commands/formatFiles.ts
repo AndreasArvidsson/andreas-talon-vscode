@@ -6,7 +6,10 @@ export async function formatWorkspaceFiles() {
     await formatDocuments(uris);
 }
 
-export async function formatSelectedFiles(clickedFile: vscode.Uri, selectedFiles: vscode.Uri[]) {
+export async function formatSelectedFiles(
+    clickedFile: vscode.Uri,
+    selectedFiles: vscode.Uri[],
+) {
     const uris = await recursivelyGetFileUris(selectedFiles);
     await formatDocuments(uris);
 }
@@ -65,18 +68,31 @@ async function formatDocument(uri: vscode.Uri) {
             preview: true,
         });
 
-        await vscode.commands.executeCommand("editor.action.formatDocument", uri);
+        await vscode.commands.executeCommand(
+            "editor.action.formatDocument",
+            uri,
+        );
 
         if (editor.document.isDirty) {
-            await vscode.commands.executeCommand("workbench.action.files.save", uri);
+            await vscode.commands.executeCommand(
+                "workbench.action.files.save",
+                uri,
+            );
         }
 
-        await vscode.commands.executeCommand("workbench.action.closeActiveEditor", uri);
+        await vscode.commands.executeCommand(
+            "workbench.action.closeActiveEditor",
+            uri,
+        );
     } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
 
         // This message will be thrown for binary files
-        if (!message.endsWith("Detail: File seems to be binary and cannot be opened as text")) {
+        if (
+            !message.endsWith(
+                "Detail: File seems to be binary and cannot be opened as text",
+            )
+        ) {
             void vscode.window.showWarningMessage(
                 `Could not format file: ${uri.fsPath}. ${message}`,
             );

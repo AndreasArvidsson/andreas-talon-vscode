@@ -27,21 +27,41 @@ function create(
     };
 }
 
-function visible(category: Category, title: string, description?: string, args?: string) {
+function visible(
+    category: Category,
+    title: string,
+    description?: string,
+    args?: string,
+) {
     return create(false, true, category, title, description, args);
 }
 
-function hidden(category: Category, title: string, description?: string, args?: string) {
+function hidden(
+    category: Category,
+    title: string,
+    description?: string,
+    args?: string,
+) {
     return create(false, false, category, title, description, args);
 }
 
-function makePrivate(category: Category, title: string, description?: string, args?: string) {
+function makePrivate(
+    category: Category,
+    title: string,
+    description?: string,
+    args?: string,
+) {
     return create(true, false, category, title, description, args);
 }
 
 export const commandDescriptions = {
     // File commands
-    getFilename: hidden("File", "Get filename of active file.", undefined, "(): string"),
+    getFilename: hidden(
+        "File",
+        "Get filename of active file.",
+        undefined,
+        "(): string",
+    ),
     copyFilename: visible("File", "Copy filename of active file to clipboard."),
     newFile: visible(
         "File",
@@ -55,7 +75,12 @@ export const commandDescriptions = {
         undefined,
         "(name?: string)",
     ),
-    renameFile: visible("File", "Rename active file.", undefined, "(name?: string)"),
+    renameFile: visible(
+        "File",
+        "Rename active file.",
+        undefined,
+        "(name?: string)",
+    ),
     removeFile: visible("File", "Remove/delete the active file."),
     moveFile: visible("File", "Move active file to new directory."),
     formatWorkspaceFiles: visible("File", "Format workspace files."),
@@ -64,7 +89,12 @@ export const commandDescriptions = {
         "Format",
         "selected files. Used by file explorer context menu.",
     ),
-    searchFiles: visible("File", "Search files", "Search files in workspace.", "(query?: string)"),
+    searchFiles: visible(
+        "File",
+        "Search files",
+        "Search files in workspace.",
+        "(query?: string)",
+    ),
     searchFilesOpenSelected: visible(
         "File",
         "Open selected",
@@ -83,8 +113,18 @@ export const commandDescriptions = {
         "Starts from 1 by default",
         "(start: number = 1)",
     ),
-    increment: visible("Edit", "Increment selected number.", undefined, "(value?: number)"),
-    decrement: visible("Edit", "Decrement selected number.", undefined, "(value?: number)"),
+    increment: visible(
+        "Edit",
+        "Increment selected number.",
+        undefined,
+        "(value?: number)",
+    ),
+    decrement: visible(
+        "Edit",
+        "Decrement selected number.",
+        undefined,
+        "(value?: number)",
+    ),
     formatComments: makePrivate("Edit", "Format selected comments"),
     formatAllComments: makePrivate("Edit", "Format comments in active file."),
 
@@ -95,7 +135,12 @@ export const commandDescriptions = {
         "Negative indices are counted from the back.",
         "(index: number)",
     ),
-    focusTab: visible("Navigation", "Focus tab by hint.", "Hints range [A-ZZ].", "(hint: string)"),
+    focusTab: visible(
+        "Navigation",
+        "Focus tab by hint.",
+        "Hints range [A-ZZ].",
+        "(hint: string)",
+    ),
     goToLine: visible(
         "Navigation",
         "Go to line number. 0-based index.",
@@ -108,11 +153,24 @@ export const commandDescriptions = {
         undefined,
         "(line: number)",
     ),
-    lineMiddle: visible("Navigation", "Move cursor to middle of the current line."),
+    lineMiddle: visible(
+        "Navigation",
+        "Move cursor to middle of the current line.",
+    ),
 
     // Text commands
-    getDocumentText: hidden("Text", "Get document text.", undefined, "(): string | null"),
-    getSelectedText: hidden("Text", "Get selected text.", undefined, "(): string[] | null"),
+    getDocumentText: hidden(
+        "Text",
+        "Get document text.",
+        undefined,
+        "(): string | null",
+    ),
+    getSelectedText: hidden(
+        "Text",
+        "Get selected text.",
+        undefined,
+        "(): string[] | null",
+    ),
     getDictationContext: hidden(
         "Text",
         "Get text before and after selection.",
@@ -133,14 +191,24 @@ export const commandDescriptions = {
     ),
 
     // Git commands
-    gitCheckout: visible("Git", "Checkout git branch.", undefined, "(branch: string)"),
+    gitCheckout: visible(
+        "Git",
+        "Checkout git branch.",
+        undefined,
+        "(branch: string)",
+    ),
     getGitFileURL: hidden(
         "Git",
         "Get URL to Git repository file webpage.",
         "Optionally include selected line numbers.",
         "({ useSelection: boolean, useBranch: boolean }): string",
     ),
-    getGitRepoURL: hidden("Git", "Get URL to Git repository webpage.", undefined, "(): string"),
+    getGitRepoURL: hidden(
+        "Git",
+        "Get URL to Git repository webpage.",
+        undefined,
+        "(): string",
+    ),
     getGitIssuesURL: hidden(
         "Git",
         "Get URL to Git repository issues webpage.",

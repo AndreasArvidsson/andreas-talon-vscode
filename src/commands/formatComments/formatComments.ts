@@ -14,14 +14,19 @@ interface Properties {
 }
 
 export function formatComments(): Promise<void> {
-    return formatCommentsRunner({ editor: getActiveEditor(), onlySelected: true });
+    return formatCommentsRunner({
+        editor: getActiveEditor(),
+        onlySelected: true,
+    });
 }
 
 export function formatAllComments(): Promise<void> {
     return formatCommentsRunner({ editor: getActiveEditor() });
 }
 
-export async function formatCommentsRunner(properties: Properties): Promise<void> {
+export async function formatCommentsRunner(
+    properties: Properties,
+): Promise<void> {
     const { editor, doSave, onlySelected } = properties;
     const { document } = editor;
     const { lineWidth } = await getFormattingOptions(document, editor.options);
@@ -45,11 +50,17 @@ export async function formatCommentsRunner(properties: Properties): Promise<void
     });
 
     if (doSave && document.isDirty) {
-        await vscode.commands.executeCommand("workbench.action.files.save", document.uri);
+        await vscode.commands.executeCommand(
+            "workbench.action.files.save",
+            document.uri,
+        );
     }
 }
 
-function getFormatter(languageId: string, lineWidth: number): CommentFormatter | undefined {
+function getFormatter(
+    languageId: string,
+    lineWidth: number,
+): CommentFormatter | undefined {
     switch (languageId) {
         case "java":
         case "javascript":

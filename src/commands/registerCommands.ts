@@ -19,7 +19,10 @@ import {
     searchFilesOpenSelected,
 } from "./files/searchFiles";
 import { focusTab } from "./focusTab";
-import { formatAllComments, formatComments } from "./formatComments/formatComments";
+import {
+    formatAllComments,
+    formatComments,
+} from "./formatComments/formatComments";
 import { formatSelectedFiles, formatWorkspaceFiles } from "./formatFiles";
 import { generateRange } from "./generateRange";
 import { goToLine } from "./goToLine";
@@ -89,7 +92,9 @@ export function registerCommands(
             return vscode.workspace.workspaceFolders.map((folder) => {
                 const uri = folder.uri;
                 if (uri.scheme !== "file") {
-                    throw new Error(`Expected file URI but got ${uri.scheme} URI`);
+                    throw new Error(
+                        `Expected file URI but got ${uri.scheme} URI`,
+                    );
                 }
                 return uri.fsPath;
             });
@@ -104,7 +109,10 @@ export function registerCommands(
     );
 }
 
-function registerCommand(command: CommandId, callback: Callback): vscode.Disposable {
+function registerCommand(
+    command: CommandId,
+    callback: Callback,
+): vscode.Disposable {
     const fullCommand = getFullCommand(command);
 
     const safeCallback = async (...args: any[]) => {
@@ -112,7 +120,8 @@ function registerCommand(command: CommandId, callback: Callback): vscode.Disposa
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return
             return await Promise.resolve(callback(...args));
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
+            const errorMessage =
+                error instanceof Error ? error.message : String(error);
             void vscode.window.showErrorMessage(errorMessage);
             throw error;
         }

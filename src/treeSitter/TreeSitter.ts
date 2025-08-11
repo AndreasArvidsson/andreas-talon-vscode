@@ -33,7 +33,10 @@ export class TreeSitter {
 
         for (const scope of scopes) {
             if (scope.name === name && scope.domain.contains(position)) {
-                if (smallest == null || smallest.domain.contains(scope.domain)) {
+                if (
+                    smallest == null ||
+                    smallest.domain.contains(scope.domain)
+                ) {
                     smallest = scope;
                 }
             }
@@ -85,10 +88,13 @@ function loadQueryFileForLanguage(languageId: string): string | undefined {
 function loadQueryFile(file: string): string {
     const content = fs.readFileSync(file, "utf8");
 
-    return content.replace(/^;; import (\w+)$/gm, (_match, filename: string) => {
-        const importFile = getQueryFile(filename);
-        return loadQueryFile(importFile);
-    });
+    return content.replace(
+        /^;; import (\w+)$/gm,
+        (_match, filename: string) => {
+            const importFile = getQueryFile(filename);
+            return loadQueryFile(importFile);
+        },
+    );
 }
 
 function getQueryFile(name: string): string {
@@ -99,8 +105,11 @@ function matchesToScopes(matches: QueryMatch[]): Scope[] {
     const results: Scope[] = [];
 
     for (const match of matches) {
-        const domain = match.captures.find((capture) => capture.name === "_.domain");
-        const domainRange = domain != null ? nodeToRange(domain.node) : undefined;
+        const domain = match.captures.find(
+            (capture) => capture.name === "_.domain",
+        );
+        const domainRange =
+            domain != null ? nodeToRange(domain.node) : undefined;
 
         for (const capture of match.captures) {
             if (capture === domain) {
@@ -123,7 +132,10 @@ function matchesToScopes(matches: QueryMatch[]): Scope[] {
 }
 
 function nodeToRange(node: Node): vscode.Range {
-    return new vscode.Range(pointToPosition(node.startPosition), pointToPosition(node.endPosition));
+    return new vscode.Range(
+        pointToPosition(node.startPosition),
+        pointToPosition(node.endPosition),
+    );
 }
 
 function pointToPosition(point: Point): vscode.Position {

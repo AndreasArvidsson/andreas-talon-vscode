@@ -31,18 +31,29 @@ export class JavaFormatter extends BaseCommentFormatter {
             }
             if (isValidLine(text)) {
                 // Split on spaces
-                return text.split(/[ ]+/g).map((token) => ({ text: token, preserve: false }));
+                return text
+                    .split(/[ ]+/g)
+                    .map((token) => ({ text: token, preserve: false }));
             }
-            if (text.length === 0 && (index === 0 || index === lines.length - 1)) {
+            if (
+                text.length === 0 &&
+                (index === 0 || index === lines.length - 1)
+            ) {
                 return [];
             }
             return [{ text, preserve: true }];
         });
 
-        const updatedLines = parseTokens(tokens, this.lineWidth, indentation, linePrefix);
+        const updatedLines = parseTokens(
+            tokens,
+            this.lineWidth,
+            indentation,
+            linePrefix,
+        );
 
         const updatedText = (() => {
-            const isSingleLine = lines.length === 1 && updatedLines.length === 1;
+            const isSingleLine =
+                lines.length === 1 && updatedLines.length === 1;
             const start = isDoc && !isSingleLine ? "/**" : "/*";
             const end = isDoc ? " */" : "*/";
             if (isSingleLine) {

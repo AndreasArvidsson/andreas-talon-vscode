@@ -25,7 +25,8 @@ class TalonFormatter {
 
     private getLeftRightText(node: Node): string {
         const { children } = node;
-        const isMultiline = children[2].startPosition.row > children[1].endPosition.row;
+        const isMultiline =
+            children[2].startPosition.row > children[1].endPosition.row;
         const left = this.getNodeText(children[0]);
         const leftWithColon = `${left}:`;
         const leftWithPadding = (() => {
@@ -86,7 +87,9 @@ class TalonFormatter {
                 return node.children.map((n) => this.getNodeText(n)).join("");
 
             case "block":
-                return node.children.map((n) => this.getNodeText(n, isIndented)).join("\n");
+                return node.children
+                    .map((n) => this.getNodeText(n, isIndented))
+                    .join("\n");
 
             case "command_declaration":
             case "key_binding_declaration":
@@ -101,12 +104,16 @@ class TalonFormatter {
             case "comment": {
                 // When using crlf eol comments have a trailing `\r`
                 const text = node.text.trimEnd();
-                return isIndented || node.startPosition.column > 0 ? `${this.indent}${text}` : text;
+                return isIndented || node.startPosition.column > 0
+                    ? `${this.indent}${text}`
+                    : text;
             }
 
             case "expression_statement":
             case "assignment_statement": {
-                const text = node.children.map((n) => this.getNodeText(n)).join(" ");
+                const text = node.children
+                    .map((n) => this.getNodeText(n))
+                    .join(" ");
                 return isIndented ? `${this.indent}${text}` : text;
             }
 
