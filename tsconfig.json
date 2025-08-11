@@ -10,9 +10,9 @@
         "sourceMap": true,
         "noEmitOnError": true,
         "strict": true,
+        "resolveJsonModule": true,
         "forceConsistentCasingInFileNames": true,
-        "noImplicitReturns": true,
-        "resolveJsonModule": true
+        "noImplicitReturns": true
     },
     "include": ["src"]
 }
