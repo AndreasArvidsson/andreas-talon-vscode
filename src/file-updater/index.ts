@@ -7,8 +7,6 @@ import {
     updateGitignore,
     updateLicense,
     updatePrettierignore,
-    updatePrettierrc,
-    updateTsconfig,
     updateVscodeSettings,
     type UpdaterConfig,
 } from "ts-archetype";
@@ -30,9 +28,9 @@ export async function runFileUpdater() {
         // ".eslintrc.json": updateEslintrc(config),
         ".gitignore": updateGitignore(config),
         ".prettierignore": updatePrettierignore(config),
-        ".prettierrc.json": updatePrettierrc(config),
+        // ".prettierrc.json": updatePrettierrc(config),
         ".vscode/settings.json": updateVscodeSettings(config),
         LICENSE: updateLicense(config),
-        "tsconfig.json": updateTsconfig(config),
+        // "tsconfig.json": updateTsconfig(config),
     });
 }
