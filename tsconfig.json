@@ -1,9 +1,8 @@
 {
     "compilerOptions": {
-        "module": "NodeNext",
-        "target": "ESNext",
-        "lib": ["ESNext"],
-        "moduleResolution": "NodeNext",
+        "module": "nodenext",
+        "target": "esnext",
+        "moduleResolution": "nodenext",
         "rootDir": "src",
         "outDir": "out",
         "esModuleInterop": true,
@@ -11,6 +10,7 @@
         "noEmitOnError": true,
         "strict": true,
         "resolveJsonModule": true,
+        "noImplicitAny": true,
         "forceConsistentCasingInFileNames": true,
         "noImplicitReturns": true
     },
