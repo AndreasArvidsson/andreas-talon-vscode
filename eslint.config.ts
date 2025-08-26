@@ -38,7 +38,7 @@ export default eslintTs.config(
         },
     },
     {
-        files: ["eslint.config.mts", "src/typings/**/*"],
+        files: ["eslint.config.ts", "src/typings/**/*"],
         extends: [eslintTs.configs.disableTypeChecked],
     },
 );
