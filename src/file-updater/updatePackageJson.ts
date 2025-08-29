@@ -33,11 +33,11 @@ export function updatePackageJson() {
 
 function getCommands(): Command[] {
     return Object.entries(commandDescriptions)
-        .filter(([, { isPrivate }]) => !isPrivate)
-        .map(([command, { title, isVisible }]) => ({
+        .filter(([, { excludePackage }]) => !excludePackage)
+        .map(([command, { title, isDisabled }]) => ({
             command: getFullCommand(command as CommandId),
             category: `Andreas`,
             title,
-            ...(isVisible ? {} : { enablement: "false" }),
+            ...(isDisabled ? { enablement: "false" } : {}),
         }));
 }

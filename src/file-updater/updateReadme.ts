@@ -24,7 +24,7 @@ export function updateReadme(content: string | null): string {
     let category = "";
 
     for (const [command, desc] of Object.entries(commandDescriptions)) {
-        if (desc.isPrivate) {
+        if (desc.excludeReadme) {
             continue;
         }
         if (category !== desc.category) {
