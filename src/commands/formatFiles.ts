@@ -1,34 +1,17 @@
 import * as vscode from "vscode";
-import fs from "node:fs";
+import { getWorkspaceFiles, recursivelyGetFileUris } from "../util/uriUtil";
 
 export async function formatWorkspaceFiles() {
-    const uris = await vscode.workspace.findFiles("**/*");
+    const uris = await getWorkspaceFiles();
     await formatDocuments(uris);
 }
 
-export async function formatSelectedFiles(clickedFile: vscode.Uri, selectedFiles: vscode.Uri[]) {
+export async function formatSelectedFiles(
+    clickedFile: vscode.Uri,
+    selectedFiles: vscode.Uri[],
+) {
     const uris = await recursivelyGetFileUris(selectedFiles);
     await formatDocuments(uris);
-}
-
-async function recursivelyGetFileUris(uris: vscode.Uri[]) {
-    const result: vscode.Uri[] = [];
-
-    for (const uri of uris) {
-        if (!fs.existsSync(uri.fsPath)) {
-            continue;
-        }
-        if (fs.lstatSync(uri.fsPath).isDirectory()) {
-            const children = await vscode.workspace.findFiles(
-                new vscode.RelativePattern(uri, "**/*"),
-            );
-            result.push(...children);
-        } else {
-            result.push(uri);
-        }
-    }
-
-    return result;
 }
 
 async function formatDocuments(uris: vscode.Uri[]) {
@@ -65,21 +48,30 @@ async function formatDocument(uri: vscode.Uri) {
             preview: true,
         });
 
-        await vscode.commands.executeCommand("editor.action.formatDocument", uri);
+        await vscode.commands.executeCommand("editor.action.formatDocument");
 
         if (editor.document.isDirty) {
-            await vscode.commands.executeCommand("workbench.action.files.save", uri);
+            await vscode.commands.executeCommand(
+                "workbench.action.files.saveWithoutFormatting",
+            );
         }
 
-        await vscode.commands.executeCommand("workbench.action.closeActiveEditor", uri);
+        await vscode.commands.executeCommand(
+            "workbench.action.closeActiveEditor",
+        );
     } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-
-        // This message will be thrown for binary files
-        if (!message.endsWith("Detail: File seems to be binary and cannot be opened as text")) {
+        if (!isMessageBinary(message)) {
             void vscode.window.showWarningMessage(
                 `Could not format file: ${uri.fsPath}. ${message}`,
             );
         }
     }
+}
+
+function isMessageBinary(errorMessage: string) {
+    // This message will be thrown for binary files
+    return errorMessage.endsWith(
+        "Detail: File seems to be binary and cannot be opened as text",
+    );
 }

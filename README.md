@@ -29,8 +29,6 @@ Many of the commands take arguments and return values that can only be used with
   Move active file to new directory.
 - `andreas.formatWorkspaceFiles()`  
   Format workspace files.
-- `andreas.formatSelectedFiles()`  
-  Format selected files. Used by file explorer context menu.
 - `andreas.searchFiles(query?: string)`  
   Search files Search files in workspace.
 - `andreas.searchFilesOpenSelected()`  

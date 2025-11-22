@@ -18,7 +18,10 @@ const extensionDependencies = [
 export async function launchVscodeAndRunTests() {
     try {
         const workspaceFolder = path.join(__dirname, "../..");
-        const extensionTestsPath = path.join(workspaceFolder, "out/test/testUtil/runAllTests");
+        const extensionTestsPath = path.join(
+            workspaceFolder,
+            "out/test/testUtil/runAllTests",
+        );
         const extensionDevelopmentPath = workspaceFolder;
 
         const vscodeExecutablePath = await downloadAndUnzipVSCode("stable");
@@ -43,12 +46,16 @@ export async function launchVscodeAndRunTests() {
 }
 
 function installExtensionDependencies(vscodeExecutablePath: string) {
-    const [cli, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
+    const [cli, ...args] =
+        resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
 
     // Install extension dependencies
     const extensionInstallArgs = [
         ...args,
-        ...extensionDependencies.flatMap((dependency) => ["--install-extension", dependency]),
+        ...extensionDependencies.flatMap((dependency) => [
+            "--install-extension",
+            dependency,
+        ]),
     ];
 
     console.log("Installing dependency extensions...");

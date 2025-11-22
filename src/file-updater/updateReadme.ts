@@ -1,4 +1,5 @@
-import { CommandId, commandDescriptions } from "../commands/commands";
+import type { CommandId } from "../commands/commands";
+import { commandDescriptions } from "../commands/commands";
 import { getFullCommand } from "../util/getFullCommand";
 
 export function updateReadme(content: string | null): string {
@@ -9,7 +10,10 @@ export function updateReadme(content: string | null): string {
             return { pre: "", post: "" };
         }
         const indexHeader = content.indexOf(header);
-        const indexStart = content.indexOf("\n### ", indexHeader + header.length);
+        const indexStart = content.indexOf(
+            "\n### ",
+            indexHeader + header.length,
+        );
         const indexEnd = content.indexOf("\n## ", indexStart + 4);
         const pre = content.substring(0, indexStart);
         const post = content.substring(indexEnd);
@@ -20,7 +24,7 @@ export function updateReadme(content: string | null): string {
     let category = "";
 
     for (const [command, desc] of Object.entries(commandDescriptions)) {
-        if (desc.isPrivate) {
+        if (desc.excludeReadme) {
             continue;
         }
         if (category !== desc.category) {

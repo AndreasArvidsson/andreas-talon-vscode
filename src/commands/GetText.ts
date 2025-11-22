@@ -26,10 +26,15 @@ export class GetText {
             return null;
         }
 
-        return getSortedSelections(editor).map((selection) => editor.document.getText(selection));
+        return getSortedSelections(editor).map((selection) =>
+            editor.document.getText(selection),
+        );
     }
 
-    async getDictationContext(): Promise<{ before: string; after: string } | null> {
+    async getDictationContext(): Promise<{
+        before: string;
+        after: string;
+    } | null> {
         const editor = vscode.window.activeTextEditor;
 
         if (editor == null || !(await this.validEditor(editor))) {
@@ -84,7 +89,8 @@ export class GetText {
     }
 
     private async inTextEditor(): Promise<boolean> {
-        const focusedType = await this.commandServerExtension.getFocusedElementType();
+        const focusedType =
+            await this.commandServerExtension.getFocusedElementType();
         return focusedType === "textEditor";
     }
 }

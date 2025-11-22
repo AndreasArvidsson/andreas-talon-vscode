@@ -1,5 +1,5 @@
 import * as assert from "node:assert";
-import * as vscode from "vscode";
+import type * as vscode from "vscode";
 import { getFullFixture } from "./getFullFixture";
 import openNewEditor from "./openNewEditor";
 import {
@@ -7,7 +7,7 @@ import {
     numbersToSelections,
     selectionsToPlainSelections,
 } from "./selectionUtil";
-import { FullTestFixture, TestFixture } from "./test.types";
+import type { FullTestFixture, TestFixture } from "./test.types";
 
 export const runTest = (fixture: TestFixture): void => {
     test(fixture.title, async () => {

@@ -83,5 +83,8 @@ function splitLine(line: string): [string, string | undefined] {
     if (index === -1) {
         return [line, undefined];
     }
-    return [line.substring(0, index).trimEnd(), line.substring(index + 1).trimStart()];
+    return [
+        line.substring(0, index).trimEnd(),
+        line.substring(index + 1).trimStart(),
+    ];
 }

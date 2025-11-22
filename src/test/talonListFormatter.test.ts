@@ -2,7 +2,12 @@ import { commands } from "vscode";
 import { runTest } from "./testUtil/runTest";
 import type { NumberSelection } from "./testUtil/test.types";
 
-const fixtures: { title: string; pre: string; post: string; selections?: NumberSelection }[] = [
+const fixtures: {
+    title: string;
+    pre: string;
+    post: string;
+    selections?: NumberSelection;
+}[] = [
     {
         title: "large",
         pre: `
@@ -57,7 +62,8 @@ suite("Talon list formatter", () => {
     for (const fixture of fixtures) {
         runTest({
             title: fixture.title,
-            callback: () => commands.executeCommand("editor.action.formatDocument"),
+            callback: () =>
+                commands.executeCommand("editor.action.formatDocument"),
             pre: {
                 language: "talon-list",
                 content: fixture.pre,

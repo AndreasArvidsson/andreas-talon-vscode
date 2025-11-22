@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Uri, Event, Disposable, ProviderResult } from "vscode";
+import type { Disposable, Event, ProviderResult, Uri } from "vscode";
 export { ProviderResult } from "vscode";
 
 export interface Git {
@@ -168,7 +168,9 @@ export interface Repository {
         treeish: string,
         path: string,
     ): Promise<{ mode: string; object: string; size: number }>;
-    detectObjectType(object: string): Promise<{ mimetype: string; encoding?: string }>;
+    detectObjectType(
+        object: string,
+    ): Promise<{ mimetype: string; encoding?: string }>;
     buffer(ref: string, path: string): Promise<Buffer>;
     show(ref: string, path: string): Promise<string>;
     getCommit(ref: string): Promise<Commit>;

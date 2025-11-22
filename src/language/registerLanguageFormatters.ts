@@ -28,24 +28,34 @@ function provideDocumentFormattingEditsForTree(
             const rootNode = treeSitter.getRootNode(document);
 
             if (rootNode.hasError) {
-                console.warn(`Abort document formatting: Syntax tree has error`);
+                console.warn(
+                    `Abort document formatting: Syntax tree has error`,
+                );
                 return [];
             }
 
-            const { indentation } = await getFormattingOptions(document, options);
+            const { indentation } = await getFormattingOptions(
+                document,
+                options,
+            );
             const newText = formatter.getText(document, rootNode, indentation);
             return createTextEdits(document, newText);
         },
     };
 }
 
-function provideDocumentFormattingEditsForText(formatter: LanguageFormatterText) {
+function provideDocumentFormattingEditsForText(
+    formatter: LanguageFormatterText,
+) {
     return {
         provideDocumentFormattingEdits: async (
             document: TextDocument,
             options: FormattingOptions,
         ): Promise<TextEdit[]> => {
-            const { indentation } = await getFormattingOptions(document, options);
+            const { indentation } = await getFormattingOptions(
+                document,
+                options,
+            );
             try {
                 const newText = formatter.getText(document, indentation);
                 return createTextEdits(document, newText);
@@ -84,7 +94,10 @@ export function registerLanguageFormatters(treeSitter: TreeSitter): Disposable {
         ),
         languages.registerDocumentFormattingEditProvider(
             "scm",
-            provideDocumentFormattingEditsForTree(treeSitter, treeSitterFormatter),
+            provideDocumentFormattingEditsForTree(
+                treeSitter,
+                treeSitterFormatter,
+            ),
         ),
         languages.registerDocumentFormattingEditProvider(
             "snippet",

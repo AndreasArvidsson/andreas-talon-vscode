@@ -1,5 +1,4 @@
-import type { Selection, TextDocument } from "vscode";
-import { Range } from "vscode";
+import type { Range, Selection, TextDocument } from "vscode";
 import type { Change, CommentFormatter, CommentMatch } from "./types";
 import { isValidLine, matchAll, parseTokens } from "./utils";
 
@@ -11,13 +10,19 @@ export class XmlFormatter implements CommentFormatter {
 
     constructor(private lineWidth: number) {}
 
-    public parse(document: TextDocument, selections?: readonly Selection[]): Change[] {
+    public parse(
+        document: TextDocument,
+        selections?: readonly Selection[],
+    ): Change[] {
         const changes: Change[] = [];
 
         matchAll(document, selections, this.regex, (match, range) => {
             const matchText = match[0];
             const text = match[1];
-            const indentation = matchText.slice(0, matchText.length - text.length);
+            const indentation = matchText.slice(
+                0,
+                matchText.length - text.length,
+            );
 
             const newText = this.parseBlockComment(range, text, indentation);
             if (newText != null) {
@@ -34,7 +39,11 @@ export class XmlFormatter implements CommentFormatter {
         return { text, isBlockComment };
     }
 
-    private parseBlockComment(range: Range, text: string, indentation: string): string | undefined {
+    private parseBlockComment(
+        range: Range,
+        text: string,
+        indentation: string,
+    ): string | undefined {
         // Extract the text between the "<!--" and "-->"
         const textContent = text.slice(prefix.length, -suffix.length);
         const linePrefix = "";
@@ -43,18 +52,29 @@ export class XmlFormatter implements CommentFormatter {
             const text = line.trim();
             if (isValidLine(text)) {
                 // Split on spaces
-                return text.split(/[ ]+/g).map((token) => ({ text: token, preserve: false }));
+                return text
+                    .split(/[ ]+/g)
+                    .map((token) => ({ text: token, preserve: false }));
             }
-            if (text.length === 0 && (index === 0 || index === lines.length - 1)) {
+            if (
+                text.length === 0 &&
+                (index === 0 || index === lines.length - 1)
+            ) {
                 return [];
             }
             return [{ text, preserve: true }];
         });
 
-        const updatedLines = parseTokens(tokens, this.lineWidth, indentation, linePrefix);
+        const updatedLines = parseTokens(
+            tokens,
+            this.lineWidth,
+            indentation,
+            linePrefix,
+        );
 
         const updatedText = (() => {
-            const isSingleLine = lines.length === 1 && updatedLines.length === 1;
+            const isSingleLine =
+                lines.length === 1 && updatedLines.length === 1;
             if (isSingleLine) {
                 const text = updatedLines[0].trimStart();
                 return `${indentation}${prefix} ${text} ${suffix}`;

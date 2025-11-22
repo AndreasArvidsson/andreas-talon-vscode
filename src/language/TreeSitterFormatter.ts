@@ -60,7 +60,9 @@ export class TreeSitterFormatter {
             .join(" ");
         const parts = [
             `${this.getIndent(numIndents)}${first}`,
-            ...node.children.slice(1, index).map((n) => this.getNodeText(n, numIndents + 1)),
+            ...node.children
+                .slice(1, index)
+                .map((n) => this.getNodeText(n, numIndents + 1)),
             `${this.getIndent(numIndents)}${last}`,
         ];
         return parts.join("\n");
@@ -74,7 +76,9 @@ export class TreeSitterFormatter {
                 .slice(1, 4)
                 .map((n) => n.text)
                 .join(""),
-            ...node.children[node.children.length - 2].children.map((n) => n.text),
+            ...node.children[node.children.length - 2].children.map(
+                (n) => n.text,
+            ),
         ];
         // Inline predicate
         if (node.startPosition.row === node.endPosition.row) {
@@ -84,7 +88,9 @@ export class TreeSitterFormatter {
         // Multiline predicate
         return [
             `${this.getIndent(numIndents)}${first}${parts[0]}`,
-            ...parts.slice(1).map((s) => `${this.getIndent(numIndents + 1)}${s}`),
+            ...parts
+                .slice(1)
+                .map((s) => `${this.getIndent(numIndents + 1)}${s}`),
             `${this.getIndent(numIndents)}${last}`,
         ].join("\n");
     }
@@ -122,7 +128,9 @@ export class TreeSitterFormatter {
             case "anonymous_node":
                 return (
                     this.getIndent(numIndents) +
-                    node.children.map((n) => this.getNodeText(n, numIndents + 1)).join("")
+                    node.children
+                        .map((n) => this.getNodeText(n, numIndents + 1))
+                        .join("")
                 );
 
             case ".":
@@ -162,11 +170,17 @@ export class TreeSitterFormatter {
         }
         const lastIsQuantifier = nodes[nodes.length - 1].type === "quantifier";
         const nodesToUse = lastIsQuantifier ? nodes.slice(0, -1) : nodes;
-        const text = nodesToUse.map((n) => this.getNodeText(n, numIndents)).join("\n");
-        return lastIsQuantifier ? `${text}${nodes[nodes.length - 1].text}` : text;
+        const text = nodesToUse
+            .map((n) => this.getNodeText(n, numIndents))
+            .join("\n");
+        return lastIsQuantifier
+            ? `${text}${nodes[nodes.length - 1].text}`
+            : text;
     }
 
     private getIndent(length: number): string {
-        return length < 1 ? "" : new Array(length).fill(this.indentation).join("");
+        return length < 1
+            ? ""
+            : new Array(length).fill(this.indentation).join("");
     }
 }

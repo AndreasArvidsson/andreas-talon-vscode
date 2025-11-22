@@ -1,18 +1,21 @@
-import {
+import type {
     CancellationToken,
     DefinitionLink,
     DefinitionProvider,
-    Disposable,
-    Hover,
     HoverProvider,
-    languages,
-    MarkdownString,
     Position,
     TextDocument,
+} from "vscode";
+import {
+    Disposable,
+    Hover,
+    languages,
+    MarkdownString,
     workspace,
 } from "vscode";
 import { getFilename } from "../util/fileSystem";
-import { getPythonMatchAtPosition, getTalonMatchAtPosition, TalonMatchName } from "./matchers";
+import type { TalonMatchName } from "./matchers";
+import { getPythonMatchAtPosition, getTalonMatchAtPosition } from "./matchers";
 import { searchInWorkspace } from "./searchInWorkspace";
 import { searchInDefaultTalonActions } from "./talonDefaultActions";
 
@@ -75,7 +78,10 @@ abstract class HoverProviderBase implements HoverProvider {
             return undefined;
         }
 
-        const workspaceResults = await searchInWorkspace(workspaceFolder, match);
+        const workspaceResults = await searchInWorkspace(
+            workspaceFolder,
+            match,
+        );
 
         const defaultStrings = searchInDefaultTalonActions(match).map((a) => {
             return new MarkdownString()
@@ -91,7 +97,9 @@ abstract class HoverProviderBase implements HoverProvider {
                     ? `[${name} #${line}](${r.targetUri.path}#${line})`
                     : `[${name}](${r.targetUri.path})`;
             const code = cleanHoverCode(r.targetText);
-            return new MarkdownString().appendMarkdown(link).appendCodeblock(code, r.language);
+            return new MarkdownString()
+                .appendMarkdown(link)
+                .appendCodeblock(code, r.language);
         });
 
         return new Hover([...defaultStrings, ...userStrings]);
@@ -141,8 +149,14 @@ class PythonHoverProvider extends HoverProviderBase {
 
 export function registerLanguageDefinitions(): Disposable {
     return Disposable.from(
-        languages.registerDefinitionProvider("talon", new TalonDefinitionProvider()),
-        languages.registerDefinitionProvider("python", new PythonDefinitionProvider()),
+        languages.registerDefinitionProvider(
+            "talon",
+            new TalonDefinitionProvider(),
+        ),
+        languages.registerDefinitionProvider(
+            "python",
+            new PythonDefinitionProvider(),
+        ),
         languages.registerHoverProvider("talon", new TalonHoverProvider()),
         languages.registerHoverProvider("python", new PythonHoverProvider()),
     );

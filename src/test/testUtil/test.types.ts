@@ -1,4 +1,4 @@
-import { CommandId } from "../../commands/commands";
+import type { CommandId } from "../../commands/commands";
 
 interface TestFixtureBase {
     title: string;
@@ -45,10 +45,12 @@ export interface FullTestFixture {
 
 export interface Command {
     id: CommandId;
-    args: any[];
+    args: unknown[];
 }
 
-export type NumberSelection = [number, number] | [number, number, number, number];
+export type NumberSelection =
+    | [number, number]
+    | [number, number, number, number];
 
 export interface PlainPosition {
     line: number;

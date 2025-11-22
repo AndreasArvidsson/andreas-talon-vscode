@@ -1,4 +1,4 @@
-import { TextEditor, Uri } from "vscode";
+import type { TextEditor, Uri } from "vscode";
 import { getDir, getFilename } from "./fileSystem";
 
 interface SplitName {

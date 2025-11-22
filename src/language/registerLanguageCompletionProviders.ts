@@ -1,15 +1,21 @@
-import {
+import type {
     CompletionItem,
-    CompletionItemKind,
     CompletionItemProvider,
+    Position,
+    TextDocument,
+} from "vscode";
+import {
+    CompletionItemKind,
     Disposable,
     languages,
-    Position,
     Range,
-    TextDocument,
     workspace,
 } from "vscode";
-import { getPythonPrefixAtPosition, getTalonPrefixAtPosition, TalonMatchPrefix } from "./matchers";
+import type { TalonMatchPrefix } from "./matchers";
+import {
+    getPythonPrefixAtPosition,
+    getTalonPrefixAtPosition,
+} from "./matchers";
 import { searchInWorkspace } from "./searchInWorkspace";
 import { searchInDefaultTalonActions } from "./talonDefaultActions";
 
@@ -18,7 +24,9 @@ interface LanguageCompletionProvider extends CompletionItemProvider {
     readonly triggererCharacters: string[];
 }
 
-abstract class TalonBaseCompletionProvider implements LanguageCompletionProvider {
+abstract class TalonBaseCompletionProvider
+    implements LanguageCompletionProvider
+{
     abstract languageId: string;
     readonly triggererCharacters = ["."];
 
@@ -36,8 +44,13 @@ abstract class TalonBaseCompletionProvider implements LanguageCompletionProvider
             return [];
         }
 
-        const defaultValues = searchInDefaultTalonActions(match).map((a) => a.name);
-        const workspaceResults = await searchInWorkspace(workspaceFolder, match);
+        const defaultValues = searchInDefaultTalonActions(match).map(
+            (a) => a.name,
+        );
+        const workspaceResults = await searchInWorkspace(
+            workspaceFolder,
+            match,
+        );
         const workspaceValues = workspaceResults.map((r) => r.name);
         const values = defaultValues.concat(workspaceValues);
 
@@ -47,7 +60,9 @@ abstract class TalonBaseCompletionProvider implements LanguageCompletionProvider
         );
 
         const kind =
-            match.type === "action" ? CompletionItemKind.Function : CompletionItemKind.Value;
+            match.type === "action"
+                ? CompletionItemKind.Function
+                : CompletionItemKind.Value;
 
         return Array.from(new Set(values)).map((label) => ({
             kind,
@@ -88,7 +103,10 @@ class SnippetCompletionProvider implements LanguageCompletionProvider {
     readonly languageId = "snippet";
     readonly triggererCharacters = ["."];
 
-    provideCompletionItems(document: TextDocument, position: Position): CompletionItem[] {
+    provideCompletionItems(
+        document: TextDocument,
+        position: Position,
+    ): CompletionItem[] {
         const line = document.lineAt(position.line);
 
         if (line.firstNonWhitespaceCharacterIndex !== 0) {
@@ -101,7 +119,11 @@ class SnippetCompletionProvider implements LanguageCompletionProvider {
         const { fields, prefix, range } = (() => {
             if (variableMatch != null) {
                 const prefix = variableMatch[2];
-                const fields = ["insertionFormatter", "wrapperPhrase", "wrapperScope"];
+                const fields = [
+                    "insertionFormatter",
+                    "wrapperPhrase",
+                    "wrapperScope",
+                ];
                 const range = new Range(
                     position.translate(undefined, -prefix.length),
                     position.translate(undefined, -prefix.length),
@@ -125,7 +147,9 @@ class SnippetCompletionProvider implements LanguageCompletionProvider {
     }
 }
 
-function registerCompletionProvider(provider: LanguageCompletionProvider): Disposable {
+function registerCompletionProvider(
+    provider: LanguageCompletionProvider,
+): Disposable {
     return languages.registerCompletionItemProvider(
         provider.languageId,
         provider,

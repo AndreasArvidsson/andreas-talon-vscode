@@ -21,7 +21,9 @@ export function parseTokens(
     for (const { text, preserve } of tokens) {
         if (preserve || currentLineLength + text.length + 1 > lineWidth) {
             if (currentLine.length > 0) {
-                updatedLines.push(joinLine(currentLine, indentation, linePrefix));
+                updatedLines.push(
+                    joinLine(currentLine, indentation, linePrefix),
+                );
             }
             currentLine.length = 0;
             currentLineLength = indentation.length + linePrefix.length;
@@ -44,12 +46,18 @@ export function parseTokens(
     return updatedLines;
 }
 
-function joinLine(parts: string[], indentation: string, linePrefix: string): string {
+function joinLine(
+    parts: string[],
+    indentation: string,
+    linePrefix: string,
+): string {
     const text = parts.join(" ");
     if (linePrefix.length === 0) {
         return `${indentation}${text}`;
     }
-    return text.length > 0 ? `${indentation}${linePrefix} ${text}` : `${indentation}${linePrefix}`;
+    return text.length > 0
+        ? `${indentation}${linePrefix} ${text}`
+        : `${indentation}${linePrefix}`;
 }
 
 export function matchAll(

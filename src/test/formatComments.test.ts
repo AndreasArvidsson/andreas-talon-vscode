@@ -28,8 +28,12 @@ function createLineTests(prefix: string): Test[] {
 function createBlockTests(prefix: string, suffix: string): Test[] {
     return templateBlockTests.map((test) => ({
         title: test.title,
-        pre: getContentString(test.pre).replaceAll("/*", prefix).replaceAll("*/", suffix),
-        post: getContentString(test.post).replaceAll("/*", prefix).replaceAll("*/", suffix),
+        pre: getContentString(test.pre)
+            .replaceAll("/*", prefix)
+            .replaceAll("*/", suffix),
+        post: getContentString(test.post)
+            .replaceAll("/*", prefix)
+            .replaceAll("*/", suffix),
     }));
 }
 
@@ -43,14 +47,38 @@ function tests(languageIds: string[], tests: Test[]): Language[] {
 const templateLineTests: Test[] = [
     { title: "Line | Missing leading space", pre: "#aaa", post: "# aaa" },
     { title: "Line | Extra leading space", pre: "#  aaa", post: "# aaa" },
-    { title: "Line | With indentation", pre: "  #aaa bbb", post: "  # aaa\n  # bbb" },
-    { title: "Line | Inline", pre: "aaa # bbb ccc ddd", post: "aaa # bbb ccc ddd" },
-    { title: "Line | Splitting", pre: "# aaa bbb ccc", post: "# aaa bbb\n# ccc" },
+    {
+        title: "Line | With indentation",
+        pre: "  #aaa bbb",
+        post: "  # aaa\n  # bbb",
+    },
+    {
+        title: "Line | Inline",
+        pre: "aaa # bbb ccc ddd",
+        post: "aaa # bbb ccc ddd",
+    },
+    {
+        title: "Line | Splitting",
+        pre: "# aaa bbb ccc",
+        post: "# aaa bbb\n# ccc",
+    },
     { title: "Line | Joining", pre: "# a\n# b\n# c", post: "# a b c" },
     { title: "Line | Preserve empty", pre: "# a\n#\n# b", post: "# a\n#\n# b" },
-    { title: "Line | Preserve dash", pre: "# a\n# -\n# b", post: "# a\n# -\n# b" },
-    { title: "Line | Separate comments", pre: "# a\n\n# b", post: "# a\n\n# b" },
-    { title: "Line | CRLF", pre: "# a\r\n# -\r\n# b", post: "# a\r\n# -\r\n# b" },
+    {
+        title: "Line | Preserve dash",
+        pre: "# a\n# -\n# b",
+        post: "# a\n# -\n# b",
+    },
+    {
+        title: "Line | Separate comments",
+        pre: "# a\n\n# b",
+        post: "# a\n\n# b",
+    },
+    {
+        title: "Line | CRLF",
+        pre: "# a\r\n# -\r\n# b",
+        post: "# a\r\n# -\r\n# b",
+    },
     {
         title: "Line | Long",
         pre: "# Lorem ipsum dolor sit amet, consectetur adipiscing elit",
@@ -82,7 +110,11 @@ const cLineTests = createLineTests("//");
 const luaLineTests = createLineTests("--");
 
 const templateBlockTests: Test[] = [
-    { title: "Block | Preserve single line", pre: "  /*a*/", post: "  /* a */" },
+    {
+        title: "Block | Preserve single line",
+        pre: "  /*a*/",
+        post: "  /* a */",
+    },
     {
         title: "Block | With indentation",
         pre: "  /*\naaa bbb ccc\n*/",
@@ -111,7 +143,11 @@ const templateBlockTests: Test[] = [
 ];
 
 const javaDocTests: Test[] = [
-    { title: "Doc | Preserve single line", pre: "  /**a*/", post: "  /** a */" },
+    {
+        title: "Doc | Preserve single line",
+        pre: "  /**a*/",
+        post: "  /** a */",
+    },
     {
         title: "Doc | With indentation",
         pre: "  /**\naaa bbb ccc\n*/",
@@ -174,7 +210,13 @@ const languages: Language[] = [
     ...tests(["css"], [...cBlockTests]),
 
     ...tests(
-        ["java", "javascript", "typescript", "javascriptreact", "typescriptreact"],
+        [
+            "java",
+            "javascript",
+            "typescript",
+            "javascriptreact",
+            "typescriptreact",
+        ],
         [...cLineTests, ...cBlockTests, ...javaDocTests],
     ),
 ];

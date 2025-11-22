@@ -7,7 +7,10 @@ interface Options {
     insertSpaces?: boolean | string;
 }
 
-export async function getFormattingOptions(document: TextDocument, options: Options) {
+export async function getFormattingOptions(
+    document: TextDocument,
+    options: Options,
+) {
     if (isTesting) {
         return {
             lineWidth: 10,
@@ -15,8 +18,11 @@ export async function getFormattingOptions(document: TextDocument, options: Opti
         };
     }
 
-    const defaultFormatter = workspace.getConfiguration("editor", document).get("defaultFormatter");
-    let insertSpaces = typeof options.insertSpaces === "boolean" ? options.insertSpaces : true;
+    const defaultFormatter = workspace
+        .getConfiguration("editor", document)
+        .get("defaultFormatter");
+    let insertSpaces =
+        typeof options.insertSpaces === "boolean" ? options.insertSpaces : true;
     let tabSize = typeof options.tabSize === "number" ? options.tabSize : 4;
     let lineWidth = 80;
 
@@ -27,16 +33,21 @@ export async function getFormattingOptions(document: TextDocument, options: Opti
             lineWidth = 88;
             break;
         case "esbenp.prettier-vscode": {
-            const prettierConfig = await prettier.resolveConfig(document.uri.fsPath, {
-                editorconfig: true,
-            });
+            const prettierConfig = await prettier.resolveConfig(
+                document.uri.fsPath,
+                {
+                    editorconfig: true,
+                },
+            );
             lineWidth = prettierConfig?.printWidth ?? 80;
             insertSpaces = !prettierConfig?.useTabs;
             tabSize = prettierConfig?.tabWidth ?? 2;
         }
     }
 
-    const indentation = insertSpaces ? new Array(tabSize).fill(" ").join("") : "\t";
+    const indentation = insertSpaces
+        ? new Array(tabSize).fill(" ").join("")
+        : "\t";
 
     return { indentation, lineWidth };
 }

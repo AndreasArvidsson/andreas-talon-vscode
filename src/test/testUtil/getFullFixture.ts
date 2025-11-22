@@ -1,6 +1,10 @@
 import { commands } from "vscode";
 import { getFullCommand } from "../../util/getFullCommand";
-import { FullTestFixture, NumberSelection, TestFixture } from "./test.types";
+import type {
+    FullTestFixture,
+    NumberSelection,
+    TestFixture,
+} from "./test.types";
 
 export function getFullFixture(fixture: TestFixture): FullTestFixture {
     const { title, pre, post } = fixture;
@@ -36,7 +40,9 @@ function getCallback(fixture: TestFixture): () => Thenable<unknown> {
     };
 }
 
-function getSelections(selections?: NumberSelection[] | NumberSelection): NumberSelection[] {
+function getSelections(
+    selections?: NumberSelection[] | NumberSelection,
+): NumberSelection[] {
     if (selections == null) {
         return [[0, 0, 0, 0]];
     }

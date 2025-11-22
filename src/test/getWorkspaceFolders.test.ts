@@ -12,7 +12,9 @@ suite(command, () => {
         const result = await vscode.commands.executeCommand(fullCommand);
 
         // Check that the result is an array of file system paths
-        const expectedPaths = vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath);
+        const expectedPaths = vscode.workspace.workspaceFolders?.map(
+            (folder) => folder.uri.fsPath,
+        );
         assert.deepStrictEqual(result, expectedPaths);
     });
 });

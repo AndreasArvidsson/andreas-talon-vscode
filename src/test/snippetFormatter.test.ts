@@ -1,10 +1,15 @@
 import { commands } from "vscode";
 import { runTest } from "./testUtil/runTest";
-import { NumberSelection } from "./testUtil/test.types";
+import type { NumberSelection } from "./testUtil/test.types";
 
 type Content = string | string[];
 
-const fixtures: { title: string; pre: Content; post: Content; selections?: NumberSelection }[] = [
+const fixtures: {
+    title: string;
+    pre: Content;
+    post: Content;
+    selections?: NumberSelection;
+}[] = [
     {
         title: "Key order",
         selections: [0, 1],
@@ -172,7 +177,8 @@ suite("Snippet formatter", () => {
     for (const fixture of fixtures) {
         runTest({
             title: fixture.title,
-            callback: () => commands.executeCommand("editor.action.formatDocument"),
+            callback: () =>
+                commands.executeCommand("editor.action.formatDocument"),
             pre: {
                 language: "snippet",
                 content: getContentString(fixture.pre),

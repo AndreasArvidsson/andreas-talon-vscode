@@ -1,4 +1,4 @@
-import { CommandId } from "../commands/commands";
+import type { CommandId } from "../commands/commands";
 
 export function getFullCommand(command: CommandId | "tabs"): string {
     return `andreas.${command}`;

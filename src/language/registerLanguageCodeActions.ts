@@ -1,14 +1,16 @@
-import {
+import type {
     CancellationToken,
-    CodeAction,
     CodeActionContext,
-    CodeActionKind,
     CodeActionProvider,
+    TextDocument,
+} from "vscode";
+import {
+    CodeAction,
+    CodeActionKind,
     CodeActionTriggerKind,
     Disposable,
     languages,
     Range,
-    TextDocument,
     WorkspaceEdit,
 } from "vscode";
 import type { TreeSitter } from "../treeSitter/TreeSitter";
@@ -37,7 +39,10 @@ abstract class ProviderCodeActions implements CodeActionProvider {
         return [];
     }
 
-    protected getCommentEdit(document: TextDocument, range: Range): CodeAction | undefined {
+    protected getCommentEdit(
+        document: TextDocument,
+        range: Range,
+    ): CodeAction | undefined {
         const nodeStart = this.treeSitter.findsSmallestContainingPosition(
             document,
             "comment",
@@ -141,15 +146,29 @@ export function lineCommentToDocComment(text: string) {
     return `${indent}/**\n${text}\n${indent}*/`;
 }
 
-export function registerLanguageCodeActions(treeSitter: TreeSitter): Disposable {
+export function registerLanguageCodeActions(
+    treeSitter: TreeSitter,
+): Disposable {
     const codeActionsProviderJava = new ProvideCodeActionsJava(treeSitter);
     const codeActionsProviderJs = new ProvideCodeActionsJs(treeSitter);
 
     return Disposable.from(
         languages.registerCodeActionsProvider("java", codeActionsProviderJava),
-        languages.registerCodeActionsProvider("javascript", codeActionsProviderJs),
-        languages.registerCodeActionsProvider("typescript", codeActionsProviderJs),
-        languages.registerCodeActionsProvider("javascriptreact", codeActionsProviderJs),
-        languages.registerCodeActionsProvider("typescriptreact", codeActionsProviderJs),
+        languages.registerCodeActionsProvider(
+            "javascript",
+            codeActionsProviderJs,
+        ),
+        languages.registerCodeActionsProvider(
+            "typescript",
+            codeActionsProviderJs,
+        ),
+        languages.registerCodeActionsProvider(
+            "javascriptreact",
+            codeActionsProviderJs,
+        ),
+        languages.registerCodeActionsProvider(
+            "typescriptreact",
+            codeActionsProviderJs,
+        ),
     );
 }

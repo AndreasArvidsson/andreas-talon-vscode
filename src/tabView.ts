@@ -40,7 +40,9 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
         });
 
         this.mainDisposable = vscode.Disposable.from(
-            treeView.onDidChangeVisibility(() => this.onVisibilityChange(treeView.visible)),
+            treeView.onDidChangeVisibility(() =>
+                this.onVisibilityChange(treeView.visible),
+            ),
             treeView,
         );
     }
@@ -50,8 +52,12 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
             if (this.onTabChangeDisposable == null) {
                 const onTabChange = () => this._onDidChangeTreeData.fire();
                 this.onTabChangeDisposable = vscode.Disposable.from(
-                    vscode.window.tabGroups.onDidChangeTabGroups(() => onTabChange()),
-                    vscode.window.tabGroups.onDidChangeTabs(() => onTabChange()),
+                    vscode.window.tabGroups.onDidChangeTabGroups(() =>
+                        onTabChange(),
+                    ),
+                    vscode.window.tabGroups.onDidChangeTabs(() =>
+                        onTabChange(),
+                    ),
                     vscode.workspace.onDidChangeConfiguration((scope) => {
                         if (scope.affectsConfiguration(labelFormatSetting)) {
                             onTabChange();
@@ -84,11 +90,18 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
         if (element == null) {
             let tabIndex = 0;
 
-            return vscode.window.tabGroups.all.flatMap((tabGroup, groupIndex) => {
-                const result: GroupElement = { type: "group", groupIndex, tabIndex, tabGroup };
-                tabIndex += tabGroup.tabs.length;
-                return groupIndex > 0 ? [paddingElement, result] : [result];
-            });
+            return vscode.window.tabGroups.all.flatMap(
+                (tabGroup, groupIndex) => {
+                    const result: GroupElement = {
+                        type: "group",
+                        groupIndex,
+                        tabIndex,
+                        tabGroup,
+                    };
+                    tabIndex += tabGroup.tabs.length;
+                    return groupIndex > 0 ? [paddingElement, result] : [result];
+                },
+            );
         }
 
         if (element.type === "group") {
@@ -110,7 +123,8 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
 
 function createItem(tab: vscode.Tab, index: number): vscode.TreeItem {
     const hint = indexToHint(index);
-    const resourceUri = tab.input instanceof vscode.TabInputText ? tab.input.uri : undefined;
+    const resourceUri =
+        tab.input instanceof vscode.TabInputText ? tab.input.uri : undefined;
     const label = `${hint.padStart(2)} - ${tab.label}`;
 
     const command: vscode.Command = {

@@ -3,8 +3,9 @@ import type { TreeSitter } from "../treeSitter/TreeSitter";
 import type { CommandServerExtension } from "../typings/commandServer";
 import { getFullCommand } from "../util/getFullCommand";
 import { GetText } from "./GetText";
-import { GitParameters, GitUtil } from "./GitUtil";
-import { CommandId } from "./commands";
+import type { GitParameters } from "./GitUtil";
+import { GitUtil } from "./GitUtil";
+import type { CommandId } from "./commands";
 import { executeCommands } from "./executeCommands";
 import { copyFilename } from "./files/copyFilename";
 import { duplicateFile } from "./files/duplicateFile";
@@ -19,7 +20,10 @@ import {
     searchFilesOpenSelected,
 } from "./files/searchFiles";
 import { focusTab } from "./focusTab";
-import { formatAllComments, formatComments } from "./formatComments/formatComments";
+import {
+    formatAllComments,
+    formatComments,
+} from "./formatComments/formatComments";
 import { formatSelectedFiles, formatWorkspaceFiles } from "./formatFiles";
 import { generateRange } from "./generateRange";
 import { goToLine } from "./goToLine";
@@ -30,6 +34,7 @@ import { printCommands } from "./printCommands";
 import { selectTo } from "./selectTo";
 import { getSetting, setSetting } from "./settings";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Callback = (...args: any[]) => any;
 
 export function registerCommands(
@@ -89,7 +94,9 @@ export function registerCommands(
             return vscode.workspace.workspaceFolders.map((folder) => {
                 const uri = folder.uri;
                 if (uri.scheme !== "file") {
-                    throw new Error(`Expected file URI but got ${uri.scheme} URI`);
+                    throw new Error(
+                        `Expected file URI but got ${uri.scheme} URI`,
+                    );
                 }
                 return uri.fsPath;
             });
@@ -104,15 +111,19 @@ export function registerCommands(
     );
 }
 
-function registerCommand(command: CommandId, callback: Callback): vscode.Disposable {
+function registerCommand(
+    command: CommandId,
+    callback: Callback,
+): vscode.Disposable {
     const fullCommand = getFullCommand(command);
 
-    const safeCallback = async (...args: any[]) => {
+    const safeCallback = async (...args: unknown[]) => {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             return await Promise.resolve(callback(...args));
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
+            const errorMessage =
+                error instanceof Error ? error.message : String(error);
             void vscode.window.showErrorMessage(errorMessage);
             throw error;
         }

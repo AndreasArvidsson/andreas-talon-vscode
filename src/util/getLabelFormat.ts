@@ -3,8 +3,13 @@ import * as vscode from "vscode";
 
 export const labelFormatSetting = "workbench.editor.labelFormat";
 
-export function getLabelFormat(tab: vscode.Tab, uri: vscode.Uri): string | undefined {
-    const format = vscode.workspace.getConfiguration().get<string>(labelFormatSetting);
+export function getLabelFormat(
+    tab: vscode.Tab,
+    uri: vscode.Uri,
+): string | undefined {
+    const format = vscode.workspace
+        .getConfiguration()
+        .get<string>(labelFormatSetting);
     switch (format) {
         case "default":
             return getConflictPath(tab, uri);
@@ -32,19 +37,26 @@ function getPathRelativeWorkspace(uri: vscode.Uri): string | undefined {
     if (wsFolder == null) {
         return getAbsolutePath(uri);
     }
-    const relativeDirPath = path.dirname(path.relative(wsFolder.uri.fsPath, uri.fsPath));
+    const relativeDirPath = path.dirname(
+        path.relative(wsFolder.uri.fsPath, uri.fsPath),
+    );
     return relativeDirPath !== "." ? relativeDirPath : undefined;
 }
 
 function getConflictPath(tab: vscode.Tab, uri: vscode.Uri): string | undefined {
-    const hasNameConflict = tab.group.tabs.some((t) => t.label === tab.label && t !== tab);
+    const hasNameConflict = tab.group.tabs.some(
+        (t) => t.label === tab.label && t !== tab,
+    );
 
     if (!hasNameConflict) {
         return undefined;
     }
 
     const wsFolder = vscode.workspace.getWorkspaceFolder(uri);
-    const fsPath = wsFolder != null ? path.relative(wsFolder.uri.fsPath, uri.fsPath) : uri.fsPath;
+    const fsPath =
+        wsFolder != null
+            ? path.relative(wsFolder.uri.fsPath, uri.fsPath)
+            : uri.fsPath;
     const parsedPath = path.parse(fsPath);
     const parts = [parsedPath.root];
 
@@ -52,7 +64,11 @@ function getConflictPath(tab: vscode.Tab, uri: vscode.Uri): string | undefined {
         const grandFolder = path.dirname(parsedPath.dir);
         const folderName = path.basename(parsedPath.dir);
         // Have additional folders above this one that is not root.
-        if (grandFolder && grandFolder !== parsedPath.root && grandFolder !== ".") {
+        if (
+            grandFolder &&
+            grandFolder !== parsedPath.root &&
+            grandFolder !== "."
+        ) {
             parts.push("...", path.sep);
         }
         parts.push(folderName);

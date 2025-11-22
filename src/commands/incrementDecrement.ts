@@ -7,10 +7,12 @@ async function update(increment: boolean, value?: number) {
         editor.selections.forEach((selection) => {
             const selectionText = editor.document.getText(selection);
 
-            const updatedText = selectionText.replace(/-?\d+(\.\d+)?/g, (text) =>
-                text.includes(".")
-                    ? updateFloat(increment, text, value).toString()
-                    : updateInteger(increment, text, value).toString(),
+            const updatedText = selectionText.replace(
+                /-?\d+(\.\d+)?/g,
+                (text) =>
+                    text.includes(".")
+                        ? updateFloat(increment, text, value).toString()
+                        : updateInteger(increment, text, value).toString(),
             );
 
             if (selectionText !== updatedText) {
@@ -20,7 +22,11 @@ async function update(increment: boolean, value?: number) {
     });
 }
 
-function updateInteger(increment: boolean, text: string, value?: number): number {
+function updateInteger(
+    increment: boolean,
+    text: string,
+    value?: number,
+): number {
     const original = parseInt(text);
     const diff = value ?? 1;
     return original + (increment ? diff : -diff);

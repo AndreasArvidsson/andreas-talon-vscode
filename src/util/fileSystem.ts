@@ -14,18 +14,26 @@ export async function createFile(uri: vscode.Uri): Promise<void> {
     }
 }
 
-export async function copyFile(source: vscode.Uri, destination: vscode.Uri): Promise<void> {
+export async function copyFile(
+    source: vscode.Uri,
+    destination: vscode.Uri,
+): Promise<void> {
     assertNonExistingFile(destination);
 
     try {
         await vscode.workspace.fs.copy(source, destination);
     } catch (ex) {
         const error = ex as Error;
-        throw new Error(`Failed to copy file: ${source.fsPath}. ${error.message}`);
+        throw new Error(
+            `Failed to copy file: ${source.fsPath}. ${error.message}`,
+        );
     }
 }
 
-export async function renameFile(uri: vscode.Uri, filename: string): Promise<void> {
+export async function renameFile(
+    uri: vscode.Uri,
+    filename: string,
+): Promise<void> {
     const dir = getDir(uri);
     const originalFilename = getFilename(uri);
     const destination = vscode.Uri.file(path.join(dir, filename));
@@ -46,7 +54,10 @@ export async function renameFile(uri: vscode.Uri, filename: string): Promise<voi
     }
 }
 
-export async function moveFile(source: vscode.Uri, destination: vscode.Uri): Promise<void> {
+export async function moveFile(
+    source: vscode.Uri,
+    destination: vscode.Uri,
+): Promise<void> {
     assertNonExistingFile(destination);
 
     const edit = new vscode.WorkspaceEdit();

@@ -1,4 +1,4 @@
-import { Position, TextDocument, TextLine } from "vscode";
+import type { Position, TextDocument, TextLine } from "vscode";
 
 export type TalonMatchType = "action" | "capture" | "list" | "dynamic_list";
 
@@ -136,7 +136,10 @@ function isInTalonScript(line: TextLine, position: Position) {
     return index > -1 && index < position.character;
 }
 
-function getNameAtPosition(document: TextDocument, position: Position): string | undefined {
+function getNameAtPosition(
+    document: TextDocument,
+    position: Position,
+): string | undefined {
     const range = document.getWordRangeAtPosition(position, /[\w\d.]+/);
     if (!range || range.isEmpty || !range.isSingleLine) {
         return undefined;
@@ -144,7 +147,11 @@ function getNameAtPosition(document: TextDocument, position: Position): string |
     return document.getText(range).replace(/^actions\./, "");
 }
 
-function testRegexAtPosition(position: Position, lineText: string, regex: RegExp): boolean {
+function testRegexAtPosition(
+    position: Position,
+    lineText: string,
+    regex: RegExp,
+): boolean {
     return Array.from(lineText.matchAll(regex)).some(
         (match) =>
             match.index != null &&

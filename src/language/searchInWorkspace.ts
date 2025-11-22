@@ -1,8 +1,9 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { DefinitionLink, Range, Uri, WorkspaceFolder } from "vscode";
+import type { DefinitionLink, WorkspaceFolder } from "vscode";
+import { Range, Uri } from "vscode";
 import { getGitIgnore } from "../util/gitIgnore";
-import { TalonMatch, TalonMatchType } from "./matchers";
+import type { TalonMatch, TalonMatchType } from "./matchers";
 
 export interface SearchResult extends DefinitionLink {
     targetText: string;
@@ -23,9 +24,11 @@ type GetNamespace = (line: number, name: string) => string | undefined;
 // @ ID .action_class (" \w ")
 const classRegex = /^@[\w\d]+\.action_class(?:\("(\w+)"\))?/gm;
 // INDENT def WS NAME WS ( ANY ) -> TYPE :
-const actionRegex = /^([ \t]+def\s+)([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:(\s+"{3}[\s\S]+?"{3})?/gm;
+const actionRegex =
+    /^([ \t]+def\s+)([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:(\s+"{3}[\s\S]+?"{3})?/gm;
 // @ ID .capture ( ANY ) WS def NAME ( ANY ) -> TYPE :
-const captureRegex = /^(@\w+\.capture\([\s\S]*?\)\s+def\s+)([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:/gm;
+const captureRegex =
+    /^(@\w+\.capture\([\s\S]*?\)\s+def\s+)([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:/gm;
 // @ ID .dynamic_list ( NAME ) def NAME ( ANY ) -> TYPE :
 const dynamicListRegex =
     /^(@\w+\.dynamic_list\(")([\w.]+)"\)\s+def\s+([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:/gm;
@@ -65,7 +68,11 @@ async function searchInWorkspaceInner(workspace: WorkspaceFolder) {
     const actions: SearchResult[] = [];
     const captures: SearchResult[] = [];
     const lists: SearchResult[] = [];
-    const results = await searchInDirectory(getGitIgnore(workspacePath), workspacePath, "");
+    const results = await searchInDirectory(
+        getGitIgnore(workspacePath),
+        workspacePath,
+        "",
+    );
     results.forEach((r) => {
         switch (r.type) {
             case "action":
@@ -134,7 +141,9 @@ async function searchInPath(
     }
 
     const fileStats = await fs.stat(absolutePath);
-    return fileStats.isDirectory() ? searchInDirectory(gitIgnore, absolutePath, relativePath) : [];
+    return fileStats.isDirectory()
+        ? searchInDirectory(gitIgnore, absolutePath, relativePath)
+        : [];
 }
 
 async function parsePythonFile(absolutePath: string): Promise<SearchResult[]> {
@@ -145,11 +154,19 @@ async function parsePythonFile(absolutePath: string): Promise<SearchResult[]> {
         ...parsePythonFileInner(uri, fileContent, "action", actionRegex),
         ...parsePythonFileInner(uri, fileContent, "capture", captureRegex),
         ...parsePythonFileInner(uri, fileContent, "list", listRegex),
-        ...parsePythonFileInner(uri, fileContent, "dynamic_list", dynamicListRegex),
+        ...parsePythonFileInner(
+            uri,
+            fileContent,
+            "dynamic_list",
+            dynamicListRegex,
+        ),
     ];
 }
 
-function getTalonNamespacesFromPython(regex: RegExp, fileContent: string): Namespace[] {
+function getTalonNamespacesFromPython(
+    regex: RegExp,
+    fileContent: string,
+): Namespace[] {
     const matches = Array.from(fileContent.matchAll(regex));
     return matches
         .map((m) => ({
@@ -173,7 +190,10 @@ function parsePythonFileInner(
     let getNamespace: GetNamespace | undefined;
 
     if (type === "action") {
-        const namespaces = getTalonNamespacesFromPython(classRegex, fileContent);
+        const namespaces = getTalonNamespacesFromPython(
+            classRegex,
+            fileContent,
+        );
 
         if (!namespaces.length) {
             return [];
@@ -204,7 +224,9 @@ function parsePythonFileInner(
     return parsePythonMatches(uri, fileContent, matches, type, getNamespace);
 }
 
-async function parseTalonListFile(absolutePath: string): Promise<SearchResult[]> {
+async function parseTalonListFile(
+    absolutePath: string,
+): Promise<SearchResult[]> {
     // list: WS NAME
     const regex = /^(list:\s*)([\w.]+)/g;
     const fileContent = await fs.readFile(absolutePath, "utf-8");
@@ -249,7 +271,8 @@ function parsePythonMatches(
         // This is just the function name
         const nameOffsetLines = match[1].split("\n");
         const nameOffsetRow = nameOffsetLines.length - 1;
-        const nameOffsetCol = nameOffsetLines[nameOffsetLines.length - 1].length;
+        const nameOffsetCol =
+            nameOffsetLines[nameOffsetLines.length - 1].length;
         const targetSelectionRange = new Range(
             line + nameOffsetRow,
             indentationLength + nameOffsetCol,
@@ -286,7 +309,12 @@ function parseTalonListMatch(
 ): SearchResult[] {
     const lines = fileContent.split("\n");
     const lastLineIndex = lines.length - 1;
-    const targetRange = new Range(0, 0, lastLineIndex, lines[lastLineIndex].length);
+    const targetRange = new Range(
+        0,
+        0,
+        lastLineIndex,
+        lines[lastLineIndex].length,
+    );
     const targetSelectionRange = new Range(
         0,
         match[1].length,

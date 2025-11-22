@@ -1,4 +1,4 @@
-import { CommandServerExtension } from "../typings/commandServer";
+import type { CommandServerExtension } from "../typings/commandServer";
 
 export function getFakeCommandServerExtension(): CommandServerExtension {
     return {
