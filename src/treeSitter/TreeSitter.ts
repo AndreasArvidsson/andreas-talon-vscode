@@ -98,7 +98,7 @@ function loadQueryFile(file: string): string {
 }
 
 function getQueryFile(name: string): string {
-    return path.join(__dirname, `queries/${name}.scm`);
+    return path.join(__dirname, `treeSitter/queries/${name}.scm`);
 }
 
 function matchesToScopes(matches: QueryMatch[]): Scope[] {

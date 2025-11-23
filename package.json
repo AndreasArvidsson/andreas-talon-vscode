@@ -2,10 +2,18 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.77.0",
+    "version": "3.78.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
+    "files": [
+        "out/extension.*",
+        "out/treeSitter",
+        "images/icon.png",
+        "images/tabs_icon.svg",
+        "node_modules/prettier",
+        "LICENSE"
+    ],
     "icon": "images/icon.png",
     "repository": {
         "type": "git",
@@ -332,19 +340,17 @@
         }
     },
     "scripts": {
-        "build": "vsce package",
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p . && npm run bundle-assets",
-        "bundle-assets": "jiti ./src/scripts/bundleAssets.ts",
+        "package": "vsce package",
+        "vscode:prepublish": "npm run build",
+        "build": "jiti ./src/scripts/build.ts",
         "clean": "rm -rf out",
-        "watch": "tsc -watch -p .",
         "lint": "npm run lint:meta && npm run lint:fmt && npm run lint:ts",
         "lint:meta": "file-updater --test",
         "lint:fmt": "prettier --check .",
-        "lint:ts": "eslint src",
+        "lint:ts": "tsc -p . && eslint src",
         "fix": "npm run fix:meta && npm run fix:fmt && npm run fix:ts",
         "fix:meta": "file-updater",
-        "fix:fmt": "prettier --write .",
+        "fix:fmt": "prettier --write --list-different .",
         "fix:ts": "eslint src --fix",
         "test:ci": "jiti src/scripts/runTestsCI.ts"
     },
@@ -364,14 +370,15 @@
         "@types/node": "^24.10.1",
         "@types/vscode": "~1.95.0",
         "@vscode/test-electron": "^2.5.2",
-        "eslint": "^9.39.1",
+        "esbuild": "^0.27.0",
         "eslint-config-prettier": "^10.1.8",
+        "eslint": "^9.39.1",
         "file-updater": "^0.5.0",
         "fs-extra": "^11.3.2",
         "jiti": "^2.6.1",
         "mocha": "^11.7.5",
         "ts-archetype": "^0.5.0",
-        "typescript": "^5.9.3",
-        "typescript-eslint": "^8.47.0"
+        "typescript-eslint": "^8.47.0",
+        "typescript": "^5.9.3"
     }
 }

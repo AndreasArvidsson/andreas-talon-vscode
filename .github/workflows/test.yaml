@@ -28,8 +28,8 @@ jobs:
       - name: Install dependencies
         run: npm --color ci
 
-      - name: Compile
-        run: npm --color run compile
+      - name: Build
+        run: npm --color run build
 
       - name: Run lint (Linux)
         run: npm --color run lint
@@ -39,6 +39,6 @@ jobs:
         run: xvfb-run -a npm --color run test:ci
         if: runner.os == 'Linux'
 
-      - name: Run tests (Windows, macOS)
+      - name: Run tests (Windows, MacOS)
         run: npm --color run test:ci
         if: runner.os != 'Linux'

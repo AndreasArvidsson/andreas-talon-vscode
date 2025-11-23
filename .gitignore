@@ -2,4 +2,3 @@ node_modules
 out
 stuff
 *.vsix
-*.txt
