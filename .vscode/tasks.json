@@ -3,32 +3,14 @@
     "tasks": [
         {
             "label": "Build",
-            "dependsOn": ["Bundle assets", "Watch"],
+            "type": "npm",
+            "script": "build",
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
-        },
-
-        {
-            "label": "Bundle assets",
-            "type": "npm",
-            "script": "bundle-assets",
-            "group": "build",
+            },
             "presentation": {
-                "reveal": "never"
-            }
-        },
-
-        {
-            "label": "Watch",
-            "type": "npm",
-            "script": "watch",
-            "problemMatcher": "$tsc-watch",
-            "isBackground": true,
-            "group": "build",
-            "presentation": {
-                "reveal": "never"
+                "reveal": "silent"
             }
         }
     ]

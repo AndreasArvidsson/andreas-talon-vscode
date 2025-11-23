@@ -1,3 +1,3 @@
-import { runFileUpdater } from "./out/file-updater/index.js";
+import { runFileUpdater } from "./out/fileUpdater/index.js";
 
 export default runFileUpdater;
