@@ -2,6 +2,9 @@ import * as vscode from "vscode";
 import { getWorkspaceFiles, recursivelyGetFileUris } from "../util/uriUtil";
 
 export async function formatWorkspaceFiles() {
+    if (vscode.env.remoteName !== undefined) {
+        throw Error("Format workspace files is only supported for local workspaces.");
+    }
     const uris = await getWorkspaceFiles();
     await formatDocuments(uris);
 }
@@ -10,6 +13,9 @@ export async function formatSelectedFiles(
     clickedFile: vscode.Uri,
     selectedFiles: vscode.Uri[],
 ) {
+    if (vscode.env.remoteName !== undefined) {
+        throw Error("Format selected files is only supported for local workspaces.");
+    }
     const uris = await recursivelyGetFileUris(selectedFiles);
     await formatDocuments(uris);
 }
