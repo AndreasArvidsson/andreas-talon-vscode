@@ -203,11 +203,17 @@ export const commandDescriptions = {
     ),
 
     // Git commands
-    gitCheckout: visible(
+    gitGetFirstAvailableBranch: hidden(
+        "Git",
+        "Get first available branch.",
+        undefined,
+        "(branches: string[]): string | undefined",
+    ),
+    gitCheckout: hidden(
         "Git",
         "Checkout git branch.",
-        undefined,
-        "(branch: string)",
+        "Uses first branch that exists.",
+        "(...branches: string[])",
     ),
     getGitFileURL: hidden(
         "Git",

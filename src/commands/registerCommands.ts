@@ -77,6 +77,9 @@ export function registerCommands(
         getClassName: () => getText.getClassName(),
         getOpenTagName: () => getText.getOpenTagName(),
         // Git
+        gitGetFirstAvailableBranch: (branches: string[]) => {
+            return git.getFirstAvailableBranch(branches);
+        },
         gitCheckout: (...branches: string[]) => git.checkout(branches),
         getGitFileURL: (p: GitParameters) => git.getFileURL(p),
         getGitRepoURL: () => git.getRepoURL(),

@@ -70,15 +70,29 @@ export class GitUtil {
 
     async checkout(branches: string[]) {
         const repository = await this.getRepository();
-        for (const branch of branches) {
+        const branch = await this.getFirstAvailableBranch(branches, repository);
+        if (branch == null) {
+            throw Error(
+                `Can't checkout unknown branch '${branches.join(", ")}'`,
+            );
+        }
+        await repository.checkout(branch);
+    }
+
+    async getFirstAvailableBranch(
+        branches: string[],
+        repository?: Repository,
+    ): Promise<string | undefined> {
+        repository = repository ?? (await this.getRepository());
+        for (const branchName of branches) {
             try {
-                await repository.checkout(branch);
-                return;
+                await repository.getBranch(branchName);
+                return branchName;
             } catch (_error) {
                 // Try the next branch
             }
         }
-        throw Error(`Can't checkout branch '${branches.join(", ")}'`);
+        return undefined;
     }
 
     private async getRepository(): Promise<Repository> {
