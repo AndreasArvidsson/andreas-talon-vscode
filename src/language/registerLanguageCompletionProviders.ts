@@ -24,9 +24,7 @@ interface LanguageCompletionProvider extends CompletionItemProvider {
     readonly triggererCharacters: string[];
 }
 
-abstract class TalonBaseCompletionProvider
-    implements LanguageCompletionProvider
-{
+abstract class TalonBaseCompletionProvider implements LanguageCompletionProvider {
     abstract languageId: string;
     readonly triggererCharacters = ["."];
 
