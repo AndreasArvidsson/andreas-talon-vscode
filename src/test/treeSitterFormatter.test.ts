@@ -15,6 +15,11 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
         post: '";"? @namedFunction.end @functionName.domain.end\n',
     },
     {
+        title: "Field definition in root",
+        pre: ";;\nlhs: (rhs)",
+        post: ";;\n(_\n    lhs: (rhs)\n)\n",
+    },
+    {
         title: "Trailing ?",
         pre: '(("." (type))?)?',
         post: `\

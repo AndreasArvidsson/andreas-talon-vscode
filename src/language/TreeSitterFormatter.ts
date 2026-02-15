@@ -96,6 +96,11 @@ export class TreeSitterFormatter {
     }
 
     private getFieldDefinitionText(node: Node, numIndents: number): string {
+        // Field definition directly in document root
+        if (numIndents === 0) {
+            return ["(_", this.getFieldDefinitionText(node, 1), ")"].join("\n");
+        }
+        // [lhs, ":", rhs]
         return [
             this.getIndent(numIndents),
             node.children[0].text,
