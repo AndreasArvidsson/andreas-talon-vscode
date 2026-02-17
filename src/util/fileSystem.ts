@@ -62,9 +62,9 @@ export async function moveFile(
 
     const edit = new vscode.WorkspaceEdit();
     edit.renameFile(source, destination);
-    const result = await vscode.workspace.applyEdit(edit);
+    const success = await vscode.workspace.applyEdit(edit);
 
-    if (!result) {
+    if (!success) {
         throw new Error(`Failed to move file: ${source.fsPath}`);
     }
 }
@@ -72,10 +72,10 @@ export async function moveFile(
 export async function deleteFile(uri: vscode.Uri): Promise<void> {
     const edit = new vscode.WorkspaceEdit();
     edit.deleteFile(uri);
-    const result = await vscode.workspace.applyEdit(edit);
+    const success = await vscode.workspace.applyEdit(edit);
 
-    if (!result) {
-        throw new Error(`Failed to remove file: ${uri.fsPath}`);
+    if (!success) {
+        throw new Error(`Failed to delete file: ${uri.fsPath}`);
     }
 }
 

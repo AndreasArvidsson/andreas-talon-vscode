@@ -80,7 +80,7 @@ export async function searchFilesDeleteSelected() {
         (await vscode.window.showInformationMessage(
             `Are you sure you want to delete ${selectedLinks.length} files?`,
             { modal: true },
-            "Move to Recycle Bin",
+            "Delete files",
         ));
 
     if (remove) {
