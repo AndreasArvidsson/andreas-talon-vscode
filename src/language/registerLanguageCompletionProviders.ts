@@ -54,7 +54,7 @@ abstract class TalonBaseCompletionProvider implements LanguageCompletionProvider
 
         const range = new Range(
             position.translate(undefined, -match.prefix.length),
-            position.translate(undefined, -match.prefix.length),
+            position,
         );
 
         const kind =
@@ -124,13 +124,13 @@ class SnippetCompletionProvider implements LanguageCompletionProvider {
                 ];
                 const range = new Range(
                     position.translate(undefined, -prefix.length),
-                    position.translate(undefined, -prefix.length),
+                    position,
                 );
                 return { fields, prefix, range };
             }
 
             const fields = ["name", "phrase", "insertionScope", "language"];
-            const range = new Range(position.line, 0, position.line, 0);
+            const range = new Range(position.with(undefined, 0), position);
             return { fields, range, prefix: precedingText };
         })();
 
