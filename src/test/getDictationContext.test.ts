@@ -31,6 +31,30 @@ suite(command, () => {
     });
 
     runTest({
+        title: "Cursor at start of line",
+        command,
+        pre: {
+            content: "abcd",
+            selections: [0, 0],
+        },
+        post: {
+            returnValue: { before: "", after: "ab" },
+        },
+    });
+
+    runTest({
+        title: "Cursor at end of line",
+        command,
+        pre: {
+            content: "abcd",
+            selections: [0, 4],
+        },
+        post: {
+            returnValue: { before: "cd", after: "" },
+        },
+    });
+
+    runTest({
         title: "Non-empty selection",
         command,
         pre: {
