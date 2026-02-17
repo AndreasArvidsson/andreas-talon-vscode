@@ -47,7 +47,7 @@ export class GetText {
         const endChar = editor.selection.end.character;
 
         return {
-            before: startLine.text.slice(startChar - 2, startChar),
+            before: startLine.text.slice(Math.max(startChar - 2, 0), startChar),
             after: endLine.text.slice(endChar, endChar + 2),
         };
     }
