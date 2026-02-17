@@ -19,7 +19,9 @@ export async function duplicateFile(name?: string): Promise<void> {
     const filename = await showNewNameInputBox(suggestedName, suggestedExt);
 
     if (filename) {
-        const uri = vscode.Uri.file(path.join(context.dir, filename));
+        const uri = context.uri.scheme === "file"
+            ? vscode.Uri.file(path.join(context.dir, filename))
+            : context.uri.with({ path: path.join(context.dir, filename) });
         await copyFile(context.uri, uri);
         await vscode.window.showTextDocument(uri);
     }

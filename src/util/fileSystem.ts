@@ -36,12 +36,16 @@ export async function renameFile(
 ): Promise<void> {
     const dir = getDir(uri);
     const originalFilename = getFilename(uri);
-    const destination = vscode.Uri.file(path.join(dir, filename));
+    const destination = uri.scheme === "file"
+        ? vscode.Uri.file(path.join(dir, filename))
+        : uri.with({ path: path.join(dir, filename) });
 
     // Special case for when just change case case of a filename
     if (originalFilename.toLocaleLowerCase() === filename.toLocaleLowerCase()) {
-        fs.renameSync(uri.fsPath, destination.fsPath);
-        return;
+        if (uri.scheme === "file") {
+            fs.renameSync(uri.fsPath, destination.fsPath);
+            return;
+        }
     }
 
     assertNonExistingFile(destination);
@@ -80,7 +84,10 @@ export async function deleteFile(uri: vscode.Uri): Promise<void> {
 }
 
 export function getFilename(uri: vscode.Uri): string {
-    return path.basename(fs.realpathSync.native(uri.fsPath));
+    if (uri.scheme === "file") {
+        return path.basename(fs.realpathSync.native(uri.fsPath));
+    }
+    return path.basename(uri.fsPath);
 }
 
 export function getDir(uri: vscode.Uri): string {
@@ -95,5 +102,8 @@ function assertNonExistingFile(uri: vscode.Uri) {
 }
 
 function fileExists(uri: vscode.Uri) {
-    return fs.existsSync(uri.fsPath);
+    if (uri.scheme === "file") {
+        return fs.existsSync(uri.fsPath);
+    }
+    return false;
 }
