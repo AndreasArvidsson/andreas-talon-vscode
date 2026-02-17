@@ -16,8 +16,11 @@ async function copyAsset(source: string, destination?: string) {
         try {
             return await lstat(fullSource);
         } catch (error) {
-            console.log(error);
-            throw Error(`Missing asset: ${fullSource}`);
+            const message =
+                error instanceof Error ? error.message : String(error);
+            throw Error(`Missing asset ${fullSource}: ${message}`, {
+                cause: error,
+            });
         }
     })();
 

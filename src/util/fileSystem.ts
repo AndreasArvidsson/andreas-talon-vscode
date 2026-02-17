@@ -23,10 +23,10 @@ export async function copyFile(
     try {
         await vscode.workspace.fs.copy(source, destination);
     } catch (ex) {
-        const error = ex as Error;
-        throw new Error(
-            `Failed to copy file: ${source.fsPath}. ${error.message}`,
-        );
+        const message = ex instanceof Error ? ex.message : String(ex);
+        throw new Error(`Failed to copy file: ${source.fsPath}. ${message}`, {
+            cause: ex,
+        });
     }
 }
 
