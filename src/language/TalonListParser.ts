@@ -25,22 +25,15 @@ export interface TalonList {
 }
 
 export function parseTalonList(text: string): TalonList {
-    const separatorIndex = text.indexOf("-");
+    const lines = text.split(/\r?\n/).map((l) => l.trim());
+    const separatorIndex = lines.indexOf("-");
 
     if (separatorIndex === -1) {
         throw Error("Separator not found in talon list");
     }
 
-    const headerLines = text
-        .slice(0, separatorIndex)
-        .trim()
-        .split(/\r?\n/)
-        .map((line) => line.trim());
-    const bodyLines = text
-        .slice(separatorIndex + 1)
-        .trim()
-        .split(/\r?\n/)
-        .map((line) => line.trim());
+    const headerLines = lines.slice(0, separatorIndex);
+    const bodyLines = trim(lines.slice(separatorIndex + 1));
 
     const result: TalonList = {
         headers: [],
@@ -56,7 +49,7 @@ export function parseTalonList(text: string): TalonList {
             continue;
         }
         const [key, value] = splitLine(line);
-        if (value === undefined) {
+        if (value == null) {
             throw Error("Header value missing");
         }
         result.headers.push({ type: "header", key, value });
@@ -87,4 +80,13 @@ function splitLine(line: string): [string, string | undefined] {
         line.substring(0, index).trimEnd(),
         line.substring(index + 1).trimStart(),
     ];
+}
+
+function trim(list: string[]): string[] {
+    const startIndex = list.findIndex((l) => l.length > 0);
+    if (startIndex < 0) {
+        return [];
+    }
+    const endIndex = list.findLastIndex((l) => l.length > 0);
+    return list.slice(startIndex, endIndex + 1);
 }
