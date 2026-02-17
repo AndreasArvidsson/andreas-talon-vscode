@@ -100,14 +100,20 @@ export class GitUtil {
         if (repositories.length === 0) {
             throw Error("No git repositories available");
         }
-        if (repositories.length === 1) {
-            return repositories[0];
-        }
+
         const { document } = getActiveFileSchemaEditor();
         const filePath = document.uri.path.toLowerCase();
-        const repository = repositories.find((r) =>
-            filePath.startsWith(r.rootUri.path.toLowerCase()),
-        );
+        const repository = repositories
+            .filter((r) => {
+                const rootPath = r.rootUri.path
+                    .toLowerCase()
+                    .replace(/\/+$/, "");
+                return (
+                    filePath === rootPath || filePath.startsWith(`${rootPath}/`)
+                );
+            })
+            .sort((a, b) => b.rootUri.path.length - a.rootUri.path.length)[0];
+
         if (repository == null) {
             throw Error("Can't find Git repository");
         }
@@ -245,7 +251,7 @@ class Github implements GitPlatform {
     }
 
     getPullRequestsURL(): string {
-        return `${this.repoUrl}/pulls#`;
+        return `${this.repoUrl}/pulls`;
     }
 }
 
