@@ -14,7 +14,7 @@ export function getActiveEditor(): TextEditor {
 export function getActiveFileSchemaEditor(): TextEditor {
     const editor = getActiveEditor();
 
-    if (editor.document.uri.scheme !== "file") {
+    if (editor.document.uri.scheme !== "file" && editor.document.uri.scheme !== "vscode-remote") {
         throw Error(
             `Active document is not file. Found: ${editor.document.uri.scheme}`,
         );

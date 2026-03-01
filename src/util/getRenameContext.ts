@@ -19,7 +19,7 @@ export function getNewFilenameContext(
     editor: TextEditor,
     inputName?: string,
 ): RenameContext | undefined {
-    if (editor.document.uri.scheme !== "file") {
+    if (editor.document.uri.scheme !== "file" && editor.document.uri.scheme !== "vscode-remote") {
         return undefined;
     }
 
