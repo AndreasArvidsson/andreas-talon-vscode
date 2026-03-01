@@ -138,8 +138,10 @@ export class TreeSitterFormatter {
                         .join("")
                 );
 
-            case ".":
             case "comment":
+                return `${this.getIndent(numIndents)}${node.text.trimEnd()}`;
+
+            case ".":
             case "negated_field":
                 return `${this.getIndent(numIndents)}${node.text}`;
 

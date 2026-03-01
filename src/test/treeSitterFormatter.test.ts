@@ -20,6 +20,11 @@ const fixtures: { title: string; pre: Content; post: Content }[] = [
         post: ";;\n(_\n    lhs: (rhs)\n)\n",
     },
     {
+        title: "Trailing comment ws",
+        pre: ";; Hello world ",
+        post: ";; Hello world\n",
+    },
+    {
         title: "Trailing ?",
         pre: '(("." (type))?)?',
         post: `\
