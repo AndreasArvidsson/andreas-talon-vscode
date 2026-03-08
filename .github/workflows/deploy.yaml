@@ -6,20 +6,31 @@ on:
     types: [completed]
     branches: [main]
 
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-extension
+  cancel-in-progress: false
+
 jobs:
   publish-extension:
     name: Publish to marketplace
     runs-on: ubuntu-latest
     environment: Production
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          cache: npm
 
       - name: Install dependencies
         run: npm --color ci
@@ -29,10 +40,12 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> $GITHUB_ENV
 
-      - name: Create Git tag
+      - name: Check whether this version is already published
         run: |
-          git tag ${{ env.version }}
-          git push origin ${{ env.version }}
+          if git ls-remote --exit-code --tags origin "refs/tags/${{ env.version }}" > /dev/null; then
+            echo "Version ${{ env.version }} is already tagged."
+            exit 1
+          fi
 
       - name: Publish to Open VSX Registry
         id: publishToOpenVSX
@@ -46,3 +59,8 @@ jobs:
           pat: ${{ secrets.VSCE_PAT }}
           registryUrl: https://marketplace.visualstudio.com
           extensionFile: ${{ steps.publishToOpenVSX.outputs.vsixPath }}
+
+      - name: Create Git tag
+        run: |
+          git tag "${{ env.version }}"
+          git push origin "${{ env.version }}"
