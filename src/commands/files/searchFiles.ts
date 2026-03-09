@@ -1,4 +1,4 @@
-import { glob } from "glob";
+import fastGlob from "fast-glob";
 import * as path from "node:path";
 import * as vscode from "vscode";
 import { deleteFile } from "../../util/fileSystem";
@@ -32,14 +32,14 @@ export async function searchFiles(query?: string) {
         }
         lines.push(ws.name, "");
 
-        const files = await glob(`**/*${query}*`, {
+        const files = await fastGlob(`**/*${query}*`, {
             cwd: ws.uri.fsPath,
             dot: true,
-            posix: true,
+            caseSensitiveMatch: false,
         });
 
         for (const file of files.sort()) {
-            lines.push(`  ${file}`);
+            lines.push(`  ${file.replaceAll("\\", "/")}`);
         }
 
         lines.push("");

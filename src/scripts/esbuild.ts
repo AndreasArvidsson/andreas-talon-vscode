@@ -1,5 +1,5 @@
 import esbuild, { type BuildOptions } from "esbuild";
-import { glob } from "glob";
+import fastGlob from "fast-glob";
 
 export async function runEsbuild() {
     console.log("Running esbuild");
@@ -24,7 +24,7 @@ export async function runEsbuild() {
         entryPoints: [
             "src/fileUpdater/index.ts",
             "src/test/testUtil/runAllTests.ts",
-            ...glob.sync("src/test/**/*.test.ts"),
+            ...fastGlob.sync("src/test/**/*.test.ts"),
         ],
     });
 }
