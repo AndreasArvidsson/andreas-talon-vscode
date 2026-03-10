@@ -106,7 +106,7 @@
     },
     {
         "name": "bytes.decode",
-        "signature": "(b: bytes, encoding: str = 'utf8', errors: str = 'strict') -> bytes",
+        "signature": "(b: bytes, encoding: str = 'utf8', errors: str = 'strict') -> str",
         "docstr": "Decode bytes to string"
     },
     {
@@ -136,12 +136,12 @@
     },
     {
         "name": "clip.image",
-        "signature": "() -> Optional[talon.skia.image.Image]",
+        "signature": "() -> Optional[skia.Image]",
         "docstr": "Get clipboard image"
     },
     {
         "name": "clip.set_image",
-        "signature": "(image: talon.skia.image.Image)",
+        "signature": "(image: skia.Image)",
         "docstr": "Set clipboard image"
     },
     {
@@ -248,6 +248,11 @@
         "name": "deck.current_page",
         "signature": "(serial: str) -> int",
         "docstr": "Get current page number for a deck"
+    },
+    {
+        "name": "deck.current_path",
+        "signature": "(serial: str) -> str",
+        "docstr": "Get current path name for a deck"
     },
     {
         "name": "deck.goto",
@@ -481,7 +486,7 @@
     },
     {
         "name": "edit.find",
-        "signature": "(text: str = None)",
+        "signature": "(text: str = '')",
         "docstr": "Open Find dialog, optionally searching for text"
     },
     {
@@ -601,7 +606,7 @@
     },
     {
         "name": "edit.select_line",
-        "signature": "(n: int = None)",
+        "signature": "(n: int = -1)",
         "docstr": "Select entire line <n>, or current line"
     },
     {
@@ -721,7 +726,7 @@
     },
     {
         "name": "list.insert",
-        "signature": "(l: list, index: int, value: Any) -> int",
+        "signature": "(l: list, index: int, value: Any) -> None",
         "docstr": "Insert value into list at index"
     },
     {
@@ -791,7 +796,7 @@
     },
     {
         "name": "math.bin",
-        "signature": "(n: <function MathActions.int at 0x0000025280294AE0>) -> str",
+        "signature": "(n: int) -> str",
         "docstr": "Convert number to binary string"
     },
     {
@@ -891,7 +896,7 @@
     },
     {
         "name": "math.hex",
-        "signature": "(n: <function MathActions.int at 0x0000025280294AE0>) -> str",
+        "signature": "(n: int) -> str",
         "docstr": "Convert number to hex string"
     },
     {
@@ -976,12 +981,12 @@
     },
     {
         "name": "math.modf_f",
-        "signature": "(x: float) -> int",
+        "signature": "(x: float) -> float",
         "docstr": "Get the fractional part of x"
     },
     {
         "name": "math.modf_i",
-        "signature": "(x: float) -> int",
+        "signature": "(x: float) -> float",
         "docstr": "Get the integer part of x"
     },
     {
@@ -991,7 +996,7 @@
     },
     {
         "name": "math.oct",
-        "signature": "(n: <function MathActions.int at 0x0000025280294AE0>) -> str",
+        "signature": "(n: int) -> str",
         "docstr": "Convert number to octal string"
     },
     {
@@ -1080,8 +1085,13 @@
         "docstr": "Check for updates"
     },
     {
-        "name": "menu.open_debug_window",
+        "name": "menu.close_debug_window",
         "signature": "()",
+        "docstr": "Close Debug window"
+    },
+    {
+        "name": "menu.open_debug_window",
+        "signature": "(section: str | None = None)",
         "docstr": "Open Debug window"
     },
     {
@@ -1185,6 +1195,11 @@
         "docstr": "Mouse Y position"
     },
     {
+        "name": "paste",
+        "signature": "(text: str)",
+        "docstr": "Use the clipboard to paste text, preserving the contents"
+    },
+    {
         "name": "path.talon_app",
         "signature": "() -> str",
         "docstr": "Path to Talon application"
@@ -1208,6 +1223,51 @@
         "name": "print",
         "signature": "(obj: Any)",
         "docstr": "Display an object in the log"
+    },
+    {
+        "name": "random.choice",
+        "signature": "(seq: Sequence[~T]) -> ~T",
+        "docstr": "Pick a random element from a sequence"
+    },
+    {
+        "name": "random.choices",
+        "signature": "(seq: Sequence[~T], weights: Optional[Sequence[int]] = None, k: int = 1) -> list[~T]",
+        "docstr": "Select k random elements from a sequence"
+    },
+    {
+        "name": "random.randint",
+        "signature": "(a: int, b: int) -> int",
+        "docstr": "Generate random number where a <= n <= b"
+    },
+    {
+        "name": "random.random",
+        "signature": "() -> float",
+        "docstr": "Generate random number between 0.0 - 1.0"
+    },
+    {
+        "name": "random.randrange",
+        "signature": "(a: int, b: int) -> int",
+        "docstr": "Generate random number where a <= n < b"
+    },
+    {
+        "name": "random.sample",
+        "signature": "(seq: Sequence[~T], k: int, counts: Optional[Sequence[int]] = None) -> list[~T]",
+        "docstr": "Sample k random unique elements from a sequence"
+    },
+    {
+        "name": "random.shuffle",
+        "signature": "(seq: MutableSequence[~T]) -> None",
+        "docstr": "Shuffle the elements of a sequence"
+    },
+    {
+        "name": "random.uniform",
+        "signature": "(a: float, b: float) -> float",
+        "docstr": "Generate uniformly random number where a <= n <= b"
+    },
+    {
+        "name": "random.urandom",
+        "signature": "(n: int) -> bytes",
+        "docstr": "Generate n cryptographically random bytes"
     },
     {
         "name": "set.add",
@@ -1285,6 +1345,11 @@
         "docstr": "Add all items from b to a"
     },
     {
+        "name": "settings.get",
+        "signature": "(path: str, default: Union[float, int, str, list[Any], talon.scripting.types.SettingDecl.NoValueType, NoneType] = NoValue) -> Union[float, int, str, list[Any], NoneType]",
+        "docstr": "Get the value of a setting"
+    },
+    {
         "name": "skip",
         "signature": "()",
         "docstr": "Do nothing"
@@ -1356,7 +1421,7 @@
     },
     {
         "name": "string.center",
-        "signature": "(s: str, width: int, fillchar: Optional[str] = None) -> str",
+        "signature": "(s: str, width: int, fillchar: str = ' ') -> str",
         "docstr": "Center string by padding to width"
     },
     {
@@ -1371,7 +1436,7 @@
     },
     {
         "name": "string.count",
-        "signature": "(s: str, sub: str, start: Optional[int] = None, end: Optional[int] = None) -> str",
+        "signature": "(s: str, sub: str, start: Optional[int] = None, end: Optional[int] = None) -> int",
         "docstr": "Count the number of instances of sub in string, with optional start/end"
     },
     {
@@ -1456,7 +1521,7 @@
     },
     {
         "name": "string.ljust",
-        "signature": "(s: str, width: int, fillchar: Optional[str] = None) -> str",
+        "signature": "(s: str, width: int, fillchar: str = ' ') -> str",
         "docstr": "Left justify string by padding to width"
     },
     {
@@ -1501,12 +1566,12 @@
     },
     {
         "name": "string.rjust",
-        "signature": "(s: str, width: int, fillchar: Optional[str] = None) -> str",
+        "signature": "(s: str, width: int, fillchar: str = ' ') -> str",
         "docstr": "Right justify string by padding to width"
     },
     {
         "name": "string.rsplit",
-        "signature": "(s: str, sep: Optional[str] = None, maxsplit: int = -1) -> str",
+        "signature": "(s: str, sep: Optional[str] = None, maxsplit: int = -1) -> list[str]",
         "docstr": "Split using separator or whitespace [maxsplit] times from the right"
     },
     {
@@ -1521,7 +1586,7 @@
     },
     {
         "name": "string.split",
-        "signature": "(s: str, sep: Optional[str] = None, maxsplit: int = -1) -> str",
+        "signature": "(s: str, sep: Optional[str] = None, maxsplit: int = -1) -> list[str]",
         "docstr": "Split using separator or whitespace [maxsplit] times"
     },
     {
@@ -1662,12 +1727,12 @@
     {
         "name": "tracking.control_always_on_toggle",
         "signature": "(state: bool = None) -> None",
-        "docstr": "Toggle Control Mouse 2 (Always On)"
+        "docstr": "Toggle Control Mouse (Always On)"
     },
     {
         "name": "tracking.control_debug_toggle",
         "signature": "(state: bool = None) -> None",
-        "docstr": "Toggle Control Mouse 2 (Debug View)"
+        "docstr": "Toggle Control Mouse (Debug View)"
     },
     {
         "name": "tracking.control_enabled",
@@ -1677,22 +1742,27 @@
     {
         "name": "tracking.control_gaze_focus_toggle",
         "signature": "(state: bool = None) -> None",
-        "docstr": "Toggle Control Mouse 2 (Gaze Focus)"
+        "docstr": "Toggle Control Mouse (Gaze Focus)"
     },
     {
         "name": "tracking.control_gaze_toggle",
         "signature": "(state: bool = None) -> None",
-        "docstr": "Toggle Control Mouse 2 (Gaze Control)"
+        "docstr": "Toggle Control Mouse (Gaze Control)"
+    },
+    {
+        "name": "tracking.control_head_jump_toggle",
+        "signature": "(state: bool = None) -> None",
+        "docstr": "Toggle Control Mouse (Head Jump)"
     },
     {
         "name": "tracking.control_head_toggle",
         "signature": "(state: bool = None) -> None",
-        "docstr": "Toggle Control Mouse 2 (Head Control)"
+        "docstr": "Toggle Control Mouse (Head Control)"
     },
     {
         "name": "tracking.control_mouse_jump_toggle",
         "signature": "(state: bool = None) -> None",
-        "docstr": "Toggle Control Mouse 2 (Mouse Jump)"
+        "docstr": "Toggle Control Mouse (Mouse Jump)"
     },
     {
         "name": "tracking.control_toggle",
@@ -1735,6 +1805,11 @@
         "docstr": "Count the number of times value appears in tuple"
     },
     {
+        "name": "tuple.get",
+        "signature": "(t: tuple, index: int) -> Any",
+        "docstr": "Get tuple[index]"
+    },
+    {
         "name": "tuple.index",
         "signature": "(t: tuple, value: Any) -> int",
         "docstr": "Get the first index of value"
@@ -1756,7 +1831,7 @@
     },
     {
         "name": "types.none",
-        "signature": "() -> NoneType",
+        "signature": "() -> None",
         "docstr": "Get an instance of None"
     },
     {
