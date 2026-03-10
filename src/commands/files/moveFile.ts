@@ -61,9 +61,10 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
             for (const [name, type] of files) {
                 if (type === FileType.Directory) {
                     const folderPath = path.join(dir, name);
-                    const relativePath = path
-                        .relative(workspaceDir, folderPath)
-                        .replaceAll("\\", "/");
+                    const relativePath = path.relative(
+                        workspaceDir,
+                        folderPath,
+                    );
                     if (!fileIgnorer.ignores(relativePath)) {
                         items.push({
                             label: `$(folder) ${name}`,
