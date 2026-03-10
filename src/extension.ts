@@ -45,7 +45,7 @@ async function activateExtension(
         registerLanguageDefinitions(),
         registerLanguageCompletionProviders(),
         registerLanguageCodeActions(treeSitter),
-        registerLanguageFormatters(treeSitter),
+        registerLanguageFormatters(context, treeSitter),
         registerSearchResults(),
         createTabView(),
     );
