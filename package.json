@@ -8,12 +8,10 @@
     "main": "./out/extension.js",
     "files": [
         "out/extension.*",
-        "out/*.wasm",
         "out/treeSitter",
+        "out/*.wasm",
         "images/icon.png",
-        "images/tabs_icon.svg",
-        "node_modules/prettier",
-        "LICENSE"
+        "images/tabs_icon.svg"
     ],
     "icon": "images/icon.png",
     "repository": {
