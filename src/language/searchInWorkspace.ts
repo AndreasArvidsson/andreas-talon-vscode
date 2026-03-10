@@ -1,9 +1,10 @@
+import fastGlob from "fast-glob";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import type { DefinitionLink, WorkspaceFolder } from "vscode";
 import { Range, Uri } from "vscode";
-import { getGitIgnore } from "../util/gitIgnore";
 import type { TalonMatch, TalonMatchType } from "./matchers";
+import { GLOB_IGNORE_PATTERNS } from "@cursorless/talon-tools";
 
 export interface SearchResult extends DefinitionLink {
     targetText: string;
@@ -16,8 +17,6 @@ interface Namespace {
     name: string;
     line: number;
 }
-
-type GitIgnore = (path: string) => boolean;
 
 type GetNamespace = (line: number, name: string) => string | undefined;
 
@@ -68,11 +67,7 @@ async function searchInWorkspaceInner(workspace: WorkspaceFolder) {
     const actions: SearchResult[] = [];
     const captures: SearchResult[] = [];
     const lists: SearchResult[] = [];
-    const results = await searchInDirectory(
-        getGitIgnore(workspacePath),
-        workspacePath,
-        "",
-    );
+    const results = await searchInDirectory(workspacePath);
     results.forEach((r) => {
         switch (r.type) {
             case "action":
@@ -93,57 +88,40 @@ async function searchInWorkspaceInner(workspace: WorkspaceFolder) {
 }
 
 async function searchInDirectory(
-    gitIgnore: GitIgnore,
-    absolutePath: string,
-    relativePath: string,
+    workspacePath: string,
 ): Promise<SearchResult[]> {
-    const files = await fs.readdir(absolutePath);
-    const definitions = await Promise.all(
-        files.map((filename) =>
-            searchInPath(
-                gitIgnore,
-                path.join(absolutePath, filename),
-                path.join(relativePath, filename),
-                filename,
-            ).catch((error) => {
-                console.error(error);
-                return [];
-            }),
-        ),
-    );
-    return definitions.flat();
-}
+    const files = await fastGlob("**/*.{py,talon-list}", {
+        cwd: workspacePath,
+        ignore: GLOB_IGNORE_PATTERNS,
+        dot: false,
+    });
 
-async function searchInPath(
-    gitIgnore: GitIgnore,
-    absolutePath: string,
-    relativePath: string,
-    filename: string,
-): Promise<SearchResult[]> {
-    // Filenames starting with `.` are ignored by Talon.
-    if (filename.startsWith(".") || gitIgnore(relativePath)) {
-        return [];
+    const result: SearchResult[] = [];
+
+    for (const file of files) {
+        const fileAbsolutePath = path.join(workspacePath, file);
+
+        try {
+            // Python file. Parse for content.
+            if (file.endsWith(".py")) {
+                result.push(...(await parsePythonFile(fileAbsolutePath)));
+            }
+
+            // Talon list file. Parse for content.
+            else if (file.endsWith(".talon-list")) {
+                result.push(...(await parseTalonListFile(fileAbsolutePath)));
+            }
+
+            // Unknown file type.
+            else {
+                console.error(`Unknown file type: ${file}`);
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 
-    // Python file. Parse for content.
-    if (relativePath.endsWith(".py")) {
-        return parsePythonFile(absolutePath);
-    }
-
-    // Talon list file. Parse for content.
-    if (relativePath.endsWith(".talon-list")) {
-        return parseTalonListFile(absolutePath);
-    }
-
-    // Files with unrelated file endings. Just ignore.
-    if (/\.\w+$/.test(relativePath)) {
-        return [];
-    }
-
-    const fileStats = await fs.stat(absolutePath);
-    return fileStats.isDirectory()
-        ? searchInDirectory(gitIgnore, absolutePath, relativePath)
-        : [];
+    return result;
 }
 
 async function parsePythonFile(absolutePath: string): Promise<SearchResult[]> {

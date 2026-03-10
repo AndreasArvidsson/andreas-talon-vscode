@@ -1,10 +1,11 @@
+import { IGNORE_FOLDERS } from "@cursorless/talon-tools";
+import ignore from "ignore";
 import * as path from "node:path";
 import type { QuickPickItem, WorkspaceFolder } from "vscode";
 import { FileType, QuickPickItemKind, Uri, window, workspace } from "vscode";
 import * as fileSystem from "../../util/fileSystem";
 import { getDir, getFilename } from "../../util/fileSystem";
 import { getActiveFileSchemaEditor } from "../../util/getActiveEditor";
-import { getGitIgnore } from "../../util/gitIgnore";
 
 interface FileQuickPickItem extends QuickPickItem {
     path: string;
@@ -15,7 +16,6 @@ interface FileQuickPickItem extends QuickPickItem {
 export async function moveFile(): Promise<void> {
     const editor = getActiveFileSchemaEditor();
     const uri = editor.document.uri;
-
     const folder = await showFolderPicker(uri);
 
     if (folder && folder !== getDir(uri)) {
@@ -29,7 +29,7 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
     return new Promise<string | undefined>((resolve) => {
         const workspaceFolder = getWorkspaceFolder(uri);
         const workspaceDir = workspaceFolder.uri.fsPath;
-        const gitIgnore = getGitIgnore(workspaceDir);
+        const fileIgnorer = ignore().add(IGNORE_FOLDERS);
         const quickPick = window.createQuickPick<FileQuickPickItem>();
         quickPick.ignoreFocusOut = true;
 
@@ -61,11 +61,10 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
             for (const [name, type] of files) {
                 if (type === FileType.Directory) {
                     const folderPath = path.join(dir, name);
-                    const relativePath = path.relative(
-                        workspaceDir,
-                        folderPath,
-                    );
-                    if (!gitIgnore(relativePath)) {
+                    const relativePath = path
+                        .relative(workspaceDir, folderPath)
+                        .replaceAll("\\", "/");
+                    if (!fileIgnorer.ignores(relativePath)) {
                         items.push({
                             label: `$(folder) ${name}`,
                             path: folderPath,
