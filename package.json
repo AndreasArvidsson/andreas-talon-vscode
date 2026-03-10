@@ -344,7 +344,7 @@
         "pokey.parse-tree"
     ],
     "dependencies": {
-        "@cursorless/talon-tools": "^0.1.4",
+        "@cursorless/talon-tools": "^0.1.5",
         "fast-glob": "^3.3.3",
         "ignore": "^7.0.5"
     },
@@ -364,7 +364,7 @@
         "mocha": "^11.7.5",
         "prettier": "^3.8.1",
         "ts-archetype": "^0.5.0",
-        "typescript-eslint": "^8.56.1",
+        "typescript-eslint": "^8.57.0",
         "typescript": "^5.9.3"
     }
 }
