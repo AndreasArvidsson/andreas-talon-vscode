@@ -1,6 +1,6 @@
 import { copy } from "fs-extra";
 import { lstat, mkdir } from "node:fs/promises";
-import path from "node:path";
+import * as path from "node:path";
 
 const projectRoot = path.join(__dirname, "../..");
 const sourceRoot = path.join(projectRoot, "src");
@@ -37,4 +37,10 @@ export async function bundleAssets() {
     console.log("Bundling assets:");
 
     await copyAsset("treeSitter/queries");
+
+    // Needed for editorconfig in @cursorless/talon-tools
+    await copyAsset(
+        "../node_modules/@one-ini/wasm/one_ini_bg.wasm",
+        "one_ini_bg.wasm",
+    );
 }

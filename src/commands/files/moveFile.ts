@@ -1,4 +1,4 @@
-import path from "node:path";
+import * as path from "node:path";
 import type { QuickPickItem, WorkspaceFolder } from "vscode";
 import { FileType, QuickPickItemKind, Uri, window, workspace } from "vscode";
 import * as fileSystem from "../../util/fileSystem";
@@ -109,7 +109,7 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
 function getWorkspaceFolder(uri: Uri): WorkspaceFolder {
     const folder = workspace.getWorkspaceFolder(uri);
 
-    if (!folder) {
+    if (folder == null) {
         throw Error("Can't find workspace for file");
     }
 

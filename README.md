@@ -30,11 +30,11 @@ Many of the commands take arguments and return values that can only be used with
 - `andreas.formatWorkspaceFiles()`  
   Format workspace files.
 - `andreas.searchFiles(query?: string)`  
-  Search files Search files in workspace.
+  Search files in workspace.
 - `andreas.searchFilesOpenSelected()`  
-  Open selected Open selected files in search result.
+  Open selected files in search result.
 - `andreas.searchFilesDeleteSelected()`  
-  Delete selected Delete selected files in search result.
+  Delete selected files in search result.
 
 ### Edit commands
 
@@ -101,45 +101,16 @@ Many of the commands take arguments and return values that can only be used with
 - `andreas.printCommands()`  
   Print available commands.
 
+## Formatting options
+
+The formatting options are described in [@cursorless/talon-tools](https://github.com/cursorless-dev/talon-tools?tab=readme-ov-file#formatting-options)
+
 ## Talon language features
 
 - Adds document formatter for Talon files.
 - Adds (go to) definitions for Talon actions, lists (incl dynamic) and captures.
 - Adds hover for Talon actions, lists (incl dynamic) and captures.
 - Adds code completion for Talon actions, lists and captures.
-
-### Column width setting for Talon formatter
-
-By applying the column width setting for the Talon formatter the left hand side of a command will be padded so the right hand column will be aligned
-
-`andreas.talonFormatter.columnWidth: null`
-
-```talon
-foo: "foo"
-foo bar baz: "foo bar baz"
-```
-
-`andreas.talonFormatter.columnWidth: 15`
-
-```talon
-foo:           "foo"
-foo bar baz:   "foo bar baz"
-```
-
-The same setting exists for Talon list files
-
-`andreas.talonListFormatter.columnWidth: 15`
-
-### Formatter column width comment
-
-The column width setting can be enabled on a per file basis using comments
-
-```talon
-# fmt: columnWidth=15
-
-foo:           "foo"
-foo bar baz:   "foo bar baz"
-```
 
 ### Disable formatting on save for Talon files
 
@@ -156,11 +127,11 @@ foo bar baz:   "foo bar baz"
 
 - Convert line and block comments to JS/Java doc comments
 
-## Tree-sitter Query(.scm) language features
+## Tree-sitter Query (.scm) language features
 
 - Adds document formatter for scm files.
 
-## Snippet(.snippet) language features
+## Snippet (.snippet) language features
 
 - Adds syntax highlight for snippet files.
 - Adds document formatter for snippet files.

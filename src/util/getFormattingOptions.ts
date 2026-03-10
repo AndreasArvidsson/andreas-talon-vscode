@@ -1,53 +1,49 @@
-import * as prettier from "prettier";
-import { type TextDocument, workspace } from "vscode";
+import type { Options } from "@cursorless/talon-tools";
+import { getOptionsFromConfig } from "@cursorless/talon-tools";
+import type { TextDocument } from "vscode";
+import { workspace } from "vscode";
 import { isTesting } from "./isTesting";
 
-interface Options {
+interface EditorOptions {
     tabSize?: number | string;
     insertSpaces?: boolean | string;
 }
 
 export async function getFormattingOptions(
     document: TextDocument,
-    options: Options,
-) {
+    editorOptions: EditorOptions,
+): Promise<Options> {
     if (isTesting) {
         return {
-            lineWidth: 10,
-            indentation: "    ",
+            maxLineLength: 10,
+            indentSize: 4,
         };
     }
 
-    const defaultFormatter = workspace
-        .getConfiguration("editor", document)
-        .get("defaultFormatter");
-    let insertSpaces =
-        typeof options.insertSpaces === "boolean" ? options.insertSpaces : true;
-    let tabSize = typeof options.tabSize === "number" ? options.tabSize : 4;
-    let lineWidth = 80;
+    const fsPath =
+        document.uri.scheme === "file"
+            ? document.uri.fsPath
+            : workspace.workspaceFolders?.[0].uri.fsPath;
 
-    switch (defaultFormatter) {
-        case "redhat.java":
-        case "ms-python.black-formatter":
-        case "black":
-            lineWidth = 88;
-            break;
-        case "esbenp.prettier-vscode": {
-            const prettierConfig = await prettier.resolveConfig(
-                document.uri.fsPath,
-                {
-                    editorconfig: true,
-                },
-            );
-            lineWidth = prettierConfig?.printWidth ?? 80;
-            insertSpaces = !prettierConfig?.useTabs;
-            tabSize = prettierConfig?.tabWidth ?? 2;
-        }
+    if (fsPath == null) {
+        return {};
     }
 
-    const indentation = insertSpaces
-        ? new Array(tabSize).fill(" ").join("")
-        : "\t";
+    const options = await getOptionsFromConfig(fsPath);
 
-    return { indentation, lineWidth };
+    if (
+        options.indentSize == null &&
+        typeof editorOptions.tabSize === "number"
+    ) {
+        options.indentSize = editorOptions.tabSize;
+    }
+
+    if (
+        options.indentTabs == null &&
+        typeof editorOptions.insertSpaces === "boolean"
+    ) {
+        options.indentTabs = !editorOptions.insertSpaces;
+    }
+
+    return options;
 }

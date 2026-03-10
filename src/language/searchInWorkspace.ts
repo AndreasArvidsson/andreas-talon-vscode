@@ -1,5 +1,5 @@
-import { promises as fs } from "node:fs";
-import path from "node:path";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
 import type { DefinitionLink, WorkspaceFolder } from "vscode";
 import { Range, Uri } from "vscode";
 import { getGitIgnore } from "../util/gitIgnore";

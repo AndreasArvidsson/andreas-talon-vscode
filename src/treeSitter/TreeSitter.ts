@@ -1,5 +1,5 @@
-import fs from "node:fs";
-import path from "node:path";
+import * as fs from "node:fs";
+import * as path from "node:path";
 import * as vscode from "vscode";
 import type { Node, Point, Query, QueryMatch } from "web-tree-sitter";
 import type { ParseTreeExtension } from "../typings/parserTree";

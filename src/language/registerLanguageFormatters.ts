@@ -1,20 +1,19 @@
+import {
+    snippetFormatter,
+    talonFormatter,
+    talonListFormatter,
+    treeSitterFormatter,
+    type Options,
+    type SyntaxNode,
+} from "@cursorless/talon-tools";
 import type { FormattingOptions, TextDocument } from "vscode";
 import { Disposable, languages, Range, TextEdit } from "vscode";
-import type { Node } from "web-tree-sitter";
 import type { TreeSitter } from "../treeSitter/TreeSitter";
+import { getErrorMessage } from "../util/getErrorMessage";
 import { getFormattingOptions } from "../util/getFormattingOptions";
-import { snippetFormatter } from "./SnippetFormatter";
-import { talonFormatter } from "./TalonFormatter";
-import { talonListFormatter } from "./TalonListFormatter";
-import { treeSitterFormatter } from "./TreeSitterFormatter";
 
-export interface LanguageFormatterTree {
-    getText(document: TextDocument, node: Node, indentation: string): string;
-}
-
-export interface LanguageFormatterText {
-    getText(document: TextDocument, indentation: string): string;
-}
+type LanguageFormatterTree = (node: SyntaxNode, options: Options) => string;
+type LanguageFormatterText = (text: string, options: Options) => string;
 
 function provideDocumentFormattingEditsForTree(
     treeSitter: TreeSitter,
@@ -23,23 +22,29 @@ function provideDocumentFormattingEditsForTree(
     return {
         provideDocumentFormattingEdits: async (
             document: TextDocument,
-            options: FormattingOptions,
+            formattingOptions: FormattingOptions,
         ): Promise<TextEdit[]> => {
-            const rootNode = treeSitter.getRootNode(document);
-
-            if (rootNode.hasError) {
-                console.warn(
-                    `Abort document formatting: Syntax tree has error`,
+            try {
+                const options = await getFormattingOptions(
+                    document,
+                    formattingOptions,
                 );
+                const rootNode = treeSitter.getRootNode(document);
+
+                if (rootNode.hasError) {
+                    console.warn(
+                        `Abort document formatting: Syntax tree has error`,
+                    );
+                    return [];
+                }
+
+                const originalText = document.getText();
+                const updatedText = formatter(rootNode, options);
+                return createTextEdits(document, originalText, updatedText);
+            } catch (error) {
+                console.warn(getErrorMessage(error));
                 return [];
             }
-
-            const { indentation } = await getFormattingOptions(
-                document,
-                options,
-            );
-            const newText = formatter.getText(document, rootNode, indentation);
-            return createTextEdits(document, newText);
         },
     };
 }
@@ -50,25 +55,30 @@ function provideDocumentFormattingEditsForText(
     return {
         provideDocumentFormattingEdits: async (
             document: TextDocument,
-            options: FormattingOptions,
+            formattingOptions: FormattingOptions,
         ): Promise<TextEdit[]> => {
-            const { indentation } = await getFormattingOptions(
-                document,
-                options,
-            );
             try {
-                const newText = formatter.getText(document, indentation);
-                return createTextEdits(document, newText);
+                const options = await getFormattingOptions(
+                    document,
+                    formattingOptions,
+                );
+                const originalText = document.getText();
+                const updatedText = formatter(originalText, options);
+                return createTextEdits(document, originalText, updatedText);
             } catch (error) {
-                console.warn((error as Error).message);
+                console.warn(getErrorMessage(error));
                 return [];
             }
         },
     };
 }
 
-function createTextEdits(document: TextDocument, text: string): TextEdit[] {
-    if (document.getText() === text) {
+function createTextEdits(
+    document: TextDocument,
+    originalText: string,
+    updatedText: string,
+): TextEdit[] {
+    if (originalText === updatedText) {
         return [];
     }
     return [
@@ -77,7 +87,7 @@ function createTextEdits(document: TextDocument, text: string): TextEdit[] {
                 document.lineAt(0).range.start,
                 document.lineAt(document.lineCount - 1).range.end,
             ),
-            text,
+            updatedText,
         ),
     ];
 }

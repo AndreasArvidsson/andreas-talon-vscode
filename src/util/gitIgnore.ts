@@ -5,7 +5,7 @@ import path from "node:path";
 export function getGitIgnore(workspacePath: string) {
     const gitignore = ignore();
 
-    gitignore.add(".git");
+    gitignore.add([".git", ".svn", ".hg", "node_modules", "__pycache__"]);
 
     try {
         const gitignorePath = path.join(workspacePath, ".gitignore");
@@ -13,7 +13,7 @@ export function getGitIgnore(workspacePath: string) {
         const gitignoreLines = gitignoreContent.split("\n");
         gitignore.add(gitignoreLines);
     } catch (_ex) {
-        gitignore.add("node_modules");
+        // If .gitignore doesn't exist, we can ignore the error
     }
 
     return (relativePath: string) => gitignore.ignores(relativePath);

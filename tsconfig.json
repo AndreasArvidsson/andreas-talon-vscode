@@ -6,6 +6,7 @@
         "rootDir": "src",
         "esModuleInterop": true,
         "noEmit": true,
+        "skipLibCheck": true,
         "strict": true,
         "resolveJsonModule": true,
         "noImplicitAny": true,

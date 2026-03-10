@@ -13,6 +13,8 @@ interface Properties {
     onlySelected?: boolean;
 }
 
+const DEFAULT_MAX_LINE_LENGTH = 80;
+
 export function formatComments(): Promise<void> {
     return formatCommentsRunner({
         editor: getActiveEditor(),
@@ -29,8 +31,14 @@ export async function formatCommentsRunner(
 ): Promise<void> {
     const { editor, doSave, onlySelected } = properties;
     const { document } = editor;
-    const { lineWidth } = await getFormattingOptions(document, editor.options);
-    const configuration = getFormatter(document.languageId, lineWidth);
+    const { maxLineLength } = await getFormattingOptions(
+        document,
+        editor.options,
+    );
+    const configuration = getFormatter(
+        document.languageId,
+        maxLineLength ?? DEFAULT_MAX_LINE_LENGTH,
+    );
     const selections = onlySelected ? editor.selections : undefined;
 
     if (configuration == null) {

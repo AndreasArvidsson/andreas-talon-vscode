@@ -104,18 +104,18 @@ export const commandDescriptions = {
     searchFiles: visible(
         "File",
         "Search files",
-        "Search files in workspace.",
+        "in workspace.",
         "(query?: string)",
     ),
     searchFilesOpenSelected: visible(
         "File",
         "Open selected",
-        "Open selected files in search result.",
+        "files in search result.",
     ),
     searchFilesDeleteSelected: visible(
         "File",
         "Delete selected",
-        "Delete selected files in search result.",
+        "files in search result.",
     ),
 
     // Edit commands
