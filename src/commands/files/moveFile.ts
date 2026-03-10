@@ -16,6 +16,10 @@ export async function moveFile(): Promise<void> {
     const editor = getActiveFileSchemaEditor();
     const uri = editor.document.uri;
 
+    if (uri.scheme !== "file") {
+        throw Error("Move file is only supported for local files.");
+    }
+
     const folder = await showFolderPicker(uri);
 
     if (folder && folder !== getDir(uri)) {
