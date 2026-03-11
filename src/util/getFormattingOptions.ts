@@ -1,5 +1,5 @@
 import type { Options } from "@cursorless/talon-tools";
-import { getOptionsFromConfig } from "@cursorless/talon-tools";
+import { getOptionsFromConfig } from "@cursorless/talon-tools/node";
 import type { TextDocument } from "vscode";
 import { workspace } from "vscode";
 import { isTesting } from "./isTesting";
