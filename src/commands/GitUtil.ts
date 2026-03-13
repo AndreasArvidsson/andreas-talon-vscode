@@ -83,7 +83,9 @@ export class GitUtil {
         branches: string[],
         repository?: Repository,
     ): Promise<string | undefined> {
-        repository = repository ?? (await this.getRepository());
+        if (repository == null) {
+            repository = await this.getRepository();
+        }
         for (const branchName of branches) {
             try {
                 await repository.getBranch(branchName);
@@ -97,6 +99,11 @@ export class GitUtil {
 
     private async getRepository(): Promise<Repository> {
         const { repositories } = await gitApi();
+
+        if (repositories.length === 1) {
+            return repositories[0];
+        }
+
         if (repositories.length === 0) {
             throw Error("No git repositories available");
         }
@@ -115,8 +122,9 @@ export class GitUtil {
             .sort((a, b) => b.rootUri.path.length - a.rootUri.path.length)[0];
 
         if (repository == null) {
-            throw Error("Can't find Git repository");
+            throw Error(`Can't find Git repository for file: ${filePath}`);
         }
+
         return repository;
     }
 }
