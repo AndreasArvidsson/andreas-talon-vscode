@@ -4,6 +4,7 @@ import * as vscode from "vscode";
 import { deleteFile } from "../../util/fileSystem";
 import { getActiveEditor } from "../../util/getActiveEditor";
 import { getFullCommand } from "../../util/getFullCommand";
+import { GLOB_IGNORE_PATTERNS } from "@cursorless/talon-tools";
 
 interface Link {
     range: vscode.Range;
@@ -36,6 +37,7 @@ export async function searchFiles(query?: string) {
             cwd: ws.uri.fsPath,
             dot: true,
             caseSensitiveMatch: false,
+            ignore: GLOB_IGNORE_PATTERNS,
         });
 
         for (const file of files.sort()) {
