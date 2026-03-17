@@ -18,7 +18,8 @@ import {
     searchFiles,
     searchFilesDeleteSelected,
     searchFilesOpenSelected,
-} from "./files/searchFiles";
+    searchFilesToggleSelected,
+} from "./searchFiles";
 import { focusTab } from "./focusTab";
 import {
     formatAllComments,
@@ -58,6 +59,7 @@ export function registerCommands(
         searchFiles,
         searchFilesOpenSelected,
         searchFilesDeleteSelected,
+        searchFilesToggleSelected,
         // Edits
         generateRange,
         increment,

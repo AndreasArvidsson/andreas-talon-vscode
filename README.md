@@ -35,6 +35,8 @@ Many of the commands take arguments and return values that can only be used with
   Open selected files in search result.
 - `andreas.searchFilesDeleteSelected()`  
   Delete selected files in search result.
+- `andreas.searchFilesToggleSelected()`  
+  Toggle selected files in search result.
 
 ### Edit commands
 

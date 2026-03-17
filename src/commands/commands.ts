@@ -117,6 +117,11 @@ export const commandDescriptions = {
         "Delete selected",
         "files in search result.",
     ),
+    searchFilesToggleSelected: visible(
+        "File",
+        "Toggle selected",
+        "files in search result.",
+    ),
 
     // Edit commands
     generateRange: visible(

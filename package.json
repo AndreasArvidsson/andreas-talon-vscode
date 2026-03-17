@@ -170,6 +170,11 @@
                 "title": "Delete selected"
             },
             {
+                "command": "andreas.searchFilesToggleSelected",
+                "category": "Andreas",
+                "title": "Toggle selected"
+            },
+            {
                 "command": "andreas.generateRange",
                 "category": "Andreas",
                 "title": "Generate numerical range."
