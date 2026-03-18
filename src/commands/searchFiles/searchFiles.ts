@@ -2,7 +2,6 @@ import { Disposable, languages, window, workspace } from "vscode";
 import { deleteFile } from "../../util/fileSystem";
 import { getActiveEditor } from "../../util/getActiveEditor";
 import { languageId } from "./constants";
-import { getQuery } from "./getQuery";
 import { onChangeHandler } from "./onChangeHandler";
 import { openNewEditor } from "./openNewEditor";
 import { getSelectedLinks, parseDocument } from "./parseDocument";
@@ -10,14 +9,7 @@ import { performSearch } from "./performSearch";
 import { refreshSearchResultsDocument } from "./refreshSearchResultsDocument";
 import { SearchDocumentLinkProvider } from "./SearchDocumentLinkProvider";
 
-export async function searchFiles(query?: string) {
-    if (!query) {
-        query = await getQuery();
-        if (!query) {
-            return;
-        }
-    }
-
+export async function searchFiles(query: string = "") {
     const workspaces = await performSearch(query);
     const editor = await openNewEditor();
     await refreshSearchResultsDocument(editor, query, workspaces);
@@ -38,7 +30,7 @@ export async function searchFilesToggleSelected() {
         }
     }
 
-    await refreshSearchResultsDocument(editor, query, workspaces);
+    await refreshSearchResultsDocument(editor, query, workspaces, false);
 }
 
 export function searchFilesOpenSelected() {

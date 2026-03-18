@@ -13,7 +13,7 @@ export async function performSearch(
 ): Promise<SearchResultsWorkspace<PartialSearchResultFile>[]> {
     lastQuery = query;
 
-    if (query === "") {
+    if (query.length < 3) {
         return [];
     }
 
