@@ -104,7 +104,7 @@ export function parseDocument(document: TextDocument): SearchResultsState {
 
         for (let i = wsNameIndex + 1; i < lines.length; i++) {
             const lineText = lines[i];
-            const match = lineText.match(/^\s*([-*]\s*)?/);
+            const match = lineText.match(/^\s*([-*]\s+)?/);
             const offset = match?.[0]?.length ?? 0;
             const selected = match?.[1] != null;
             const relativePath = lineText.slice(offset).trimEnd();
