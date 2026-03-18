@@ -2,8 +2,6 @@ import {
     DocumentLink,
     type DocumentLinkProvider,
     type TextDocument,
-    type Range,
-    type Uri,
 } from "vscode";
 import { parseDocument } from "./parseDocument";
 
