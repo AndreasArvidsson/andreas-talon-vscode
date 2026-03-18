@@ -19,10 +19,7 @@ export async function searchFiles(query?: string) {
     }
 
     const workspaces = await performSearch(query);
-    const editor = await openNewEditor({
-        languageId,
-        name: getSearchResultsName(query),
-    });
+    const editor = await openNewEditor();
     await refreshSearchResultsDocument(editor, query, workspaces);
 }
 
@@ -80,9 +77,4 @@ export function registerSearchFiles(): Disposable {
             }
         }),
     );
-}
-
-function getSearchResultsName(query: string): string {
-    const normalizedQuery = query.replaceAll(/[\\/:*?"<>|]/g, " ");
-    return `Search: ${normalizedQuery}`;
 }

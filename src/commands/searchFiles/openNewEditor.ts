@@ -1,12 +1,8 @@
 import { languages, workspace, window, Uri } from "vscode";
+import { languageId } from "./constants";
 
-interface Props {
-    languageId: string;
-    name: string;
-}
-
-export async function openNewEditor({ languageId, name }: Props) {
-    const uri = Uri.file(name).with({
+export async function openNewEditor() {
+    const uri = Uri.file("Search results").with({
         scheme: "untitled",
     });
     const document = await workspace.openTextDocument(uri);
