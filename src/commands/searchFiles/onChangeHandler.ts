@@ -1,6 +1,5 @@
-import type { TextDocument } from "vscode";
+import { type TextDocument, window } from "vscode";
 import { Debouncer } from "../../util/debounce";
-import { getActiveEditor } from "../../util/getActiveEditor";
 import { parseDocument } from "./parseDocument";
 import { lastQuery, performSearch } from "./performSearch";
 import { refreshSearchResultsDocument } from "./refreshSearchResultsDocument";
@@ -17,7 +16,14 @@ export function onChangeHandler(document: TextDocument) {
 }
 
 async function performUpdate() {
-    const editor = getActiveEditor();
+    const editor = window.visibleTextEditors.find(
+        (editor) => editor.document.uri.toString() === documentUri,
+    );
+
+    if (editor == null) {
+        return;
+    }
+
     const { document } = editor;
 
     if (document.uri.toString() !== documentUri) {
