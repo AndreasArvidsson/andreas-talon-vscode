@@ -7,10 +7,11 @@ import type {
 
 export async function refreshSearchResultsDocument(
     editor: TextEditor,
+    query: string,
     workspaces: SearchResultsWorkspace<PartialSearchResultFile>[],
 ): Promise<void> {
     const { document } = editor;
-    const text = renderSearchResults(workspaces);
+    const text = renderSearchResults(query, workspaces);
     await editor.edit((editBuilder) => {
         const range = new Range(
             new Position(0, 0),

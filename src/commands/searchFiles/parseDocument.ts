@@ -6,36 +6,39 @@ import { getFullCommand } from "../../util/getFullCommand";
 import { deleteLink, divider, languageId, openLink } from "./constants";
 import type {
     SearchResultFile,
+    SearchResultsState,
     SearchResultsWorkspace,
 } from "./searchFiles.types";
 
-export function parseDocument(
-    document: TextDocument,
-): SearchResultsWorkspace<SearchResultFile>[] {
+export function parseDocument(document: TextDocument): SearchResultsState {
+    const result: SearchResultsState = {
+        query: "",
+        workspaces: [],
+        buttons: [],
+    };
+
     if (document.languageId !== languageId) {
-        console.error("Active document is not a search result");
-        return [];
+        console.warn("Active document is not a search result");
+        return result;
     }
 
-    const workspaces: SearchResultsWorkspace<SearchResultFile>[] = [];
-    const wsTexts = document.getText().split(new RegExp(`${divider}\\r?\\n`));
+    const sectionTexts = document
+        .getText()
+        .split(new RegExp(`${divider}\\r?\\n`));
     let lineNumber = 0;
 
-    wsTexts.forEach((wsText, index) => {
-        const lines = wsText.split(/\r?\n/);
-        const wsName = lines[0];
-        const wsPath = workspace.workspaceFolders?.find(
-            (ws) => ws.name === wsName,
-        )?.uri.fsPath;
-        const ws: SearchResultsWorkspace<SearchResultFile> = {
-            name: wsName,
-            files: [],
-        };
-        workspaces.push(ws);
+    sectionTexts.forEach((sectionText, index) => {
+        const lines = sectionText.split(/\r?\n/);
 
-        if (index === wsTexts.length - 1) {
-            ws.name = "";
+        // The first section contains the query, which is not associated with a specific workspace
+        if (index === 0) {
+            result.query = sectionText.trim();
+            lineNumber += lines.length + 1;
+            return;
+        }
 
+        // The last section contains the buttons, which are not associated with a specific workspace
+        if (index === sectionTexts.length - 1) {
             for (const lineText of lines) {
                 const range = new Range(
                     lineNumber,
@@ -57,6 +60,7 @@ export function parseDocument(
                     if (lineText === deleteLink) {
                         return "searchFilesDeleteSelected";
                     }
+                    console.warn(`Unknown search result button: ${lineText}`);
                     return null;
                 })();
 
@@ -65,23 +69,43 @@ export function parseDocument(
                 }
 
                 const uri = Uri.parse(`command:${getFullCommand(command)}`);
-
-                ws.files.push({ path: lineText, range, uri, selected: false });
+                result.buttons.push({ range, uri });
             }
 
             return;
         }
 
-        if (wsPath == null || lines.length < 2) {
+        const wsNameIndex = lines.findIndex((line) => line !== "");
+
+        if (wsNameIndex === -1) {
             lineNumber += lines.length + 1;
+            console.warn("Workspace name not found in section:", sectionText);
             return;
         }
 
-        lineNumber++;
+        const wsName = lines[wsNameIndex];
+        lineNumber += wsNameIndex;
+        const wsPath = workspace.workspaceFolders?.find(
+            (ws) => ws.name === wsName,
+        )?.uri.fsPath;
 
-        for (let i = 1; i < lines.length; i++) {
+        if (wsPath == null) {
+            lineNumber += lines.length + 1;
+            console.warn(
+                `Workspace folder not found for workspace "${wsName}"`,
+            );
+            return;
+        }
+
+        const ws: SearchResultsWorkspace<SearchResultFile> = {
+            name: wsName,
+            files: [],
+        };
+        result.workspaces.push(ws);
+
+        for (let i = wsNameIndex + 1; i < lines.length; i++) {
             const lineText = lines[i];
-            const match = lineText.match(/^\s*([-*]\s+)?/);
+            const match = lineText.match(/^\s*([-*]\s*)?/);
             const offset = match?.[0]?.length ?? 0;
             const selected = match?.[1] != null;
             const relativePath = lineText.slice(offset).trimEnd();
@@ -106,12 +130,12 @@ export function parseDocument(
         }
     });
 
-    return workspaces;
+    return result;
 }
 
 export function getSelectedLinks(): SearchResultFile[] {
     const { document } = getActiveEditor();
     return parseDocument(document)
-        .flatMap((ws) => ws.files)
+        .workspaces.flatMap((ws) => ws.files)
         .filter((link) => link.selected);
 }

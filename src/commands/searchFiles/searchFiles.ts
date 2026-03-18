@@ -1,21 +1,14 @@
-import { GLOB_IGNORE_PATTERNS } from "@cursorless/talon-tools";
-import fastGlob from "fast-glob";
-import {
-    Disposable,
-    DocumentLink,
-    languages,
-    Uri,
-    window,
-    workspace,
-    type TextDocument,
-} from "vscode";
+import { Disposable, languages, window, workspace } from "vscode";
 import { deleteFile } from "../../util/fileSystem";
 import { getActiveEditor } from "../../util/getActiveEditor";
 import { languageId } from "./constants";
 import { getQuery } from "./getQuery";
+import { onChangeHandler } from "./onChangeHandler";
+import { openNewEditor } from "./openNewEditor";
 import { getSelectedLinks, parseDocument } from "./parseDocument";
+import { performSearch } from "./performSearch";
 import { refreshSearchResultsDocument } from "./refreshSearchResultsDocument";
-import type { PartialSearchResultFile } from "./searchFiles.types";
+import { SearchDocumentLinkProvider } from "./SearchDocumentLinkProvider";
 
 export async function searchFiles(query?: string) {
     if (!query) {
@@ -25,47 +18,18 @@ export async function searchFiles(query?: string) {
         }
     }
 
-    const workspaces = await Promise.all(
-        (workspace.workspaceFolders ?? []).map(async (ws) => {
-            const files = await fastGlob(`**/*${query}*`, {
-                cwd: ws.uri.fsPath,
-                dot: true,
-                caseSensitiveMatch: false,
-                ignore: GLOB_IGNORE_PATTERNS,
-            });
-
-            return {
-                name: ws.name,
-                files: files.sort().map((file): PartialSearchResultFile => {
-                    const path = file.replaceAll("\\", "/");
-                    return {
-                        path,
-                        selected: false,
-                    };
-                }),
-            };
-        }),
-    );
-
-    const uri = Uri.file(getSearchResultsName(query)).with({
-        scheme: "untitled",
-    });
-    const document = await workspace.openTextDocument(uri);
-    const searchResultsDocument = await languages.setTextDocumentLanguage(
-        document,
+    const workspaces = await performSearch(query);
+    const editor = await openNewEditor({
         languageId,
-    );
-    const editor = await window.showTextDocument(searchResultsDocument, {
-        preview: false,
+        name: getSearchResultsName(query),
     });
-    await refreshSearchResultsDocument(editor, workspaces);
+    await refreshSearchResultsDocument(editor, query, workspaces);
 }
 
 export async function searchFilesToggleSelected() {
     const editor = getActiveEditor();
     const { document, selections } = editor;
-
-    const workspaces = parseDocument(document).filter((ws) => ws.name !== "");
+    const { query, workspaces } = parseDocument(document);
 
     for (const ws of workspaces) {
         for (const link of ws.files) {
@@ -77,11 +41,10 @@ export async function searchFilesToggleSelected() {
         }
     }
 
-    await refreshSearchResultsDocument(editor, workspaces);
+    await refreshSearchResultsDocument(editor, query, workspaces);
 }
 
 export function searchFilesOpenSelected() {
-    console.log(getSelectedLinks());
     return Promise.all(
         getSelectedLinks().map((link) =>
             window.showTextDocument(link.uri, { preview: false }),
@@ -109,26 +72,13 @@ export function registerSearchFiles(): Disposable {
     return Disposable.from(
         languages.registerDocumentLinkProvider(
             { language: languageId },
-            {
-                provideDocumentLinks(document: TextDocument): DocumentLink[] {
-                    return parseDocument(document).flatMap((ws) =>
-                        ws.files.map(
-                            (link) => new DocumentLink(link.range, link.uri),
-                        ),
-                    );
-                },
-            },
+            new SearchDocumentLinkProvider(),
         ),
-        // workspace.onDidChangeTextDocument((event) => {
-        //     if (!searchResultsStates.has(event.document.uri.toString())) {
-        //         return;
-        //     }
-
-        //     syncSelectedPaths(event.document);
-        // }),
-        // workspace.onDidCloseTextDocument((document) => {
-        //     searchResultsStates.delete(document.uri.toString());
-        // }),
+        workspace.onDidChangeTextDocument((event) => {
+            if (event.document.languageId === languageId) {
+                onChangeHandler(event.document);
+            }
+        }),
     );
 }
 

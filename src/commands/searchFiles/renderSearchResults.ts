@@ -5,9 +5,10 @@ import type {
 } from "./searchFiles.types";
 
 export function renderSearchResults(
+    query: string,
     workspaces: SearchResultsWorkspace<PartialSearchResultFile>[],
 ): string {
-    const lines: string[] = [];
+    const lines: string[] = [query];
 
     for (const ws of workspaces) {
         if (lines.length > 0) {
