@@ -2,23 +2,20 @@ import { GLOB_IGNORE_PATTERNS } from "@cursorless/talon-tools";
 import fastGlob from "fast-glob";
 import {
     Disposable,
+    DocumentLink,
     languages,
     Uri,
     window,
     workspace,
-    DocumentLink,
     type TextDocument,
 } from "vscode";
 import { deleteFile } from "../../util/fileSystem";
 import { getActiveEditor } from "../../util/getActiveEditor";
-import { scheme } from "./constants";
+import { languageId } from "./constants";
 import { getQuery } from "./getQuery";
-import { parseDocument } from "./parseDocument";
-import type { SearchResultsState } from "./searchFiles.types";
-import { SearchResultsProvider } from "./SearchResultsProvider";
-
-const searchResultsStates = new Map<string, SearchResultsState>();
-const searchResultsProvider = new SearchResultsProvider(searchResultsStates);
+import { getSelectedLinks, parseDocument } from "./parseDocument";
+import { refreshSearchResultsDocument } from "./refreshSearchResultsDocument";
+import type { PartialSearchResultFile } from "./searchFiles.types";
 
 export async function searchFiles(query?: string) {
     if (!query) {
@@ -39,58 +36,52 @@ export async function searchFiles(query?: string) {
 
             return {
                 name: ws.name,
-                path: ws.uri.fsPath,
-                files: files.sort().map((file) => file.replaceAll("\\", "/")),
+                files: files.sort().map((file): PartialSearchResultFile => {
+                    const path = file.replaceAll("\\", "/");
+                    return {
+                        path,
+                        selected: false,
+                    };
+                }),
             };
         }),
     );
 
-    const uri = Uri.from({
-        scheme,
-        path: getSearchResultsName(query),
-        fragment: Date.now().toString(),
+    const uri = Uri.file(getSearchResultsName(query)).with({
+        scheme: "untitled",
     });
-
-    searchResultsStates.set(uri.toString(), {
-        workspaces,
-        selectedPaths: new Set<string>(),
+    const document = await workspace.openTextDocument(uri);
+    const searchResultsDocument = await languages.setTextDocumentLanguage(
+        document,
+        languageId,
+    );
+    const editor = await window.showTextDocument(searchResultsDocument, {
+        preview: false,
     });
-
-    await window.showTextDocument(uri, { preview: false });
+    await refreshSearchResultsDocument(editor, workspaces);
 }
 
-export function searchFilesToggleSelected() {
+export async function searchFilesToggleSelected() {
     const editor = getActiveEditor();
-    const { document } = editor;
-    const uri = document.uri;
-    const state = searchResultsStates.get(uri.toString());
+    const { document, selections } = editor;
 
-    if (state == null) {
-        return;
-    }
+    const workspaces = parseDocument(document).filter((ws) => ws.name !== "");
 
-    const links = parseDocument(document, searchResultsStates).filter((link) =>
-        editor.selections.some((sel) => sel.intersection(link.range) != null),
-    );
-
-    if (links.length === 0) {
-        return;
-    }
-
-    for (const link of links) {
-        const fileUriString = link.uri.toString();
-
-        if (state.selectedPaths.has(fileUriString)) {
-            state.selectedPaths.delete(fileUriString);
-        } else {
-            state.selectedPaths.add(fileUriString);
+    for (const ws of workspaces) {
+        for (const link of ws.files) {
+            if (
+                selections.some((sel) => sel.intersection(link.range) != null)
+            ) {
+                link.selected = !link.selected;
+            }
         }
     }
 
-    searchResultsProvider.refresh(uri);
+    await refreshSearchResultsDocument(editor, workspaces);
 }
 
 export function searchFilesOpenSelected() {
+    console.log(getSelectedLinks());
     return Promise.all(
         getSelectedLinks().map((link) =>
             window.showTextDocument(link.uri, { preview: false }),
@@ -114,35 +105,34 @@ export async function searchFilesDeleteSelected() {
     }
 }
 
-export function registerSearchResults(): Disposable {
+export function registerSearchFiles(): Disposable {
     return Disposable.from(
-        workspace.registerTextDocumentContentProvider(
-            scheme,
-            searchResultsProvider,
-        ),
         languages.registerDocumentLinkProvider(
-            { scheme },
+            { language: languageId },
             {
                 provideDocumentLinks(document: TextDocument): DocumentLink[] {
-                    return parseDocument(document, searchResultsStates).map(
-                        (link) => new DocumentLink(link.range, link.uri),
+                    return parseDocument(document).flatMap((ws) =>
+                        ws.files.map(
+                            (link) => new DocumentLink(link.range, link.uri),
+                        ),
                     );
                 },
             },
         ),
+        // workspace.onDidChangeTextDocument((event) => {
+        //     if (!searchResultsStates.has(event.document.uri.toString())) {
+        //         return;
+        //     }
+
+        //     syncSelectedPaths(event.document);
+        // }),
+        // workspace.onDidCloseTextDocument((document) => {
+        //     searchResultsStates.delete(document.uri.toString());
+        // }),
     );
 }
 
 function getSearchResultsName(query: string): string {
-    const normalizedQuery = query.replaceAll(/[\\/:*?"<>|]/g, " ").trim();
-    return normalizedQuery === ""
-        ? "Search Results"
-        : `Search Results: ${normalizedQuery}`;
-}
-
-function getSelectedLinks() {
-    const { document } = getActiveEditor();
-    return parseDocument(document, searchResultsStates).filter(
-        (link) => link.selected,
-    );
+    const normalizedQuery = query.replaceAll(/[\\/:*?"<>|]/g, " ");
+    return `Search: ${normalizedQuery}`;
 }

@@ -1,36 +1,40 @@
 import * as path from "path";
 import type { TextDocument } from "vscode";
-import { Range, Uri } from "vscode";
+import { Range, Uri, workspace } from "vscode";
+import { getActiveEditor } from "../../util/getActiveEditor";
 import { getFullCommand } from "../../util/getFullCommand";
-import { deleteLink, divider, openLink, scheme } from "./constants";
-import type { Link, SearchResultsState } from "./searchFiles.types";
+import { deleteLink, divider, languageId, openLink } from "./constants";
+import type {
+    SearchResultFile,
+    SearchResultsWorkspace,
+} from "./searchFiles.types";
 
 export function parseDocument(
     document: TextDocument,
-    searchResultsStates: Map<string, SearchResultsState>,
-): Link[] {
-    if (document.uri.scheme !== scheme) {
+): SearchResultsWorkspace<SearchResultFile>[] {
+    if (document.languageId !== languageId) {
         console.error("Active document is not a search result");
         return [];
     }
 
-    const links: Link[] = [];
-    const wsTexts = document.getText().split(divider + "\n");
-    const searchResultsState = searchResultsStates.get(document.uri.toString());
+    const workspaces: SearchResultsWorkspace<SearchResultFile>[] = [];
+    const wsTexts = document.getText().split(new RegExp(`${divider}\\r?\\n`));
     let lineNumber = 0;
-    let hasSelectedLink = false;
 
     wsTexts.forEach((wsText, index) => {
-        const lines = wsText.split("\n");
+        const lines = wsText.split(/\r?\n/);
         const wsName = lines[0];
-        const wsPath = searchResultsState?.workspaces.find(
+        const wsPath = workspace.workspaceFolders?.find(
             (ws) => ws.name === wsName,
-        )?.path;
+        )?.uri.fsPath;
+        const ws: SearchResultsWorkspace<SearchResultFile> = {
+            name: wsName,
+            files: [],
+        };
+        workspaces.push(ws);
 
         if (index === wsTexts.length - 1) {
-            if (!hasSelectedLink) {
-                return;
-            }
+            ws.name = "";
 
             for (const lineText of lines) {
                 const range = new Range(
@@ -62,7 +66,7 @@ export function parseDocument(
 
                 const uri = Uri.parse(`command:${getFullCommand(command)}`);
 
-                links.push({ range, uri, selected: false });
+                ws.files.push({ path: lineText, range, uri, selected: false });
             }
 
             return;
@@ -98,13 +102,16 @@ export function parseDocument(
             const absPath = path.resolve(wsPath, relativePath);
             const uri = Uri.file(absPath);
 
-            if (selected) {
-                hasSelectedLink = true;
-            }
-
-            links.push({ range, uri, selected });
+            ws.files.push({ path: relativePath, range, uri, selected });
         }
     });
 
-    return links;
+    return workspaces;
+}
+
+export function getSelectedLinks(): SearchResultFile[] {
+    const { document } = getActiveEditor();
+    return parseDocument(document)
+        .flatMap((ws) => ws.files)
+        .filter((link) => link.selected);
 }

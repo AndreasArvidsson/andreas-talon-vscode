@@ -1,18 +1,18 @@
 import type { Range, Uri } from "vscode";
 
-export interface Link {
-    range: Range;
-    uri: Uri;
+export interface PartialSearchResultFile {
+    path: string;
     selected: boolean;
 }
 
-export interface SearchResultsWorkspace {
-    name: string;
-    path: string;
-    files: string[];
+export interface SearchResultFile extends PartialSearchResultFile {
+    range: Range;
+    uri: Uri;
 }
 
-export interface SearchResultsState {
-    workspaces: SearchResultsWorkspace[];
-    selectedPaths: Set<string>;
+export interface SearchResultsWorkspace<
+    T extends SearchResultFile | PartialSearchResultFile,
+> {
+    name: string;
+    files: T[];
 }
