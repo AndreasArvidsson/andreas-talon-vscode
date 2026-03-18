@@ -14,8 +14,6 @@ export async function refreshSearchResultsDocument(
     workspaces: SearchResultsWorkspace<PartialSearchResultFile>[],
     keepFileSelections: boolean = true,
 ): Promise<void> {
-    lastQuery = query;
-
     if (keepFileSelections) {
         applyCurrentFileSelection(editor, workspaces);
     }
@@ -24,13 +22,17 @@ export async function refreshSearchResultsDocument(
     const selections = editor.selections;
     const { document } = editor;
 
-    await editor.edit((editBuilder) => {
+    const success = await editor.edit((editBuilder) => {
         const range = new Range(
             new Position(0, 0),
             document.lineAt(document.lineCount - 1).range.end,
         );
         editBuilder.replace(range, text);
     });
+
+    if (success) {
+        lastQuery = query;
+    }
 
     editor.selections = selections;
 }
