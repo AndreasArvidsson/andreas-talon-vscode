@@ -60,7 +60,6 @@ export function parseDocument(document: TextDocument): SearchResultsState {
                     if (lineText === deleteLink) {
                         return "searchFilesDeleteSelected";
                     }
-                    console.warn(`Unknown search result button: ${lineText}`);
                     return null;
                 })();
 
