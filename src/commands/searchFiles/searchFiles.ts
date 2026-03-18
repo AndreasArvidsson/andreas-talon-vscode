@@ -65,7 +65,7 @@ export function registerSearchFiles(): Disposable {
         ),
         workspace.onDidChangeTextDocument((event) => {
             if (event.document.languageId === languageId) {
-                onChangeHandler(event.document);
+                onChangeHandler();
             }
         }),
     );

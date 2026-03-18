@@ -6,13 +6,9 @@ import type {
     SearchResultsWorkspace,
 } from "./searchFiles.types";
 
-export let lastQuery = "";
-
 export async function performSearch(
     query: string,
 ): Promise<SearchResultsWorkspace<PartialSearchResultFile>[]> {
-    lastQuery = query;
-
     // Require at least 3 characters to prevent excessive searching on short queries
     if (query.length < 3) {
         return [];

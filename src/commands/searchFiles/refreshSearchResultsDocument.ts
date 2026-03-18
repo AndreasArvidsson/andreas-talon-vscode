@@ -6,12 +6,16 @@ import type {
 } from "./searchFiles.types";
 import { parseDocument } from "./parseDocument";
 
+export let lastQuery = "";
+
 export async function refreshSearchResultsDocument(
     editor: TextEditor,
     query: string,
     workspaces: SearchResultsWorkspace<PartialSearchResultFile>[],
     keepFileSelections: boolean = true,
 ): Promise<void> {
+    lastQuery = query;
+
     if (keepFileSelections) {
         applyCurrentFileSelection(editor, workspaces);
     }
