@@ -4,8 +4,7 @@ import type {
     PartialSearchResultFile,
     SearchResultsWorkspace,
 } from "./searchFiles.types";
-
-let selectedFiles: Set<string> = new Set();
+import { parseDocument } from "./parseDocument";
 
 export async function refreshSearchResultsDocument(
     editor: TextEditor,
@@ -13,15 +12,8 @@ export async function refreshSearchResultsDocument(
     workspaces: SearchResultsWorkspace<PartialSearchResultFile>[],
     keepFileSelections: boolean = true,
 ): Promise<void> {
-    // Keep track of selected files across refreshes by their workspace name and file path
     if (keepFileSelections) {
-        for (const ws of workspaces) {
-            for (const file of ws.files) {
-                if (selectedFiles.has(`${ws.name}/${file.path}`)) {
-                    file.selected = true;
-                }
-            }
-        }
+        applyCurrentFileSelection(editor, workspaces);
     }
 
     const text = renderSearchResults(query, workspaces);
@@ -37,12 +29,29 @@ export async function refreshSearchResultsDocument(
     });
 
     editor.selections = selections;
+}
 
-    selectedFiles = new Set(
-        workspaces.flatMap((ws) =>
-            ws.files
+// Keep track of selected files across refreshes by their workspace name and file path
+function applyCurrentFileSelection(
+    editor: TextEditor,
+    workspaces: SearchResultsWorkspace<PartialSearchResultFile>[],
+) {
+    const currentWorkspaces = parseDocument(editor.document).workspaces;
+
+    for (const ws of workspaces) {
+        const currentWs = currentWorkspaces.find((cws) => cws.name === ws.name);
+        if (currentWs == null) {
+            continue;
+        }
+        const selectedFiles = new Set(
+            currentWs.files
                 .filter((file) => file.selected)
-                .map((file) => `${ws.name}/${file.path}`),
-        ),
-    );
+                .map((file) => file.path),
+        );
+        for (const file of ws.files) {
+            if (selectedFiles.has(file.path)) {
+                file.selected = true;
+            }
+        }
+    }
 }
