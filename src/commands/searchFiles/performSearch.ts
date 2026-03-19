@@ -15,7 +15,7 @@ export async function performSearch(
 
     return Promise.all(
         (workspace.workspaceFolders ?? []).map(async (ws) => {
-            const files = await fastGlob(`**/*${query}*`, {
+            const files = await fastGlob(`**/*${query}**`, {
                 cwd: ws.uri.fsPath,
                 dot: true,
                 caseSensitiveMatch: false,
