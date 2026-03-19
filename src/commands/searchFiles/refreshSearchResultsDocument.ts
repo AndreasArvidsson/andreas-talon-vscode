@@ -19,13 +19,11 @@ export async function refreshSearchResultsDocument(
     }
 
     const text = renderSearchResults(query, workspaces);
-    const selections = editor.selections;
-    const { document } = editor;
 
     const success = await editor.edit((editBuilder) => {
         const range = new Range(
             new Position(0, 0),
-            document.lineAt(document.lineCount - 1).range.end,
+            editor.document.lineAt(editor.document.lineCount - 1).range.end,
         );
         editBuilder.replace(range, text);
     });
@@ -33,8 +31,6 @@ export async function refreshSearchResultsDocument(
     if (success) {
         lastQuery = query;
     }
-
-    editor.selections = selections;
 }
 
 // Keep track of selected files across refreshes by their workspace name and file path

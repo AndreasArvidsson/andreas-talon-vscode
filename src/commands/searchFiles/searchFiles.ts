@@ -1,4 +1,11 @@
-import { Disposable, languages, window, workspace } from "vscode";
+import {
+    Disposable,
+    languages,
+    Position,
+    window,
+    workspace,
+    Selection,
+} from "vscode";
 import { deleteFile } from "../../util/fileSystem";
 import { getActiveEditor } from "../../util/getActiveEditor";
 import { languageId } from "./constants";
@@ -13,6 +20,8 @@ export async function searchFiles(query: string = "") {
     const workspaces = await performSearch(query);
     const editor = await openNewEditor();
     await refreshSearchResultsDocument(editor, query, workspaces);
+    const postQueryPosition = new Position(0, query.length);
+    editor.selections = [new Selection(postQueryPosition, postQueryPosition)];
 }
 
 export async function searchFilesToggleSelected() {
