@@ -43,17 +43,26 @@ suite("performSearch", () => {
 
     test("Find files with .ts extension", async () => {
         const workspaceResult = await performWorkspaceSearch(workspace, ".ts");
-        assert.equal(workspaceResult.files.length, 4);
+        assert.deepStrictEqual(
+            workspaceResult.files.map((file) => file.path),
+            ["apps/a.ts", "src/apps.ts", "src/apps/b.ts", "src/features/d.ts"],
+        );
     });
 
     test("Find files named apps", async () => {
         const workspaceResult = await performWorkspaceSearch(workspace, "apps");
-        assert.equal(workspaceResult.files.length, 1);
+        assert.deepStrictEqual(
+            workspaceResult.files.map((file) => file.path),
+            ["src/apps.ts"],
+        );
     });
 
     test("Find files named APPS", async () => {
         const workspaceResult = await performWorkspaceSearch(workspace, "APPS");
-        assert.equal(workspaceResult.files.length, 1);
+        assert.deepStrictEqual(
+            workspaceResult.files.map((file) => file.path),
+            ["src/apps.ts"],
+        );
     });
 
     test("Find files inside an apps directory", async () => {
@@ -61,6 +70,9 @@ suite("performSearch", () => {
             workspace,
             "apps/",
         );
-        assert.equal(workspaceResult.files.length, 3);
+        assert.deepStrictEqual(
+            workspaceResult.files.map((file) => file.path),
+            ["apps/a.ts", "src/apps/b.ts", "src/apps/c.js"],
+        );
     });
 });
