@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.92.0",
+    "version": "3.93.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -349,7 +349,7 @@
         "pokey.parse-tree"
     ],
     "dependencies": {
-        "@cursorless/talon-tools": "^0.7.0",
+        "@cursorless/talon-tools": "^0.8.0",
         "fast-glob": "^3.3.3",
         "ignore": "^7.0.5"
     },
@@ -369,7 +369,7 @@
         "mocha": "^11.7.5",
         "prettier": "^3.8.1",
         "ts-archetype": "^0.5.0",
-        "typescript-eslint": "^8.57.0",
+        "typescript-eslint": "^8.57.1",
         "typescript": "^5.9.3"
     }
 }
