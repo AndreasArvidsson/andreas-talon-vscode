@@ -161,6 +161,14 @@ generate range [from <number_small>]:
     user.run_rpc_command("andreas.generateRange", number_small or 1)
 ```
 
+## Search files queries:
+
+- `apps` finds files such as `src/apps.ts`.
+- `apps/` finds files directly inside an `apps` directory, such as `apps/my app.ts` and `src/apps/my-app.js`.
+- `apps/*` finds files in `apps` and nested subdirectories, such as `src/apps/sub/myApp.ts`.
+- `my app` treats whitespace as a wildcard within a path segment, so it matches `my app`, `my-app`, and `myApp`.
+- `my app` does not match `my/app`, because whitespace is not treated as a directory wildcard.
+
 ## Images
 
 ### Code completion

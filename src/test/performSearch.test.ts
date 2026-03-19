@@ -8,11 +8,12 @@ import { performWorkspaceSearch } from "../commands/searchFiles/performSearch";
 
 const testFiles = [
     "node_modules/ignored.ts",
-    "apps/a.ts",
-    "src/apps/b.ts",
-    "src/apps/c.js",
+    "apps/my app.ts",
+    "src/apps/my-app.js",
+    "src/apps/sub/myApp.ts",
     "src/apps.ts",
-    "src/features/d.ts",
+    "src/features/foo.ts",
+    "src/my/app.js",
 ];
 
 suite("performSearch", () => {
@@ -45,7 +46,12 @@ suite("performSearch", () => {
         const workspaceResult = await performWorkspaceSearch(workspace, ".ts");
         assert.deepStrictEqual(
             workspaceResult.files.map((file) => file.path),
-            ["apps/a.ts", "src/apps.ts", "src/apps/b.ts", "src/features/d.ts"],
+            [
+                "apps/my app.ts",
+                "src/apps.ts",
+                "src/apps/sub/myApp.ts",
+                "src/features/foo.ts",
+            ],
         );
     });
 
@@ -57,11 +63,25 @@ suite("performSearch", () => {
         );
     });
 
-    test("Find files named APPS", async () => {
-        const workspaceResult = await performWorkspaceSearch(workspace, "APPS");
+    test("Find files named APPS.ts", async () => {
+        const workspaceResult = await performWorkspaceSearch(
+            workspace,
+            "APPS.ts",
+        );
         assert.deepStrictEqual(
             workspaceResult.files.map((file) => file.path),
             ["src/apps.ts"],
+        );
+    });
+
+    test("Find files named 'my app'", async () => {
+        const workspaceResult = await performWorkspaceSearch(
+            workspace,
+            "my app",
+        );
+        assert.deepStrictEqual(
+            workspaceResult.files.map((file) => file.path),
+            ["apps/my app.ts", "src/apps/my-app.js", "src/apps/sub/myApp.ts"],
         );
     });
 
@@ -72,7 +92,18 @@ suite("performSearch", () => {
         );
         assert.deepStrictEqual(
             workspaceResult.files.map((file) => file.path),
-            ["apps/a.ts", "src/apps/b.ts", "src/apps/c.js"],
+            ["apps/my app.ts", "src/apps/my-app.js"],
+        );
+    });
+
+    test("Find files inside an apps and sub directories", async () => {
+        const workspaceResult = await performWorkspaceSearch(
+            workspace,
+            "apps/*",
+        );
+        assert.deepStrictEqual(
+            workspaceResult.files.map((file) => file.path),
+            ["apps/my app.ts", "src/apps/my-app.js", "src/apps/sub/myApp.ts"],
         );
     });
 });

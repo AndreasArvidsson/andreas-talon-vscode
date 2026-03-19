@@ -24,7 +24,9 @@ export async function performWorkspaceSearch(
     workspace: WorkspaceFolder,
     query: string,
 ): Promise<SearchResultsWorkspace<PartialSearchResultFile>> {
-    const files = await fastGlob(`**/*${query}**`, {
+    const queryPattern = query.replace(/\s+/g, "*");
+
+    const files = await fastGlob(`**/*${queryPattern}*`, {
         cwd: workspace.uri.fsPath,
         dot: true,
         caseSensitiveMatch: false,
