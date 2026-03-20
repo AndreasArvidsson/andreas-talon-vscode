@@ -13,94 +13,94 @@ Many of the commands take arguments and return values that can only be used with
 
 ### File commands
 
-- `andreas.getFilename(): string`  
+- `andreas.getFilename(): string`
   Get filename of active file.
-- `andreas.copyFilename()`  
+- `andreas.copyFilename()`
   Copy filename of active file to clipboard.
-- `andreas.newFile(name?: string)`  
+- `andreas.newFile(name?: string)`
   Create new file. Uses selected text and current file extension as suggestion.
-- `andreas.duplicateFile(name?: string)`  
+- `andreas.duplicateFile(name?: string)`
   Create duplicate/copy of active file.
-- `andreas.renameFile(name?: string)`  
+- `andreas.renameFile(name?: string)`
   Rename active file.
-- `andreas.removeFile()`  
+- `andreas.removeFile()`
   Remove/delete the active file.
-- `andreas.moveFile()`  
+- `andreas.moveFile()`
   Move active file to new directory.
-- `andreas.formatWorkspaceFiles()`  
+- `andreas.formatWorkspaceFiles()`
   Format workspace files.
-- `andreas.searchFiles(query?: string)`  
+- `andreas.searchFiles(query?: string)`
   Search files in workspace.
-- `andreas.searchFilesOpenSelected()`  
+- `andreas.searchFilesOpenSelected()`
   Open selected files in search result.
-- `andreas.searchFilesDeleteSelected()`  
+- `andreas.searchFilesDeleteSelected()`
   Delete selected files in search result.
-- `andreas.searchFilesToggleSelected()`  
+- `andreas.searchFilesToggleSelected()`
   Toggle selected files in search result.
 
 ### Edit commands
 
-- `andreas.generateRange(start: number = 1)`  
+- `andreas.generateRange(start: number = 1)`
   Generate numerical range. Starts from 1 by default
-- `andreas.increment(value?: number)`  
+- `andreas.increment(value?: number)`
   Increment selected number.
-- `andreas.decrement(value?: number)`  
+- `andreas.decrement(value?: number)`
   Decrement selected number.
 
 ### Navigation commands
 
-- `andreas.openEditorAtIndex(index: number)`  
+- `andreas.openEditorAtIndex(index: number)`
   Open editor/tab at given index. Negative indices are counted from the back.
-- `andreas.focusTab(hint: string)`  
+- `andreas.focusTab(hint: string)`
   Focus tab by hint. Hints range [A-ZZ].
-- `andreas.goToLine(line: number)`  
+- `andreas.goToLine(line: number)`
   Go to line number. 0-based index.
-- `andreas.selectTo(line: number)`  
+- `andreas.selectTo(line: number)`
   Select from current location to specified line.
-- `andreas.lineMiddle()`  
+- `andreas.lineMiddle()`
   Move cursor to middle of the current line.
 
 ### Text commands
 
-- `andreas.getDocumentText(): string | null`  
+- `andreas.getDocumentText(): string | null`
   Get document text.
-- `andreas.getSelectedText(): string[] | null`  
+- `andreas.getSelectedText(): string[] | null`
   Get selected text.
-- `andreas.getDictationContext(): {before: string, after: string} | null`  
+- `andreas.getDictationContext(): {before: string, after: string} | null`
   Get text before and after selection. Used for context sensitive dictation.
-- `andreas.getClassName(): string | null`  
+- `andreas.getClassName(): string | null`
   Get class name. Useful for inserting constructors in C++/Java.
-- `andreas.getOpenTagName(): string | null`  
+- `andreas.getOpenTagName(): string | null`
   Get name for open tag. Useful to close tag in HTML/XML.
 
 ### Git commands
 
-- `andreas.gitGetFirstAvailableBranch(branches: string[]): string | undefined`  
+- `andreas.gitGetFirstAvailableBranch(branches: string[]): string | undefined`
   Get first available branch.
-- `andreas.gitCheckout(...branches: string[])`  
+- `andreas.gitCheckout(...branches: string[])`
   Checkout git branch. Uses first branch that exists.
-- `andreas.getGitFileURL({ useSelection: boolean, useBranch: boolean }): string`  
+- `andreas.getGitFileURL({ useSelection: boolean, useBranch: boolean }): string`
   Get URL to Git repository file webpage. Optionally include selected line numbers.
-- `andreas.getGitRepoURL(): string`  
+- `andreas.getGitRepoURL(): string`
   Get URL to Git repository webpage.
-- `andreas.getGitIssuesURL(): string`  
+- `andreas.getGitIssuesURL(): string`
   Get URL to Git repository issues webpage.
-- `andreas.getGitNewIssueURL(): string`  
+- `andreas.getGitNewIssueURL(): string`
   Get URL to Git repository new issue webpage.
-- `andreas.getGitPullRequestsURL(): string`  
+- `andreas.getGitPullRequestsURL(): string`
   Get URL to Git repository pull requests webpage.
 
 ### Other commands
 
-- `andreas.getSetting(section: string, defaultValue?: T): T | undefined`  
+- `andreas.getSetting(section: string, defaultValue?: T): T | undefined`
   Get setting from vscode
-- `andreas.setSetting(section: string, value: any, configurationTarget?: "global" | "workspace" | "workspaceFolder")`  
+- `andreas.setSetting(section: string, value: any, configurationTarget?: "global" | "workspace" | "workspaceFolder")`
   Set setting for vscode, either globally or for the current workspace/folder
-- `andreas.executeCommands(commands: string[])`  
+- `andreas.executeCommands(commands: string[])`
   Sequentially execute multiple commands. Useful for keybindings.
-- `andreas.getWorkspaceFolders(): string[] | undefined`  
+- `andreas.getWorkspaceFolders(): string[] | undefined`
   Get an array of file system paths for workspace folders
-- `andreas.printCommands()`  
+- `andreas.printCommands()`
   Print available commands.
 
 ## Formatting options
@@ -199,6 +199,10 @@ generate range [from <number_small>]:
 ### Tab view
 
 ![Tab view](images/tab_view.png)
+
+### Search files results
+
+<img src="images/search_files_results.png" height="500" />
 
 ### Format selected files context menu
 
