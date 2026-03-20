@@ -106,4 +106,24 @@ suite("performSearch", () => {
             ["apps/my app.ts", "src/apps/my-app.js", "src/apps/sub/myApp.ts"],
         );
     });
+
+    test("Respect .gitignore entries", async () => {
+        await fs.writeFile(
+            path.join(workspace.uri.fsPath, ".gitignore"),
+            "src/features/\napps/my app.ts\n",
+        );
+
+        try {
+            const workspaceResult = await performWorkspaceSearch(
+                workspace,
+                ".ts",
+            );
+            assert.deepStrictEqual(
+                workspaceResult.files.map((file) => file.path),
+                ["src/apps.ts", "src/apps/sub/myApp.ts"],
+            );
+        } finally {
+            await fs.rm(path.join(workspace.uri.fsPath, ".gitignore"));
+        }
+    });
 });

@@ -6,6 +6,7 @@ export function run(): Promise<void> {
     const mocha = new Mocha({
         ui: "tdd",
         color: true,
+        // grep: "performSearch",
     });
 
     const cwd = path.resolve(__dirname, "..");

@@ -1,6 +1,6 @@
-import { GLOB_IGNORE_PATTERNS } from "@cursorless/talon-tools";
 import fastGlob from "fast-glob";
 import { workspace, type WorkspaceFolder } from "vscode";
+import { getGlobIgnorePatterns } from "../../util/getGlobIgnorePatterns";
 import type {
     PartialSearchResultFile,
     SearchResultsWorkspace,
@@ -30,7 +30,7 @@ export async function performWorkspaceSearch(
         cwd: workspace.uri.fsPath,
         dot: true,
         caseSensitiveMatch: false,
-        ignore: GLOB_IGNORE_PATTERNS,
+        ignore: getGlobIgnorePatterns(workspace),
     });
 
     return {

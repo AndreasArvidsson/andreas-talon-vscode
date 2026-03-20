@@ -86,7 +86,7 @@ function loadQueryFileForLanguage(languageId: string): string | undefined {
 }
 
 function loadQueryFile(file: string): string {
-    const content = fs.readFileSync(file, "utf8");
+    const content = fs.readFileSync(file, "utf-8");
 
     return content.replace(
         /^;; import (\w+)$/gm,

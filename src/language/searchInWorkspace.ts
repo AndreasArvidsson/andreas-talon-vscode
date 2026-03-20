@@ -3,8 +3,8 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import type { DefinitionLink, WorkspaceFolder } from "vscode";
 import { Range, Uri } from "vscode";
+import { getGlobIgnorePatterns } from "../util/getGlobIgnorePatterns";
 import type { TalonMatch, TalonMatchType } from "./matchers";
-import { GLOB_IGNORE_PATTERNS } from "@cursorless/talon-tools";
 
 export interface SearchResult extends DefinitionLink {
     targetText: string;
@@ -63,11 +63,10 @@ export async function searchInWorkspace(
 }
 
 async function searchInWorkspaceInner(workspace: WorkspaceFolder) {
-    const workspacePath = workspace.uri.fsPath;
     const actions: SearchResult[] = [];
     const captures: SearchResult[] = [];
     const lists: SearchResult[] = [];
-    const results = await searchInDirectory(workspacePath);
+    const results = await searchInDirectory(workspace);
     results.forEach((r) => {
         switch (r.type) {
             case "action":
@@ -88,11 +87,12 @@ async function searchInWorkspaceInner(workspace: WorkspaceFolder) {
 }
 
 async function searchInDirectory(
-    workspacePath: string,
+    workspace: WorkspaceFolder,
 ): Promise<SearchResult[]> {
+    const workspacePath = workspace.uri.fsPath;
     const files = await fastGlob("**/*.{py,talon-list}", {
         cwd: workspacePath,
-        ignore: GLOB_IGNORE_PATTERNS,
+        ignore: getGlobIgnorePatterns(workspace),
         dot: false,
     });
 
