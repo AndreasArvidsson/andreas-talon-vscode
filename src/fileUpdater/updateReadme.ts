@@ -32,7 +32,7 @@ export function updateReadme(content: string | null): string {
             commands.push(`\n### ${category} commands\n`);
         }
         const fullCommand = getFullCommand(command as CommandId);
-        commands.push(`- \`${fullCommand}${desc.args}\`  `);
+        commands.push(`- \`${fullCommand}${desc.args}\` \\`);
         commands.push(`  ${desc.description}`);
     }
 
