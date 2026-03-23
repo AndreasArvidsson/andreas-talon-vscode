@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.96.0",
+    "version": "3.97.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -333,43 +333,41 @@
     "scripts": {
         "package": "vsce package",
         "vscode:prepublish": "npm run build",
-        "build": "jiti ./src/scripts/build.ts",
+        "build": "tsx ./src/scripts/build.ts",
         "clean": "rm -rf out",
+        "typecheck": "tsc -p .",
         "lint": "npm run lint:meta && npm run lint:fmt && npm run lint:ts",
         "lint:meta": "file-updater --test",
-        "lint:fmt": "prettier --check .",
-        "lint:ts": "tsc -p . && eslint src",
+        "lint:fmt": "oxfmt --check .",
+        "lint:ts": "oxlint --deny-warnings .",
         "fix": "npm run fix:meta && npm run fix:fmt && npm run fix:ts",
         "fix:meta": "file-updater",
-        "fix:fmt": "prettier --write --list-different .",
-        "fix:ts": "eslint src --fix",
-        "test:ci": "jiti src/scripts/runTestsCI.ts"
+        "fix:fmt": "oxfmt .",
+        "fix:ts": "oxlint --fix .",
+        "test:ci": "tsx src/scripts/runTestsCI.ts"
     },
     "extensionDependencies": [
         "pokey.parse-tree"
     ],
     "dependencies": {
-        "@cursorless/talon-tools": "^0.8.0",
+        "@cursorless/talon-tools": "^0.9.0",
         "fast-glob": "^3.3.3",
         "ignore": "^7.0.5"
     },
     "devDependencies": {
-        "@eslint/js": "^10.0.1",
         "@types/fs-extra": "^11.0.4",
         "@types/mocha": "^10.0.10",
         "@types/node": "^24.12.0",
         "@types/vscode": "1.98.0",
         "@vscode/test-electron": "^2.5.2",
         "esbuild": "^0.27.4",
-        "eslint-config-prettier": "^10.1.8",
-        "eslint": "^10.0.3",
         "file-updater": "^0.5.0",
         "fs-extra": "^11.3.4",
-        "jiti": "^2.6.1",
         "mocha": "^11.7.5",
-        "prettier": "^3.8.1",
-        "ts-archetype": "^0.5.0",
-        "typescript-eslint": "^8.57.1",
+        "oxfmt": "^0.41.0",
+        "oxlint-tsgolint": "^0.17.1",
+        "oxlint": "^1.56.0",
+        "tsx": "^4.21.0",
         "typescript": "^5.9.3"
     }
 }

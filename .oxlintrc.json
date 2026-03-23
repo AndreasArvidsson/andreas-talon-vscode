@@ -1,0 +1,28 @@
+{
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "options": {
+        "typeAware": true,
+        "typeCheck": true
+    },
+    "rules": {
+        "@typescript-eslint/consistent-type-imports": "error",
+        "@typescript-eslint/naming-convention": "error",
+        "@typescript-eslint/no-unused-vars": [
+            "warn",
+            {
+                "argsIgnorePattern": "^_",
+                "caughtErrorsIgnorePattern": "^_"
+            }
+        ],
+        "no-warning-comments": "warn",
+        "curly": "error",
+        "eqeqeq": [
+            "error",
+            "always",
+            {
+                "null": "never"
+            }
+        ]
+    },
+    "ignorePatterns": ["src/typings/**/*"]
+}

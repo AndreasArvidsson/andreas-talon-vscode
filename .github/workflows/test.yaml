@@ -36,6 +36,10 @@ jobs:
       - name: Build
         run: npm --color run build
 
+      - name: Run type check (Linux)
+        run: npm --color run typecheck
+        if: runner.os == 'Linux'
+
       - name: Run lint (Linux)
         run: npm --color run lint
         if: runner.os == 'Linux'

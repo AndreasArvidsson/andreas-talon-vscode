@@ -1,0 +1,21 @@
+{
+    "$schema": "./node_modules/oxfmt/configuration_schema.json",
+    "tabWidth": 4,
+    "printWidth": 80,
+    "sortPackageJson": false,
+    "ignorePatterns": ["/package-lock.json", "/src/typings/treeSitter.d.ts"],
+    "overrides": [
+        {
+            "files": ["*.yaml"],
+            "options": {
+                "tabWidth": 2
+            }
+        }
+        // {
+        //     "files": ["*.json", "*.jsonc"],
+        //     "options": {
+        //         "trailingComma": "none"
+        //     }
+        // }
+    ]
+}
