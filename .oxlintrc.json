@@ -1,8 +1,9 @@
 {
     "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "ignorePatterns": ["src/typings/**/*"],
     "options": {
         "typeAware": true,
-        "typeCheck": true
+        "typeCheck": true,
     },
     "rules": {
         "@typescript-eslint/consistent-type-imports": "error",
@@ -11,8 +12,8 @@
             "warn",
             {
                 "argsIgnorePattern": "^_",
-                "caughtErrorsIgnorePattern": "^_"
-            }
+                "caughtErrorsIgnorePattern": "^_",
+            },
         ],
         "no-warning-comments": "warn",
         "curly": "error",
@@ -20,9 +21,8 @@
             "error",
             "always",
             {
-                "null": "never"
-            }
-        ]
+                "null": "never",
+            },
+        ],
     },
-    "ignorePatterns": ["src/typings/**/*"]
 }
