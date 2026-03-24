@@ -21,7 +21,7 @@
                 "paths": [
                     {
                         "name": "node:assert",
-                        "message": "Usenode:assert/strictinstead"
+                        "message": "Use node:assert/strict instead"
                     }
                 ]
             }
