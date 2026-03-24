@@ -52,6 +52,10 @@ export async function searchInWorkspace(
                 return results.lists;
             case "dynamic_list":
                 throw new Error(`Can't search specifically for dynamic lists`);
+            default:
+                const exhaustiveCheck: never = match.type;
+                // oxlint-disable-next-line typescript/restrict-template-expressions
+                throw new Error(`Unknown match type: ${exhaustiveCheck}`);
         }
     })();
     if ("name" in match) {
