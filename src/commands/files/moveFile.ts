@@ -110,7 +110,7 @@ function getWorkspaceFolder(uri: Uri): WorkspaceFolder {
     const folder = workspace.getWorkspaceFolder(uri);
 
     if (folder == null) {
-        throw Error("Can't find workspace for file");
+        throw new Error("Can't find workspace for file");
     }
 
     return folder;

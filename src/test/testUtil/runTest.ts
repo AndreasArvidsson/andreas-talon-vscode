@@ -1,4 +1,4 @@
-import * as assert from "node:assert";
+import * as assert from "node:assert/strict";
 import type * as vscode from "vscode";
 import { getFullFixture } from "./getFullFixture";
 import openNewEditor from "./openNewEditor";

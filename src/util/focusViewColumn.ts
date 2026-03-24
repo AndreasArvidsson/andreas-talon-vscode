@@ -4,7 +4,7 @@ export function focusViewColumn(viewColumn: ViewColumn) {
     const command = columnFocusCommands[viewColumn];
 
     if (command == null) {
-        throw Error(`Unsupported view column '${viewColumn}'`);
+        throw new Error(`Unsupported view column '${viewColumn}'`);
     }
 
     return commands.executeCommand(command);

@@ -56,5 +56,5 @@ function numbersToSelection(numbers: NumberSelection): vscode.Selection {
         );
     }
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    throw Error(`Expected two or four numbers: ${numbers}`);
+    throw new Error(`Expected two or four numbers: ${numbers}`);
 }

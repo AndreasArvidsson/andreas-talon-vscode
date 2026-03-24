@@ -18,6 +18,6 @@ export class LuaFormatter extends BaseCommentFormatter {
         _text: string,
         _indentation: string,
     ): string | undefined {
-        throw Error("Block comments are not supported for Lua");
+        throw new Error("Block comments are not supported for Lua");
     }
 }

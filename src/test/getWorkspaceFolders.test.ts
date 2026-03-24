@@ -1,4 +1,4 @@
-import * as assert from "assert";
+import * as assert from "node:assert/strict";
 import * as vscode from "vscode";
 import { getFullCommand } from "../util/getFullCommand";
 
@@ -15,6 +15,6 @@ suite(command, () => {
         const expectedPaths = vscode.workspace.workspaceFolders?.map(
             (folder) => folder.uri.fsPath,
         );
-        assert.deepStrictEqual(result, expectedPaths);
+        assert.deepEqual(result, expectedPaths);
     });
 });

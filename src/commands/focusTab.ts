@@ -16,7 +16,7 @@ export async function focusTab(hint?: string): Promise<void> {
     const tabInfo = getTabInfo(index);
 
     if (tabInfo == null) {
-        throw Error(
+        throw new Error(
             `Can't focus non-existing tab '${hint.toUpperCase()}' at index '${index}'`,
         );
     }

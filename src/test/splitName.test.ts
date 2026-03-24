@@ -1,4 +1,4 @@
-import * as assert from "node:assert";
+import * as assert from "node:assert/strict";
 import { splitName } from "../util/getRenameContext";
 
 const fixtures: [string, string, string | undefined][] = [

@@ -112,7 +112,9 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
             }));
         }
 
-        throw Error(`Can't get children for element type '${element.type}'`);
+        throw new Error(
+            `Can't get children for element type '${element.type}'`,
+        );
     }
 
     dispose() {

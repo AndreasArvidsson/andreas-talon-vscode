@@ -5,7 +5,7 @@ export function getActiveEditor(): TextEditor {
     const editor = window.activeTextEditor;
 
     if (editor == null) {
-        throw Error("Can't find active text editor");
+        throw new Error("Can't find active text editor");
     }
 
     return editor;
@@ -15,7 +15,7 @@ export function getActiveFileSchemaEditor(): TextEditor {
     const editor = getActiveEditor();
 
     if (editor.document.uri.scheme !== "file") {
-        throw Error(
+        throw new Error(
             `Active document is not file. Found: ${editor.document.uri.scheme}`,
         );
     }

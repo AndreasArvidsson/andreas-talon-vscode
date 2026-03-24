@@ -336,14 +336,14 @@
         "build": "tsx ./src/scripts/build.ts",
         "clean": "rm -rf out",
         "typecheck": "tsc -p .",
-        "lint": "npm run lint:meta && npm run lint:fmt && npm run lint:ts",
+        "lint": "npm run lint:meta && npm run lint:ts && npm run lint:fmt",
         "lint:meta": "file-updater --test",
-        "lint:fmt": "oxfmt --check .",
         "lint:ts": "oxlint --deny-warnings .",
-        "fix": "npm run fix:meta && npm run fix:fmt && npm run fix:ts",
+        "lint:fmt": "oxfmt --check .",
+        "fix": "npm run fix:meta && npm run fix:ts && npm run fix:fmt",
         "fix:meta": "file-updater",
-        "fix:fmt": "oxfmt .",
         "fix:ts": "oxlint --fix .",
+        "fix:fmt": "oxfmt .",
         "test:ci": "tsx src/scripts/runTestsCI.ts"
     },
     "extensionDependencies": [

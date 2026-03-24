@@ -12,7 +12,7 @@ async function getExtension<T>(name: string): Promise<T> {
             console.log(`  ${extension}`);
         }
 
-        throw Error(`Depends on missing extension '${name}'`);
+        throw new Error(`Depends on missing extension '${name}'`);
     }
 
     return extension.activate() as Promise<T>;

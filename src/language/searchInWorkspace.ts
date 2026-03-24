@@ -51,7 +51,7 @@ export async function searchInWorkspace(
             case "list":
                 return results.lists;
             case "dynamic_list":
-                throw Error(`Can't search specifically for dynamic lists`);
+                throw new Error(`Can't search specifically for dynamic lists`);
         }
     })();
     if ("name" in match) {

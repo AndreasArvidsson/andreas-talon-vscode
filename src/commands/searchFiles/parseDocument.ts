@@ -1,4 +1,4 @@
-import * as path from "path";
+import * as path from "node:path";
 import type { TextDocument } from "vscode";
 import { Range, Uri, workspace } from "vscode";
 import { getActiveEditor } from "../../util/getActiveEditor";

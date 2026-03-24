@@ -90,7 +90,7 @@ export function getDir(uri: vscode.Uri): string {
 function assertNonExistingFile(uri: vscode.Uri) {
     if (fileExists(uri)) {
         const filename = getFilename(uri);
-        throw Error(`File '${filename}' already exists`);
+        throw new Error(`File '${filename}' already exists`);
     }
 }
 

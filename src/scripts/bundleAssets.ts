@@ -18,7 +18,7 @@ async function copyAsset(source: string, destination?: string) {
         } catch (error) {
             const message =
                 error instanceof Error ? error.message : String(error);
-            throw Error(`Missing asset ${fullSource}: ${message}`, {
+            throw new Error(`Missing asset ${fullSource}: ${message}`, {
                 cause: error,
             });
         }

@@ -42,7 +42,7 @@ export class GitUtil {
 
         // We can only do your URL to a single range of lines
         if (useSelection && selections.length > 1) {
-            throw Error("Can't get Git file URL with multiple selections");
+            throw new Error("Can't get Git file URL with multiple selections");
         }
 
         return platform.getFileUrl(commitOrBranch, relativeFilePath, range);
@@ -72,7 +72,7 @@ export class GitUtil {
         const repository = await this.getRepository();
         const branch = await this.getFirstAvailableBranch(branches, repository);
         if (branch == null) {
-            throw Error(
+            throw new Error(
                 `Can't checkout unknown branch '${branches.join(", ")}'`,
             );
         }
@@ -105,7 +105,7 @@ export class GitUtil {
         }
 
         if (repositories.length === 0) {
-            throw Error("No git repositories available");
+            throw new Error("No git repositories available");
         }
 
         const { document } = getActiveFileSchemaEditor();
@@ -122,7 +122,7 @@ export class GitUtil {
             .sort((a, b) => b.rootUri.path.length - a.rootUri.path.length)[0];
 
         if (repository == null) {
-            throw Error(`Can't find Git repository for file: ${filePath}`);
+            throw new Error(`Can't find Git repository for file: ${filePath}`);
         }
 
         return repository;
@@ -138,10 +138,10 @@ function validateUnchangedDocument(
     repository: Repository,
 ) {
     if (document.uri.scheme !== "file") {
-        throw Error("Document scheme is not file");
+        throw new Error("Document scheme is not file");
     }
     if (document.isDirty) {
-        throw Error("Document contains unsaved changes");
+        throw new Error("Document contains unsaved changes");
     }
 
     const changes = [
@@ -151,18 +151,18 @@ function validateUnchangedDocument(
     ];
     const hasGitChange = changes.some((c) => c.uri.path === document.uri.path);
     if (hasGitChange) {
-        throw Error("Document contains uncommitted Git changes");
+        throw new Error("Document contains uncommitted Git changes");
     }
 }
 
 function getRemote(repository: Repository): Remote {
     const name = repository.state.HEAD?.upstream?.remote;
     if (name == null) {
-        throw Error("Can't find Git remote name");
+        throw new Error("Can't find Git remote name");
     }
     const remote = repository.state.remotes.find((r) => r.name === name);
     if (remote == null) {
-        throw Error(`Can't find git remote '${name ?? ""}'`);
+        throw new Error(`Can't find git remote '${name ?? ""}'`);
     }
     return remote;
 }
@@ -171,7 +171,7 @@ function getRemoteUrl(repository: Repository) {
     const remote = getRemote(repository);
     const url = remote.fetchUrl ?? remote.pushUrl;
     if (!url) {
-        throw Error(`Remote '${remote.name}' has no fetch or push url`);
+        throw new Error(`Remote '${remote.name}' has no fetch or push url`);
     }
     return url;
 }
@@ -179,7 +179,7 @@ function getRemoteUrl(repository: Repository) {
 function getBranch(repository: Repository): string {
     const branch = repository.state.HEAD?.name;
     if (!branch) {
-        throw Error("Can't find Git branch");
+        throw new Error("Can't find Git branch");
     }
     return branch;
 }
@@ -187,7 +187,7 @@ function getBranch(repository: Repository): string {
 function getCommit(repository: Repository): string {
     const commit = repository.state.HEAD?.commit;
     if (!commit) {
-        throw Error("Can't find Git commit");
+        throw new Error("Can't find Git commit");
     }
     return commit;
 }
@@ -210,7 +210,7 @@ function getPlatform(repository: Repository): GitPlatform {
     if (remoteUrl.includes("bitbucket.org")) {
         return new Bitbucket(remoteUrl);
     }
-    throw Error(`Can't find Git platform for remote url '${remoteUrl}'`);
+    throw new Error(`Can't find Git platform for remote url '${remoteUrl}'`);
 }
 
 interface GitPlatform {

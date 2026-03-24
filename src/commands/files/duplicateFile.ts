@@ -10,7 +10,7 @@ export async function duplicateFile(name?: string): Promise<void> {
     const context = getNewFilenameContext(editor, name);
 
     if (context == null) {
-        throw Error("Can't duplicate file");
+        throw new Error("Can't duplicate file");
     }
 
     const suggestedName = context.input?.name ?? context.file.name;
