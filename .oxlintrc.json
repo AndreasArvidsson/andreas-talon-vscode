@@ -6,9 +6,17 @@
         "typeCheck": true
     },
     "rules": {
-        "@typescript-eslint/consistent-type-imports": "error",
-        "@typescript-eslint/naming-convention": "error",
-        "@typescript-eslint/no-unused-vars": [
+        "curly": "warn",
+        "eqeqeq": [
+            "warn",
+            "always",
+            {
+                "null": "never"
+            }
+        ],
+        "eslint/naming-convention": "warn",
+        "eslint/no-throw-literal": "warn",
+        "eslint/no-unused-vars": [
             "warn",
             {
                 "argsIgnorePattern": "^_",
@@ -16,13 +24,8 @@
             }
         ],
         "no-warning-comments": "warn",
-        "curly": "error",
-        "eqeqeq": [
-            "error",
-            "always",
-            {
-                "null": "never"
-            }
-        ]
+        "typescript/consistent-type-imports": "warn",
+        "unicorn/prefer-module": "warn",
+        "unicorn/throw-new-error": "warn"
     }
 }

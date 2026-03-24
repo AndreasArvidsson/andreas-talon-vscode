@@ -3,7 +3,7 @@
     "tabWidth": 4,
     "printWidth": 80,
     "sortPackageJson": false,
-    "ignorePatterns": ["/package-lock.json", "/src/typings/treeSitter.d.ts"],
+    "ignorePatterns": ["/src/typings/treeSitter.d.ts"],
     "overrides": [
         {
             "files": ["*.yaml"],
