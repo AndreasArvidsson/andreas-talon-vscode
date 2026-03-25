@@ -37,6 +37,7 @@
         "no-warning-comments": "warn",
         "typescript/consistent-return": "warn",
         "typescript/consistent-type-imports": "warn",
+        "typescript/no-deprecated": "warn",
         "unicorn/prefer-node-protocol": "warn",
         "unicorn/throw-new-error": "warn"
     }
