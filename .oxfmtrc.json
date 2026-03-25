@@ -5,7 +5,7 @@
     "sortPackageJson": false,
     "sortImports": {
         "newlinesBetween": false,
-        "partitionByComment": true
+        "partitionByNewline": true
     },
     "ignorePatterns": ["/src/typings/treeSitter.d.ts"],
 
