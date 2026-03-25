@@ -1,10 +1,10 @@
 import { Position, Range, type TextEditor } from "vscode";
+import { parseDocument } from "./parseDocument";
 import { renderSearchResults } from "./renderSearchResults";
 import type {
     PartialSearchResultFile,
     SearchResultsWorkspace,
 } from "./searchFiles.types";
-import { parseDocument } from "./parseDocument";
 
 export let lastQuery = "";
 

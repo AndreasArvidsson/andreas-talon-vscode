@@ -1,6 +1,6 @@
-import { copy } from "fs-extra";
 import { lstat, mkdir } from "node:fs/promises";
 import * as path from "node:path";
+import { copy } from "fs-extra";
 
 const projectRoot = path.join(__dirname, "../..");
 const sourceRoot = path.join(projectRoot, "src");

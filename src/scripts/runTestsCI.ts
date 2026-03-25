@@ -1,10 +1,10 @@
+import * as cp from "node:child_process";
+import * as path from "node:path";
 import {
     downloadAndUnzipVSCode,
     resolveCliArgsFromVSCodeExecutablePath,
     runTests,
 } from "@vscode/test-electron";
-import * as cp from "node:child_process";
-import * as path from "node:path";
 
 const extensionDependencies = [
     // Cursorless access to Tree sitter

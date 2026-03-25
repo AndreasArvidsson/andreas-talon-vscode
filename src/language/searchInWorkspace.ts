@@ -1,6 +1,6 @@
-import fastGlob from "fast-glob";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
+import fastGlob from "fast-glob";
 import type { DefinitionLink, WorkspaceFolder } from "vscode";
 import { Range, Uri } from "vscode";
 import { getGlobIgnorePatterns } from "../util/getGlobIgnorePatterns";

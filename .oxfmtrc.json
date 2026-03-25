@@ -3,7 +3,12 @@
     "tabWidth": 4,
     "printWidth": 80,
     "sortPackageJson": false,
+    "sortImports": {
+        "newlinesBetween": false,
+        "partitionByComment": true
+    },
     "ignorePatterns": ["/src/typings/treeSitter.d.ts"],
+
     "overrides": [
         {
             "files": ["*.yaml"],

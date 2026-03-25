@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { registerSearchFiles } from "./commands/searchFiles";
 import { registerCommands } from "./commands/registerCommands";
+import { registerSearchFiles } from "./commands/searchFiles";
 import { registerLanguageCodeActions } from "./language/registerLanguageCodeActions";
 import { registerLanguageCompletionProviders } from "./language/registerLanguageCompletionProviders";
 import { registerLanguageDefinitions } from "./language/registerLanguageDefinitions";

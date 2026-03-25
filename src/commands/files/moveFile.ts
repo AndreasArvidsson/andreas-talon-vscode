@@ -1,6 +1,6 @@
+import * as path from "node:path";
 import { IGNORE_FOLDERS } from "@cursorless/talon-tools";
 import ignore from "ignore";
-import * as path from "node:path";
 import type { QuickPickItem, WorkspaceFolder } from "vscode";
 import { FileType, QuickPickItemKind, Uri, window, workspace } from "vscode";
 import * as fileSystem from "../../util/fileSystem";

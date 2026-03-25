@@ -1,6 +1,6 @@
+import * as path from "node:path";
 import fastGlob from "fast-glob";
 import Mocha from "mocha";
-import * as path from "node:path";
 
 export function run(): Promise<void> {
     const mocha = new Mocha({

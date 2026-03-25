@@ -2,9 +2,6 @@ import * as vscode from "vscode";
 import type { TreeSitter } from "../treeSitter/TreeSitter";
 import type { CommandServerExtension } from "../typings/commandServer";
 import { getFullCommand } from "../util/getFullCommand";
-import { GetText } from "./GetText";
-import type { GitParameters } from "./GitUtil";
-import { GitUtil } from "./GitUtil";
 import type { CommandId } from "./commands";
 import { executeCommands } from "./executeCommands";
 import { copyFilename } from "./files/copyFilename";
@@ -14,12 +11,6 @@ import { moveFile } from "./files/moveFile";
 import { newFile } from "./files/newFile";
 import { removeFile } from "./files/removeFile";
 import { renameFile } from "./files/renameFile";
-import {
-    searchFiles,
-    searchFilesDeleteSelected,
-    searchFilesOpenSelected,
-    searchFilesToggleSelected,
-} from "./searchFiles";
 import { focusTab } from "./focusTab";
 import {
     formatAllComments,
@@ -27,11 +18,20 @@ import {
 } from "./formatComments/formatComments";
 import { formatSelectedFiles, formatWorkspaceFiles } from "./formatFiles";
 import { generateRange } from "./generateRange";
+import { GetText } from "./GetText";
+import type { GitParameters } from "./GitUtil";
+import { GitUtil } from "./GitUtil";
 import { goToLine } from "./goToLine";
 import { decrement, increment } from "./incrementDecrement";
 import { lineMiddle } from "./lineMiddle";
 import { openEditorAtIndex } from "./openEditorAtIndex";
 import { printCommands } from "./printCommands";
+import {
+    searchFiles,
+    searchFilesDeleteSelected,
+    searchFilesOpenSelected,
+    searchFilesToggleSelected,
+} from "./searchFiles";
 import { selectTo } from "./selectTo";
 import { getSetting, setSetting } from "./settings";
 
