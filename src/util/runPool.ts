@@ -8,8 +8,7 @@ export async function runPool<T, R>(
 
     async function runWorker(): Promise<void> {
         while (nextIndex < items.length) {
-            const currentIndex = nextIndex;
-            nextIndex++;
+            const currentIndex = nextIndex++;
             // oxlint-disable-next-line no-await-in-loop
             results[currentIndex] = await worker(items[currentIndex]);
         }
