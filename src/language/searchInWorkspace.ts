@@ -1,8 +1,10 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import fastGlob from "fast-glob";
+import { window } from "vscode";
 import type { DefinitionLink, WorkspaceFolder } from "vscode";
 import { Range, Uri } from "vscode";
+import { getErrorMessage } from "../util/getErrorMessage";
 import { getGlobIgnorePatterns } from "../util/getGlobIgnorePatterns";
 import type { TalonMatch, TalonMatchType } from "./matchers";
 
@@ -101,32 +103,37 @@ async function searchInDirectory(
         dot: false,
     });
 
-    const result: SearchResult[] = [];
+    const promises: Promise<SearchResult[]>[] = [];
 
     for (const file of files) {
         const fileAbsolutePath = path.join(workspacePath, file);
 
-        try {
-            // Python file. Parse for content.
-            if (file.endsWith(".py")) {
-                result.push(...(await parsePythonFile(fileAbsolutePath)));
-            }
+        // Python file. Parse for content.
+        if (file.endsWith(".py")) {
+            promises.push(parsePythonFile(fileAbsolutePath));
+        }
 
-            // Talon list file. Parse for content.
-            else if (file.endsWith(".talon-list")) {
-                result.push(...(await parseTalonListFile(fileAbsolutePath)));
-            }
+        // Talon list file. Parse for content.
+        else if (file.endsWith(".talon-list")) {
+            promises.push(parseTalonListFile(fileAbsolutePath));
+        }
 
-            // Unknown file type.
-            else {
-                console.error(`Unknown file type: ${file}`);
-            }
-        } catch (error) {
-            console.error(error);
+        // Unknown file type.
+        else {
+            console.error(`Unknown file type: ${file}`);
         }
     }
 
-    return result;
+    const result = await Promise.all(
+        promises.map((p) =>
+            p.catch((e) => {
+                void window.showErrorMessage(getErrorMessage(e));
+                return [];
+            }),
+        ),
+    );
+
+    return result.flat();
 }
 
 async function parsePythonFile(absolutePath: string): Promise<SearchResult[]> {

@@ -33,6 +33,7 @@ async function formatDocuments(uris: vscode.Uri[]) {
 
                 progress.report({ message: `${i + 1} / ${uris.length}` });
 
+                // oxlint-disable-next-line no-await-in-loop
                 await formatDocument(uri);
 
                 progress.report({ increment });

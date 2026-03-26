@@ -86,6 +86,7 @@ export class GitUtil {
         repository ??= await this.getRepository();
         for (const branchName of branches) {
             try {
+                // oxlint-disable-next-line no-await-in-loop
                 await repository.getBranch(branchName);
                 return branchName;
             } catch (_error) {

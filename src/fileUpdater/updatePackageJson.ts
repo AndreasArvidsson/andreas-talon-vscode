@@ -4,6 +4,7 @@ import { getFullCommand } from "../util/getFullCommand";
 import { objectEntries } from "../util/objectUtil";
 
 interface Command {
+    category: "Andreas";
     command: string;
     title: string;
     enablement?: string;
@@ -34,10 +35,15 @@ export function updatePackageJson() {
 function getCommands(): Command[] {
     return objectEntries(commandDescriptions)
         .filter(([, desc]) => !desc.excludePackage)
-        .map(([command, { title, isDisabled }]) => ({
-            command: getFullCommand(command),
-            category: `Andreas`,
-            title,
-            ...(isDisabled ? { enablement: "false" } : {}),
-        }));
+        .map(([command, { title, isDisabled }]) => {
+            const entry: Command = {
+                command: getFullCommand(command),
+                category: "Andreas",
+                title,
+            };
+            if (isDisabled) {
+                entry.enablement = "false";
+            }
+            return entry;
+        });
 }
