@@ -30,7 +30,7 @@ function updateInteger(inc: boolean, text: string, value?: number): number {
 
 function updateFloat(inc: boolean, text: string, value?: number): number {
     const original = parseFloat(text);
-    const isPercentage = Math.abs(original) <= 1.0;
+    const isPercentage = Math.abs(original) <= 1;
     const diff = value ?? (isPercentage ? 0.1 : 1);
     const updated = original + (inc ? diff : -diff);
     // Remove precision problems that would add a lot of extra digits

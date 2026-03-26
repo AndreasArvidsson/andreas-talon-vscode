@@ -18,8 +18,8 @@ async function getFileUris(uri: vscode.Uri): Promise<vscode.Uri[]> {
         }
 
         return [uri];
-    } catch (e) {
-        void vscode.window.showErrorMessage(getErrorMessage(e));
+    } catch (error) {
+        void vscode.window.showErrorMessage(getErrorMessage(error));
         return [];
     }
 }

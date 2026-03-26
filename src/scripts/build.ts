@@ -10,7 +10,7 @@ async function build() {
 }
 
 // oxlint-disable-next-line unicorn/prefer-top-level-await
-void build().catch((e) => {
-    console.error(e);
+void build().catch((error) => {
+    console.error(error);
     process.exit(1);
 });

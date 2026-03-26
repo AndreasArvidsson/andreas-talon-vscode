@@ -5,7 +5,7 @@ import { isValidLine, parseTokens } from "./utils";
 
 export class JavaFormatter extends BaseCommentFormatter {
     protected regex = /(?:^[\t ]*)(?:(\/\*\*?[\s\S]*?\*\/)|(\/\/.*))/gm;
-    protected linePrefix: string = "//";
+    protected linePrefix = "//";
 
     protected parseMatch(match: RegExpExecArray): CommentMatch {
         const isBlockComment = match[1] != null;

@@ -1,9 +1,8 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import fastGlob from "fast-glob";
-import { window } from "vscode";
 import type { DefinitionLink, WorkspaceFolder } from "vscode";
-import { Range, Uri } from "vscode";
+import { Range, Uri, window } from "vscode";
 import { getErrorMessage } from "../util/getErrorMessage";
 import { getGlobIgnorePatterns } from "../util/getGlobIgnorePatterns";
 import type { TalonMatch, TalonMatchType } from "./matchers";
@@ -126,8 +125,8 @@ async function searchInDirectory(
 
     const result = await Promise.all(
         promises.map((p) =>
-            p.catch((e) => {
-                void window.showErrorMessage(getErrorMessage(e));
+            p.catch((error) => {
+                void window.showErrorMessage(getErrorMessage(error));
                 return [];
             }),
         ),
@@ -137,7 +136,7 @@ async function searchInDirectory(
 }
 
 async function parsePythonFile(absolutePath: string): Promise<SearchResult[]> {
-    const fileContent = await fs.readFile(absolutePath, "utf-8");
+    const fileContent = await fs.readFile(absolutePath, "utf8");
     const uri = Uri.file(absolutePath);
 
     return [
@@ -207,7 +206,7 @@ function parsePythonFileInner(
                 return "user";
             }
             const index = name.indexOf(".");
-            return index > -1 ? name.slice(0, index) : "";
+            return index !== -1 ? name.slice(0, index) : "";
         };
     }
 
@@ -219,7 +218,7 @@ async function parseTalonListFile(
 ): Promise<SearchResult[]> {
     // list: WS NAME
     const regex = /^(list:\s*)([\w.]+)/g;
-    const fileContent = await fs.readFile(absolutePath, "utf-8");
+    const fileContent = await fs.readFile(absolutePath, "utf8");
     const matches = Array.from(fileContent.matchAll(regex));
     if (matches.length !== 1) {
         return [];

@@ -1,4 +1,4 @@
-import { languages, workspace, window, Uri } from "vscode";
+import { Uri, languages, window, workspace } from "vscode";
 import { languageId } from "./constants";
 
 export async function openNewEditor() {

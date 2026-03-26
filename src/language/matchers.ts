@@ -131,7 +131,7 @@ function isInTalonScript(line: TextLine, position: Position) {
         return true;
     }
     const index = line.text.indexOf(":");
-    return index > -1 && index < position.character;
+    return index !== -1 && index < position.character;
 }
 
 function getNameAtPosition(

@@ -1,5 +1,5 @@
 import fastGlob from "fast-glob";
-import { workspace, type WorkspaceFolder } from "vscode";
+import { type WorkspaceFolder, workspace } from "vscode";
 import { getGlobIgnorePatterns } from "../../util/getGlobIgnorePatterns";
 import type {
     PartialSearchResultFile,

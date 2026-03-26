@@ -25,10 +25,10 @@ export function run(): Promise<void> {
                     resolve();
                 }
             });
-        } catch (err) {
-            console.error(err);
+        } catch (error) {
+            console.error(error);
             // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
-            reject(err);
+            reject(error);
         }
     });
 }

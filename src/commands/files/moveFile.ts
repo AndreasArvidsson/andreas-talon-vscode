@@ -15,7 +15,7 @@ interface FileQuickPickItem extends QuickPickItem {
 
 export async function moveFile(): Promise<void> {
     const editor = getActiveFileSchemaEditor();
-    const uri = editor.document.uri;
+    const { uri } = editor.document;
     const folder = await showFolderPicker(uri);
 
     if (folder != null && folder !== getDir(uri)) {

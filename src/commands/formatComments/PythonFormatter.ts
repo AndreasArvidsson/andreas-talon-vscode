@@ -4,7 +4,7 @@ import type { CommentMatch } from "./types";
 
 export class PythonFormatter extends BaseCommentFormatter {
     protected regex = /^[\t ]*(#.*)/gm;
-    protected linePrefix: string = "#";
+    protected linePrefix = "#";
 
     protected parseMatch(match: RegExpExecArray): CommentMatch {
         return {

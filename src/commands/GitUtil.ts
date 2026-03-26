@@ -3,10 +3,10 @@ import type { API, Remote, Repository } from "../typings/git";
 import { getActiveFileSchemaEditor } from "../util/getActiveEditor";
 import { getGitExtension } from "../util/getExtension";
 
-export type GitParameters = {
+export interface GitParameters {
     useSelection: boolean;
     useBranch: boolean;
-};
+}
 
 let _gitApi: API;
 
@@ -89,7 +89,7 @@ export class GitUtil {
                 // oxlint-disable-next-line no-await-in-loop
                 await repository.getBranch(branchName);
                 return branchName;
-            } catch (_error) {
+            } catch {
                 // Try the next branch
             }
         }

@@ -7,8 +7,8 @@ import type {
 import {
     CompletionItemKind,
     Disposable,
-    languages,
     Range,
+    languages,
     workspace,
 } from "vscode";
 import type { TalonMatchPrefix } from "./matchers";

@@ -26,7 +26,7 @@ export function hintToIndex(hint: string): number {
     letters.forEach((letter, index) => {
         const value = letter.codePointAt(0)! - refLC;
         if (index > 0) {
-            result += (value + 1) * Math.pow(26, index);
+            result += (value + 1) * 26 ** index;
         } else {
             result += value;
         }

@@ -38,9 +38,9 @@ export async function launchVscodeAndRunTests() {
         if (code !== 0) {
             console.log(`Returned from "runAllTests" with value: ${code}`);
         }
-    } catch (err) {
+    } catch (error) {
         console.error("Test run threw exception:");
-        console.error(err);
+        console.error(error);
         process.exit(1);
     }
 }
@@ -63,7 +63,7 @@ function installExtensionDependencies(vscodeExecutablePath: string) {
     console.log(JSON.stringify(extensionInstallArgs, null, 2));
 
     const { status, signal, error } = cp.spawnSync(cli, extensionInstallArgs, {
-        encoding: "utf-8",
+        encoding: "utf8",
         stdio: "inherit",
         shell: process.platform === "win32",
     });

@@ -16,7 +16,7 @@ export interface Scope {
 }
 
 export class TreeSitter {
-    private queries: Map<string, Query | undefined> = new Map();
+    private queries = new Map<string, Query | undefined>();
 
     constructor(private parseTreeExtension: ParseTreeExtension) {}
 
@@ -87,7 +87,7 @@ function loadQueryFileForLanguage(languageId: string): string | undefined {
 }
 
 function loadQueryFile(file: string): string {
-    const content = fs.readFileSync(file, "utf-8");
+    const content = fs.readFileSync(file, "utf8");
 
     return content.replaceAll(
         /^;; import (\w+)$/gm,

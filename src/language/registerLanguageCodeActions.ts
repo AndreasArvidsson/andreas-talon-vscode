@@ -9,9 +9,9 @@ import {
     CodeActionKind,
     CodeActionTriggerKind,
     Disposable,
-    languages,
     Range,
     WorkspaceEdit,
+    languages,
 } from "vscode";
 import type { TreeSitter } from "../treeSitter/TreeSitter";
 

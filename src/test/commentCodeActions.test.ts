@@ -24,7 +24,7 @@ const blockFixtures: Fixture[] = [
 
 suite("Line comment code actions", () => {
     lineFixtures.forEach(([input, expected]) => {
-        const name = input.replaceAll("\n", "\\n").trim();
+        const name = input.replaceAll("\n", String.raw`\n`).trim();
         test(name, () => {
             const actual = lineCommentToDocComment(input);
             assert.equal(actual, expected);
@@ -34,7 +34,7 @@ suite("Line comment code actions", () => {
 
 suite("Block comment code actions", () => {
     blockFixtures.forEach(([input, expected]) => {
-        const name = input.replaceAll("\n", "\\n").trim();
+        const name = input.replaceAll("\n", String.raw`\n`).trim();
         test(name, () => {
             const actual = blockCommentToDocComment(input);
             assert.equal(actual, expected);

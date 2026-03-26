@@ -63,7 +63,7 @@ function convertGitIgnoreLineToGlob(line: string): string[] {
 function readGitIgnoreFile(workspace: WorkspaceFolder): string {
     const gitignoreFilePath = path.join(workspace.uri.fsPath, ".gitignore");
     try {
-        return fs.readFileSync(gitignoreFilePath, "utf-8");
+        return fs.readFileSync(gitignoreFilePath, "utf8");
     } catch (error) {
         if (
             error instanceof Error &&

@@ -80,9 +80,8 @@ export function registerCommands(
         getClassName: () => getText.getClassName(),
         getOpenTagName: () => getText.getOpenTagName(),
         // Git
-        gitGetFirstAvailableBranch: (branches: string[]) => {
-            return git.getFirstAvailableBranch(branches);
-        },
+        gitGetFirstAvailableBranch: (branches: string[]) =>
+            git.getFirstAvailableBranch(branches),
         gitCheckout: (...branches: string[]) => git.checkout(branches),
         getGitFileURL: (p: GitParameters) => git.getFileURL(p),
         getGitRepoURL: () => git.getRepoURL(),
@@ -98,7 +97,7 @@ export function registerCommands(
                 return [];
             }
             return vscode.workspace.workspaceFolders.map((folder) => {
-                const uri = folder.uri;
+                const { uri } = folder;
                 if (uri.scheme !== "file") {
                     throw new Error(
                         `Expected file URI but got ${uri.scheme} URI`,

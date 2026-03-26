@@ -1,13 +1,13 @@
 import {
+    type Options,
+    type SyntaxNode,
     snippetFormatter,
     talonFormatter,
     talonListFormatter,
     treeSitterFormatter,
-    type Options,
-    type SyntaxNode,
 } from "@cursorless/talon-tools";
-import type { FormattingOptions, TextDocument, ExtensionContext } from "vscode";
-import { Disposable, languages, Range, TextEdit, ExtensionMode } from "vscode";
+import type { ExtensionContext, FormattingOptions, TextDocument } from "vscode";
+import { Disposable, ExtensionMode, Range, TextEdit, languages } from "vscode";
 import type { TreeSitter } from "../treeSitter/TreeSitter";
 import { getErrorMessage } from "../util/getErrorMessage";
 import { getFormattingOptions } from "../util/getFormattingOptions";

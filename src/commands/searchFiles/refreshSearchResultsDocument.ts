@@ -12,7 +12,7 @@ export async function refreshSearchResultsDocument(
     editor: TextEditor,
     query: string,
     workspaces: SearchResultsWorkspace<PartialSearchResultFile>[],
-    keepFileSelections: boolean = true,
+    keepFileSelections = true,
 ): Promise<void> {
     if (keepFileSelections) {
         applyCurrentFileSelection(editor, workspaces);
