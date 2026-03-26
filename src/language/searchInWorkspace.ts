@@ -154,7 +154,7 @@ function getTalonNamespacesFromPython(
     const matches = Array.from(fileContent.matchAll(regex));
     return matches
         .map((m) => ({
-            name: m[1] ?? "user",
+            name: m.at(1) ?? "user",
             line: fileContent.slice(0, m.index).split("\n").length - 1,
         }))
         .toSorted((a, b) => a.line - b.line);
