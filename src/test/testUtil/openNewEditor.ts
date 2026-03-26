@@ -7,9 +7,7 @@ interface Options {
     content: string;
 }
 
-export default async function openNewEditor(
-    options: Options,
-): Promise<TextEditor> {
+export async function openNewEditor(options: Options): Promise<TextEditor> {
     await commands.executeCommand("workbench.action.closeAllEditors");
 
     const document = await workspace.openTextDocument(options);

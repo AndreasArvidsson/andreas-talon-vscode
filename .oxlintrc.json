@@ -5,6 +5,19 @@
         "typeAware": true,
         "typeCheck": true
     },
+    "env": {
+        "node": true,
+        "mocha": true
+    },
+    "plugins": [
+        "eslint",
+        "typescript",
+        "unicorn",
+        "oxc",
+        "import",
+        "node",
+        "promise"
+    ],
     "categories": {
         "correctness": "warn",
         "suspicious": "warn",
@@ -13,10 +26,6 @@
         "style": "warn",
         "restriction": "warn",
         "nursery": "warn"
-    },
-    "env": {
-        "node": true,
-        "mocha": true
     },
     "rules": {
         "eqeqeq": [
@@ -75,9 +84,19 @@
         "eslint/sort-keys": "off",
         "eslint/sort-vars": "off",
         "func-style": "off",
+        "import/exports-last": "off",
+        "import/group-exports": "off",
+        "import/max-dependencies": "off",
+        "import/no-named-export": "off",
+        "import/no-namespace": "off",
+        "import/no-nodejs-modules": "off",
+        "import/no-relative-parent-imports": "off",
+        "import/prefer-default-export": "off",
         "oxc/no-async-await": "off",
         "oxc/no-optional-chaining": "off",
         "oxc/no-rest-spread-properties": "off",
+        "promise/avoid-new": "off",
+        "promise/prefer-await-to-callbacks": "off",
         "typescript/explicit-function-return-type": "off",
         "typescript/parameter-properties": "off",
         "typescript/prefer-readonly-parameter-types": "off",

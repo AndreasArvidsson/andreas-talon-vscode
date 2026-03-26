@@ -4,11 +4,12 @@ import { languageId } from "./constants";
 import { parseDocument } from "./parseDocument";
 import { performSearch } from "./performSearch";
 import {
-    lastQuery,
+    getLastQuery,
     refreshSearchResultsDocument,
 } from "./refreshSearchResultsDocument";
 
 const debouncer = new Debouncer(() => {
+    // oxlint-disable-next-line promise/prefer-await-to-then
     performUpdate().catch(console.error);
 }, 500);
 
@@ -28,7 +29,7 @@ async function performUpdate(): Promise<void> {
 
     const { query } = parseDocument(editor.document);
 
-    if (query === lastQuery) {
+    if (query === getLastQuery()) {
         return;
     }
 

@@ -1,4 +1,5 @@
-import { Position, Range, type TextEditor } from "vscode";
+import { Position, Range } from "vscode";
+import type { TextEditor } from "vscode";
 import { parseDocument } from "./parseDocument";
 import { renderSearchResults } from "./renderSearchResults";
 import type {
@@ -6,7 +7,11 @@ import type {
     SearchResultsWorkspace,
 } from "./searchFiles.types";
 
-export let lastQuery = "";
+let lastQuery = "";
+
+export function getLastQuery(): string {
+    return lastQuery;
+}
 
 export async function refreshSearchResultsDocument(
     editor: TextEditor,

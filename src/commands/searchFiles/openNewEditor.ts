@@ -1,4 +1,5 @@
-import { Uri, languages, window, workspace, type TextEditor } from "vscode";
+import { Uri, languages, window, workspace } from "vscode";
+import type { TextEditor } from "vscode";
 import { languageId } from "./constants";
 
 export async function openNewEditor(): Promise<TextEditor> {

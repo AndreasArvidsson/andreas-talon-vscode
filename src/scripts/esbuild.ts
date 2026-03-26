@@ -1,4 +1,5 @@
-import esbuild, { type BuildOptions } from "esbuild";
+import esbuild from "esbuild";
+import type { BuildOptions } from "esbuild";
 import fastGlob from "fast-glob";
 
 export async function runEsbuild(): Promise<void> {
