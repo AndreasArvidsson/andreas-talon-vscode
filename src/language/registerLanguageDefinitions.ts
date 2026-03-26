@@ -124,7 +124,7 @@ function cleanHoverCode(text: string): string {
     return lines
         .filter((l) => {
             const lt = l.trimStart();
-            return lt !== "" && lt[0] !== "#";
+            return lt !== "" && !lt.startsWith("#");
         })
         .join("\n");
 }

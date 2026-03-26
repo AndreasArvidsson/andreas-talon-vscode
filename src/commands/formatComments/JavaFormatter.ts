@@ -8,7 +8,7 @@ export class JavaFormatter extends BaseCommentFormatter {
     protected linePrefix = "//";
 
     protected parseMatch(match: RegExpExecArray): CommentMatch {
-        const isBlockComment = match[1] != null;
+        const isBlockComment = match.at(1) != null;
         const text = isBlockComment ? match[1] : match[2];
         return { text, isBlockComment };
     }
@@ -25,7 +25,7 @@ export class JavaFormatter extends BaseCommentFormatter {
         const lines = textContent.split("\n");
         const tokens = lines.flatMap((sourceLine, index) => {
             let line = sourceLine.trim();
-            if (line[0] === "*") {
+            if (line.startsWith("*")) {
                 // Extract the text after the optional "*"
                 line = line.slice(1).trim();
             }

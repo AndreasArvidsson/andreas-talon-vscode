@@ -4,11 +4,11 @@ import { getActiveFileSchemaEditor } from "../util/getActiveEditor";
 import { getGitExtension } from "../util/getExtension";
 
 export interface GitParameters {
-    useSelection: boolean;
-    useBranch: boolean;
+    useSelection?: boolean;
+    useBranch?: boolean;
 }
 
-let _gitApi: API;
+let _gitApi: API | undefined;
 
 async function gitApi(): Promise<API> {
     if (_gitApi == null) {
@@ -118,9 +118,8 @@ export class GitUtil {
                     filePath === rootPath || filePath.startsWith(`${rootPath}/`)
                 );
             })
-            .toSorted(
-                (a, b) => b.rootUri.path.length - a.rootUri.path.length,
-            )[0];
+            .toSorted((a, b) => b.rootUri.path.length - a.rootUri.path.length)
+            .at(0);
 
         if (repository == null) {
             throw new Error(`Can't find Git repository for file: ${filePath}`);
@@ -163,7 +162,7 @@ function getRemote(repository: Repository): Remote {
     }
     const remote = repository.state.remotes.find((r) => r.name === name);
     if (remote == null) {
-        throw new Error(`Can't find git remote '${name ?? ""}'`);
+        throw new Error(`Can't find git remote '${name}'`);
     }
     return remote;
 }

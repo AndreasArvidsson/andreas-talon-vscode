@@ -82,9 +82,6 @@ export function matchAll(
         const matches = document.getText(range).matchAll(regex);
 
         for (const match of matches) {
-            if (match.index == null) {
-                continue;
-            }
             callback(
                 match,
                 new Range(

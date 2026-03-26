@@ -45,16 +45,11 @@ function numbersToSelection(numbers: NumberSelection): vscode.Selection {
         const [line, character] = numbers;
         return new vscode.Selection(line, character, line, character);
     }
-    if (numbers.length === 4) {
-        const [anchorLine, anchorCharacter, activeLine, activeCharacter] =
-            numbers;
-        return new vscode.Selection(
-            anchorLine,
-            anchorCharacter,
-            activeLine,
-            activeCharacter,
-        );
-    }
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    throw new Error(`Expected two or four numbers: ${numbers}`);
+    const [anchorLine, anchorCharacter, activeLine, activeCharacter] = numbers;
+    return new vscode.Selection(
+        anchorLine,
+        anchorCharacter,
+        activeLine,
+        activeCharacter,
+    );
 }

@@ -1,14 +1,14 @@
 import type { Range, Selection, TextDocument } from "vscode";
-import type { Change, CommentFormatter, CommentMatch } from "./types";
+import type { Change, CommentFormatter } from "./types";
 import { isValidLine, matchAll, parseTokens } from "./utils";
 
 const prefix = "<!--";
 const suffix = "-->";
 
 export class XmlFormatter implements CommentFormatter {
-    private regex = /^[\t ]*(<!--[\s\S]*?-->)/gm;
+    private readonly regex = /^[\t ]*(<!--[\s\S]*?-->)/gm;
 
-    constructor(private lineWidth: number) {}
+    constructor(private readonly lineWidth: number) {}
 
     public parse(
         document: TextDocument,
@@ -31,12 +31,6 @@ export class XmlFormatter implements CommentFormatter {
         });
 
         return changes;
-    }
-
-    private parseMatch(match: RegExpExecArray): CommentMatch {
-        const isBlockComment = match[1] != null;
-        const text = isBlockComment ? match[1] : match[2];
-        return { text, isBlockComment };
     }
 
     private parseBlockComment(

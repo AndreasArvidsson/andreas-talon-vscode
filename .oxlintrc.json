@@ -11,10 +11,14 @@
         "pedantic": "warn",
         "perf": "warn",
         "style": "warn",
-        "restriction": "warn"
+        "restriction": "warn",
+        "nursery": "warn"
+    },
+    "env": {
+        "node": true,
+        "mocha": true
     },
     "rules": {
-        "curly": "warn",
         "eqeqeq": [
             "warn",
             "always",
@@ -32,7 +36,6 @@
         "eslint/max-lines": "off",
         "eslint/max-params": "off",
         "eslint/max-statements": "off",
-        "eslint/naming-convention": "warn",
         "eslint/no-console": "off",
         "eslint/no-continue": "off",
         "eslint/no-duplicate-imports": [
@@ -57,7 +60,6 @@
             }
         ],
         "eslint/no-ternary": "off",
-        "eslint/no-throw-literal": "warn",
         "eslint/no-undefined": "off",
         "eslint/no-unused-vars": [
             "warn",
@@ -73,15 +75,12 @@
         "eslint/sort-keys": "off",
         "eslint/sort-vars": "off",
         "func-style": "off",
-        "no-warning-comments": "warn",
         "oxc/no-async-await": "off",
         "oxc/no-optional-chaining": "off",
         "oxc/no-rest-spread-properties": "off",
-        "typescript/consistent-return": "warn",
-        "typescript/consistent-type-imports": "warn",
         "typescript/explicit-function-return-type": "off",
-        "typescript/no-deprecated": "warn",
         "typescript/parameter-properties": "off",
+        "typescript/prefer-readonly-parameter-types": "off",
         "typescript/promise-function-async": "off",
         "typescript/strict-boolean-expressions": [
             "warn",
@@ -89,16 +88,15 @@
                 "allowNullableBoolean": true
             }
         ],
+        "typescript/strict-void-return": "off",
         "unicorn/filename-case": "off",
         "unicorn/no-array-callback-reference": "off",
         "unicorn/no-array-for-each": "off",
         "unicorn/no-null": "off",
         "unicorn/prefer-at": "off",
         "unicorn/prefer-module": "off",
-        "unicorn/prefer-node-protocol": "warn",
         "unicorn/prefer-spread": "off",
         "unicorn/prefer-ternary": "off",
-        "unicorn/switch-case-braces": "off",
-        "unicorn/throw-new-error": "warn"
+        "unicorn/switch-case-braces": "off"
     }
 }

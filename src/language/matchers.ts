@@ -102,7 +102,7 @@ function getPrefixAtPosition(
 ): TalonMatchPrefix | undefined {
     const line = document.lineAt(position.line);
     const precedingText = line.text.slice(0, position.character);
-    const prefix = precedingText.match(/[\w\d.]+$/)?.[0] ?? "";
+    const prefix = /[\w\d.]+$/.exec(precedingText)?.[0] ?? "";
 
     if (inTalon) {
         if (isInTalonScript(line, position)) {
@@ -152,7 +152,6 @@ function testRegexAtPosition(
 ): boolean {
     return Array.from(lineText.matchAll(regex)).some(
         (match) =>
-            match.index != null &&
             position.character >= match.index &&
             position.character <= match.index + match[0].length,
     );

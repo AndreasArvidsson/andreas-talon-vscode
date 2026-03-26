@@ -16,9 +16,9 @@ export interface Scope {
 }
 
 export class TreeSitter {
-    private queries = new Map<string, Query | undefined>();
+    private readonly queries = new Map<string, Query | undefined>();
 
-    constructor(private parseTreeExtension: ParseTreeExtension) {}
+    constructor(private readonly parseTreeExtension: ParseTreeExtension) {}
 
     getRootNode(document: vscode.TextDocument): Node {
         return this.parseTreeExtension.getTree(document).rootNode;

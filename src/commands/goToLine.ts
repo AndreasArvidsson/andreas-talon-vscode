@@ -6,10 +6,6 @@ export function goToLine(line: number): void {
 
     const documentLine = editor.document.lineAt(line);
 
-    if (documentLine == null) {
-        throw new Error(`No line ${line} in document`);
-    }
-
     const position = new Position(
         documentLine.lineNumber,
         documentLine.firstNonWhitespaceCharacterIndex,

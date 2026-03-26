@@ -5,8 +5,8 @@ import { getSortedSelections } from "../util/getSortedSelections";
 
 export class GetText {
     constructor(
-        private commandServerExtension: CommandServerExtension,
-        private treeSitter: TreeSitter,
+        private readonly commandServerExtension: CommandServerExtension,
+        private readonly treeSitter: TreeSitter,
     ) {}
 
     getDocumentText(): string | null {

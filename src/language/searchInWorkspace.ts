@@ -161,7 +161,7 @@ function getTalonNamespacesFromPython(
     return matches
         .map((m) => ({
             name: m[1] ?? "user",
-            line: fileContent.slice(0, m.index ?? 0).split("\n").length - 1,
+            line: fileContent.slice(0, m.index).split("\n").length - 1,
         }))
         .toSorted((a, b) => a.line - b.line);
 }
@@ -202,7 +202,7 @@ function parsePythonFileInner(
         };
     } else if (type === "capture") {
         getNamespace = (line: number, content: string): string | undefined => {
-            const name = content.match(captureNameRegex)?.[1];
+            const name = captureNameRegex.exec(content)?.[1];
             if (name == null) {
                 return "user";
             }
@@ -273,7 +273,7 @@ function parsePythonMatches(
         // Format name and target text for display
         const name = match[2].replace(/^self\./, "user.");
         const fullName = ns ? `${ns === "self" ? "user" : ns}.${name}` : name;
-        const indentation = match[0].match(/^\s+/)?.[0] ?? "";
+        const indentation = /^\s+/.exec(match[0])?.[0] ?? "";
         const targetText = indentation
             ? match[0].replaceAll(new RegExp(`^${indentation}`, "gm"), "")
             : match[0];

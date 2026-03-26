@@ -224,7 +224,7 @@ export const commandDescriptions = {
         "Git",
         "Get URL to Git repository file webpage.",
         "Optionally include selected line numbers.",
-        "({ useSelection: boolean, useBranch: boolean }): string",
+        "({ useSelection?: boolean, useBranch?: boolean }): string",
     ),
     getGitRepoURL: hidden(
         "Git",

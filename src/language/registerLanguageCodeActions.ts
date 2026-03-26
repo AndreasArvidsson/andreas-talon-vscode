@@ -18,7 +18,7 @@ import type { TreeSitter } from "../treeSitter/TreeSitter";
 abstract class ProviderCodeActions implements CodeActionProvider {
     protected abstract docActionName: string;
 
-    constructor(private treeSitter: TreeSitter) {}
+    constructor(private readonly treeSitter: TreeSitter) {}
 
     provideCodeActions(
         document: TextDocument,
@@ -139,7 +139,7 @@ export function blockCommentToDocComment(text: string): string {
 }
 
 export function lineCommentToDocComment(text: string): string {
-    const indent = text.match(/^\s*/)?.[0] ?? "";
+    const indent = /^\s*/.exec(text)?.[0] ?? "";
     // Replace leading `//` on each line with `*`
     const newText = text.replaceAll(/^(\s*)\/\/\s?/gm, "$1* ");
     // Wrap old comment in `/** */`
