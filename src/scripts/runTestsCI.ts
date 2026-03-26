@@ -1,5 +1,6 @@
 import * as cp from "node:child_process";
 import * as path from "node:path";
+import { exit } from "node:process";
 import {
     downloadAndUnzipVSCode,
     resolveCliArgsFromVSCodeExecutablePath,
@@ -15,7 +16,7 @@ const extensionDependencies = [
     "jrieken.vscode-tree-sitter-query",
 ];
 
-export async function launchVscodeAndRunTests() {
+export async function launchVscodeAndRunTests(): Promise<void> {
     try {
         const workspaceFolder = path.join(__dirname, "../..");
         const extensionTestsPath = path.join(
@@ -41,7 +42,7 @@ export async function launchVscodeAndRunTests() {
     } catch (error) {
         console.error("Test run threw exception:");
         console.error(error);
-        process.exit(1);
+        exit(1);
     }
 }
 

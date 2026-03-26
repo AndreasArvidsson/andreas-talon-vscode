@@ -10,7 +10,8 @@
         "suspicious": "warn",
         "pedantic": "warn",
         "perf": "warn",
-        "style": "warn"
+        "style": "warn",
+        "restriction": "warn"
     },
     "rules": {
         "curly": "warn",
@@ -23,6 +24,7 @@
         ],
         "eslint/arrow-body-style": "off",
         "eslint/capitalized-comments": "off",
+        "eslint/class-methods-use-this": "off",
         "eslint/id-length": "off",
         "eslint/init-declarations": "off",
         "eslint/max-classes-per-file": "off",
@@ -31,6 +33,7 @@
         "eslint/max-params": "off",
         "eslint/max-statements": "off",
         "eslint/naming-convention": "warn",
+        "eslint/no-console": "off",
         "eslint/no-continue": "off",
         "eslint/no-duplicate-imports": [
             "warn",
@@ -38,8 +41,10 @@
                 "allowSeparateTypeImports": true
             }
         ],
+        "eslint/no-eq-null": "off",
         "eslint/no-magic-numbers": "off",
         "eslint/no-negated-condition": "off",
+        "eslint/no-plusplus": "off",
         "eslint/no-restricted-imports": [
             "warn",
             {
@@ -53,6 +58,7 @@
         ],
         "eslint/no-ternary": "off",
         "eslint/no-throw-literal": "warn",
+        "eslint/no-undefined": "off",
         "eslint/no-unused-vars": [
             "warn",
             {
@@ -60,16 +66,23 @@
                 "caughtErrorsIgnorePattern": "^_"
             }
         ],
+        "eslint/no-use-before-define": "off",
+        "eslint/no-void": "off",
         "eslint/prefer-destructuring": "off",
         "eslint/sort-imports": "off",
         "eslint/sort-keys": "off",
         "eslint/sort-vars": "off",
         "func-style": "off",
         "no-warning-comments": "warn",
+        "oxc/no-async-await": "off",
+        "oxc/no-optional-chaining": "off",
+        "oxc/no-rest-spread-properties": "off",
         "typescript/consistent-return": "warn",
         "typescript/consistent-type-imports": "warn",
+        "typescript/explicit-function-return-type": "off",
         "typescript/no-deprecated": "warn",
         "typescript/parameter-properties": "off",
+        "typescript/promise-function-async": "off",
         "typescript/strict-boolean-expressions": [
             "warn",
             {
@@ -78,8 +91,10 @@
         ],
         "unicorn/filename-case": "off",
         "unicorn/no-array-callback-reference": "off",
+        "unicorn/no-array-for-each": "off",
         "unicorn/no-null": "off",
         "unicorn/prefer-at": "off",
+        "unicorn/prefer-module": "off",
         "unicorn/prefer-node-protocol": "warn",
         "unicorn/prefer-spread": "off",
         "unicorn/prefer-ternary": "off",

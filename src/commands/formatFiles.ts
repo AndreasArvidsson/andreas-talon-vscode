@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { getWorkspaceFiles, recursivelyGetFileUris } from "../util/uriUtil";
 
-export async function formatWorkspaceFiles() {
+export async function formatWorkspaceFiles(): Promise<void> {
     const uris = await getWorkspaceFiles();
     await formatDocuments(uris);
 }
@@ -9,12 +9,12 @@ export async function formatWorkspaceFiles() {
 export async function formatSelectedFiles(
     clickedFile: vscode.Uri,
     selectedFiles: vscode.Uri[],
-) {
+): Promise<void> {
     const uris = await recursivelyGetFileUris(selectedFiles);
     await formatDocuments(uris);
 }
 
-async function formatDocuments(uris: vscode.Uri[]) {
+async function formatDocuments(uris: vscode.Uri[]): Promise<void> {
     const increment = 100 / uris.length;
 
     await vscode.window.withProgress(

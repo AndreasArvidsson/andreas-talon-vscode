@@ -87,6 +87,7 @@ async function searchInWorkspaceInner(workspace: WorkspaceFolder) {
             case "dynamic_list":
                 lists.push(r);
                 break;
+            // no default
         }
     });
     return { actions, captures, lists };
@@ -125,7 +126,7 @@ async function searchInDirectory(
 
     const result = await Promise.all(
         promises.map((p) =>
-            p.catch((error) => {
+            p.catch((error: unknown) => {
                 void window.showErrorMessage(getErrorMessage(error));
                 return [];
             }),

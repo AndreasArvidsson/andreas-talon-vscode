@@ -23,18 +23,18 @@ async function update(inc: boolean, value?: number) {
 }
 
 function updateInteger(inc: boolean, text: string, value?: number): number {
-    const original = parseInt(text, 10);
+    const original = Number.parseInt(text, 10);
     const diff = value ?? 1;
     return original + (inc ? diff : -diff);
 }
 
 function updateFloat(inc: boolean, text: string, value?: number): number {
-    const original = parseFloat(text);
+    const original = Number.parseFloat(text);
     const isPercentage = Math.abs(original) <= 1;
     const diff = value ?? (isPercentage ? 0.1 : 1);
     const updated = original + (inc ? diff : -diff);
     // Remove precision problems that would add a lot of extra digits
-    return parseFloat(updated.toPrecision(15)) / 1;
+    return Number.parseFloat(updated.toPrecision(15)) / 1;
 }
 
 export function increment(value?: number): Promise<void> {

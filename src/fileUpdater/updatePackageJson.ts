@@ -16,7 +16,7 @@ interface PackageJson {
     };
 }
 
-export function updatePackageJson() {
+export function updatePackageJson(): ReturnType<typeof json> {
     return json((content: PackageJson | null): PackageJson => {
         if (content == null) {
             return {};

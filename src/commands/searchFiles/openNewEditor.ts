@@ -1,7 +1,7 @@
-import { Uri, languages, window, workspace } from "vscode";
+import { Uri, languages, window, workspace, type TextEditor } from "vscode";
 import { languageId } from "./constants";
 
-export async function openNewEditor() {
+export async function openNewEditor(): Promise<TextEditor> {
     const uri = Uri.file("Search results").with({
         scheme: "untitled",
     });

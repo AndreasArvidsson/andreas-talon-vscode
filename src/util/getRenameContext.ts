@@ -37,7 +37,7 @@ export function getNewFilenameContext(
     };
 }
 
-export function splitName(fullName: string) {
+export function splitName(fullName: string): SplitName {
     const i = fullName.lastIndexOf(".");
 
     // Skip index 0 because we don't want dotfiles

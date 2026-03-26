@@ -1,7 +1,7 @@
 import esbuild, { type BuildOptions } from "esbuild";
 import fastGlob from "fast-glob";
 
-export async function runEsbuild() {
+export async function runEsbuild(): Promise<void> {
     console.log("Running esbuild");
 
     const optionsCommon: BuildOptions = {

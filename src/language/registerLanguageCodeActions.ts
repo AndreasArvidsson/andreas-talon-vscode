@@ -138,12 +138,12 @@ export function blockCommentToDocComment(text: string): string {
     return lines.join("");
 }
 
-export function lineCommentToDocComment(text: string) {
+export function lineCommentToDocComment(text: string): string {
     const indent = text.match(/^\s*/)?.[0] ?? "";
     // Replace leading `//` on each line with `*`
-    text = text.replaceAll(/^(\s*)\/\/\s?/gm, "$1* ");
+    const newText = text.replaceAll(/^(\s*)\/\/\s?/gm, "$1* ");
     // Wrap old comment in `/** */`
-    return `${indent}/**\n${text}\n${indent}*/`;
+    return `${indent}/**\n${newText}\n${indent}*/`;
 }
 
 export function registerLanguageCodeActions(

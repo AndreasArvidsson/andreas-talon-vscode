@@ -1,3 +1,4 @@
+import { exit } from "node:process";
 import { bundleAssets } from "./bundleAssets";
 import { runEsbuild } from "./esbuild";
 
@@ -10,7 +11,7 @@ async function build() {
 }
 
 // oxlint-disable-next-line unicorn/prefer-top-level-await
-void build().catch((error) => {
+void build().catch((error: unknown) => {
     console.error(error);
-    process.exit(1);
+    exit(1);
 });

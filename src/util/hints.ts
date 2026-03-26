@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-non-null-assertion
+
 const refLC = "a".codePointAt(0)!;
 const refUC = "A".codePointAt(0)!;
 

@@ -12,11 +12,11 @@ const debouncer = new Debouncer(() => {
     performUpdate().catch(console.error);
 }, 500);
 
-export function onChangeHandler() {
+export function onChangeHandler(): void {
     debouncer.run();
 }
 
-async function performUpdate() {
+async function performUpdate(): Promise<void> {
     // There can only be one search editor, so we can just find the first visible editor with the correct language ID
     const editor = window.visibleTextEditors.find(
         (e) => e.document.languageId === languageId,

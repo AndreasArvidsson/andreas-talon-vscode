@@ -2,7 +2,9 @@ import * as fs from "node:fs/promises";
 import * as vscode from "vscode";
 import { getErrorMessage } from "./getErrorMessage";
 
-export async function recursivelyGetFileUris(uris: vscode.Uri[]) {
+export async function recursivelyGetFileUris(
+    uris: vscode.Uri[],
+): Promise<vscode.Uri[]> {
     const result = await Promise.all(uris.map(getFileUris));
     return sortUris(result.flat());
 }

@@ -68,7 +68,7 @@ export class GitUtil {
         return getPlatform(repository).getPullRequestsURL();
     }
 
-    async checkout(branches: string[]) {
+    async checkout(branches: string[]): Promise<void> {
         const repository = await this.getRepository();
         const branch = await this.getFirstAvailableBranch(branches, repository);
         if (branch == null) {
@@ -83,11 +83,11 @@ export class GitUtil {
         branches: string[],
         repository?: Repository,
     ): Promise<string | undefined> {
-        repository ??= await this.getRepository();
+        const repo = repository ?? (await this.getRepository());
         for (const branchName of branches) {
             try {
                 // oxlint-disable-next-line no-await-in-loop
-                await repository.getBranch(branchName);
+                await repo.getBranch(branchName);
                 return branchName;
             } catch {
                 // Try the next branch
@@ -194,13 +194,14 @@ function getCommit(repository: Repository): string {
 }
 
 function cleanGitUrl(url: string) {
-    if (url.startsWith("git@")) {
-        url = url.replace(":", "/").replace("git@", "https://");
+    let cleanedUrl = url;
+    if (cleanedUrl.startsWith("git@")) {
+        cleanedUrl = cleanedUrl.replace(":", "/").replace("git@", "https://");
     }
-    if (url.endsWith(".git")) {
-        url = url.slice(0, -4);
+    if (cleanedUrl.endsWith(".git")) {
+        cleanedUrl = cleanedUrl.slice(0, -4);
     }
-    return url;
+    return cleanedUrl;
 }
 
 function getPlatform(repository: Repository): GitPlatform {

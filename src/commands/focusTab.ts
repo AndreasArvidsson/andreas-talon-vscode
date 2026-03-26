@@ -3,13 +3,12 @@ import { commands, window } from "vscode";
 import { focusViewColumn } from "../util/focusViewColumn";
 import { hintToIndex } from "../util/hints";
 
-export async function focusTab(hint?: string): Promise<void> {
+export async function focusTab(hintSource?: string): Promise<void> {
+    const hint = hintSource ?? (await showInputBox());
+
     if (hint == null) {
-        hint = await showInputBox();
-        if (hint == null) {
-            console.warn("Can't focus tab: Missing hint argument.");
-            return;
-        }
+        console.warn("Can't focus tab: Missing hint argument.");
+        return;
     }
 
     const index = hintToIndex(hint);

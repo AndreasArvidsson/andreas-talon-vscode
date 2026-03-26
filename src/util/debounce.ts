@@ -6,7 +6,7 @@ export class Debouncer {
         private debounceDelayMs: number,
     ) {}
 
-    run() {
+    run(): void {
         if (this.timeoutHandle != null) {
             clearTimeout(this.timeoutHandle);
         }
@@ -17,7 +17,7 @@ export class Debouncer {
         }, this.debounceDelayMs);
     }
 
-    dispose() {
+    dispose(): void {
         if (this.timeoutHandle != null) {
             clearTimeout(this.timeoutHandle);
         }

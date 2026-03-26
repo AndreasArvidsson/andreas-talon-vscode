@@ -33,7 +33,7 @@ async function copyAsset(source: string, destination?: string) {
     await copy(fullSource, fullDestination);
 }
 
-export async function bundleAssets() {
+export async function bundleAssets(): Promise<void> {
     console.log("Bundling assets:");
 
     await copyAsset("treeSitter/queries");

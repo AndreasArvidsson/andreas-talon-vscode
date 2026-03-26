@@ -65,7 +65,7 @@ export function matchAll(
     selections: readonly Selection[] | undefined,
     regex: RegExp,
     callback: (match: RegExpExecArray, range: Range) => void,
-) {
+): void {
     // Ranges are always the full line. We don't format parts of a comment.
     const ranges = selections?.map((selection) => {
         if (selection.isSingleLine) {

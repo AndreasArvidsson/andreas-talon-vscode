@@ -16,7 +16,7 @@ import { performSearch } from "./performSearch";
 import { refreshSearchResultsDocument } from "./refreshSearchResultsDocument";
 import { SearchDocumentLinkProvider } from "./SearchDocumentLinkProvider";
 
-export async function searchFiles(query = "") {
+export async function searchFiles(query = ""): Promise<void> {
     const workspaces = await performSearch(query);
     const editor = await openNewEditor();
     await refreshSearchResultsDocument(editor, query, workspaces);
@@ -24,7 +24,7 @@ export async function searchFiles(query = "") {
     editor.selections = [new Selection(postQueryPosition, postQueryPosition)];
 }
 
-export async function searchFilesToggleSelected() {
+export async function searchFilesToggleSelected(): Promise<void> {
     const editor = getActiveEditor();
     const { document, selections } = editor;
     const { query, workspaces } = parseDocument(document);
@@ -42,15 +42,15 @@ export async function searchFilesToggleSelected() {
     await refreshSearchResultsDocument(editor, query, workspaces, false);
 }
 
-export function searchFilesOpenSelected() {
-    return Promise.all(
+export async function searchFilesOpenSelected(): Promise<void> {
+    await Promise.all(
         getSelectedLinks().map((link) =>
             window.showTextDocument(link.uri, { preview: false }),
         ),
     );
 }
 
-export async function searchFilesDeleteSelected() {
+export async function searchFilesDeleteSelected(): Promise<void> {
     const selectedLinks = getSelectedLinks();
 
     if (selectedLinks.length === 0) {

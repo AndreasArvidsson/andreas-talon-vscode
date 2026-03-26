@@ -1,15 +1,13 @@
 import { Selection, window } from "vscode";
 import { getActiveEditor } from "../util/getActiveEditor";
 
-export async function selectTo(lineNumber?: number): Promise<void> {
+export async function selectTo(lineNumberSource?: number): Promise<void> {
     const editor = getActiveEditor();
+    const lineNumber = lineNumberSource ?? (await showInputBox());
 
     if (lineNumber == null) {
-        lineNumber = await showInputBox();
-        if (lineNumber == null) {
-            console.warn("Can't select to: Missing line number argument.");
-            return;
-        }
+        console.warn("Can't select to: Missing line number argument.");
+        return;
     }
 
     const { start, end } = editor.selection;
@@ -33,7 +31,7 @@ async function showInputBox(): Promise<number | undefined> {
         },
     });
     if (value != null) {
-        return parseInt(value.trim(), 10);
+        return Number.parseInt(value.trim(), 10);
     }
     return undefined;
 }
