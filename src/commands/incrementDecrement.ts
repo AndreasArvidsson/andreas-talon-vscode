@@ -7,7 +7,7 @@ async function update(inc: boolean, value?: number) {
         editor.selections.forEach((selection) => {
             const selectionText = editor.document.getText(selection);
 
-            const updatedText = selectionText.replace(
+            const updatedText = selectionText.replaceAll(
                 /-?\d+(\.\d+)?/g,
                 (text) =>
                     text.includes(".")
@@ -23,7 +23,7 @@ async function update(inc: boolean, value?: number) {
 }
 
 function updateInteger(inc: boolean, text: string, value?: number): number {
-    const original = parseInt(text);
+    const original = parseInt(text, 10);
     const diff = value ?? 1;
     return original + (inc ? diff : -diff);
 }

@@ -16,8 +16,8 @@ export function updateReadme(content: string | null): string {
         );
         const indexEnd = content.indexOf("\n## ", indexStart + 4);
         return {
-            pre: content.substring(0, indexStart),
-            post: content.substring(indexEnd),
+            pre: content.slice(0, indexStart),
+            post: content.slice(indexEnd),
         };
     })();
 

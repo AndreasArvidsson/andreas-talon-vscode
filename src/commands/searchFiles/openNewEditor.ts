@@ -10,7 +10,7 @@ export async function openNewEditor() {
         document,
         languageId,
     );
-    return await window.showTextDocument(searchResultsDocument, {
+    return window.showTextDocument(searchResultsDocument, {
         preview: false,
     });
 }

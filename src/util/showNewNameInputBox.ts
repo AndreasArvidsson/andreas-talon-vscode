@@ -10,12 +10,12 @@ export async function showNewNameInputBox(
         value: `${suggestedName}${suggestedExt}`,
         valueSelection: [0, suggestedName.length],
         ignoreFocusOut: true,
-        validateInput: (value) => {
-            if (value.trim()) {
+        validateInput: (input) => {
+            if (input.trim().length > 0) {
                 return null;
             }
             return "Can't be empty";
         },
     });
-    return filename ? filename.trim() : undefined;
+    return filename != null ? filename.trim() : undefined;
 }

@@ -52,10 +52,11 @@ export async function searchInWorkspace(
                 return results.lists;
             case "dynamic_list":
                 throw new Error(`Can't search specifically for dynamic lists`);
-            default:
+            default: {
                 const exhaustiveCheck: never = match.type;
                 // oxlint-disable-next-line typescript/restrict-template-expressions
                 throw new Error(`Unknown match type: ${exhaustiveCheck}`);
+            }
         }
     })();
     if ("name" in match) {
@@ -165,7 +166,7 @@ function parsePythonFileInner(
     regex: RegExp,
 ): SearchResult[] {
     const matches = Array.from(fileContent.matchAll(regex));
-    if (!matches.length) {
+    if (matches.length === 0) {
         return [];
     }
 
@@ -177,7 +178,7 @@ function parsePythonFileInner(
             fileContent,
         );
 
-        if (!namespaces.length) {
+        if (namespaces.length === 0) {
             return [];
         }
 
@@ -195,11 +196,11 @@ function parsePythonFileInner(
     } else if (type === "capture") {
         getNamespace = (line: number, content: string): string | undefined => {
             const name = content.match(captureNameRegex)?.[1];
-            if (!name) {
+            if (name == null) {
                 return "user";
             }
             const index = name.indexOf(".");
-            return index > -1 ? name.substring(0, index) : "";
+            return index > -1 ? name.slice(0, index) : "";
         };
     }
 
@@ -267,7 +268,7 @@ function parsePythonMatches(
         const fullName = ns ? `${ns === "self" ? "user" : ns}.${name}` : name;
         const indentation = match[0].match(/^\s+/)?.[0] ?? "";
         const targetText = indentation
-            ? match[0].replace(new RegExp(`^${indentation}`, "gm"), "")
+            ? match[0].replaceAll(new RegExp(`^${indentation}`, "gm"), "")
             : match[0];
 
         results.push({

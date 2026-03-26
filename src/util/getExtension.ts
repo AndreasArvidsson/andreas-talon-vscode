@@ -3,7 +3,7 @@ import type { CommandServerExtension } from "../typings/commandServer";
 import type { GitExtension } from "../typings/git";
 import type { ParseTreeExtension } from "../typings/parserTree";
 
-async function getExtension<T>(name: string): Promise<T> {
+function getExtension<T>(name: string): Promise<T> {
     const extension = vscode.extensions.getExtension(name);
 
     if (extension == null) {

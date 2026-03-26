@@ -10,6 +10,9 @@ export function getLabelFormat(
     const format = vscode.workspace
         .getConfiguration()
         .get<string>(labelFormatSetting);
+    if (format == null) {
+        return undefined;
+    }
     switch (format) {
         case "default":
             return getConflictPath(tab, uri);

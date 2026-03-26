@@ -22,7 +22,9 @@ export default async function openNewEditor(
         ? EndOfLine.CRLF
         : EndOfLine.LF;
     if (eol !== editor.document.eol) {
-        await editor.edit((editBuilder) => editBuilder.setEndOfLine(eol));
+        await editor.edit((editBuilder) => {
+            editBuilder.setEndOfLine(eol);
+        });
     }
 
     editor.options = { tabSize: 4, insertSpaces: true };

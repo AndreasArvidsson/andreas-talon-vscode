@@ -7,7 +7,8 @@
     },
     "categories": {
         "correctness": "warn",
-        "suspicious": "warn"
+        "suspicious": "warn",
+        "pedantic": "warn"
     },
     "rules": {
         "curly": "warn",
@@ -18,7 +19,11 @@
                 "null": "never"
             }
         ],
+        "eslint/max-classes-per-file": "off",
+        "eslint/max-lines-per-function": "off",
+        "eslint/max-lines": "off",
         "eslint/naming-convention": "warn",
+        "eslint/no-negated-condition": "off",
         "eslint/no-restricted-imports": [
             "warn",
             {
@@ -38,10 +43,19 @@
                 "caughtErrorsIgnorePattern": "^_"
             }
         ],
+        "eslint/sort-vars": "off",
         "no-warning-comments": "warn",
         "typescript/consistent-return": "warn",
         "typescript/consistent-type-imports": "warn",
         "typescript/no-deprecated": "warn",
+        "typescript/strict-boolean-expressions": [
+            "warn",
+            {
+                "allowNullableBoolean": true
+            }
+        ],
+        "unicorn/no-array-callback-reference": "off",
+        "unicorn/prefer-at": "off",
         "unicorn/prefer-node-protocol": "warn",
         "unicorn/throw-new-error": "warn"
     }

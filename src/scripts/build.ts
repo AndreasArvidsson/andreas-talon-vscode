@@ -9,6 +9,7 @@ async function build() {
     await bundleAssets();
 }
 
+// oxlint-disable-next-line unicorn/prefer-top-level-await
 void build().catch((e) => {
     console.error(e);
     process.exit(1);

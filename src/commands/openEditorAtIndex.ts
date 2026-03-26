@@ -29,7 +29,7 @@ async function showInputBox(): Promise<number | undefined> {
         },
     });
     if (value != null) {
-        return parseInt(value.trim());
+        return parseInt(value.trim(), 10);
     }
     return undefined;
 }

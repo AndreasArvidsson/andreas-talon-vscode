@@ -48,7 +48,7 @@ function getMatchAtPosition(
     inTalon: boolean,
 ): TalonMatchName | undefined {
     const name = getNameAtPosition(document, position);
-    if (!name) {
+    if (name == null) {
         return undefined;
     }
 
@@ -101,17 +101,15 @@ function getPrefixAtPosition(
     inTalon: boolean,
 ): TalonMatchPrefix | undefined {
     const line = document.lineAt(position.line);
-    const precedingText = line.text.substring(0, position.character);
+    const precedingText = line.text.slice(0, position.character);
     const prefix = precedingText.match(/[\w\d.]+$/)?.[0] ?? "";
 
     if (inTalon) {
         if (isInTalonScript(line, position)) {
             return { type: "action", prefix };
         }
-    } else {
-        if (prefix.startsWith("actions.")) {
-            return { type: "action", prefix: prefix.substring(8) };
-        }
+    } else if (prefix.startsWith("actions.")) {
+        return { type: "action", prefix: prefix.slice(8) };
     }
 
     const prevChar = precedingText.at(-prefix.length - 1) ?? "";

@@ -20,19 +20,19 @@ import { searchInWorkspace } from "./searchInWorkspace";
 import { searchInDefaultTalonActions } from "./talonDefaultActions";
 
 abstract class DefinitionProviderBase implements DefinitionProvider {
-    async provideDefinition(
+    provideDefinition(
         document: TextDocument,
         position: Position,
         _token: CancellationToken,
     ): Promise<DefinitionLink[]> {
         const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
         if (!workspaceFolder) {
-            return [];
+            return Promise.resolve([]);
         }
 
         const match = this.getMatchAtPosition(document, position);
         if (!match) {
-            return [];
+            return Promise.resolve([]);
         }
 
         return searchInWorkspace(workspaceFolder, match);

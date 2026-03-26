@@ -11,8 +11,8 @@ const extensionDependencies = [
     "pokey.parse-tree",
 
     // Register necessary language-IDs for tests
-    "mrob95.vscode-talonscript", // talon
-    "jrieken.vscode-tree-sitter-query", // scm
+    "mrob95.vscode-talonscript",
+    "jrieken.vscode-tree-sitter-query",
 ];
 
 export async function launchVscodeAndRunTests() {
@@ -90,4 +90,5 @@ function installExtensionDependencies(vscodeExecutablePath: string) {
     console.log("Finished installing dependency extensions");
 }
 
+// oxlint-disable-next-line unicorn/prefer-top-level-await
 void launchVscodeAndRunTests();

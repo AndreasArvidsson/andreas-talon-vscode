@@ -94,8 +94,8 @@ export function registerCommands(
         setSetting,
         executeCommands,
         getWorkspaceFolders: () => {
-            if (!vscode.workspace.workspaceFolders) {
-                return undefined;
+            if (vscode.workspace.workspaceFolders == null) {
+                return [];
             }
             return vscode.workspace.workspaceFolders.map((folder) => {
                 const uri = folder.uri;

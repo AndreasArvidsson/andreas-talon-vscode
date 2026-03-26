@@ -40,9 +40,9 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
         });
 
         this.mainDisposable = vscode.Disposable.from(
-            treeView.onDidChangeVisibility(() =>
-                this.onVisibilityChange(treeView.visible),
-            ),
+            treeView.onDidChangeVisibility(() => {
+                this.onVisibilityChange(treeView.visible);
+            }),
             treeView,
         );
     }
@@ -50,14 +50,16 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
     private onVisibilityChange(visible: boolean) {
         if (visible) {
             if (this.onTabChangeDisposable == null) {
-                const onTabChange = () => this._onDidChangeTreeData.fire();
+                const onTabChange = () => {
+                    this._onDidChangeTreeData.fire();
+                };
                 this.onTabChangeDisposable = vscode.Disposable.from(
-                    vscode.window.tabGroups.onDidChangeTabGroups(() =>
-                        onTabChange(),
-                    ),
-                    vscode.window.tabGroups.onDidChangeTabs(() =>
-                        onTabChange(),
-                    ),
+                    vscode.window.tabGroups.onDidChangeTabGroups(() => {
+                        onTabChange();
+                    }),
+                    vscode.window.tabGroups.onDidChangeTabs(() => {
+                        onTabChange();
+                    }),
                     vscode.workspace.onDidChangeConfiguration((scope) => {
                         if (scope.affectsConfiguration(labelFormatSetting)) {
                             onTabChange();
@@ -65,11 +67,9 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
                     }),
                 );
             }
-        } else {
-            if (this.onTabChangeDisposable != null) {
-                this.onTabChangeDisposable.dispose();
-                this.onTabChangeDisposable = undefined;
-            }
+        } else if (this.onTabChangeDisposable != null) {
+            this.onTabChangeDisposable.dispose();
+            this.onTabChangeDisposable = undefined;
         }
     }
 

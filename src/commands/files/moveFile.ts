@@ -18,15 +18,15 @@ export async function moveFile(): Promise<void> {
     const uri = editor.document.uri;
     const folder = await showFolderPicker(uri);
 
-    if (folder && folder !== getDir(uri)) {
+    if (folder != null && folder !== getDir(uri)) {
         const filename = getFilename(uri);
         const newPath = path.join(folder, filename);
         await fileSystem.moveFile(uri, Uri.file(newPath));
     }
 }
 
-function showFolderPicker(uri: Uri): Promise<string | undefined> {
-    return new Promise<string | undefined>((resolve) => {
+function showFolderPicker(uri: Uri): Promise<string | null> {
+    return new Promise<string | null>((resolve) => {
         const workspaceFolder = getWorkspaceFolder(uri);
         const workspaceDir = workspaceFolder.uri.fsPath;
         const fileIgnorer = ignore().add(IGNORE_FOLDERS);
@@ -34,18 +34,18 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
         quickPick.ignoreFocusOut = true;
 
         async function changeDirectory(dir: string, select?: string) {
-            const items: FileQuickPickItem[] = [];
-
-            items.push({
-                label: "$(file) Move file here",
-                path: dir,
-                move: true,
-            });
-            items.push({
-                label: "",
-                path: "",
-                kind: QuickPickItemKind.Separator,
-            });
+            const items: FileQuickPickItem[] = [
+                {
+                    label: "$(file) Move file here",
+                    path: dir,
+                    move: true,
+                },
+                {
+                    label: "",
+                    path: "",
+                    kind: QuickPickItemKind.Separator,
+                },
+            ];
 
             if (dir !== workspaceDir) {
                 items.push({
@@ -96,7 +96,7 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
         });
 
         quickPick.onDidHide(() => {
-            resolve(undefined);
+            resolve(null);
         });
 
         void changeDirectory(getDir(uri));

@@ -53,15 +53,17 @@ export function searchFilesOpenSelected() {
 export async function searchFilesDeleteSelected() {
     const selectedLinks = getSelectedLinks();
 
-    const remove =
-        selectedLinks.length > 0 &&
-        (await window.showInformationMessage(
-            `Are you sure you want to delete ${selectedLinks.length} files?`,
-            { modal: true },
-            "Delete files",
-        ));
+    if (selectedLinks.length === 0) {
+        return;
+    }
 
-    if (remove) {
+    const remove = await window.showInformationMessage(
+        `Are you sure you want to delete ${selectedLinks.length} files?`,
+        { modal: true },
+        "Delete files",
+    );
+
+    if (remove != null) {
         await Promise.all(selectedLinks.map((link) => deleteFile(link.uri)));
     }
 }

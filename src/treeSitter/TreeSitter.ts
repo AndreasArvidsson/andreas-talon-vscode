@@ -34,13 +34,12 @@ export class TreeSitter {
         let smallest: Scope | undefined = undefined;
 
         for (const scope of scopes) {
-            if (scope.name === name && scope.domain.contains(position)) {
-                if (
-                    smallest == null ||
-                    smallest.domain.contains(scope.domain)
-                ) {
-                    smallest = scope;
-                }
+            if (
+                scope.name === name &&
+                scope.domain.contains(position) &&
+                (smallest == null || smallest.domain.contains(scope.domain))
+            ) {
+                smallest = scope;
             }
         }
 
@@ -90,7 +89,7 @@ function loadQueryFileForLanguage(languageId: string): string | undefined {
 function loadQueryFile(file: string): string {
     const content = fs.readFileSync(file, "utf-8");
 
-    return content.replace(
+    return content.replaceAll(
         /^;; import (\w+)$/gm,
         (_match, filename: string) => {
             const importFile = getQueryFile(filename);

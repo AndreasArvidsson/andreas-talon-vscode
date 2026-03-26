@@ -83,9 +83,7 @@ export class GitUtil {
         branches: string[],
         repository?: Repository,
     ): Promise<string | undefined> {
-        if (repository == null) {
-            repository = await this.getRepository();
-        }
+        repository ??= await this.getRepository();
         for (const branchName of branches) {
             try {
                 await repository.getBranch(branchName);
@@ -119,7 +117,9 @@ export class GitUtil {
                     filePath === rootPath || filePath.startsWith(`${rootPath}/`)
                 );
             })
-            .toSorted((a, b) => b.rootUri.path.length - a.rootUri.path.length)[0];
+            .toSorted(
+                (a, b) => b.rootUri.path.length - a.rootUri.path.length,
+            )[0];
 
         if (repository == null) {
             throw new Error(`Can't find Git repository for file: ${filePath}`);
@@ -130,7 +130,7 @@ export class GitUtil {
 }
 
 function getRelativeFilepath(repository: Repository, filePath: string) {
-    return filePath.substring(repository.rootUri.path.length + 1);
+    return filePath.slice(repository.rootUri.path.length + 1);
 }
 
 function validateUnchangedDocument(
@@ -170,7 +170,7 @@ function getRemote(repository: Repository): Remote {
 function getRemoteUrl(repository: Repository) {
     const remote = getRemote(repository);
     const url = remote.fetchUrl ?? remote.pushUrl;
-    if (!url) {
+    if (url == null) {
         throw new Error(`Remote '${remote.name}' has no fetch or push url`);
     }
     return url;
@@ -178,7 +178,7 @@ function getRemoteUrl(repository: Repository) {
 
 function getBranch(repository: Repository): string {
     const branch = repository.state.HEAD?.name;
-    if (!branch) {
+    if (branch == null) {
         throw new Error("Can't find Git branch");
     }
     return branch;
@@ -186,7 +186,7 @@ function getBranch(repository: Repository): string {
 
 function getCommit(repository: Repository): string {
     const commit = repository.state.HEAD?.commit;
-    if (!commit) {
+    if (commit == null) {
         throw new Error("Can't find Git commit");
     }
     return commit;
@@ -197,7 +197,7 @@ function cleanGitUrl(url: string) {
         url = url.replace(":", "/").replace("git@", "https://");
     }
     if (url.endsWith(".git")) {
-        url = url.substring(0, url.length - 4);
+        url = url.slice(0, -4);
     }
     return url;
 }

@@ -6,11 +6,11 @@ import type {
     SearchResultsWorkspace,
 } from "./searchFiles.types";
 
-export async function performSearch(
+export function performSearch(
     query: string,
 ): Promise<SearchResultsWorkspace<PartialSearchResultFile>[]> {
     if (query.length === 0 || workspace.workspaceFolders == null) {
-        return [];
+        return Promise.resolve([]);
     }
 
     return Promise.all(
@@ -24,7 +24,7 @@ export async function performWorkspaceSearch(
     ws: WorkspaceFolder,
     query: string,
 ): Promise<SearchResultsWorkspace<PartialSearchResultFile>> {
-    const queryPattern = query.replace(/\s+/g, "*");
+    const queryPattern = query.replaceAll(/\s+/g, "*");
 
     const files = await fastGlob(`**/*${queryPattern}*`, {
         cwd: ws.uri.fsPath,
