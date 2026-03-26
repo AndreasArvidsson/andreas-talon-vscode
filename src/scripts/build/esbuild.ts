@@ -23,7 +23,6 @@ export async function runEsbuild(): Promise<void> {
     await esbuild.build({
         ...optionsCommon,
         entryPoints: [
-            "src/fileUpdater/index.ts",
             "src/test/testUtil/runAllTests.ts",
             ...fastGlob.sync("src/test/**/*.test.ts"),
         ],

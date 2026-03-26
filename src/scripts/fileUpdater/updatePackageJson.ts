@@ -1,7 +1,7 @@
 import { json } from "file-updater";
-import { commandDescriptions } from "../commands/commands";
-import { getFullCommand } from "../util/getFullCommand";
-import { objectEntries } from "../util/objectUtil";
+import { commandDescriptions } from "../../commands/commands";
+import { getFullCommand } from "../../util/getFullCommand";
+import { objectEntries } from "../../util/objectUtil";
 
 interface Command {
     category: "Andreas";
