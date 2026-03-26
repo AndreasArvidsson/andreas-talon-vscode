@@ -9,12 +9,12 @@ export async function runEsbuild(): Promise<void> {
         bundle: true,
         format: "cjs",
         platform: "node",
-        outdir: "out",
         external: ["vscode", "prettier", "mocha"],
     };
 
     await esbuild.build({
         ...optionsCommon,
+        outdir: "out",
         entryPoints: ["src/extension.ts"],
         minify: true,
         sourcemap: true,
@@ -22,8 +22,8 @@ export async function runEsbuild(): Promise<void> {
 
     await esbuild.build({
         ...optionsCommon,
+        outdir: "out/test",
         entryPoints: [
-            "src/fileUpdater/index.ts",
             "src/test/testUtil/runAllTests.ts",
             ...fastGlob.sync("src/test/**/*.test.ts"),
         ],
