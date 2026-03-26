@@ -1,8 +1,5 @@
-import {
-    DocumentLink,
-    type DocumentLinkProvider,
-    type TextDocument,
-} from "vscode";
+import { DocumentLink } from "vscode";
+import type { DocumentLinkProvider, TextDocument } from "vscode";
 import { parseDocument } from "./parseDocument";
 
 export class SearchDocumentLinkProvider implements DocumentLinkProvider {

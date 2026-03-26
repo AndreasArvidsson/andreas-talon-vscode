@@ -1,11 +1,12 @@
 import * as vscode from "vscode";
 
 export async function printCommands(): Promise<void> {
-    const commands = (await vscode.commands.getCommands())
-        .filter((c) => !c.startsWith("_"))
-        .sort();
+    const commands = await vscode.commands.getCommands();
 
-    commands.forEach((c) => {
-        console.log(c);
-    });
+    commands
+        .filter((c) => !c.startsWith("_"))
+        .toSorted()
+        .forEach((c) => {
+            console.log(c);
+        });
 }

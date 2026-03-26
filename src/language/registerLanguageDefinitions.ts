@@ -9,8 +9,8 @@ import type {
 import {
     Disposable,
     Hover,
-    languages,
     MarkdownString,
+    languages,
     workspace,
 } from "vscode";
 import { getFilename } from "../util/fileSystem";
@@ -20,19 +20,19 @@ import { searchInWorkspace } from "./searchInWorkspace";
 import { searchInDefaultTalonActions } from "./talonDefaultActions";
 
 abstract class DefinitionProviderBase implements DefinitionProvider {
-    async provideDefinition(
+    provideDefinition(
         document: TextDocument,
         position: Position,
         _token: CancellationToken,
     ): Promise<DefinitionLink[]> {
         const workspaceFolder = workspace.getWorkspaceFolder(document.uri);
         if (!workspaceFolder) {
-            return [];
+            return Promise.resolve([]);
         }
 
         const match = this.getMatchAtPosition(document, position);
         if (!match) {
-            return [];
+            return Promise.resolve([]);
         }
 
         return searchInWorkspace(workspaceFolder, match);
@@ -116,7 +116,7 @@ function cleanHoverCode(text: string): string {
     // Remove talon-list files context
     if (lines[0].startsWith("list:")) {
         const index = lines.findIndex((l) => l.startsWith("-"));
-        if (index > -1) {
+        if (index !== -1) {
             lines = lines.slice(index + 1);
         }
     }
@@ -124,7 +124,7 @@ function cleanHoverCode(text: string): string {
     return lines
         .filter((l) => {
             const lt = l.trimStart();
-            return lt !== "" && lt[0] !== "#";
+            return lt !== "" && !lt.startsWith("#");
         })
         .join("\n");
 }

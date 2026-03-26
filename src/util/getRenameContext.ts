@@ -32,12 +32,12 @@ export function getNewFilenameContext(
         dir: getDir(uri),
         filename,
         file: splitName(filename),
-        input: inputName ? splitName(inputName) : undefined,
+        input: inputName != null ? splitName(inputName) : undefined,
         selected: selected ? splitName(selected) : undefined,
     };
 }
 
-export function splitName(fullName: string) {
+export function splitName(fullName: string): SplitName {
     const i = fullName.lastIndexOf(".");
 
     // Skip index 0 because we don't want dotfiles
@@ -47,15 +47,15 @@ export function splitName(fullName: string) {
         };
     }
 
-    let name = fullName.substring(0, i);
-    let ext = fullName.substring(i);
+    let name = fullName.slice(0, i);
+    let ext = fullName.slice(i);
 
     // For convenience treat .test as part of the extension
     if (name.endsWith(".test")) {
         const i2 = name.lastIndexOf(".", i - 1);
         if (i2 > 0) {
-            name = name.substring(0, i2);
-            ext = fullName.substring(i2);
+            name = name.slice(0, i2);
+            ext = fullName.slice(i2);
         }
     }
 

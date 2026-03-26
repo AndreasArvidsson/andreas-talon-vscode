@@ -3,18 +3,19 @@ import type { CommandServerExtension } from "../typings/commandServer";
 import type { GitExtension } from "../typings/git";
 import type { ParseTreeExtension } from "../typings/parserTree";
 
-async function getExtension<T>(name: string): Promise<T> {
+function getExtension<T>(name: string): Promise<T> {
     const extension = vscode.extensions.getExtension(name);
 
-    if (!extension) {
+    if (extension == null) {
         console.log("Available extensions:");
-        for (const extension of vscode.extensions.all.map((e) => e.id).sort()) {
-            console.log(`  ${extension}`);
+        for (const ext of vscode.extensions.all.map((e) => e.id).toSorted()) {
+            console.log(`  ${ext}`);
         }
 
-        throw Error(`Depends on missing extension '${name}'`);
+        throw new Error(`Depends on missing extension '${name}'`);
     }
 
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     return extension.activate() as Promise<T>;
 }
 

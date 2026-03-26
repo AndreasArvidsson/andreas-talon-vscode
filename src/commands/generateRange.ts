@@ -13,7 +13,7 @@ export async function generateRange(start = 1): Promise<void> {
     });
 
     if (!wereEditsApplied) {
-        throw Error("Couldn't apply edits for generate range");
+        throw new Error("Couldn't apply edits for generate range");
     }
 
     // Replace edits will select the new content. Move selection after.

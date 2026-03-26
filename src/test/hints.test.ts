@@ -1,4 +1,4 @@
-import * as assert from "node:assert";
+import * as assert from "node:assert/strict";
 import { hintToIndex, indexToHint } from "../util/hints";
 
 const fixtures: Record<string, number> = {

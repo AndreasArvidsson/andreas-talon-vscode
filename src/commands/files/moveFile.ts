@@ -1,6 +1,6 @@
+import * as path from "node:path";
 import { IGNORE_FOLDERS } from "@cursorless/talon-tools";
 import ignore from "ignore";
-import * as path from "node:path";
 import type { QuickPickItem, WorkspaceFolder } from "vscode";
 import { FileType, QuickPickItemKind, Uri, window, workspace } from "vscode";
 import * as fileSystem from "../../util/fileSystem";
@@ -15,18 +15,18 @@ interface FileQuickPickItem extends QuickPickItem {
 
 export async function moveFile(): Promise<void> {
     const editor = getActiveFileSchemaEditor();
-    const uri = editor.document.uri;
+    const { uri } = editor.document;
     const folder = await showFolderPicker(uri);
 
-    if (folder && folder !== getDir(uri)) {
+    if (folder != null && folder !== getDir(uri)) {
         const filename = getFilename(uri);
         const newPath = path.join(folder, filename);
         await fileSystem.moveFile(uri, Uri.file(newPath));
     }
 }
 
-function showFolderPicker(uri: Uri): Promise<string | undefined> {
-    return new Promise<string | undefined>((resolve) => {
+function showFolderPicker(uri: Uri): Promise<string | null> {
+    return new Promise<string | null>((resolve) => {
         const workspaceFolder = getWorkspaceFolder(uri);
         const workspaceDir = workspaceFolder.uri.fsPath;
         const fileIgnorer = ignore().add(IGNORE_FOLDERS);
@@ -34,18 +34,18 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
         quickPick.ignoreFocusOut = true;
 
         async function changeDirectory(dir: string, select?: string) {
-            const items: FileQuickPickItem[] = [];
-
-            items.push({
-                label: "$(file) Move file here",
-                path: dir,
-                move: true,
-            });
-            items.push({
-                label: "",
-                path: "",
-                kind: QuickPickItemKind.Separator,
-            });
+            const items: FileQuickPickItem[] = [
+                {
+                    label: "$(file) Move file here",
+                    path: dir,
+                    move: true,
+                },
+                {
+                    label: "",
+                    path: "",
+                    kind: QuickPickItemKind.Separator,
+                },
+            ];
 
             if (dir !== workspaceDir) {
                 items.push({
@@ -55,8 +55,7 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
                 });
             }
 
-            const uri = Uri.file(dir);
-            const files = await workspace.fs.readDirectory(uri);
+            const files = await workspace.fs.readDirectory(Uri.file(dir));
 
             for (const [name, type] of files) {
                 if (type === FileType.Directory) {
@@ -97,7 +96,7 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
         });
 
         quickPick.onDidHide(() => {
-            resolve(undefined);
+            resolve(null);
         });
 
         void changeDirectory(getDir(uri));
@@ -110,7 +109,7 @@ function getWorkspaceFolder(uri: Uri): WorkspaceFolder {
     const folder = workspace.getWorkspaceFolder(uri);
 
     if (folder == null) {
-        throw Error("Can't find workspace for file");
+        throw new Error("Can't find workspace for file");
     }
 
     return folder;

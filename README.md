@@ -79,7 +79,7 @@ Many of the commands take arguments and return values that can only be used with
   Get first available branch.
 - `andreas.gitCheckout(...branches: string[])` \
   Checkout git branch. Uses first branch that exists.
-- `andreas.getGitFileURL({ useSelection: boolean, useBranch: boolean }): string` \
+- `andreas.getGitFileURL({ useSelection?: boolean, useBranch?: boolean }): string` \
   Get URL to Git repository file webpage. Optionally include selected line numbers.
 - `andreas.getGitRepoURL(): string` \
   Get URL to Git repository webpage.
@@ -98,7 +98,7 @@ Many of the commands take arguments and return values that can only be used with
   Set setting for vscode, either globally or for the current workspace/folder
 - `andreas.executeCommands(commands: string[])` \
   Sequentially execute multiple commands. Useful for keybindings.
-- `andreas.getWorkspaceFolders(): string[] | undefined` \
+- `andreas.getWorkspaceFolders(): string[]` \
   Get an array of file system paths for workspace folders
 - `andreas.printCommands()` \
   Print available commands.

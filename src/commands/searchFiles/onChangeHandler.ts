@@ -4,22 +4,23 @@ import { languageId } from "./constants";
 import { parseDocument } from "./parseDocument";
 import { performSearch } from "./performSearch";
 import {
-    lastQuery,
+    getLastQuery,
     refreshSearchResultsDocument,
 } from "./refreshSearchResultsDocument";
 
 const debouncer = new Debouncer(() => {
+    // oxlint-disable-next-line promise/prefer-await-to-then
     performUpdate().catch(console.error);
 }, 500);
 
-export function onChangeHandler() {
+export function onChangeHandler(): void {
     debouncer.run();
 }
 
-async function performUpdate() {
+async function performUpdate(): Promise<void> {
     // There can only be one search editor, so we can just find the first visible editor with the correct language ID
     const editor = window.visibleTextEditors.find(
-        (editor) => editor.document.languageId === languageId,
+        (e) => e.document.languageId === languageId,
     );
 
     if (editor == null) {
@@ -28,7 +29,7 @@ async function performUpdate() {
 
     const { query } = parseDocument(editor.document);
 
-    if (query === lastQuery) {
+    if (query === getLastQuery()) {
         return;
     }
 

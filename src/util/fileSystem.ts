@@ -1,6 +1,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as vscode from "vscode";
+import { getErrorMessage } from "./getErrorMessage";
 
 export async function createFile(uri: vscode.Uri): Promise<void> {
     assertNonExistingFile(uri);
@@ -22,11 +23,13 @@ export async function copyFile(
 
     try {
         await vscode.workspace.fs.copy(source, destination);
-    } catch (ex) {
-        const message = ex instanceof Error ? ex.message : String(ex);
-        throw new Error(`Failed to copy file: ${source.fsPath}. ${message}`, {
-            cause: ex,
-        });
+    } catch (error) {
+        throw new Error(
+            `Failed to copy file: ${source.fsPath}. ${getErrorMessage(error)}`,
+            {
+                cause: error,
+            },
+        );
     }
 }
 
@@ -90,7 +93,7 @@ export function getDir(uri: vscode.Uri): string {
 function assertNonExistingFile(uri: vscode.Uri) {
     if (fileExists(uri)) {
         const filename = getFilename(uri);
-        throw Error(`File '${filename}' already exists`);
+        throw new Error(`File '${filename}' already exists`);
     }
 }
 

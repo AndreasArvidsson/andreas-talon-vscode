@@ -1,4 +1,4 @@
-import * as assert from "node:assert";
+import * as assert from "node:assert/strict";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
@@ -44,7 +44,7 @@ suite("performSearch", () => {
 
     test("Find files with .ts extension", async () => {
         const workspaceResult = await performWorkspaceSearch(workspace, ".ts");
-        assert.deepStrictEqual(
+        assert.deepEqual(
             workspaceResult.files.map((file) => file.path),
             [
                 "apps/my app.ts",
@@ -57,7 +57,7 @@ suite("performSearch", () => {
 
     test("Find files named apps", async () => {
         const workspaceResult = await performWorkspaceSearch(workspace, "apps");
-        assert.deepStrictEqual(
+        assert.deepEqual(
             workspaceResult.files.map((file) => file.path),
             ["src/apps.ts"],
         );
@@ -68,7 +68,7 @@ suite("performSearch", () => {
             workspace,
             "APPS.ts",
         );
-        assert.deepStrictEqual(
+        assert.deepEqual(
             workspaceResult.files.map((file) => file.path),
             ["src/apps.ts"],
         );
@@ -79,7 +79,7 @@ suite("performSearch", () => {
             workspace,
             "my app",
         );
-        assert.deepStrictEqual(
+        assert.deepEqual(
             workspaceResult.files.map((file) => file.path),
             ["apps/my app.ts", "src/apps/my-app.js", "src/apps/sub/myApp.ts"],
         );
@@ -90,7 +90,7 @@ suite("performSearch", () => {
             workspace,
             "apps/",
         );
-        assert.deepStrictEqual(
+        assert.deepEqual(
             workspaceResult.files.map((file) => file.path),
             ["apps/my app.ts", "src/apps/my-app.js"],
         );
@@ -101,7 +101,7 @@ suite("performSearch", () => {
             workspace,
             "apps/*",
         );
-        assert.deepStrictEqual(
+        assert.deepEqual(
             workspaceResult.files.map((file) => file.path),
             ["apps/my app.ts", "src/apps/my-app.js", "src/apps/sub/myApp.ts"],
         );
@@ -118,7 +118,7 @@ suite("performSearch", () => {
                 workspace,
                 ".ts",
             );
-            assert.deepStrictEqual(
+            assert.deepEqual(
                 workspaceResult.files.map((file) => file.path),
                 ["src/apps.ts", "src/apps/sub/myApp.ts"],
             );

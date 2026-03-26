@@ -1,5 +1,5 @@
 import type { TextEditor } from "vscode";
-import { commands, EndOfLine, window, workspace } from "vscode";
+import { EndOfLine, commands, window, workspace } from "vscode";
 import { getParseTreeExtension } from "../../util/getExtension";
 
 interface Options {
@@ -7,14 +7,13 @@ interface Options {
     content: string;
 }
 
-export default async function openNewEditor(
-    options: Options,
-): Promise<TextEditor> {
+export async function openNewEditor(options: Options): Promise<TextEditor> {
     await commands.executeCommand("workbench.action.closeAllEditors");
 
     const document = await workspace.openTextDocument(options);
 
-    await (await getParseTreeExtension()).loadLanguage(options.language);
+    const parseTreeExtension = await getParseTreeExtension();
+    await parseTreeExtension.loadLanguage(options.language);
 
     const editor = await window.showTextDocument(document);
 
@@ -22,7 +21,9 @@ export default async function openNewEditor(
         ? EndOfLine.CRLF
         : EndOfLine.LF;
     if (eol !== editor.document.eol) {
-        await editor.edit((editBuilder) => editBuilder.setEndOfLine(eol));
+        await editor.edit((editBuilder) => {
+            editBuilder.setEndOfLine(eol);
+        });
     }
 
     editor.options = { tabSize: 4, insertSpaces: true };

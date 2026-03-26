@@ -1,14 +1,14 @@
 import type { Range, Selection, TextDocument } from "vscode";
-import type { Change, CommentFormatter, CommentMatch } from "./types";
+import type { Change, CommentFormatter } from "./types";
 import { isValidLine, matchAll, parseTokens } from "./utils";
 
 const prefix = "<!--";
 const suffix = "-->";
 
 export class XmlFormatter implements CommentFormatter {
-    private regex = /^[\t ]*(<!--[\s\S]*?-->)/gm;
+    private readonly regex = /^[\t ]*(<!--[\s\S]*?-->)/gm;
 
-    constructor(private lineWidth: number) {}
+    constructor(private readonly lineWidth: number) {}
 
     public parse(
         document: TextDocument,
@@ -33,12 +33,6 @@ export class XmlFormatter implements CommentFormatter {
         return changes;
     }
 
-    private parseMatch(match: RegExpExecArray): CommentMatch {
-        const isBlockComment = match[1] != null;
-        const text = isBlockComment ? match[1] : match[2];
-        return { text, isBlockComment };
-    }
-
     private parseBlockComment(
         range: Range,
         text: string,
@@ -48,21 +42,21 @@ export class XmlFormatter implements CommentFormatter {
         const textContent = text.slice(prefix.length, -suffix.length);
         const linePrefix = "";
         const lines = textContent.split("\n");
-        const tokens = lines.flatMap((line, index) => {
-            const text = line.trim();
-            if (isValidLine(text)) {
+        const tokens = lines.flatMap((sourceLine, index) => {
+            const line = sourceLine.trim();
+            if (isValidLine(line)) {
                 // Split on spaces
-                return text
+                return line
                     .split(/[ ]+/g)
                     .map((token) => ({ text: token, preserve: false }));
             }
             if (
-                text.length === 0 &&
+                line.length === 0 &&
                 (index === 0 || index === lines.length - 1)
             ) {
                 return [];
             }
-            return [{ text, preserve: true }];
+            return [{ text: line, preserve: true }];
         });
 
         const updatedLines = parseTokens(
@@ -76,8 +70,8 @@ export class XmlFormatter implements CommentFormatter {
             const isSingleLine =
                 lines.length === 1 && updatedLines.length === 1;
             if (isSingleLine) {
-                const text = updatedLines[0].trimStart();
-                return `${indentation}${prefix} ${text} ${suffix}`;
+                const line = updatedLines[0].trimStart();
+                return `${indentation}${prefix} ${line} ${suffix}`;
             }
             return `${indentation}${prefix}\n${updatedLines.join("\n")}\n${indentation}${suffix}`;
         })();

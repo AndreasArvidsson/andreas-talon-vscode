@@ -5,24 +5,117 @@
         "typeAware": true,
         "typeCheck": true
     },
+    "env": {
+        "node": true,
+        "mocha": true
+    },
+    "plugins": [
+        "eslint",
+        "typescript",
+        "unicorn",
+        "oxc",
+        "import",
+        "node",
+        "promise"
+    ],
+    "categories": {
+        "correctness": "warn",
+        "suspicious": "warn",
+        "pedantic": "warn",
+        "perf": "warn",
+        "style": "warn",
+        "restriction": "warn",
+        "nursery": "warn"
+    },
     "rules": {
-        "@typescript-eslint/consistent-type-imports": "error",
-        "@typescript-eslint/naming-convention": "error",
-        "@typescript-eslint/no-unused-vars": [
+        "eqeqeq": [
+            "warn",
+            "always",
+            {
+                "null": "never"
+            }
+        ],
+        "eslint/arrow-body-style": "off",
+        "eslint/capitalized-comments": "off",
+        "eslint/class-methods-use-this": "off",
+        "eslint/id-length": "off",
+        "eslint/init-declarations": "off",
+        "eslint/max-classes-per-file": "off",
+        "eslint/max-lines-per-function": "off",
+        "eslint/max-lines": "off",
+        "eslint/max-params": "off",
+        "eslint/max-statements": "off",
+        "eslint/no-console": "off",
+        "eslint/no-continue": "off",
+        "eslint/no-duplicate-imports": [
+            "warn",
+            {
+                "allowSeparateTypeImports": true
+            }
+        ],
+        "eslint/no-eq-null": "off",
+        "eslint/no-magic-numbers": "off",
+        "eslint/no-negated-condition": "off",
+        "eslint/no-plusplus": "off",
+        "eslint/no-restricted-imports": [
+            "warn",
+            {
+                "paths": [
+                    {
+                        "name": "node:assert",
+                        "message": "Use node:assert/strict instead"
+                    }
+                ]
+            }
+        ],
+        "eslint/no-ternary": "off",
+        "eslint/no-undefined": "off",
+        "eslint/no-unused-vars": [
             "warn",
             {
                 "argsIgnorePattern": "^_",
                 "caughtErrorsIgnorePattern": "^_"
             }
         ],
-        "no-warning-comments": "warn",
-        "curly": "error",
-        "eqeqeq": [
-            "error",
-            "always",
+        "eslint/no-use-before-define": "off",
+        "eslint/no-void": "off",
+        "eslint/prefer-destructuring": "off",
+        "eslint/sort-imports": "off",
+        "eslint/sort-keys": "off",
+        "eslint/sort-vars": "off",
+        "func-style": "off",
+        "import/exports-last": "off",
+        "import/group-exports": "off",
+        "import/max-dependencies": "off",
+        "import/no-named-export": "off",
+        "import/no-namespace": "off",
+        "import/no-nodejs-modules": "off",
+        "import/no-relative-parent-imports": "off",
+        "import/prefer-default-export": "off",
+        "oxc/no-async-await": "off",
+        "oxc/no-optional-chaining": "off",
+        "oxc/no-rest-spread-properties": "off",
+        "promise/avoid-new": "off",
+        "promise/prefer-await-to-callbacks": "off",
+        "typescript/explicit-function-return-type": "off",
+        "typescript/parameter-properties": "off",
+        "typescript/prefer-readonly-parameter-types": "off",
+        "typescript/promise-function-async": "off",
+        "typescript/strict-boolean-expressions": [
+            "warn",
             {
-                "null": "never"
+                "allowNullableBoolean": true
             }
-        ]
+        ],
+        "typescript/strict-void-return": "off",
+        "unicorn/filename-case": "off",
+        "unicorn/no-array-callback-reference": "off",
+        "unicorn/no-array-for-each": "off",
+        "unicorn/no-null": "off",
+        "unicorn/prefer-at": "off",
+        "unicorn/prefer-module": "off",
+        "unicorn/prefer-spread": "off",
+        "unicorn/prefer-ternary": "off",
+        "unicorn/switch-case-braces": "off"
     }
 }

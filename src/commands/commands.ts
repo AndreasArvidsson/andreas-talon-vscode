@@ -25,7 +25,7 @@ function create(
         isDisabled,
         category,
         title,
-        description: title + (description ? ` ${description}` : ""),
+        description: title + (description != null ? ` ${description}` : ""),
         args: args ?? "()",
     };
 }
@@ -224,7 +224,7 @@ export const commandDescriptions = {
         "Git",
         "Get URL to Git repository file webpage.",
         "Optionally include selected line numbers.",
-        "({ useSelection: boolean, useBranch: boolean }): string",
+        "({ useSelection?: boolean, useBranch?: boolean }): string",
     ),
     getGitRepoURL: hidden(
         "Git",
@@ -274,7 +274,7 @@ export const commandDescriptions = {
         "Other",
         "Get an array of file system paths for workspace folders",
         undefined,
-        "(): string[] | undefined",
+        "(): string[]",
     ),
     printCommands: visible("Other", "Print available commands."),
 } as const;

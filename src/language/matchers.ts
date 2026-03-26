@@ -48,7 +48,7 @@ function getMatchAtPosition(
     inTalon: boolean,
 ): TalonMatchName | undefined {
     const name = getNameAtPosition(document, position);
-    if (!name) {
+    if (name == null) {
         return undefined;
     }
 
@@ -101,17 +101,15 @@ function getPrefixAtPosition(
     inTalon: boolean,
 ): TalonMatchPrefix | undefined {
     const line = document.lineAt(position.line);
-    const precedingText = line.text.substring(0, position.character);
-    const prefix = precedingText.match(/[\w\d.]+$/)?.[0] ?? "";
+    const precedingText = line.text.slice(0, position.character);
+    const prefix = /[\w\d.]+$/.exec(precedingText)?.[0] ?? "";
 
     if (inTalon) {
         if (isInTalonScript(line, position)) {
             return { type: "action", prefix };
         }
-    } else {
-        if (prefix.startsWith("actions.")) {
-            return { type: "action", prefix: prefix.substring(8) };
-        }
+    } else if (prefix.startsWith("actions.")) {
+        return { type: "action", prefix: prefix.slice(8) };
     }
 
     const prevChar = precedingText.at(-prefix.length - 1) ?? "";
@@ -133,7 +131,7 @@ function isInTalonScript(line: TextLine, position: Position) {
         return true;
     }
     const index = line.text.indexOf(":");
-    return index > -1 && index < position.character;
+    return index !== -1 && index < position.character;
 }
 
 function getNameAtPosition(
@@ -154,7 +152,6 @@ function testRegexAtPosition(
 ): boolean {
     return Array.from(lineText.matchAll(regex)).some(
         (match) =>
-            match.index != null &&
             position.character >= match.index &&
             position.character <= match.index + match[0].length,
     );

@@ -4,7 +4,7 @@ import { getActiveFileSchemaEditor } from "../../util/getActiveEditor";
 
 export async function removeFile(): Promise<void> {
     const editor = getActiveFileSchemaEditor();
-    const uri = editor.document.uri;
+    const { uri } = editor.document;
     const filename = getFilename(uri);
 
     const remove = await window.showInformationMessage(

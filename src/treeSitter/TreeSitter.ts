@@ -4,7 +4,9 @@ import * as vscode from "vscode";
 import type { Node, Point, Query, QueryMatch } from "web-tree-sitter";
 import type { ParseTreeExtension } from "../typings/parserTree";
 
-export type ScopeName = "class.name" | "startTag.name" | "comment";
+const scopeNames = ["class.name", "startTag.name", "comment"] as const;
+const scopeNameSet: ReadonlySet<string> = new Set(scopeNames);
+export type ScopeName = (typeof scopeNames)[number];
 
 export interface Scope {
     name: ScopeName;
@@ -14,9 +16,9 @@ export interface Scope {
 }
 
 export class TreeSitter {
-    private queries: Map<string, Query | undefined> = new Map();
+    private readonly queries = new Map<string, Query | undefined>();
 
-    constructor(private parseTreeExtension: ParseTreeExtension) {}
+    constructor(private readonly parseTreeExtension: ParseTreeExtension) {}
 
     getRootNode(document: vscode.TextDocument): Node {
         return this.parseTreeExtension.getTree(document).rootNode;
@@ -32,13 +34,12 @@ export class TreeSitter {
         let smallest: Scope | undefined = undefined;
 
         for (const scope of scopes) {
-            if (scope.name === name && scope.domain.contains(position)) {
-                if (
-                    smallest == null ||
-                    smallest.domain.contains(scope.domain)
-                ) {
-                    smallest = scope;
-                }
+            if (
+                scope.name === name &&
+                scope.domain.contains(position) &&
+                (smallest == null || smallest.domain.contains(scope.domain))
+            ) {
+                smallest = scope;
             }
         }
 
@@ -86,9 +87,9 @@ function loadQueryFileForLanguage(languageId: string): string | undefined {
 }
 
 function loadQueryFile(file: string): string {
-    const content = fs.readFileSync(file, "utf-8");
+    const content = fs.readFileSync(file, "utf8");
 
-    return content.replace(
+    return content.replaceAll(
         /^;; import (\w+)$/gm,
         (_match, filename: string) => {
             const importFile = getQueryFile(filename);
@@ -99,6 +100,10 @@ function loadQueryFile(file: string): string {
 
 function getQueryFile(name: string): string {
     return path.join(__dirname, `treeSitter/queries/${name}.scm`);
+}
+
+function isScopeName(name: string): name is ScopeName {
+    return scopeNameSet.has(name);
 }
 
 function matchesToScopes(matches: QueryMatch[]): Scope[] {
@@ -117,10 +122,15 @@ function matchesToScopes(matches: QueryMatch[]): Scope[] {
             }
 
             const { name, node } = capture;
+
+            if (!isScopeName(name)) {
+                throw new Error(`Unexpected capture name: ${name}`);
+            }
+
             const range = nodeToRange(node);
 
             results.push({
-                name: name as ScopeName,
+                name,
                 node,
                 range,
                 domain: domainRange ?? range,

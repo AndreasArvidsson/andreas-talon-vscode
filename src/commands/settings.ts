@@ -9,12 +9,12 @@ export function getSetting<T>(
 
 type ConfigurationTarget = "global" | "workspace" | "workspaceFolder";
 
-export function setSetting(
+export async function setSetting(
     section: string,
     value: unknown,
     configurationTarget?: ConfigurationTarget,
-) {
-    return vscode.workspace
+): Promise<void> {
+    await vscode.workspace
         .getConfiguration()
         .update(
             section,

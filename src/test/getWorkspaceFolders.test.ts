@@ -1,4 +1,4 @@
-import * as assert from "assert";
+import * as assert from "node:assert/strict";
 import * as vscode from "vscode";
 import { getFullCommand } from "../util/getFullCommand";
 
@@ -12,9 +12,10 @@ suite(command, () => {
         const result = await vscode.commands.executeCommand(fullCommand);
 
         // Check that the result is an array of file system paths
-        const expectedPaths = vscode.workspace.workspaceFolders?.map(
-            (folder) => folder.uri.fsPath,
-        );
-        assert.deepStrictEqual(result, expectedPaths);
+        const expectedPaths =
+            vscode.workspace.workspaceFolders?.map(
+                (folder) => folder.uri.fsPath,
+            ) ?? [];
+        assert.deepEqual(result, expectedPaths);
     });
 });

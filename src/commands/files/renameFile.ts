@@ -8,7 +8,7 @@ export async function renameFile(name?: string): Promise<void> {
     const context = getNewFilenameContext(editor, name);
 
     if (context == null) {
-        throw Error("Can't rename file");
+        throw new Error("Can't rename file");
     }
 
     const suggestedName = context.input?.name ?? context.file.name;
@@ -16,7 +16,7 @@ export async function renameFile(name?: string): Promise<void> {
 
     const filename = await showNewNameInputBox(suggestedName, suggestedExt);
 
-    if (filename && filename !== context.filename) {
+    if (filename != null && filename !== context.filename) {
         await fileSystem.renameFile(context.uri, filename);
     }
 }

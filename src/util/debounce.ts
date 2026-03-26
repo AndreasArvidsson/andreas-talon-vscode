@@ -2,11 +2,11 @@ export class Debouncer {
     private timeoutHandle: NodeJS.Timeout | null = null;
 
     constructor(
-        private callback: () => void,
-        private debounceDelayMs: number,
+        private readonly callback: () => void,
+        private readonly debounceDelayMs: number,
     ) {}
 
-    run() {
+    run(): void {
         if (this.timeoutHandle != null) {
             clearTimeout(this.timeoutHandle);
         }
@@ -17,7 +17,7 @@ export class Debouncer {
         }, this.debounceDelayMs);
     }
 
-    dispose() {
+    dispose(): void {
         if (this.timeoutHandle != null) {
             clearTimeout(this.timeoutHandle);
         }

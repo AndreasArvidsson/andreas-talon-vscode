@@ -3,20 +3,19 @@ import { commands, window } from "vscode";
 import { focusViewColumn } from "../util/focusViewColumn";
 import { hintToIndex } from "../util/hints";
 
-export async function focusTab(hint?: string): Promise<void> {
+export async function focusTab(hintSource?: string): Promise<void> {
+    const hint = hintSource ?? (await showInputBox());
+
     if (hint == null) {
-        hint = await showInputBox();
-        if (hint == null) {
-            console.warn("Can't focus tab: Missing hint argument.");
-            return;
-        }
+        console.warn("Can't focus tab: Missing hint argument.");
+        return;
     }
 
     const index = hintToIndex(hint);
     const tabInfo = getTabInfo(index);
 
     if (tabInfo == null) {
-        throw Error(
+        throw new Error(
             `Can't focus non-existing tab '${hint.toUpperCase()}' at index '${index}'`,
         );
     }
@@ -48,8 +47,8 @@ async function showInputBox(): Promise<string | undefined> {
     const value = await window.showInputBox({
         placeHolder: "Tab hint: [a-zA-Z]{1,2}",
         ignoreFocusOut: true,
-        validateInput: (value) => {
-            if (/^[a-zA-Z]{1,2}$/.test(value.trim())) {
+        validateInput: (input) => {
+            if (/^[a-zA-Z]{1,2}$/.test(input.trim())) {
                 return null;
             }
             return "Must be one or two letters: [a-zA-Z]{1,2}";

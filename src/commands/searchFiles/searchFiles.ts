@@ -1,10 +1,10 @@
 import {
     Disposable,
-    languages,
     Position,
+    Selection,
+    languages,
     window,
     workspace,
-    Selection,
 } from "vscode";
 import { deleteFile } from "../../util/fileSystem";
 import { getActiveEditor } from "../../util/getActiveEditor";
@@ -16,7 +16,7 @@ import { performSearch } from "./performSearch";
 import { refreshSearchResultsDocument } from "./refreshSearchResultsDocument";
 import { SearchDocumentLinkProvider } from "./SearchDocumentLinkProvider";
 
-export async function searchFiles(query: string = "") {
+export async function searchFiles(query = ""): Promise<void> {
     const workspaces = await performSearch(query);
     const editor = await openNewEditor();
     await refreshSearchResultsDocument(editor, query, workspaces);
@@ -24,7 +24,7 @@ export async function searchFiles(query: string = "") {
     editor.selections = [new Selection(postQueryPosition, postQueryPosition)];
 }
 
-export async function searchFilesToggleSelected() {
+export async function searchFilesToggleSelected(): Promise<void> {
     const editor = getActiveEditor();
     const { document, selections } = editor;
     const { query, workspaces } = parseDocument(document);
@@ -42,26 +42,28 @@ export async function searchFilesToggleSelected() {
     await refreshSearchResultsDocument(editor, query, workspaces, false);
 }
 
-export function searchFilesOpenSelected() {
-    return Promise.all(
+export async function searchFilesOpenSelected(): Promise<void> {
+    await Promise.all(
         getSelectedLinks().map((link) =>
             window.showTextDocument(link.uri, { preview: false }),
         ),
     );
 }
 
-export async function searchFilesDeleteSelected() {
+export async function searchFilesDeleteSelected(): Promise<void> {
     const selectedLinks = getSelectedLinks();
 
-    const remove =
-        selectedLinks.length > 0 &&
-        (await window.showInformationMessage(
-            `Are you sure you want to delete ${selectedLinks.length} files?`,
-            { modal: true },
-            "Delete files",
-        ));
+    if (selectedLinks.length === 0) {
+        return;
+    }
 
-    if (remove) {
+    const remove = await window.showInformationMessage(
+        `Are you sure you want to delete ${selectedLinks.length} files?`,
+        { modal: true },
+        "Delete files",
+    );
+
+    if (remove != null) {
         await Promise.all(selectedLinks.map((link) => deleteFile(link.uri)));
     }
 }

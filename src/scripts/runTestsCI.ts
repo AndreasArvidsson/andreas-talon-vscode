@@ -1,21 +1,22 @@
+import * as cp from "node:child_process";
+import * as path from "node:path";
+import { exit } from "node:process";
 import {
     downloadAndUnzipVSCode,
     resolveCliArgsFromVSCodeExecutablePath,
     runTests,
 } from "@vscode/test-electron";
-import * as cp from "child_process";
-import * as path from "path";
 
 const extensionDependencies = [
     // Cursorless access to Tree sitter
     "pokey.parse-tree",
 
     // Register necessary language-IDs for tests
-    "mrob95.vscode-talonscript", // talon
-    "jrieken.vscode-tree-sitter-query", // scm
+    "mrob95.vscode-talonscript",
+    "jrieken.vscode-tree-sitter-query",
 ];
 
-export async function launchVscodeAndRunTests() {
+export async function launchVscodeAndRunTests(): Promise<void> {
     try {
         const workspaceFolder = path.join(__dirname, "../..");
         const extensionTestsPath = path.join(
@@ -38,10 +39,10 @@ export async function launchVscodeAndRunTests() {
         if (code !== 0) {
             console.log(`Returned from "runAllTests" with value: ${code}`);
         }
-    } catch (err) {
+    } catch (error) {
         console.error("Test run threw exception:");
-        console.error(err);
-        process.exit(1);
+        console.error(error);
+        exit(1);
     }
 }
 
@@ -63,7 +64,7 @@ function installExtensionDependencies(vscodeExecutablePath: string) {
     console.log(JSON.stringify(extensionInstallArgs, null, 2));
 
     const { status, signal, error } = cp.spawnSync(cli, extensionInstallArgs, {
-        encoding: "utf-8",
+        encoding: "utf8",
         stdio: "inherit",
         shell: process.platform === "win32",
     });
@@ -90,4 +91,5 @@ function installExtensionDependencies(vscodeExecutablePath: string) {
     console.log("Finished installing dependency extensions");
 }
 
+// oxlint-disable-next-line unicorn/prefer-top-level-await
 void launchVscodeAndRunTests();

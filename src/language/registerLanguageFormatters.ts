@@ -3,11 +3,10 @@ import {
     talonFormatter,
     talonListFormatter,
     treeSitterFormatter,
-    type Options,
-    type SyntaxNode,
 } from "@cursorless/talon-tools";
-import type { FormattingOptions, TextDocument, ExtensionContext } from "vscode";
-import { Disposable, languages, Range, TextEdit, ExtensionMode } from "vscode";
+import type { Options, SyntaxNode } from "@cursorless/talon-tools";
+import type { ExtensionContext, FormattingOptions, TextDocument } from "vscode";
+import { Disposable, ExtensionMode, Range, TextEdit, languages } from "vscode";
 import type { TreeSitter } from "../treeSitter/TreeSitter";
 import { getErrorMessage } from "../util/getErrorMessage";
 import { getFormattingOptions } from "../util/getFormattingOptions";
@@ -30,7 +29,6 @@ export function registerLanguageFormatters(
     const debug = context.extensionMode !== ExtensionMode.Production;
 
     const provideDocumentFormattingEditsForTree = (
-        treeSitter: TreeSitter,
         formatter: LanguageFormatterTree,
     ) => {
         return {
@@ -109,7 +107,7 @@ export function registerLanguageFormatters(
     return Disposable.from(
         languages.registerDocumentFormattingEditProvider(
             "talon",
-            provideDocumentFormattingEditsForTree(treeSitter, talonFormatter),
+            provideDocumentFormattingEditsForTree(talonFormatter),
         ),
         languages.registerDocumentFormattingEditProvider(
             "talon-list",
@@ -117,10 +115,7 @@ export function registerLanguageFormatters(
         ),
         languages.registerDocumentFormattingEditProvider(
             "scm",
-            provideDocumentFormattingEditsForTree(
-                treeSitter,
-                treeSitterFormatter,
-            ),
+            provideDocumentFormattingEditsForTree(treeSitterFormatter),
         ),
         languages.registerDocumentFormattingEditProvider(
             "snippet",

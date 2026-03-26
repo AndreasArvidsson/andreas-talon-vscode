@@ -7,8 +7,8 @@ import type {
 import {
     CompletionItemKind,
     Disposable,
-    languages,
     Range,
+    languages,
     workspace,
 } from "vscode";
 import type { TalonMatchPrefix } from "./matchers";
@@ -111,27 +111,30 @@ class SnippetCompletionProvider implements LanguageCompletionProvider {
             return [];
         }
 
-        const precedingText = line.text.substring(0, position.character);
-        const variableMatch = precedingText.match(/^(\$\d+\.)(.*)/);
+        const precedingText = line.text.slice(0, position.character);
+        const variableMatch = /^\$(\d+)\.(.*)/.exec(precedingText);
 
         const { fields, prefix, range } = (() => {
             if (variableMatch != null) {
-                const prefix = variableMatch[2];
-                const fields = [
-                    "insertionFormatter",
-                    "wrapperPhrase",
-                    "wrapperScope",
-                ];
-                const range = new Range(
-                    position.translate(undefined, -prefix.length),
-                    position,
-                );
-                return { fields, prefix, range };
+                const matchPrefix = variableMatch[2];
+                return {
+                    prefix: matchPrefix,
+                    fields: [
+                        "insertionFormatter",
+                        "wrapperPhrase",
+                        "wrapperScope",
+                    ],
+                    range: new Range(
+                        position.translate(undefined, -matchPrefix.length),
+                        position,
+                    ),
+                };
             }
-
-            const fields = ["name", "phrase", "insertionScope", "language"];
-            const range = new Range(position.with(undefined, 0), position);
-            return { fields, range, prefix: precedingText };
+            return {
+                prefix: precedingText,
+                fields: ["name", "phrase", "insertionScope", "language"],
+                range: new Range(position.with(undefined, 0), position),
+            };
         })();
 
         return fields

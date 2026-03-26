@@ -1,4 +1,4 @@
-import * as path from "path";
+import * as path from "node:path";
 import type { TextDocument } from "vscode";
 import { Range, Uri, workspace } from "vscode";
 import { getActiveEditor } from "../../util/getActiveEditor";
@@ -104,7 +104,7 @@ export function parseDocument(document: TextDocument): SearchResultsState {
 
         for (let i = wsNameIndex + 1; i < lines.length; i++) {
             const lineText = lines[i];
-            const match = lineText.match(/^\s*([-*]\s+)?/);
+            const match = /^\s*([-*]\s+)?/.exec(lineText);
             const offset = match?.[0]?.length ?? 0;
             const selected = match?.[1] != null;
             const relativePath = lineText.slice(offset).trimEnd();

@@ -75,7 +75,7 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
     ): string | undefined;
 
     private parseLineComment(lines: Line[]): string | undefined {
-        const indentation = lines[0].indentation;
+        const { indentation } = lines[0];
         const tokens = lines.flatMap((line) => {
             // Extract the text after the "//"
             const text = line.text.slice(this.linePrefix.length).trimStart();

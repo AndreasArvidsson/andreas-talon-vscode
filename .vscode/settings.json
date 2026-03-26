@@ -1,3 +1,6 @@
 {
+    "[talon][talon-list][snippet][scm]": {
+        "editor.defaultFormatter": "AndreasArvidsson.andreas-talon"
+    },
     "editor.defaultFormatter": "oxc.oxc-vscode"
 }

@@ -1,9 +1,11 @@
-import fastGlob from "fast-glob";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
+import fastGlob from "fast-glob";
 import type { DefinitionLink, WorkspaceFolder } from "vscode";
-import { Range, Uri } from "vscode";
+import { Range, Uri, window } from "vscode";
+import { getErrorMessage } from "../util/getErrorMessage";
 import { getGlobIgnorePatterns } from "../util/getGlobIgnorePatterns";
+import { runPool } from "../util/runPool";
 import type { TalonMatch, TalonMatchType } from "./matchers";
 
 export interface SearchResult extends DefinitionLink {
@@ -51,7 +53,12 @@ export async function searchInWorkspace(
             case "list":
                 return results.lists;
             case "dynamic_list":
-                throw Error(`Can't search specifically for dynamic lists`);
+                throw new Error(`Can't search specifically for dynamic lists`);
+            default: {
+                const exhaustiveCheck: never = match.type;
+                // oxlint-disable-next-line typescript/restrict-template-expressions
+                throw new Error(`Unknown match type: ${exhaustiveCheck}`);
+            }
         }
     })();
     if ("name" in match) {
@@ -81,6 +88,7 @@ async function searchInWorkspaceInner(workspace: WorkspaceFolder) {
             case "dynamic_list":
                 lists.push(r);
                 break;
+            // no default
         }
     });
     return { actions, captures, lists };
@@ -96,36 +104,34 @@ async function searchInDirectory(
         dot: false,
     });
 
-    const result: SearchResult[] = [];
-
-    for (const file of files) {
-        const fileAbsolutePath = path.join(workspacePath, file);
-
+    const result = await runPool(files, 8, async (file) => {
         try {
+            const fileAbsolutePath = path.join(workspacePath, file);
+
             // Python file. Parse for content.
             if (file.endsWith(".py")) {
-                result.push(...(await parsePythonFile(fileAbsolutePath)));
+                return await parsePythonFile(fileAbsolutePath);
             }
 
             // Talon list file. Parse for content.
-            else if (file.endsWith(".talon-list")) {
-                result.push(...(await parseTalonListFile(fileAbsolutePath)));
+            if (file.endsWith(".talon-list")) {
+                return await parseTalonListFile(fileAbsolutePath);
             }
 
             // Unknown file type.
-            else {
-                console.error(`Unknown file type: ${file}`);
-            }
+            console.error(`Unknown file type: ${file}`);
+            return [];
         } catch (error) {
-            console.error(error);
+            void window.showErrorMessage(getErrorMessage(error));
+            return [];
         }
-    }
+    });
 
-    return result;
+    return result.flat();
 }
 
 async function parsePythonFile(absolutePath: string): Promise<SearchResult[]> {
-    const fileContent = await fs.readFile(absolutePath, "utf-8");
+    const fileContent = await fs.readFile(absolutePath, "utf8");
     const uri = Uri.file(absolutePath);
 
     return [
@@ -149,9 +155,9 @@ function getTalonNamespacesFromPython(
     return matches
         .map((m) => ({
             name: m[1] ?? "user",
-            line: fileContent.slice(0, m.index ?? 0).split("\n").length - 1,
+            line: fileContent.slice(0, m.index).split("\n").length - 1,
         }))
-        .sort((a, b) => a.line - b.line);
+        .toSorted((a, b) => a.line - b.line);
 }
 
 function parsePythonFileInner(
@@ -161,7 +167,7 @@ function parsePythonFileInner(
     regex: RegExp,
 ): SearchResult[] {
     const matches = Array.from(fileContent.matchAll(regex));
-    if (!matches.length) {
+    if (matches.length === 0) {
         return [];
     }
 
@@ -173,7 +179,7 @@ function parsePythonFileInner(
             fileContent,
         );
 
-        if (!namespaces.length) {
+        if (namespaces.length === 0) {
             return [];
         }
 
@@ -190,12 +196,12 @@ function parsePythonFileInner(
         };
     } else if (type === "capture") {
         getNamespace = (line: number, content: string): string | undefined => {
-            const name = content.match(captureNameRegex)?.[1];
-            if (!name) {
+            const name = captureNameRegex.exec(content)?.[1];
+            if (name == null) {
                 return "user";
             }
             const index = name.indexOf(".");
-            return index > -1 ? name.substring(0, index) : "";
+            return index !== -1 ? name.slice(0, index) : "";
         };
     }
 
@@ -207,7 +213,7 @@ async function parseTalonListFile(
 ): Promise<SearchResult[]> {
     // list: WS NAME
     const regex = /^(list:\s*)([\w.]+)/g;
-    const fileContent = await fs.readFile(absolutePath, "utf-8");
+    const fileContent = await fs.readFile(absolutePath, "utf8");
     const matches = Array.from(fileContent.matchAll(regex));
     if (matches.length !== 1) {
         return [];
@@ -261,9 +267,9 @@ function parsePythonMatches(
         // Format name and target text for display
         const name = match[2].replace(/^self\./, "user.");
         const fullName = ns ? `${ns === "self" ? "user" : ns}.${name}` : name;
-        const indentation = match[0].match(/^\s+/)?.[0] ?? "";
+        const indentation = /^\s+/.exec(match[0])?.[0] ?? "";
         const targetText = indentation
-            ? match[0].replace(new RegExp(`^${indentation}`, "gm"), "")
+            ? match[0].replaceAll(new RegExp(`^${indentation}`, "gm"), "")
             : match[0];
 
         results.push({

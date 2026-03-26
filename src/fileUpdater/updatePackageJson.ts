@@ -1,9 +1,10 @@
 import { json } from "file-updater";
-import type { CommandId } from "../commands/commands";
 import { commandDescriptions } from "../commands/commands";
 import { getFullCommand } from "../util/getFullCommand";
+import { objectEntries } from "../util/objectUtil";
 
 interface Command {
+    category: "Andreas";
     command: string;
     title: string;
     enablement?: string;
@@ -15,7 +16,7 @@ interface PackageJson {
     };
 }
 
-export function updatePackageJson() {
+export function updatePackageJson(): ReturnType<typeof json> {
     return json((content: PackageJson | null): PackageJson => {
         if (content == null) {
             return {};
@@ -32,12 +33,17 @@ export function updatePackageJson() {
 }
 
 function getCommands(): Command[] {
-    return Object.entries(commandDescriptions)
-        .filter(([, { excludePackage }]) => !excludePackage)
-        .map(([command, { title, isDisabled }]) => ({
-            command: getFullCommand(command as CommandId),
-            category: `Andreas`,
-            title,
-            ...(isDisabled ? { enablement: "false" } : {}),
-        }));
+    return objectEntries(commandDescriptions)
+        .filter(([, desc]) => !desc.excludePackage)
+        .map(([command, { title, isDisabled }]) => {
+            const entry: Command = {
+                command: getFullCommand(command),
+                category: "Andreas",
+                title,
+            };
+            if (isDisabled) {
+                entry.enablement = "false";
+            }
+            return entry;
+        });
 }

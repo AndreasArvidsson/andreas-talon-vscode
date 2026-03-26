@@ -4,7 +4,7 @@ import type { CommentMatch } from "./types";
 
 export class PythonFormatter extends BaseCommentFormatter {
     protected regex = /^[\t ]*(#.*)/gm;
-    protected linePrefix: string = "#";
+    protected linePrefix = "#";
 
     protected parseMatch(match: RegExpExecArray): CommentMatch {
         return {
@@ -18,6 +18,6 @@ export class PythonFormatter extends BaseCommentFormatter {
         _text: string,
         _indentation: string,
     ): string | undefined {
-        throw Error("Block comments are not supported for Python");
+        throw new Error("Block comments are not supported for Python");
     }
 }

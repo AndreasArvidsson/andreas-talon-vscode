@@ -2,9 +2,7 @@ import * as vscode from "vscode";
 import type { TreeSitter } from "../treeSitter/TreeSitter";
 import type { CommandServerExtension } from "../typings/commandServer";
 import { getFullCommand } from "../util/getFullCommand";
-import { GetText } from "./GetText";
-import type { GitParameters } from "./GitUtil";
-import { GitUtil } from "./GitUtil";
+import { objectEntries } from "../util/objectUtil";
 import type { CommandId } from "./commands";
 import { executeCommands } from "./executeCommands";
 import { copyFilename } from "./files/copyFilename";
@@ -14,12 +12,6 @@ import { moveFile } from "./files/moveFile";
 import { newFile } from "./files/newFile";
 import { removeFile } from "./files/removeFile";
 import { renameFile } from "./files/renameFile";
-import {
-    searchFiles,
-    searchFilesDeleteSelected,
-    searchFilesOpenSelected,
-    searchFilesToggleSelected,
-} from "./searchFiles";
 import { focusTab } from "./focusTab";
 import {
     formatAllComments,
@@ -27,11 +19,20 @@ import {
 } from "./formatComments/formatComments";
 import { formatSelectedFiles, formatWorkspaceFiles } from "./formatFiles";
 import { generateRange } from "./generateRange";
+import { GetText } from "./GetText";
+import type { GitParameters } from "./GitUtil";
+import { GitUtil } from "./GitUtil";
 import { goToLine } from "./goToLine";
 import { decrement, increment } from "./incrementDecrement";
 import { lineMiddle } from "./lineMiddle";
 import { openEditorAtIndex } from "./openEditorAtIndex";
 import { printCommands } from "./printCommands";
+import {
+    searchFiles,
+    searchFilesDeleteSelected,
+    searchFilesOpenSelected,
+    searchFilesToggleSelected,
+} from "./searchFiles";
 import { selectTo } from "./selectTo";
 import { getSetting, setSetting } from "./settings";
 
@@ -79,9 +80,8 @@ export function registerCommands(
         getClassName: () => getText.getClassName(),
         getOpenTagName: () => getText.getOpenTagName(),
         // Git
-        gitGetFirstAvailableBranch: (branches: string[]) => {
-            return git.getFirstAvailableBranch(branches);
-        },
+        gitGetFirstAvailableBranch: (branches: string[]) =>
+            git.getFirstAvailableBranch(branches),
         gitCheckout: (...branches: string[]) => git.checkout(branches),
         getGitFileURL: (p: GitParameters) => git.getFileURL(p),
         getGitRepoURL: () => git.getRepoURL(),
@@ -93,11 +93,11 @@ export function registerCommands(
         setSetting,
         executeCommands,
         getWorkspaceFolders: () => {
-            if (!vscode.workspace.workspaceFolders) {
-                return undefined;
+            if (vscode.workspace.workspaceFolders == null) {
+                return [];
             }
             return vscode.workspace.workspaceFolders.map((folder) => {
-                const uri = folder.uri;
+                const { uri } = folder;
                 if (uri.scheme !== "file") {
                     throw new Error(
                         `Expected file URI but got ${uri.scheme} URI`,
@@ -110,8 +110,8 @@ export function registerCommands(
     } as const;
 
     return vscode.Disposable.from(
-        ...Object.entries(commands).map(([command, callback]) =>
-            registerCommand(command as CommandId, callback),
+        ...objectEntries(commands).map(([command, callback]) =>
+            registerCommand(command, callback),
         ),
     );
 }
@@ -124,7 +124,7 @@ function registerCommand(
 
     const safeCallback = async (...args: unknown[]) => {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            // oxlint-disable-next-line typescript/no-unsafe-return
             return await Promise.resolve(callback(...args));
         } catch (error) {
             const errorMessage =

@@ -1,10 +1,10 @@
 import { ViewColumn, commands } from "vscode";
 
-export function focusViewColumn(viewColumn: ViewColumn) {
+export function focusViewColumn(viewColumn: ViewColumn): Thenable<unknown> {
     const command = columnFocusCommands[viewColumn];
 
     if (command == null) {
-        throw Error(`Unsupported view column '${viewColumn}'`);
+        throw new Error(`Unsupported view column '${viewColumn}'`);
     }
 
     return commands.executeCommand(command);
