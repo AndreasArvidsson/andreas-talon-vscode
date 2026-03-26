@@ -4,7 +4,9 @@ import * as vscode from "vscode";
 import type { Node, Point, Query, QueryMatch } from "web-tree-sitter";
 import type { ParseTreeExtension } from "../typings/parserTree";
 
-export type ScopeName = "class.name" | "startTag.name" | "comment";
+const scopeNames = ["class.name", "startTag.name", "comment"] as const;
+const scopeNameSet: ReadonlySet<string> = new Set(scopeNames);
+export type ScopeName = (typeof scopeNames)[number];
 
 export interface Scope {
     name: ScopeName;
@@ -101,6 +103,10 @@ function getQueryFile(name: string): string {
     return path.join(__dirname, `treeSitter/queries/${name}.scm`);
 }
 
+function isScopeName(name: string): name is ScopeName {
+    return scopeNameSet.has(name);
+}
+
 function matchesToScopes(matches: QueryMatch[]): Scope[] {
     const results: Scope[] = [];
 
@@ -117,10 +123,15 @@ function matchesToScopes(matches: QueryMatch[]): Scope[] {
             }
 
             const { name, node } = capture;
+
+            if (!isScopeName(name)) {
+                throw new Error(`Unexpected capture name: ${name}`);
+            }
+
             const range = nodeToRange(node);
 
             results.push({
-                name: name as ScopeName,
+                name,
                 node,
                 range,
                 domain: domainRange ?? range,

@@ -30,7 +30,6 @@ export function registerLanguageFormatters(
     const debug = context.extensionMode !== ExtensionMode.Production;
 
     const provideDocumentFormattingEditsForTree = (
-        treeSitter: TreeSitter,
         formatter: LanguageFormatterTree,
     ) => {
         return {
@@ -109,7 +108,7 @@ export function registerLanguageFormatters(
     return Disposable.from(
         languages.registerDocumentFormattingEditProvider(
             "talon",
-            provideDocumentFormattingEditsForTree(treeSitter, talonFormatter),
+            provideDocumentFormattingEditsForTree(talonFormatter),
         ),
         languages.registerDocumentFormattingEditProvider(
             "talon-list",
@@ -117,10 +116,7 @@ export function registerLanguageFormatters(
         ),
         languages.registerDocumentFormattingEditProvider(
             "scm",
-            provideDocumentFormattingEditsForTree(
-                treeSitter,
-                treeSitterFormatter,
-            ),
+            provideDocumentFormattingEditsForTree(treeSitterFormatter),
         ),
         languages.registerDocumentFormattingEditProvider(
             "snippet",

@@ -21,8 +21,8 @@ async function showInputBox(): Promise<number | undefined> {
     const value = await window.showInputBox({
         placeHolder: "Editor index (0 offset)",
         ignoreFocusOut: true,
-        validateInput: (value) => {
-            if (/^-?\d+$/.test(value.trim())) {
+        validateInput: (input) => {
+            if (/^-?\d+$/.test(input.trim())) {
                 return null;
             }
             return "Must be integer";

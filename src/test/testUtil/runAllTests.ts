@@ -11,7 +11,7 @@ export function run(): Promise<void> {
 
     const cwd = path.resolve(__dirname, "..");
 
-    const files = fastGlob.sync("**/**.test.js", { cwd }).sort();
+    const files = fastGlob.sync("**/**.test.js", { cwd }).toSorted();
 
     files.forEach((f) => mocha.addFile(path.resolve(cwd, f)));
 

@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import type { TreeSitter } from "../treeSitter/TreeSitter";
 import type { CommandServerExtension } from "../typings/commandServer";
 import { getFullCommand } from "../util/getFullCommand";
+import { objectEntries } from "../util/objectUtil";
 import type { CommandId } from "./commands";
 import { executeCommands } from "./executeCommands";
 import { copyFilename } from "./files/copyFilename";
@@ -110,8 +111,8 @@ export function registerCommands(
     } as const;
 
     return vscode.Disposable.from(
-        ...Object.entries(commands).map(([command, callback]) =>
-            registerCommand(command as CommandId, callback),
+        ...objectEntries(commands).map(([command, callback]) =>
+            registerCommand(command, callback),
         ),
     );
 }

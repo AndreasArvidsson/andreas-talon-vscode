@@ -28,5 +28,5 @@ export async function getWorkspaceFiles() {
 }
 
 function sortUris(uris: vscode.Uri[]) {
-    return uris.sort((a, b) => a.fsPath.localeCompare(b.fsPath));
+    return uris.toSorted((a, b) => a.fsPath.localeCompare(b.fsPath));
 }

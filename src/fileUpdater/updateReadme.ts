@@ -1,6 +1,6 @@
-import type { CommandId } from "../commands/commands";
 import { commandDescriptions } from "../commands/commands";
 import { getFullCommand } from "../util/getFullCommand";
+import { objectEntries } from "../util/objectUtil";
 
 export function updateReadme(content: string | null): string {
     const header = "## Commands";
@@ -15,15 +15,16 @@ export function updateReadme(content: string | null): string {
             indexHeader + header.length,
         );
         const indexEnd = content.indexOf("\n## ", indexStart + 4);
-        const pre = content.substring(0, indexStart);
-        const post = content.substring(indexEnd);
-        return { pre, post };
+        return {
+            pre: content.substring(0, indexStart),
+            post: content.substring(indexEnd),
+        };
     })();
 
     const commands: string[] = [];
     let category = "";
 
-    for (const [command, desc] of Object.entries(commandDescriptions)) {
+    for (const [command, desc] of objectEntries(commandDescriptions)) {
         if (desc.excludeReadme) {
             continue;
         }
@@ -31,7 +32,7 @@ export function updateReadme(content: string | null): string {
             category = desc.category;
             commands.push(`\n### ${category} commands\n`);
         }
-        const fullCommand = getFullCommand(command as CommandId);
+        const fullCommand = getFullCommand(command);
         commands.push(`- \`${fullCommand}${desc.args}\` \\`);
         commands.push(`  ${desc.description}`);
     }

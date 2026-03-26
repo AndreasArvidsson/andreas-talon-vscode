@@ -155,7 +155,7 @@ function getTalonNamespacesFromPython(
             name: m[1] ?? "user",
             line: fileContent.slice(0, m.index ?? 0).split("\n").length - 1,
         }))
-        .sort((a, b) => a.line - b.line);
+        .toSorted((a, b) => a.line - b.line);
 }
 
 function parsePythonFileInner(

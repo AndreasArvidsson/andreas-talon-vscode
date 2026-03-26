@@ -48,8 +48,8 @@ async function showInputBox(): Promise<string | undefined> {
     const value = await window.showInputBox({
         placeHolder: "Tab hint: [a-zA-Z]{1,2}",
         ignoreFocusOut: true,
-        validateInput: (value) => {
-            if (/^[a-zA-Z]{1,2}$/.test(value.trim())) {
+        validateInput: (input) => {
+            if (/^[a-zA-Z]{1,2}$/.test(input.trim())) {
                 return null;
             }
             return "Must be one or two letters: [a-zA-Z]{1,2}";

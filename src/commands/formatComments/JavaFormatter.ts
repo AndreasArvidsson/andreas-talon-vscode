@@ -23,25 +23,25 @@ export class JavaFormatter extends BaseCommentFormatter {
         const textContent = isDoc ? text.slice(3, -2) : text.slice(2, -2);
         const linePrefix = isDoc ? " *" : "";
         const lines = textContent.split("\n");
-        const tokens = lines.flatMap((line, index) => {
-            let text = line.trim();
-            if (text[0] === "*") {
+        const tokens = lines.flatMap((sourceLine, index) => {
+            let line = sourceLine.trim();
+            if (line[0] === "*") {
                 // Extract the text after the optional "*"
-                text = text.slice(1).trim();
+                line = line.slice(1).trim();
             }
-            if (isValidLine(text)) {
+            if (isValidLine(line)) {
                 // Split on spaces
-                return text
+                return line
                     .split(/[ ]+/g)
                     .map((token) => ({ text: token, preserve: false }));
             }
             if (
-                text.length === 0 &&
+                line.length === 0 &&
                 (index === 0 || index === lines.length - 1)
             ) {
                 return [];
             }
-            return [{ text, preserve: true }];
+            return [{ text: line, preserve: true }];
         });
 
         const updatedLines = parseTokens(
@@ -57,11 +57,11 @@ export class JavaFormatter extends BaseCommentFormatter {
             const start = isDoc && !isSingleLine ? "/**" : "/*";
             const end = isDoc ? " */" : "*/";
             if (isSingleLine) {
-                const text = updatedLines[0].trimStart();
+                const line = updatedLines[0].trimStart();
                 if (isDoc) {
-                    return `${indentation}${start}${text}${end}`;
+                    return `${indentation}${start}${line}${end}`;
                 }
-                return `${indentation}${start} ${text} ${end}`;
+                return `${indentation}${start} ${line} ${end}`;
             }
             return `${indentation}${start}\n${updatedLines.join("\n")}\n${indentation}${end}`;
         })();

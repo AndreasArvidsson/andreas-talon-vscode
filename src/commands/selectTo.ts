@@ -25,8 +25,8 @@ async function showInputBox(): Promise<number | undefined> {
     const value = await window.showInputBox({
         placeHolder: "Line number (0 offset)",
         ignoreFocusOut: true,
-        validateInput: (value) => {
-            if (/^\d+$/.test(value.trim())) {
+        validateInput: (input) => {
+            if (/^\d+$/.test(input.trim())) {
                 return null;
             }
             return "Must be positive integer";

@@ -5,6 +5,10 @@
         "typeAware": true,
         "typeCheck": true
     },
+    "categories": {
+        "correctness": "warn",
+        "suspicious": "warn"
+    },
     "rules": {
         "curly": "warn",
         "eqeqeq": [

@@ -55,8 +55,7 @@ function showFolderPicker(uri: Uri): Promise<string | undefined> {
                 });
             }
 
-            const uri = Uri.file(dir);
-            const files = await workspace.fs.readDirectory(uri);
+            const files = await workspace.fs.readDirectory(Uri.file(dir));
 
             for (const [name, type] of files) {
                 if (type === FileType.Directory) {

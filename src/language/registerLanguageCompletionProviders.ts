@@ -116,22 +116,25 @@ class SnippetCompletionProvider implements LanguageCompletionProvider {
 
         const { fields, prefix, range } = (() => {
             if (variableMatch != null) {
-                const prefix = variableMatch[2];
-                const fields = [
-                    "insertionFormatter",
-                    "wrapperPhrase",
-                    "wrapperScope",
-                ];
-                const range = new Range(
-                    position.translate(undefined, -prefix.length),
-                    position,
-                );
-                return { fields, prefix, range };
+                const matchPrefix = variableMatch[2];
+                return {
+                    prefix: matchPrefix,
+                    fields: [
+                        "insertionFormatter",
+                        "wrapperPhrase",
+                        "wrapperScope",
+                    ],
+                    range: new Range(
+                        position.translate(undefined, -matchPrefix.length),
+                        position,
+                    ),
+                };
             }
-
-            const fields = ["name", "phrase", "insertionScope", "language"];
-            const range = new Range(position.with(undefined, 0), position);
-            return { fields, range, prefix: precedingText };
+            return {
+                prefix: precedingText,
+                fields: ["name", "phrase", "insertionScope", "language"],
+                range: new Range(position.with(undefined, 0), position),
+            };
         })();
 
         return fields

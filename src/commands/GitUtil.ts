@@ -119,7 +119,7 @@ export class GitUtil {
                     filePath === rootPath || filePath.startsWith(`${rootPath}/`)
                 );
             })
-            .sort((a, b) => b.rootUri.path.length - a.rootUri.path.length)[0];
+            .toSorted((a, b) => b.rootUri.path.length - a.rootUri.path.length)[0];
 
         if (repository == null) {
             throw new Error(`Can't find Git repository for file: ${filePath}`);

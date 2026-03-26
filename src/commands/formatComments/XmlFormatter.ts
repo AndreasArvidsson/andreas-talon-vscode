@@ -48,21 +48,21 @@ export class XmlFormatter implements CommentFormatter {
         const textContent = text.slice(prefix.length, -suffix.length);
         const linePrefix = "";
         const lines = textContent.split("\n");
-        const tokens = lines.flatMap((line, index) => {
-            const text = line.trim();
-            if (isValidLine(text)) {
+        const tokens = lines.flatMap((sourceLine, index) => {
+            const line = sourceLine.trim();
+            if (isValidLine(line)) {
                 // Split on spaces
-                return text
+                return line
                     .split(/[ ]+/g)
                     .map((token) => ({ text: token, preserve: false }));
             }
             if (
-                text.length === 0 &&
+                line.length === 0 &&
                 (index === 0 || index === lines.length - 1)
             ) {
                 return [];
             }
-            return [{ text, preserve: true }];
+            return [{ text: line, preserve: true }];
         });
 
         const updatedLines = parseTokens(
@@ -76,8 +76,8 @@ export class XmlFormatter implements CommentFormatter {
             const isSingleLine =
                 lines.length === 1 && updatedLines.length === 1;
             if (isSingleLine) {
-                const text = updatedLines[0].trimStart();
-                return `${indentation}${prefix} ${text} ${suffix}`;
+                const line = updatedLines[0].trimStart();
+                return `${indentation}${prefix} ${line} ${suffix}`;
             }
             return `${indentation}${prefix}\n${updatedLines.join("\n")}\n${indentation}${suffix}`;
         })();

@@ -20,7 +20,7 @@ export function indexToHint(index: number): string {
 }
 
 export function hintToIndex(hint: string): number {
-    const letters = hint.toLowerCase().split("").reverse();
+    const letters = hint.toLowerCase().split("").toReversed();
     let result = 0;
 
     letters.forEach((letter, index) => {

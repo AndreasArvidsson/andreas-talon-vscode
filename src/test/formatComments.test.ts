@@ -37,10 +37,10 @@ function createBlockTests(prefix: string, suffix: string): Test[] {
     }));
 }
 
-function tests(languageIds: string[], tests: Test[]): Language[] {
+function tests(languageIds: string[], testCases: Test[]): Language[] {
     return languageIds.map((id) => ({
         id,
-        tests,
+        tests: testCases,
     }));
 }
 

@@ -46,8 +46,14 @@ function getSelections(
     if (selections == null) {
         return [[0, 0, 0, 0]];
     }
-    if (Array.isArray(selections[0])) {
-        return selections as NumberSelection[];
+    if (isNumberSelectionArray(selections)) {
+        return selections;
     }
-    return [selections as NumberSelection];
+    return [selections];
+}
+
+function isNumberSelectionArray(
+    selections: NumberSelection[] | NumberSelection,
+): selections is NumberSelection[] {
+    return Array.isArray(selections[0]);
 }

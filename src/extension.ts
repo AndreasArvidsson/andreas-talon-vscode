@@ -7,6 +7,7 @@ import { registerLanguageDefinitions } from "./language/registerLanguageDefiniti
 import { registerLanguageFormatters } from "./language/registerLanguageFormatters";
 import { createTabView } from "./tabView";
 import { TreeSitter } from "./treeSitter/TreeSitter";
+import { getErrorMessage } from "./util/getErrorMessage";
 import {
     getCommandServerExtension,
     getParseTreeExtension,
@@ -20,7 +21,7 @@ export async function activate(
     try {
         await activateExtension(context);
     } catch (error) {
-        void vscode.window.showErrorMessage((error as Error).message);
+        void vscode.window.showErrorMessage(getErrorMessage(error));
         throw error;
     }
 }
