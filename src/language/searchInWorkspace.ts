@@ -5,6 +5,7 @@ import type { DefinitionLink, WorkspaceFolder } from "vscode";
 import { Range, Uri, window } from "vscode";
 import { getErrorMessage } from "../util/getErrorMessage";
 import { getGlobIgnorePatterns } from "../util/getGlobIgnorePatterns";
+import { runPool } from "../util/runPool";
 import type { TalonMatch, TalonMatchType } from "./matchers";
 
 export interface SearchResult extends DefinitionLink {
@@ -103,35 +104,28 @@ async function searchInDirectory(
         dot: false,
     });
 
-    const promises: Promise<SearchResult[]>[] = [];
+    const result = await runPool(files, 8, async (file) => {
+        try {
+            const fileAbsolutePath = path.join(workspacePath, file);
 
-    for (const file of files) {
-        const fileAbsolutePath = path.join(workspacePath, file);
+            // Python file. Parse for content.
+            if (file.endsWith(".py")) {
+                return await parsePythonFile(fileAbsolutePath);
+            }
 
-        // Python file. Parse for content.
-        if (file.endsWith(".py")) {
-            promises.push(parsePythonFile(fileAbsolutePath));
-        }
+            // Talon list file. Parse for content.
+            if (file.endsWith(".talon-list")) {
+                return await parseTalonListFile(fileAbsolutePath);
+            }
 
-        // Talon list file. Parse for content.
-        else if (file.endsWith(".talon-list")) {
-            promises.push(parseTalonListFile(fileAbsolutePath));
-        }
-
-        // Unknown file type.
-        else {
+            // Unknown file type.
             console.error(`Unknown file type: ${file}`);
+            return [];
+        } catch (error) {
+            void window.showErrorMessage(getErrorMessage(error));
+            return [];
         }
-    }
-
-    const result = await Promise.all(
-        promises.map((p) =>
-            p.catch((error: unknown) => {
-                void window.showErrorMessage(getErrorMessage(error));
-                return [];
-            }),
-        ),
-    );
+    });
 
     return result.flat();
 }
