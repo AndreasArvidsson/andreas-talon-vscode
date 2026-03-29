@@ -32,7 +32,7 @@ export function getNewFilenameContext(
         dir: getDir(uri),
         filename,
         file: splitName(filename),
-        input: inputName != null ? splitName(inputName) : undefined,
+        input: inputName != null && inputName !== "" ? splitName(inputName) : undefined,
         selected: selected ? splitName(selected) : undefined,
     };
 }
