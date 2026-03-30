@@ -1,18 +1,19 @@
+import type { Options } from "@cursorless/talon-tools";
 import {
     snippetFormatter,
     talonFormatter,
     talonListFormatter,
     treeSitterFormatter,
 } from "@cursorless/talon-tools";
-import type { Options, SyntaxNode } from "@cursorless/talon-tools";
 import type { ExtensionContext, FormattingOptions, TextDocument } from "vscode";
 import { Disposable, ExtensionMode, Range, TextEdit, languages } from "vscode";
+import type { Node } from "web-tree-sitter";
 import type { TreeSitter } from "../treeSitter/TreeSitter";
 import { getErrorMessage } from "../util/getErrorMessage";
 import { getFormattingOptions } from "../util/getFormattingOptions";
 
 type LanguageFormatterTree = (
-    node: SyntaxNode,
+    node: Node,
     options: Options,
     debug: boolean,
 ) => string;
@@ -42,19 +43,11 @@ export function registerLanguageFormatters(
                         formattingOptions,
                     );
                     const rootNode = treeSitter.getRootNode(document);
-
-                    if (rootNode.hasError) {
-                        console.warn(
-                            `Abort document formatting: Syntax tree has error`,
-                        );
-                        return [];
-                    }
-
                     const originalText = document.getText();
                     const updatedText = formatter(rootNode, options, debug);
                     return createTextEdits(document, originalText, updatedText);
                 } catch (error) {
-                    console.warn(getErrorMessage(error));
+                    console.error(getErrorMessage(error));
                     return [];
                 }
             },
@@ -78,7 +71,7 @@ export function registerLanguageFormatters(
                     const updatedText = formatter(originalText, options, debug);
                     return createTextEdits(document, originalText, updatedText);
                 } catch (error) {
-                    console.warn(getErrorMessage(error));
+                    console.error(getErrorMessage(error));
                     return [];
                 }
             },
