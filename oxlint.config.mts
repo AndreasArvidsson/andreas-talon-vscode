@@ -107,7 +107,6 @@ export default defineConfig({
             "warn",
             {
                 argsIgnorePattern: "^_",
-                caughtErrorsIgnorePattern: "^_",
             },
         ],
         "typescript/strict-boolean-expressions": [
