@@ -15,7 +15,7 @@ const fixtures: Record<string, number> = {
 };
 
 suite("hints", () => {
-    Object.entries(fixtures).forEach(([hint, index]) => {
+    for (const [hint, index] of Object.entries(fixtures)) {
         test(`${hint} => ${index}`, () => {
             assert.equal(hintToIndex(hint), index);
         });
@@ -23,5 +23,5 @@ suite("hints", () => {
         test(`${index} => ${hint}`, () => {
             assert.equal(indexToHint(index).toLowerCase(), hint);
         });
-    });
+    }
 });

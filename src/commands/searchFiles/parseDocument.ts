@@ -27,14 +27,14 @@ export function parseDocument(document: TextDocument): SearchResultsState {
         .split(new RegExp(`${divider}\\r?\\n`));
     let lineNumber = 0;
 
-    sectionTexts.forEach((sectionText, index) => {
+    for (const [index, sectionText] of sectionTexts.entries()) {
         const lines = sectionText.split(/\r?\n/);
 
         // The first section contains the query, which is not associated with a specific workspace
         if (index === 0) {
             result.query = sectionText.trim();
             lineNumber += lines.length + 1;
-            return;
+            continue;
         }
 
         // The last section contains the buttons, which are not associated with a specific workspace
@@ -71,7 +71,7 @@ export function parseDocument(document: TextDocument): SearchResultsState {
                 result.buttons.push({ range, uri });
             }
 
-            return;
+            continue;
         }
 
         const wsNameIndex = lines.findIndex((line) => line !== "");
@@ -79,7 +79,7 @@ export function parseDocument(document: TextDocument): SearchResultsState {
         if (wsNameIndex === -1) {
             lineNumber += lines.length + 1;
             console.warn("Workspace name not found in section:", sectionText);
-            return;
+            continue;
         }
 
         const wsName = lines[wsNameIndex];
@@ -93,7 +93,7 @@ export function parseDocument(document: TextDocument): SearchResultsState {
             console.warn(
                 `Workspace folder not found for workspace "${wsName}"`,
             );
-            return;
+            continue;
         }
 
         const ws: SearchResultsWorkspace<SearchResultFile> = {
@@ -127,7 +127,7 @@ export function parseDocument(document: TextDocument): SearchResultsState {
 
             ws.files.push({ path: relativePath, range, uri, selected });
         }
-    });
+    }
 
     return result;
 }

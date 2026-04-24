@@ -52,9 +52,9 @@ export async function formatCommentsRunner(
     }
 
     await editor.edit((editBuilder) => {
-        changes.forEach((change) => {
+        for (const change of changes) {
             editBuilder.replace(change.range, change.text);
-        });
+        }
     });
 
     if (doSave && document.isDirty) {

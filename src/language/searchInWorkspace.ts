@@ -74,7 +74,7 @@ async function searchInWorkspaceInner(workspace: WorkspaceFolder) {
     const captures: SearchResult[] = [];
     const lists: SearchResult[] = [];
     const results = await searchInDirectory(workspace);
-    results.forEach((r) => {
+    for (const r of results) {
         switch (r.type) {
             case "action":
                 actions.push(r);
@@ -90,7 +90,7 @@ async function searchInWorkspaceInner(workspace: WorkspaceFolder) {
                 break;
             // no default
         }
-    });
+    }
     return { actions, captures, lists };
 }
 
@@ -231,7 +231,7 @@ function parsePythonMatches(
 ): SearchResult[] {
     const results: SearchResult[] = [];
 
-    matches.forEach((match) => {
+    for (const match of matches) {
         const leadingLines = fileContent.slice(0, match.index ?? 0).split("\n");
         const line = leadingLines.length - 1;
         const indentationLength = leadingLines[leadingLines.length - 1].length;
@@ -240,7 +240,7 @@ function parsePythonMatches(
 
         // This function does not belong to a Talon actions class
         if (ns == null || match[2].startsWith("_")) {
-            return;
+            continue;
         }
 
         // This is the entire function signature
@@ -281,7 +281,7 @@ function parsePythonMatches(
             targetText,
             name: fullName,
         });
-    });
+    }
 
     return results;
 }

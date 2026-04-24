@@ -6,10 +6,10 @@ export async function generateRange(start = 1): Promise<void> {
     const editor = getActiveEditor();
 
     const wereEditsApplied = await editor.edit((editBuilder) => {
-        getSortedSelections(editor).forEach((selection, i) => {
+        for (const [i, selection] of getSortedSelections(editor).entries()) {
             const text = (start + i).toString();
             editBuilder.replace(selection, text);
-        });
+        }
     });
 
     if (!wereEditsApplied) {

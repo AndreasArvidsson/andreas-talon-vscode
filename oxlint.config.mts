@@ -46,7 +46,6 @@ const disabledRules = [
     "typescript/strict-void-return",
     "unicorn/filename-case",
     "unicorn/no-array-callback-reference",
-    "unicorn/no-array-for-each",
     "unicorn/no-null",
     "unicorn/prefer-at",
     "unicorn/prefer-module",

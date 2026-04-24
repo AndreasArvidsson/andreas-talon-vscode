@@ -9,11 +9,11 @@ const fixtures: [string, string, string | undefined][] = [
 ];
 
 suite("splitName", () => {
-    fixtures.forEach(([input, expectedName, expectedExt]) => {
+    for (const [input, expectedName, expectedExt] of fixtures) {
         test(input, () => {
             const { name, ext } = splitName(input);
             assert.equal(name, expectedName);
             assert.equal(ext, expectedExt);
         });
-    });
+    }
 });

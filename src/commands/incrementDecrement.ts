@@ -4,7 +4,7 @@ async function update(inc: boolean, value?: number) {
     const editor = getActiveEditor();
 
     await editor.edit((editBuilder) => {
-        editor.selections.forEach((selection) => {
+        for (const selection of editor.selections) {
             const selectionText = editor.document.getText(selection);
 
             const updatedText = selectionText.replaceAll(
@@ -18,7 +18,7 @@ async function update(inc: boolean, value?: number) {
             if (selectionText !== updatedText) {
                 editBuilder.replace(selection, updatedText);
             }
-        });
+        }
     });
 }
 

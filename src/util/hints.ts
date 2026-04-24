@@ -25,14 +25,14 @@ export function hintToIndex(hint: string): number {
     const letters = hint.toLowerCase().split("").toReversed();
     let result = 0;
 
-    letters.forEach((letter, index) => {
+    for (const [index, letter] of letters.entries()) {
         const value = letter.codePointAt(0)! - refLC;
         if (index > 0) {
             result += (value + 1) * 26 ** index;
         } else {
             result += value;
         }
-    });
+    }
 
     return result;
 }

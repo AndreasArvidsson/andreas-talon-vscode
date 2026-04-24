@@ -23,21 +23,21 @@ const blockFixtures: Fixture[] = [
 ];
 
 suite("Line comment code actions", () => {
-    lineFixtures.forEach(([input, expected]) => {
+    for (const [input, expected] of lineFixtures) {
         const name = input.replaceAll("\n", String.raw`\n`).trim();
         test(name, () => {
             const actual = lineCommentToDocComment(input);
             assert.equal(actual, expected);
         });
-    });
+    }
 });
 
 suite("Block comment code actions", () => {
-    blockFixtures.forEach(([input, expected]) => {
+    for (const [input, expected] of blockFixtures) {
         const name = input.replaceAll("\n", String.raw`\n`).trim();
         test(name, () => {
             const actual = blockCommentToDocComment(input);
             assert.equal(actual, expected);
         });
-    });
+    }
 });

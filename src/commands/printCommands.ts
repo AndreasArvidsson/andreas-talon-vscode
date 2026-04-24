@@ -3,10 +3,9 @@ import * as vscode from "vscode";
 export async function printCommands(): Promise<void> {
     const commands = await vscode.commands.getCommands();
 
-    commands
+    for (const command of commands
         .filter((c) => !c.startsWith("_"))
-        .toSorted()
-        .forEach((c) => {
-            console.log(c);
-        });
+        .toSorted()) {
+        console.log(command);
+    }
 }
