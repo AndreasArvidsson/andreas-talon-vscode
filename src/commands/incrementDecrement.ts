@@ -1,6 +1,6 @@
 import { getActiveEditor } from "../util/getActiveEditor";
 
-async function update(inc: boolean, value?: number) {
+async function update(inc: boolean, value?: number): Promise<void> {
     const editor = getActiveEditor();
 
     await editor.edit((editBuilder) => {

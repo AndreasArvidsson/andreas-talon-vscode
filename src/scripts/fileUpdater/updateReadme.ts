@@ -5,7 +5,7 @@ import { objectEntries } from "../../util/objectUtil";
 export function updateReadme(content: string | null): string {
     const header = "## Commands";
 
-    const { pre, post } = (() => {
+    const { pre, post } = ((): { pre: string; post: string } => {
         if (content == null) {
             return { pre: "", post: "" };
         }
@@ -24,17 +24,20 @@ export function updateReadme(content: string | null): string {
     const commands: string[] = [];
     let category = "";
 
-    for (const [command, desc] of objectEntries(commandDescriptions)) {
-        if (desc.excludeReadme) {
+    for (const [
+        command,
+        { args, category: descCategory, description, excludeReadme },
+    ] of objectEntries(commandDescriptions)) {
+        if (excludeReadme) {
             continue;
         }
-        if (category !== desc.category) {
-            category = desc.category;
+        if (category !== descCategory) {
+            category = descCategory;
             commands.push(`\n### ${category} commands\n`);
         }
         const fullCommand = getFullCommand(command);
-        commands.push(`- \`${fullCommand}${desc.args}\` \\`);
-        commands.push(`  ${desc.description}`);
+        commands.push(`- \`${fullCommand}${args}\` \\`);
+        commands.push(`  ${description}`);
     }
 
     commands.push("");

@@ -44,7 +44,7 @@ export async function searchInWorkspace(
     match: TalonMatch,
 ): Promise<SearchResult[]> {
     const results = await searchInWorkspaceInner(workspace);
-    const resultsForType = (() => {
+    const resultsForType = ((): SearchResult[] => {
         switch (match.type) {
             case "action":
                 return results.actions;
@@ -69,7 +69,11 @@ export async function searchInWorkspace(
     return resultsForType.filter((r) => r.name.startsWith(prefix));
 }
 
-async function searchInWorkspaceInner(workspace: WorkspaceFolder) {
+async function searchInWorkspaceInner(workspace: WorkspaceFolder): Promise<{
+    actions: SearchResult[];
+    captures: SearchResult[];
+    lists: SearchResult[];
+}> {
     const actions: SearchResult[] = [];
     const captures: SearchResult[] = [];
     const lists: SearchResult[] = [];
@@ -151,7 +155,7 @@ function getTalonNamespacesFromPython(
     regex: RegExp,
     fileContent: string,
 ): Namespace[] {
-    const matches = Array.from(fileContent.matchAll(regex));
+    const matches = [...fileContent.matchAll(regex)];
     return matches
         .map((m) => ({
             name: m.at(1) ?? "user",
@@ -166,7 +170,7 @@ function parsePythonFileInner(
     type: TalonMatchType,
     regex: RegExp,
 ): SearchResult[] {
-    const matches = Array.from(fileContent.matchAll(regex));
+    const matches = [...fileContent.matchAll(regex)];
     if (matches.length === 0) {
         return [];
     }
@@ -214,7 +218,7 @@ async function parseTalonListFile(
     // list: WS NAME
     const regex = /^(list:\s*)([\w.]+)/g;
     const fileContent = await fs.readFile(absolutePath, "utf8");
-    const matches = Array.from(fileContent.matchAll(regex));
+    const matches = [...fileContent.matchAll(regex)];
     if (matches.length !== 1) {
         return [];
     }

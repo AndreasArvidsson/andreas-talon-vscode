@@ -47,10 +47,10 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
         );
     }
 
-    private onVisibilityChange(visible: boolean) {
+    private onVisibilityChange(visible: boolean): void {
         if (visible) {
             if (this.onTabChangeDisposable == null) {
-                const onTabChange = () => {
+                const onTabChange = (): void => {
                     this._onDidChangeTreeData.fire();
                 };
                 this.onTabChangeDisposable = vscode.Disposable.from(
@@ -117,7 +117,7 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
         );
     }
 
-    dispose() {
+    dispose(): void {
         this.mainDisposable.dispose();
         this.onTabChangeDisposable?.dispose();
     }

@@ -33,7 +33,10 @@ function showFolderPicker(uri: Uri): Promise<string | null> {
         const quickPick = window.createQuickPick<FileQuickPickItem>();
         quickPick.ignoreFocusOut = true;
 
-        async function changeDirectory(dir: string, select?: string) {
+        async function changeDirectory(
+            dir: string,
+            select?: string,
+        ): Promise<void> {
             const items: FileQuickPickItem[] = [
                 {
                     label: "$(file) Move file here",
@@ -86,7 +89,7 @@ function showFolderPicker(uri: Uri): Promise<string | null> {
         }
 
         quickPick.onDidAccept(async () => {
-            const selection = quickPick.activeItems[0];
+            const [selection] = quickPick.activeItems;
             if (selection.move) {
                 quickPick.hide();
                 resolve(selection.path);

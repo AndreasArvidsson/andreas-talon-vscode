@@ -129,14 +129,14 @@ export class GitUtil {
     }
 }
 
-function getRelativeFilepath(repository: Repository, filePath: string) {
+function getRelativeFilepath(repository: Repository, filePath: string): string {
     return filePath.slice(repository.rootUri.path.length + 1);
 }
 
 function validateUnchangedDocument(
     document: TextDocument,
     repository: Repository,
-) {
+): void {
     if (document.uri.scheme !== "file") {
         throw new Error("Document scheme is not file");
     }
@@ -167,7 +167,7 @@ function getRemote(repository: Repository): Remote {
     return remote;
 }
 
-function getRemoteUrl(repository: Repository) {
+function getRemoteUrl(repository: Repository): string {
     const remote = getRemote(repository);
     const url = remote.fetchUrl ?? remote.pushUrl;
     if (url == null) {
@@ -192,7 +192,7 @@ function getCommit(repository: Repository): string {
     return commit;
 }
 
-function cleanGitUrl(url: string) {
+function cleanGitUrl(url: string): string {
     let cleanedUrl = url;
     if (cleanedUrl.startsWith("git@")) {
         cleanedUrl = cleanedUrl.replace(":", "/").replace("git@", "https://");

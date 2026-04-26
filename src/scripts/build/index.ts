@@ -2,7 +2,7 @@ import { exit } from "node:process";
 import { bundleAssets } from "./bundleAssets";
 import { runEsbuild } from "./esbuild";
 
-async function build() {
+void (async (): Promise<void> => {
     try {
         await runEsbuild();
 
@@ -13,7 +13,4 @@ async function build() {
         console.error(error);
         exit(1);
     }
-}
-
-// oxlint-disable-next-line unicorn/prefer-top-level-await
-void build();
+})();

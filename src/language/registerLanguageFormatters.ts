@@ -5,7 +5,12 @@ import {
     talonListFormatter,
     treeSitterFormatter,
 } from "@cursorless/talon-tools";
-import type { ExtensionContext, FormattingOptions, TextDocument } from "vscode";
+import type {
+    DocumentFormattingEditProvider,
+    ExtensionContext,
+    FormattingOptions,
+    TextDocument,
+} from "vscode";
 import { Disposable, ExtensionMode, Range, TextEdit, languages } from "vscode";
 import type { Node } from "web-tree-sitter";
 import type { TreeSitter } from "../treeSitter/TreeSitter";
@@ -31,7 +36,7 @@ export function registerLanguageFormatters(
 
     const provideDocumentFormattingEditsForTree = (
         formatter: LanguageFormatterTree,
-    ) => {
+    ): DocumentFormattingEditProvider => {
         return {
             provideDocumentFormattingEdits: async (
                 document: TextDocument,
@@ -56,7 +61,7 @@ export function registerLanguageFormatters(
 
     const provideDocumentFormattingEditsForText = (
         formatter: LanguageFormatterText,
-    ) => {
+    ): DocumentFormattingEditProvider => {
         return {
             provideDocumentFormattingEdits: async (
                 document: TextDocument,

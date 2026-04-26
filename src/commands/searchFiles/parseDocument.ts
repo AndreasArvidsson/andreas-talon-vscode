@@ -3,6 +3,7 @@ import type { TextDocument } from "vscode";
 import { Range, Uri, workspace } from "vscode";
 import { getActiveEditor } from "../../util/getActiveEditor";
 import { getFullCommand } from "../../util/getFullCommand";
+import type { CommandId } from "../commands";
 import { deleteLink, divider, languageId, openLink } from "./constants";
 import type {
     SearchResultFile,
@@ -53,7 +54,7 @@ export function parseDocument(document: TextDocument): SearchResultsState {
                     continue;
                 }
 
-                const command = (() => {
+                const command = ((): CommandId | null => {
                     if (lineText === openLink) {
                         return "searchFilesOpenSelected";
                     }

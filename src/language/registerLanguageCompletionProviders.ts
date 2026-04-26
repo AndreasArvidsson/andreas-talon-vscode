@@ -114,9 +114,13 @@ class SnippetCompletionProvider implements LanguageCompletionProvider {
         const precedingText = line.text.slice(0, position.character);
         const variableMatch = /^\$(\d+)\.(.*)/.exec(precedingText);
 
-        const { fields, prefix, range } = (() => {
+        const { fields, prefix, range } = ((): {
+            fields: string[];
+            prefix: string;
+            range: Range;
+        } => {
             if (variableMatch != null) {
-                const matchPrefix = variableMatch[2];
+                const [_1, _2, matchPrefix] = variableMatch;
                 return {
                     prefix: matchPrefix,
                     fields: [

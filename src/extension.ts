@@ -36,7 +36,7 @@ async function activateExtension(
     const treeSitter = new TreeSitter(parseTreeExtension);
 
     if (isTesting) {
-        console.debug = () => {
+        console.debug = (): void => {
             // The parse tree extensions spams debug logs
         };
     }

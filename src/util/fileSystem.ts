@@ -90,13 +90,13 @@ export function getDir(uri: vscode.Uri): string {
     return path.dirname(uri.fsPath);
 }
 
-function assertNonExistingFile(uri: vscode.Uri) {
+function assertNonExistingFile(uri: vscode.Uri): void {
     if (fileExists(uri)) {
         const filename = getFilename(uri);
         throw new Error(`File '${filename}' already exists`);
     }
 }
 
-function fileExists(uri: vscode.Uri) {
+function fileExists(uri: vscode.Uri): boolean {
     return fs.existsSync(uri.fsPath);
 }

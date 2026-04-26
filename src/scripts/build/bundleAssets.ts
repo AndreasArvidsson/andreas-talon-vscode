@@ -6,12 +6,13 @@ const projectRoot = path.join(__dirname, "../../..");
 const sourceRoot = path.join(projectRoot, "src");
 const destinationRoot = path.join(projectRoot, "out");
 
-async function copyAsset(source: string, destination?: string) {
+async function copyAsset(source: string, destination?: string): Promise<void> {
     const fullSource = path.join(sourceRoot, source);
     const fullDestination = path.join(destinationRoot, destination ?? source);
 
     console.log(`Copying ${fullSource} to ${fullDestination}`);
 
+    // oxlint-disable-next-line typescript/explicit-function-return-type
     const stat = await (async () => {
         try {
             return await lstat(fullSource);

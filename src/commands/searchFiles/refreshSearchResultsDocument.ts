@@ -42,7 +42,7 @@ export async function refreshSearchResultsDocument(
 function applyCurrentFileSelection(
     editor: TextEditor,
     workspaces: SearchResultsWorkspace<PartialSearchResultFile>[],
-) {
+): void {
     const currentWorkspaces = parseDocument(editor.document).workspaces;
 
     for (const ws of workspaces) {

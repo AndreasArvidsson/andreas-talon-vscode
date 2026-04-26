@@ -17,7 +17,7 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
         const changes: Change[] = [];
         const unprocessedLines: Line[] = [];
 
-        const processLines = () => {
+        const processLines = (): void => {
             const newText = this.parseLineComment(unprocessedLines);
             if (newText != null) {
                 const range = unprocessedLines[0].range.union(
@@ -29,7 +29,7 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
         };
 
         matchAll(document, selections, this.regex, (match, range) => {
-            const matchText = match[0];
+            const [matchText] = match;
             const { text, isBlockComment } = this.parseMatch(match);
             const indentation = matchText.slice(
                 0,
@@ -75,7 +75,7 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
     ): string | undefined;
 
     private parseLineComment(lines: Line[]): string | undefined {
-        const { indentation } = lines[0];
+        const [{ indentation }] = lines;
         const tokens = lines.flatMap((line) => {
             // Extract the text after the "//"
             const text = line.text.slice(this.linePrefix.length).trimStart();

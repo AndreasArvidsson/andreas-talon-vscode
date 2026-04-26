@@ -2,7 +2,7 @@ import { commands } from "vscode";
 import { runTest } from "./testUtil/runTest";
 
 suite("Formatters", () => {
-    const callback = () =>
+    const callback = (): Thenable<unknown> =>
         commands.executeCommand("editor.action.formatDocument");
 
     runTest({

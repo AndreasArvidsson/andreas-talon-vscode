@@ -21,7 +21,6 @@ const disabledRules = [
     "eslint/no-undefined",
     "eslint/no-use-before-define",
     "eslint/no-void",
-    "eslint/prefer-destructuring",
     "eslint/sort-imports",
     "eslint/sort-keys",
     "eslint/sort-vars",
@@ -39,11 +38,9 @@ const disabledRules = [
     "oxc/no-rest-spread-properties",
     "promise/avoid-new",
     "promise/prefer-await-to-callbacks",
-    "typescript/explicit-function-return-type",
     "typescript/parameter-properties",
     "typescript/prefer-readonly-parameter-types",
     "typescript/promise-function-async",
-    "typescript/strict-void-return",
     "unicorn/filename-case",
     "unicorn/no-array-callback-reference",
     "unicorn/no-null",
@@ -83,8 +80,10 @@ export default defineConfig({
         restriction: "warn",
         nursery: "warn",
     },
+
     rules: {
         ...Object.fromEntries(disabledRules.map((r) => [r, "off"])),
+
         "eslint/no-duplicate-imports": [
             "warn",
             {
@@ -106,6 +105,13 @@ export default defineConfig({
             "warn",
             {
                 argsIgnorePattern: "^_",
+                destructuredArrayIgnorePattern: "^_",
+            },
+        ],
+        "typescript/no-confusing-void-expression": [
+            "warn",
+            {
+                ignoreArrowShorthand: true,
             },
         ],
         "typescript/strict-boolean-expressions": [
@@ -122,4 +128,14 @@ export default defineConfig({
             },
         ],
     },
+
+    overrides: [
+        {
+            files: ["src/test/**/*.ts", "src/scripts/**/*.ts"],
+            rules: {
+                "unicorn/prefer-top-level-await": "off",
+                "typescript/strict-void-return": "off",
+            },
+        },
+    ],
 });

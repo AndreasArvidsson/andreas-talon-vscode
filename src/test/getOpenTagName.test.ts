@@ -3,7 +3,7 @@ import { runTest } from "./testUtil/runTest";
 const command = "getOpenTagName";
 
 suite(command, () => {
-    function testLanguage(languageId: string) {
+    function testLanguage(languageId: string): void {
         runTest({
             title: `${command} - ${languageId}`,
             command,

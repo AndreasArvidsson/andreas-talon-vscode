@@ -23,7 +23,7 @@ export function getNewFilenameContext(
         return undefined;
     }
 
-    const uri = editor.document.uri;
+    const { uri } = editor.document;
     const selected = getSelectedText(editor);
     const filename = getFilename(uri);
 

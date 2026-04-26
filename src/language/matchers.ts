@@ -126,7 +126,7 @@ function getPrefixAtPosition(
 }
 
 /** Returns true if the line is indented or the position is to the right side of the `:` */
-function isInTalonScript(line: TextLine, position: Position) {
+function isInTalonScript(line: TextLine, position: Position): boolean {
     if (line.firstNonWhitespaceCharacterIndex > 0) {
         return true;
     }
@@ -150,7 +150,7 @@ function testRegexAtPosition(
     lineText: string,
     regex: RegExp,
 ): boolean {
-    return Array.from(lineText.matchAll(regex)).some(
+    return [...lineText.matchAll(regex)].some(
         (match) =>
             position.character >= match.index &&
             position.character <= match.index + match[0].length,

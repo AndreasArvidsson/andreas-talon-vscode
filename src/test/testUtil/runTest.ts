@@ -21,7 +21,9 @@ export const runTest = (fixture: TestFixture): void => {
     });
 };
 
-async function openEditor(fixture: FullTestFixture) {
+async function openEditor(
+    fixture: FullTestFixture,
+): Promise<vscode.TextEditor> {
     const { language, content, selections } = fixture.pre;
 
     const editor = await openNewEditor({ language, content });
@@ -35,7 +37,7 @@ function assertPost(
     fixture: FullTestFixture,
     editor: vscode.TextEditor,
     actualReturnValue: unknown,
-) {
+): void {
     const { language, content, selections, returnValue } = fixture.post;
 
     assert.equal(editor.document.languageId, language);

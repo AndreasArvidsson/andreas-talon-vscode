@@ -35,7 +35,7 @@ function visible(
     title: string,
     description?: string,
     args?: string,
-) {
+): CommandDescription {
     return create(false, false, false, category, title, description, args);
 }
 
@@ -44,7 +44,7 @@ function hidden(
     title: string,
     description?: string,
     args?: string,
-) {
+): CommandDescription {
     return create(false, false, true, category, title, description, args);
 }
 
@@ -53,7 +53,7 @@ function makePrivate(
     title: string,
     description?: string,
     args?: string,
-) {
+): CommandDescription {
     return create(true, true, true, category, title, description, args);
 }
 
@@ -62,7 +62,7 @@ function privateReadme(
     title: string,
     description?: string,
     args?: string,
-) {
+): CommandDescription {
     return create(true, false, false, category, title, description, args);
 }
 

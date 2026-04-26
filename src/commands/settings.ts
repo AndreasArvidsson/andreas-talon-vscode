@@ -36,9 +36,6 @@ function getConfigurationTarget(
         case "workspaceFolder":
             return vscode.ConfigurationTarget.WorkspaceFolder;
         default:
-            throw new Error(
-                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                `Unknown configuration target: ${configurationTarget}`,
-            );
+            throw new Error("Unknown configuration target");
     }
 }

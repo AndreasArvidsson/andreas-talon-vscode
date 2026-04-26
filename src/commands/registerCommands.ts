@@ -36,7 +36,7 @@ import {
 import { selectTo } from "./selectTo";
 import { getSetting, setSetting } from "./settings";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line @typescript-eslint/no-explicit-any
 type Callback = (...args: any[]) => any;
 
 export function registerCommands(
@@ -122,7 +122,7 @@ function registerCommand(
 ): vscode.Disposable {
     const fullCommand = getFullCommand(command);
 
-    const safeCallback = async (...args: unknown[]) => {
+    const safeCallback = async (...args: unknown[]): Promise<void> => {
         try {
             // oxlint-disable-next-line typescript/no-unsafe-return
             return await Promise.resolve(callback(...args));

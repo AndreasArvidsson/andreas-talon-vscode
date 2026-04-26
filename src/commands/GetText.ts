@@ -84,7 +84,7 @@ export class GetText {
         return nameNode?.node.text ?? null;
     }
 
-    private async validEditor(editor: vscode.TextEditor) {
+    private async validEditor(editor: vscode.TextEditor): Promise<boolean> {
         return editor.selections.length === 1 && (await this.inTextEditor());
     }
 

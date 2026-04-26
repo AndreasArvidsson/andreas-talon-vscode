@@ -51,7 +51,7 @@ export class JavaFormatter extends BaseCommentFormatter {
             linePrefix,
         );
 
-        const updatedText = (() => {
+        const updatedText = ((): string => {
             const isSingleLine =
                 lines.length === 1 && updatedLines.length === 1;
             const start = isDoc && !isSingleLine ? "/**" : "/*";

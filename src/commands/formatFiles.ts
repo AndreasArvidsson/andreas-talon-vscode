@@ -42,7 +42,7 @@ async function formatDocuments(uris: vscode.Uri[]): Promise<void> {
     );
 }
 
-async function formatDocument(uri: vscode.Uri) {
+async function formatDocument(uri: vscode.Uri): Promise<void> {
     try {
         const editor = await vscode.window.showTextDocument(uri, {
             preserveFocus: false,
@@ -70,7 +70,7 @@ async function formatDocument(uri: vscode.Uri) {
     }
 }
 
-function isMessageBinary(errorMessage: string) {
+function isMessageBinary(errorMessage: string): boolean {
     // This message will be thrown for binary files
     return errorMessage.endsWith(
         "Detail: File seems to be binary and cannot be opened as text",

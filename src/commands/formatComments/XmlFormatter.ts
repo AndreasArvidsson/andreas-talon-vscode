@@ -17,8 +17,7 @@ export class XmlFormatter implements CommentFormatter {
         const changes: Change[] = [];
 
         matchAll(document, selections, this.regex, (match, range) => {
-            const matchText = match[0];
-            const text = match[1];
+            const [matchText, text] = match;
             const indentation = matchText.slice(
                 0,
                 matchText.length - text.length,
@@ -66,7 +65,7 @@ export class XmlFormatter implements CommentFormatter {
             linePrefix,
         );
 
-        const updatedText = (() => {
+        const updatedText = ((): string => {
             const isSingleLine =
                 lines.length === 1 && updatedLines.length === 1;
             if (isSingleLine) {

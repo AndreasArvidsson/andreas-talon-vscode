@@ -46,7 +46,7 @@ export async function launchVscodeAndRunTests(): Promise<void> {
     }
 }
 
-function installExtensionDependencies(vscodeExecutablePath: string) {
+function installExtensionDependencies(vscodeExecutablePath: string): void {
     const [cli, ...args] =
         resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
 
