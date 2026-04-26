@@ -38,7 +38,7 @@ jobs:
       - name: Read version from package.json
         run: |
           VERSION=$(node -p "require('./package.json').version")
-          echo "version=$VERSION" >> $GITHUB_ENV
+          echo "version=v$VERSION" >> $GITHUB_ENV
 
       - name: Check whether this version is already published
         run: |
