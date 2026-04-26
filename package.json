@@ -350,24 +350,24 @@
         "pokey.parse-tree"
     ],
     "dependencies": {
-        "@cursorless/talon-tools": "^0.10.1",
+        "@cursorless/talon-tools": "^0.10.2",
         "fast-glob": "^3.3.3",
         "ignore": "^7.0.5"
     },
     "devDependencies": {
         "@types/fs-extra": "^11.0.4",
         "@types/mocha": "^10.0.10",
-        "@types/node": "^24.12.0",
+        "@types/node": "^24.12.2",
         "@types/vscode": "1.98.0",
         "@vscode/test-electron": "^2.5.2",
-        "esbuild": "^0.27.4",
+        "esbuild": "^0.28.0",
         "file-updater": "^0.5.0",
         "fs-extra": "^11.3.4",
         "mocha": "^11.7.5",
-        "oxfmt": "^0.42.0",
-        "oxlint-tsgolint": "^0.17.4",
-        "oxlint": "^1.57.0",
+        "oxfmt": "^0.46.0",
+        "oxlint-tsgolint": "^0.22.0",
+        "oxlint": "^1.61.0",
         "tsx": "^4.21.0",
-        "typescript": "^6.0.2"
+        "typescript": "^6.0.3"
     }
 }
