@@ -18,13 +18,15 @@ export interface Scope {
 export class TreeSitter {
     private readonly queries = new Map<string, Query | undefined>();
 
-    constructor(private readonly parseTreeExtension: ParseTreeExtension) {}
+    public constructor(
+        private readonly parseTreeExtension: ParseTreeExtension,
+    ) {}
 
-    getRootNode(document: vscode.TextDocument): Node {
+    public getRootNode(document: vscode.TextDocument): Node {
         return this.parseTreeExtension.getTree(document).rootNode;
     }
 
-    findsSmallestContainingPosition(
+    public findsSmallestContainingPosition(
         document: vscode.TextDocument,
         name: ScopeName,
         position: vscode.Position,

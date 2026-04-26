@@ -19,7 +19,7 @@ async function gitApi(): Promise<API> {
 }
 
 export class GitUtil {
-    async getFileURL({
+    public async getFileURL({
         useSelection = false,
         useBranch = false,
     }: GitParameters): Promise<string> {
@@ -48,27 +48,27 @@ export class GitUtil {
         return platform.getFileUrl(commitOrBranch, relativeFilePath, range);
     }
 
-    async getRepoURL(): Promise<string> {
+    public async getRepoURL(): Promise<string> {
         const repository = await this.getRepository();
         return getPlatform(repository).getRepoUrl();
     }
 
-    async getIssuesURL(): Promise<string> {
+    public async getIssuesURL(): Promise<string> {
         const repository = await this.getRepository();
         return getPlatform(repository).getIssuesUrl();
     }
 
-    async getNewIssueURL(): Promise<string> {
+    public async getNewIssueURL(): Promise<string> {
         const repository = await this.getRepository();
         return getPlatform(repository).getNewIssueUrl();
     }
 
-    async getPullRequestsURL(): Promise<string> {
+    public async getPullRequestsURL(): Promise<string> {
         const repository = await this.getRepository();
         return getPlatform(repository).getPullRequestsURL();
     }
 
-    async checkout(branches: string[]): Promise<void> {
+    public async checkout(branches: string[]): Promise<void> {
         const repository = await this.getRepository();
         const branch = await this.getFirstAvailableBranch(branches, repository);
         if (branch == null) {
@@ -79,7 +79,7 @@ export class GitUtil {
         await repository.checkout(branch);
     }
 
-    async getFirstAvailableBranch(
+    public async getFirstAvailableBranch(
         branches: string[],
         repository?: Repository,
     ): Promise<string | undefined> {
@@ -224,14 +224,14 @@ interface GitPlatform {
 }
 
 class Github implements GitPlatform {
-    name = "GitHub";
-    repoUrl: string;
+    public name = "GitHub";
+    public repoUrl: string;
 
-    constructor(remoteUrl: string) {
+    public constructor(remoteUrl: string) {
         this.repoUrl = cleanGitUrl(remoteUrl);
     }
 
-    getFileUrl(
+    public getFileUrl(
         commitOrBranch: string,
         filePath: string,
         range?: Range,
@@ -247,32 +247,32 @@ class Github implements GitPlatform {
         return url;
     }
 
-    getRepoUrl(): string {
+    public getRepoUrl(): string {
         return this.repoUrl;
     }
 
-    getIssuesUrl(): string {
+    public getIssuesUrl(): string {
         return `${this.repoUrl}/issues`;
     }
 
-    getNewIssueUrl(): string {
+    public getNewIssueUrl(): string {
         return `${this.repoUrl}/issues/new`;
     }
 
-    getPullRequestsURL(): string {
+    public getPullRequestsURL(): string {
         return `${this.repoUrl}/pulls`;
     }
 }
 
 class Bitbucket implements GitPlatform {
-    name = "Bitbucket";
-    repoUrl: string;
+    public name = "Bitbucket";
+    public repoUrl: string;
 
-    constructor(remoteUrl: string) {
+    public constructor(remoteUrl: string) {
         this.repoUrl = cleanGitUrl(remoteUrl);
     }
 
-    getFileUrl(
+    public getFileUrl(
         commitOrBranch: string,
         filePath: string,
         range?: Range,
@@ -288,19 +288,19 @@ class Bitbucket implements GitPlatform {
         return url;
     }
 
-    getRepoUrl(): string {
+    public getRepoUrl(): string {
         return this.repoUrl;
     }
 
-    getIssuesUrl(): string {
+    public getIssuesUrl(): string {
         return `${this.repoUrl}/issues`;
     }
 
-    getNewIssueUrl(): string {
+    public getNewIssueUrl(): string {
         return `${this.repoUrl}/issues/new`;
     }
 
-    getPullRequestsURL(): string {
+    public getPullRequestsURL(): string {
         return `${this.repoUrl}/pull-requests`;
     }
 }

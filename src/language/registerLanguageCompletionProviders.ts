@@ -25,10 +25,10 @@ interface LanguageCompletionProvider extends CompletionItemProvider {
 }
 
 abstract class TalonBaseCompletionProvider implements LanguageCompletionProvider {
-    abstract languageId: string;
-    readonly triggererCharacters = ["."];
+    public abstract languageId: string;
+    public readonly triggererCharacters = ["."];
 
-    async provideCompletionItems(
+    public async provideCompletionItems(
         document: TextDocument,
         position: Position,
     ): Promise<CompletionItem[]> {
@@ -76,7 +76,7 @@ abstract class TalonBaseCompletionProvider implements LanguageCompletionProvider
 }
 
 class TalonCompletionProvider extends TalonBaseCompletionProvider {
-    readonly languageId = "talon";
+    public readonly languageId = "talon";
 
     protected getPrefixAtPosition(
         document: TextDocument,
@@ -87,7 +87,7 @@ class TalonCompletionProvider extends TalonBaseCompletionProvider {
 }
 
 class PythonCompletionProvider extends TalonBaseCompletionProvider {
-    readonly languageId = "python";
+    public readonly languageId = "python";
 
     protected getPrefixAtPosition(
         document: TextDocument,
@@ -98,10 +98,10 @@ class PythonCompletionProvider extends TalonBaseCompletionProvider {
 }
 
 class SnippetCompletionProvider implements LanguageCompletionProvider {
-    readonly languageId = "snippet";
-    readonly triggererCharacters = ["."];
+    public readonly languageId = "snippet";
+    public readonly triggererCharacters = ["."];
 
-    provideCompletionItems(
+    public provideCompletionItems(
         document: TextDocument,
         position: Position,
     ): CompletionItem[] {

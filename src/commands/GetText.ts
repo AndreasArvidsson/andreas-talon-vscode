@@ -4,12 +4,12 @@ import type { CommandServerExtension } from "../typings/commandServer";
 import { getSortedSelections } from "../util/getSortedSelections";
 
 export class GetText {
-    constructor(
+    public constructor(
         private readonly commandServerExtension: CommandServerExtension,
         private readonly treeSitter: TreeSitter,
     ) {}
 
-    getDocumentText(): string | null {
+    public getDocumentText(): string | null {
         const editor = vscode.window.activeTextEditor;
 
         if (editor == null) {
@@ -19,7 +19,7 @@ export class GetText {
         return editor.document.getText();
     }
 
-    async getSelectedText(): Promise<string[] | null> {
+    public async getSelectedText(): Promise<string[] | null> {
         const editor = vscode.window.activeTextEditor;
 
         if (editor == null || !(await this.inTextEditor())) {
@@ -31,7 +31,7 @@ export class GetText {
         );
     }
 
-    async getDictationContext(): Promise<{
+    public async getDictationContext(): Promise<{
         before: string;
         after: string;
     } | null> {
@@ -52,7 +52,7 @@ export class GetText {
         };
     }
 
-    async getClassName(): Promise<string | null> {
+    public async getClassName(): Promise<string | null> {
         const editor = vscode.window.activeTextEditor;
 
         if (editor == null || !(await this.validEditor(editor))) {
@@ -68,7 +68,7 @@ export class GetText {
         return nameNode?.node.text ?? null;
     }
 
-    async getOpenTagName(): Promise<string | null> {
+    public async getOpenTagName(): Promise<string | null> {
         const editor = vscode.window.activeTextEditor;
 
         if (editor == null || !(await this.validEditor(editor))) {

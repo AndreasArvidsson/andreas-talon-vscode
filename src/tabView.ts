@@ -32,9 +32,9 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
     private readonly _onDidChangeTreeData = new vscode.EventEmitter<void>();
     private readonly mainDisposable: vscode.Disposable;
     private onTabChangeDisposable: vscode.Disposable | undefined;
-    readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
+    public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
-    constructor() {
+    public constructor() {
         const treeView = vscode.window.createTreeView(getFullCommand("tabs"), {
             treeDataProvider: this,
         });
@@ -73,7 +73,7 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
         }
     }
 
-    getTreeItem(element: Element): vscode.TreeItem {
+    public getTreeItem(element: Element): vscode.TreeItem {
         if (element.type === "group") {
             return {
                 label: `GROUP ${element.groupIndex + 1}`,
@@ -86,7 +86,7 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
         return createItem(element.tab, element.index);
     }
 
-    getChildren(element?: Element): Element[] {
+    public getChildren(element?: Element): Element[] {
         if (element == null) {
             let tabIndex = 0;
 
@@ -117,7 +117,7 @@ class TreeDataProvider implements vscode.TreeDataProvider<Element> {
         );
     }
 
-    dispose(): void {
+    public dispose(): void {
         this.mainDisposable.dispose();
         this.onTabChangeDisposable?.dispose();
     }

@@ -3,7 +3,7 @@ import type { DocumentLinkProvider, TextDocument } from "vscode";
 import { parseDocument } from "./parseDocument";
 
 export class SearchDocumentLinkProvider implements DocumentLinkProvider {
-    provideDocumentLinks(document: TextDocument): DocumentLink[] {
+    public provideDocumentLinks(document: TextDocument): DocumentLink[] {
         const { workspaces, buttons } = parseDocument(document);
         const result: DocumentLink[] = [];
         let hasSelectedFile = false;

@@ -80,7 +80,7 @@ function getMatchAtPosition(
     if (testRegexAtPosition(position, lineText, captureRegex)) {
         return {
             type: "capture",
-            name: name,
+            name,
         };
     }
 

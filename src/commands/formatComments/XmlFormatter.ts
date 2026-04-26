@@ -8,7 +8,7 @@ const suffix = "-->";
 export class XmlFormatter implements CommentFormatter {
     private readonly regex = /^[\t ]*(<!--[\s\S]*?-->)/gm;
 
-    constructor(private readonly lineWidth: number) {}
+    public constructor(private readonly lineWidth: number) {}
 
     public parse(
         document: TextDocument,

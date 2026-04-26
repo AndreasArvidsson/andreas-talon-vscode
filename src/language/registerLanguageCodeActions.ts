@@ -18,9 +18,9 @@ import type { TreeSitter } from "../treeSitter/TreeSitter";
 abstract class ProviderCodeActions implements CodeActionProvider {
     protected abstract docActionName: string;
 
-    constructor(private readonly treeSitter: TreeSitter) {}
+    public constructor(private readonly treeSitter: TreeSitter) {}
 
-    provideCodeActions(
+    public provideCodeActions(
         document: TextDocument,
         range: Range,
         context: CodeActionContext,
@@ -95,7 +95,7 @@ abstract class ProviderCodeActions implements CodeActionProvider {
 }
 
 class ProvideCodeActionsJava extends ProviderCodeActions {
-    docActionName = "JavaDoc";
+    public docActionName = "JavaDoc";
 
     protected isDocComment(type: string, text: string): boolean {
         return /^\/\*\*[\s\S]*\*\/$/.test(text);
@@ -111,7 +111,7 @@ class ProvideCodeActionsJava extends ProviderCodeActions {
 }
 
 class ProvideCodeActionsJs extends ProviderCodeActions {
-    docActionName = "JSDoc";
+    public docActionName = "JSDoc";
 
     protected isDocComment(type: string, text: string): boolean {
         return /^\/\*\*[\s\S]*\*\/$/.test(text);

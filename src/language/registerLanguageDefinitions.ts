@@ -20,7 +20,7 @@ import { searchInWorkspace } from "./searchInWorkspace";
 import { searchInDefaultTalonActions } from "./talonDefaultActions";
 
 abstract class DefinitionProviderBase implements DefinitionProvider {
-    provideDefinition(
+    public provideDefinition(
         document: TextDocument,
         position: Position,
         _token: CancellationToken,
@@ -63,7 +63,7 @@ class PythonDefinitionProvider extends DefinitionProviderBase {
 }
 
 abstract class HoverProviderBase implements HoverProvider {
-    async provideHover(
+    public async provideHover(
         document: TextDocument,
         position: Position,
         _token: CancellationToken,

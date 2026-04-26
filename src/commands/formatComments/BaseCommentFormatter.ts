@@ -6,7 +6,7 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
     protected abstract regex: RegExp;
     protected abstract linePrefix: string;
 
-    constructor(protected lineWidth: number) {}
+    public constructor(protected lineWidth: number) {}
 
     protected abstract parseMatch(match: RegExpExecArray): CommentMatch;
 
