@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.99.0",
+    "version": "3.100.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -11,7 +11,10 @@
         "out/treeSitter",
         "out/*.wasm",
         "images/icon.png",
-        "images/tabs_icon.svg"
+        "images/tabs_icon.svg",
+        "package.json",
+        "README.md",
+        "LICENSE"
     ],
     "icon": "images/icon.png",
     "repository": {
@@ -364,9 +367,9 @@
         "file-updater": "^0.5.0",
         "fs-extra": "^11.3.4",
         "mocha": "^11.7.5",
-        "oxfmt": "^0.46.0",
-        "oxlint-tsgolint": "^0.22.0",
-        "oxlint": "^1.61.0",
+        "oxfmt": "^0.47.0",
+        "oxlint-tsgolint": "^0.22.1",
+        "oxlint": "^1.62.0",
         "tsx": "^4.21.0",
         "typescript": "^6.0.3"
     }
