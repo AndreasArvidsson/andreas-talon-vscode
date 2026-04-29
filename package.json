@@ -7,9 +7,10 @@
     "license": "MIT",
     "main": "./out/extension.js",
     "files": [
-        "out/extension.*",
-        "out/treeSitter",
-        "out/*.wasm",
+        "out/extension.js*",
+        "out/**/*.scm",
+        "out/**/*.wasm",
+        "syntaxes/",
         "images/icon.png",
         "images/tabs_icon.svg",
         "package.json",
