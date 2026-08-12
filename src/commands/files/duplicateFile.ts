@@ -1,5 +1,5 @@
-import * as path from "node:path";
-import * as vscode from "vscode";
+import path from "node:path";
+import vscode from "vscode";
 import { copyFile } from "../../util/fileSystem";
 import { getActiveFileSchemaEditor } from "../../util/getActiveEditor";
 import { getNewFilenameContext } from "../../util/getRenameContext";

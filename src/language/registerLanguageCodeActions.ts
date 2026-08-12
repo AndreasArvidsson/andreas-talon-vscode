@@ -98,7 +98,7 @@ class ProvideCodeActionsJava extends ProviderCodeActions {
     public docActionName = "JavaDoc";
 
     protected isDocComment(type: string, text: string): boolean {
-        return /^\/\*\*[\s\S]*\*\/$/.test(text);
+        return /^\/\*\*[\s\S]*\*\/$/u.test(text);
     }
 
     protected isBlockComment(type: string, _text: string): boolean {
@@ -114,34 +114,34 @@ class ProvideCodeActionsJs extends ProviderCodeActions {
     public docActionName = "JSDoc";
 
     protected isDocComment(type: string, text: string): boolean {
-        return /^\/\*\*[\s\S]*\*\/$/.test(text);
+        return /^\/\*\*[\s\S]*\*\/$/u.test(text);
     }
 
     protected isBlockComment(type: string, text: string): boolean {
-        return /^\/\*[\s\S]*\*\/$/.test(text);
+        return /^\/\*[\s\S]*\*\/$/u.test(text);
     }
 
     protected isLineComment(type: string, text: string): boolean {
-        return /^\s*\/\//m.test(text);
+        return /^\s*\/\//mu.test(text);
     }
 }
 
 export function blockCommentToDocComment(text: string): string {
-    const lines = text.split(/(\r?\n)/);
+    const lines = text.split(/(\r?\n)/u);
     lines[0] = lines[0].replace("/*", "/**");
 
     // Add a leading `*` on each line missing it
     for (let i = 1; i < lines.length - 1; ++i) {
-        lines[i] = lines[i].replace(/^(\s*)(?!\*)(\S)/, "$1* $2");
+        lines[i] = lines[i].replace(/^(\s*)(?!\*)(\S)/u, "$1* $2");
     }
 
     return lines.join("");
 }
 
 export function lineCommentToDocComment(text: string): string {
-    const indent = /^\s*/.exec(text)?.[0] ?? "";
+    const indent = /^\s*/u.exec(text)?.[0] ?? "";
     // Replace leading `//` on each line with `*`
-    const newText = text.replaceAll(/^(\s*)\/\/\s?/gm, "$1* ");
+    const newText = text.replaceAll(/^(\s*)\/\/\s?/gmu, "$1* ");
     // Wrap old comment in `/** */`
     return `${indent}/**\n${newText}\n${indent}*/`;
 }

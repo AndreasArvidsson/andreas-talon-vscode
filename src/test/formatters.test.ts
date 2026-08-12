@@ -1,10 +1,10 @@
 import { commands } from "vscode";
 import { runTest } from "./testUtil/runTest";
 
-suite("Formatters", () => {
-    const callback = (): Thenable<unknown> =>
-        commands.executeCommand("editor.action.formatDocument");
+const callback = (): Thenable<unknown> =>
+    commands.executeCommand("editor.action.formatDocument");
 
+suite("Formatters", () => {
     runTest({
         title: "Talon",
         callback,

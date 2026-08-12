@@ -6,7 +6,7 @@ const prefix = "<!--";
 const suffix = "-->";
 
 export class XmlFormatter implements CommentFormatter {
-    private readonly regex = /^[\t ]*(<!--[\s\S]*?-->)/gm;
+    private readonly regex = /^[\t ]*(<!--[\s\S]*?-->)/gmu;
 
     public constructor(private readonly lineWidth: number) {}
 
@@ -46,7 +46,7 @@ export class XmlFormatter implements CommentFormatter {
             if (isValidLine(line)) {
                 // Split on spaces
                 return line
-                    .split(/[ ]+/g)
+                    .split(/[ ]+/gu)
                     .map((token) => ({ text: token, preserve: false }));
             }
             if (

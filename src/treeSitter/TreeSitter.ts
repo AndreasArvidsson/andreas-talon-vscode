@@ -1,6 +1,6 @@
-import * as fs from "node:fs";
-import * as path from "node:path";
-import * as vscode from "vscode";
+import fs from "node:fs";
+import path from "node:path";
+import vscode from "vscode";
 import type { Node, Point, Query, QueryMatch } from "web-tree-sitter";
 import type { ParseTreeExtension } from "../typings/parserTree";
 
@@ -92,7 +92,7 @@ function loadQueryFile(file: string): string {
     const content = fs.readFileSync(file, "utf8");
 
     return content.replaceAll(
-        /^;; import (\w+)$/gm,
+        /^;; import (\w+)$/gmu,
         (_match, filename: string) => {
             const importFile = getQueryFile(filename);
             return loadQueryFile(importFile);

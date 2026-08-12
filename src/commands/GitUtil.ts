@@ -113,7 +113,7 @@ export class GitUtil {
             .filter((r) => {
                 const rootPath = r.rootUri.path
                     .toLowerCase()
-                    .replace(/\/+$/, "");
+                    .replace(/\/+$/u, "");
                 return (
                     filePath === rootPath || filePath.startsWith(`${rootPath}/`)
                 );
@@ -216,11 +216,15 @@ function getPlatform(repository: Repository): GitPlatform {
 
 interface GitPlatform {
     name: string;
-    getFileUrl(commitOrBranch: string, filePath: string, range?: Range): string;
-    getRepoUrl(): string;
-    getIssuesUrl(): string;
-    getNewIssueUrl(): string;
-    getPullRequestsURL(): string;
+    getFileUrl: (
+        commitOrBranch: string,
+        filePath: string,
+        range?: Range,
+    ) => string;
+    getRepoUrl: () => string;
+    getIssuesUrl: () => string;
+    getNewIssueUrl: () => string;
+    getPullRequestsURL: () => string;
 }
 
 class Github implements GitPlatform {

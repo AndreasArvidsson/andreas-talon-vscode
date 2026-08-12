@@ -1,5 +1,5 @@
-import * as path from "node:path";
-import * as vscode from "vscode";
+import path from "node:path";
+import vscode from "vscode";
 
 export const labelFormatSetting = "workbench.editor.labelFormat";
 

@@ -3,7 +3,7 @@ import { BaseCommentFormatter } from "./BaseCommentFormatter";
 import type { CommentMatch } from "./types";
 
 export class PythonFormatter extends BaseCommentFormatter {
-    protected regex = /^[\t ]*(#.*)/gm;
+    protected regex = /^[\t ]*(#.*)/gmu;
     protected linePrefix = "#";
 
     protected parseMatch(match: RegExpExecArray): CommentMatch {

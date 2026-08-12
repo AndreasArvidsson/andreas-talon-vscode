@@ -25,7 +25,7 @@ export async function performWorkspaceSearch(
     ws: WorkspaceFolder,
     query: string,
 ): Promise<SearchResultsWorkspace<PartialSearchResultFile>> {
-    const formattedQuery = query.replaceAll(/\s+/g, "*");
+    const formattedQuery = query.replaceAll(/\s+/gu, "*");
     const glob = `**/*${formattedQuery}*`;
 
     const files = await fastGlob(glob, {

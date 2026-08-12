@@ -82,7 +82,7 @@ export abstract class BaseCommentFormatter implements CommentFormatter {
             if (isValidLine(text)) {
                 // Split on spaces
                 return text
-                    .split(/[ ]+/g)
+                    .split(/[ ]+/gu)
                     .map((token) => ({ text: token, preserve: false }));
             }
             return [{ text, preserve: true }];

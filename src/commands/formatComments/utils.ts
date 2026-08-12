@@ -2,7 +2,7 @@ import type { Selection, TextDocument } from "vscode";
 import { Range } from "vscode";
 import type { Token } from "./types";
 
-export const isValidLineRegex = /\w/;
+export const isValidLineRegex = /\w/u;
 
 export function isValidLine(text: string): boolean {
     return isValidLineRegex.test(text);

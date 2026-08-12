@@ -1,5 +1,5 @@
-import * as cp from "node:child_process";
-import * as path from "node:path";
+import cp from "node:child_process";
+import path from "node:path";
 import { exit } from "node:process";
 import {
     downloadAndUnzipVSCode,

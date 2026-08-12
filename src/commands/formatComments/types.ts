@@ -1,7 +1,10 @@
 import type { Range, Selection, TextDocument } from "vscode";
 
 export interface CommentFormatter {
-    parse(document: TextDocument, selections?: readonly Selection[]): Change[];
+    parse: (
+        document: TextDocument,
+        selections?: readonly Selection[],
+    ) => Change[];
 }
 
 export interface CommentMatch {

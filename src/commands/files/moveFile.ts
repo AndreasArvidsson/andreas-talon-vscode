@@ -1,4 +1,4 @@
-import * as path from "node:path";
+import path from "node:path";
 import { IGNORE_FOLDERS } from "@cursorless/talon-tools";
 import ignore from "ignore";
 import type { QuickPickItem, WorkspaceFolder } from "vscode";

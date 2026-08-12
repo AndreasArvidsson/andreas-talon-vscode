@@ -1,4 +1,4 @@
-import * as path from "node:path";
+import path from "node:path";
 import type { TextDocument } from "vscode";
 import { Range, Uri, workspace } from "vscode";
 import { getActiveEditor } from "../../util/getActiveEditor";
@@ -25,11 +25,11 @@ export function parseDocument(document: TextDocument): SearchResultsState {
 
     const sectionTexts = document
         .getText()
-        .split(new RegExp(`${divider}\\r?\\n`));
+        .split(new RegExp(`${divider}\\r?\\n`, "u"));
     let lineNumber = 0;
 
     for (const [index, sectionText] of sectionTexts.entries()) {
-        const lines = sectionText.split(/\r?\n/);
+        const lines = sectionText.split(/\r?\n/u);
 
         // The first section contains the query, which is not associated with a specific workspace
         if (index === 0) {
@@ -105,7 +105,7 @@ export function parseDocument(document: TextDocument): SearchResultsState {
 
         for (let i = wsNameIndex + 1; i < lines.length; i++) {
             const lineText = lines[i];
-            const match = /^\s*([-*]\s+)?/.exec(lineText);
+            const match = /^\s*([-*]\s+)?/u.exec(lineText);
             const offset = match?.[0]?.length ?? 0;
             const selected = match?.[1] != null;
             const relativePath = lineText.slice(offset).trimEnd();

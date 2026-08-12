@@ -70,7 +70,7 @@ function getSelectedText(editor: TextEditor): string {
         return "";
     }
     const selectedText = editor.document.getText(editor.selection);
-    if (/^[ \w\d-.]+$/.test(selectedText)) {
+    if (/^[ \w\d.-]+$/u.test(selectedText)) {
         return selectedText;
     }
     return "";

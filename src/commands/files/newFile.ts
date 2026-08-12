@@ -1,5 +1,5 @@
-import * as path from "node:path";
-import * as vscode from "vscode";
+import path from "node:path";
+import vscode from "vscode";
 import { createFile } from "../../util/fileSystem";
 import { getNewFilenameContext } from "../../util/getRenameContext";
 import { showNewNameInputBox } from "../../util/showNewNameInputBox";

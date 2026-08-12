@@ -24,14 +24,14 @@ async function showInputBox(): Promise<number | undefined> {
         placeHolder: "Line number (0 offset)",
         ignoreFocusOut: true,
         validateInput: (input) => {
-            if (/^\d+$/.test(input.trim())) {
+            if (/^\d+$/u.test(input.trim())) {
                 return null;
             }
             return "Must be positive integer";
         },
     });
     if (value != null) {
-        return Number.parseInt(value.trim(), 10);
+        return Math.trunc(Number(value.trim()));
     }
     return undefined;
 }

@@ -27,14 +27,14 @@ async function showInputBox(): Promise<number | undefined> {
         placeHolder: "Editor index (0 offset)",
         ignoreFocusOut: true,
         validateInput: (input) => {
-            if (/^-?\d+$/.test(input.trim())) {
+            if (/^-?\d+$/u.test(input.trim())) {
                 return null;
             }
             return "Must be integer";
         },
     });
     if (value != null) {
-        return Number.parseInt(value.trim(), 10);
+        return Math.trunc(Number(value.trim()));
     }
     return undefined;
 }

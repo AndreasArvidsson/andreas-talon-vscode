@@ -112,7 +112,7 @@ abstract class HoverProviderBase implements HoverProvider {
 }
 
 function cleanHoverCode(text: string): string {
-    let lines = text.split(/\r?\n/);
+    let lines = text.split(/\r?\n/u);
     // Remove talon-list files context
     if (lines[0].startsWith("list:")) {
         const index = lines.findIndex((l) => l.startsWith("-"));

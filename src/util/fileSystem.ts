@@ -1,6 +1,6 @@
-import * as fs from "node:fs";
-import * as path from "node:path";
-import * as vscode from "vscode";
+import fs from "node:fs";
+import path from "node:path";
+import vscode from "vscode";
 import { getErrorMessage } from "./getErrorMessage";
 
 export async function createFile(uri: vscode.Uri): Promise<void> {
