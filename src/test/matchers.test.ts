@@ -1,6 +1,27 @@
 import assert from "node:assert/strict";
-import type { Position, TextDocument, TextLine } from "vscode";
+import type { TextDocument, TextLine } from "vscode";
+import { Position } from "vscode";
 import { getTalonMatchAtPosition } from "../language/matchers";
+
+suite("Talon matchers", () => {
+    test("Matches a list reference in Unicode mode", () => {
+        const document = createDocument("{user.foo}: command");
+        const position = new Position(0, 6);
+        const expected = {
+            type: "list",
+            name: "user.foo",
+        };
+        const actual = getTalonMatchAtPosition(document, position);
+        assert.deepEqual(actual, expected);
+    });
+
+    test("Treats dots in names literally", () => {
+        const document = createDocument("{userXfoo}: command");
+        const position = new Position(0, 6);
+        const actual = getTalonMatchAtPosition(document, position);
+        assert.equal(actual, undefined);
+    });
+});
 
 function createDocument(text: string): TextDocument {
     // oxlint-disable-next-line typescript/no-unsafe-type-assertion
@@ -18,24 +39,3 @@ function createDocument(text: string): TextDocument {
         getText: () => "user.foo",
     } as unknown as TextDocument;
 }
-
-suite("Talon matchers", () => {
-    test("matches a list reference in Unicode mode", () => {
-        const document = createDocument("command: {user.foo}");
-        // oxlint-disable-next-line typescript/no-unsafe-type-assertion
-        const position = { line: 0, character: 16 } as Position;
-
-        assert.deepEqual(getTalonMatchAtPosition(document, position), {
-            type: "list",
-            name: "user.foo",
-        });
-    });
-
-    test("treats dots in names literally", () => {
-        const document = createDocument("command: {userXfoo}");
-        // oxlint-disable-next-line typescript/no-unsafe-type-assertion
-        const position = { line: 0, character: 16 } as Position;
-
-        assert.equal(getTalonMatchAtPosition(document, position), undefined);
-    });
-});
