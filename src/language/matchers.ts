@@ -1,4 +1,5 @@
 import type { Position, TextDocument, TextLine } from "vscode";
+import { escapeRegExp } from "../util/escapeRegExp";
 
 export type TalonMatchType = "action" | "capture" | "list" | "dynamic_list";
 
@@ -48,16 +49,21 @@ function getMatchAtPosition(
     inTalon: boolean,
 ): TalonMatchName | undefined {
     const name = getNameAtPosition(document, position);
+
     if (name == null) {
         return undefined;
     }
 
     const line = document.lineAt(position);
     const lineText = line.text;
+    const escapedName = escapeRegExp(name);
 
     if (inTalon) {
         if (isInTalonScript(line, position)) {
-            const actionRegex = new RegExp(`${name}\\([\\s\\S]*?\\)`, "gu");
+            const actionRegex = new RegExp(
+                `${escapedName}\\([\\s\\S]*?\\)`,
+                "gu",
+            );
             if (testRegexAtPosition(position, lineText, actionRegex)) {
                 return {
                     type: "action",
@@ -67,7 +73,7 @@ function getMatchAtPosition(
             return undefined;
         }
     } else {
-        const actionRegex = new RegExp(`actions.${name}\\(`, "gu");
+        const actionRegex = new RegExp(`actions\\.${escapedName}\\(`, "gu");
         if (testRegexAtPosition(position, lineText, actionRegex)) {
             return {
                 type: "action",
@@ -76,7 +82,7 @@ function getMatchAtPosition(
         }
     }
 
-    const captureRegex = new RegExp(`<${name}>`, "gu");
+    const captureRegex = new RegExp(`<${escapedName}>`, "gu");
     if (testRegexAtPosition(position, lineText, captureRegex)) {
         return {
             type: "capture",
@@ -84,7 +90,7 @@ function getMatchAtPosition(
         };
     }
 
-    const listRegex = new RegExp(`{${name}}`, "gu");
+    const listRegex = new RegExp(`\\{${escapedName}\\}`, "gu");
     if (testRegexAtPosition(position, lineText, listRegex)) {
         return {
             type: "list",
