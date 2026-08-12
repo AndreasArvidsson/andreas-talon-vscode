@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import vscode from "vscode";
 
 export async function executeCommands(commands: string[]): Promise<unknown[]> {
     const results: unknown[] = [];

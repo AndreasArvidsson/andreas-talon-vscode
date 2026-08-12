@@ -1,5 +1,5 @@
-import * as fs from "node:fs/promises";
-import * as vscode from "vscode";
+import fs from "node:fs/promises";
+import vscode from "vscode";
 import { getErrorMessage } from "./getErrorMessage";
 
 export async function recursivelyGetFileUris(

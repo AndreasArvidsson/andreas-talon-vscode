@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import vscode from "vscode";
 import { getFullCommand } from "./util/getFullCommand";
 import { getLabelFormat, labelFormatSetting } from "./util/getLabelFormat";
 import { indexToHint } from "./util/hints";
