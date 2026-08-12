@@ -36,8 +36,7 @@ export function updateReadme(content: string | null): string {
             commands.push(`\n### ${category} commands\n`);
         }
         const fullCommand = getFullCommand(command);
-        commands.push(`- \`${fullCommand}${args}\` \\`);
-        commands.push(`  ${description}`);
+        commands.push(`- \`${fullCommand}${args}\` \\`, `  ${description}`);
     }
 
     commands.push("");

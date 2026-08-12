@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import vscode from "vscode";
 
 export async function printCommands(): Promise<void> {
     const commands = await vscode.commands.getCommands();

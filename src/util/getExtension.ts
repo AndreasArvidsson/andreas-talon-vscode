@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import vscode from "vscode";
 import type { CommandServerExtension } from "../typings/commandServer";
 import type { GitExtension } from "../typings/git";
 import type { ParseTreeExtension } from "../typings/parserTree";

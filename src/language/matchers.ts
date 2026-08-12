@@ -1,4 +1,5 @@
 import type { Position, TextDocument, TextLine } from "vscode";
+import { escapeRegExp } from "../util/escapeRegExp";
 
 export type TalonMatchType = "action" | "capture" | "list" | "dynamic_list";
 
@@ -48,16 +49,21 @@ function getMatchAtPosition(
     inTalon: boolean,
 ): TalonMatchName | undefined {
     const name = getNameAtPosition(document, position);
+
     if (name == null) {
         return undefined;
     }
 
     const line = document.lineAt(position);
     const lineText = line.text;
+    const escapedName = escapeRegExp(name);
 
     if (inTalon) {
         if (isInTalonScript(line, position)) {
-            const actionRegex = new RegExp(`${name}\\([\\s\\S]*?\\)`, "g");
+            const actionRegex = new RegExp(
+                `${escapedName}\\([\\s\\S]*?\\)`,
+                "gu",
+            );
             if (testRegexAtPosition(position, lineText, actionRegex)) {
                 return {
                     type: "action",
@@ -67,7 +73,7 @@ function getMatchAtPosition(
             return undefined;
         }
     } else {
-        const actionRegex = new RegExp(`actions.${name}\\(`, "g");
+        const actionRegex = new RegExp(`actions\\.${escapedName}\\(`, "gu");
         if (testRegexAtPosition(position, lineText, actionRegex)) {
             return {
                 type: "action",
@@ -76,7 +82,7 @@ function getMatchAtPosition(
         }
     }
 
-    const captureRegex = new RegExp(`<${name}>`, "g");
+    const captureRegex = new RegExp(`<${escapedName}>`, "gu");
     if (testRegexAtPosition(position, lineText, captureRegex)) {
         return {
             type: "capture",
@@ -84,7 +90,7 @@ function getMatchAtPosition(
         };
     }
 
-    const listRegex = new RegExp(`{${name}}`, "g");
+    const listRegex = new RegExp(`\\{${escapedName}\\}`, "gu");
     if (testRegexAtPosition(position, lineText, listRegex)) {
         return {
             type: "list",
@@ -102,7 +108,7 @@ function getPrefixAtPosition(
 ): TalonMatchPrefix | undefined {
     const line = document.lineAt(position.line);
     const precedingText = line.text.slice(0, position.character);
-    const prefix = /[\w\d.]+$/.exec(precedingText)?.[0] ?? "";
+    const prefix = /[\w\d.]+$/u.exec(precedingText)?.[0] ?? "";
 
     if (inTalon) {
         if (isInTalonScript(line, position)) {
@@ -138,11 +144,11 @@ function getNameAtPosition(
     document: TextDocument,
     position: Position,
 ): string | undefined {
-    const range = document.getWordRangeAtPosition(position, /[\w\d.]+/);
+    const range = document.getWordRangeAtPosition(position, /[\w\d.]+/u);
     if (!range || range.isEmpty || !range.isSingleLine) {
         return undefined;
     }
-    return document.getText(range).replace(/^actions\./, "");
+    return document.getText(range).replace(/^actions\./u, "");
 }
 
 function testRegexAtPosition(

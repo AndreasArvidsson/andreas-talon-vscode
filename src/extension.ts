@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import vscode from "vscode";
 import { registerCommands } from "./commands/registerCommands";
 import { registerSearchFiles } from "./commands/searchFiles";
 import { registerLanguageCodeActions } from "./language/registerLanguageCodeActions";

@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import vscode from "vscode";
 import { getWorkspaceFiles, recursivelyGetFileUris } from "../util/uriUtil";
 
 export async function formatWorkspaceFiles(): Promise<void> {

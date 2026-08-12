@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import vscode from "vscode";
 import { getActiveEditor } from "../../util/getActiveEditor";
 import { getFormattingOptions } from "../../util/getFormattingOptions";
 import { JavaFormatter } from "./JavaFormatter";

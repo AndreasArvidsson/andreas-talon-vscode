@@ -83,25 +83,6 @@ export function registerLanguageFormatters(
         };
     };
 
-    const createTextEdits = (
-        document: TextDocument,
-        originalText: string,
-        updatedText: string,
-    ): TextEdit[] => {
-        if (originalText === updatedText) {
-            return [];
-        }
-        return [
-            TextEdit.replace(
-                new Range(
-                    document.lineAt(0).range.start,
-                    document.lineAt(document.lineCount - 1).range.end,
-                ),
-                updatedText,
-            ),
-        ];
-    };
-
     return Disposable.from(
         languages.registerDocumentFormattingEditProvider(
             "talon",
@@ -120,4 +101,23 @@ export function registerLanguageFormatters(
             provideDocumentFormattingEditsForText(snippetFormatter),
         ),
     );
+}
+
+function createTextEdits(
+    document: TextDocument,
+    originalText: string,
+    updatedText: string,
+): TextEdit[] {
+    if (originalText === updatedText) {
+        return [];
+    }
+    return [
+        TextEdit.replace(
+            new Range(
+                document.lineAt(0).range.start,
+                document.lineAt(document.lineCount - 1).range.end,
+            ),
+            updatedText,
+        ),
+    ];
 }

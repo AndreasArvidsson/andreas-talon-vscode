@@ -1,9 +1,9 @@
-import * as assert from "node:assert/strict";
-import * as fs from "node:fs/promises";
-import * as os from "node:os";
-import * as path from "node:path";
+import assert from "node:assert/strict";
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import type { WorkspaceFolder } from "vscode";
-import * as vscode from "vscode";
+import vscode from "vscode";
 import { performWorkspaceSearch } from "../commands/searchFiles/performSearch";
 
 const testFiles = [

@@ -4,7 +4,7 @@ import type { CommentMatch } from "./types";
 import { isValidLine, parseTokens } from "./utils";
 
 export class JavaFormatter extends BaseCommentFormatter {
-    protected regex = /(?:^[\t ]*)(?:(\/\*\*?[\s\S]*?\*\/)|(\/\/.*))/gm;
+    protected regex = /(?:^[\t ]*)(?:(\/\*\*?[\s\S]*?\*\/)|(\/\/.*))/gmu;
     protected linePrefix = "//";
 
     protected parseMatch(match: RegExpExecArray): CommentMatch {
@@ -32,7 +32,7 @@ export class JavaFormatter extends BaseCommentFormatter {
             if (isValidLine(line)) {
                 // Split on spaces
                 return line
-                    .split(/[ ]+/g)
+                    .split(/[ ]+/gu)
                     .map((token) => ({ text: token, preserve: false }));
             }
             if (

@@ -1,5 +1,5 @@
-import * as fs from "node:fs/promises";
-import * as path from "node:path";
+import fs from "node:fs/promises";
+import path from "node:path";
 import fastGlob from "fast-glob";
 import type { DefinitionLink, WorkspaceFolder } from "vscode";
 import { Range, Uri, window } from "vscode";
@@ -23,21 +23,21 @@ interface Namespace {
 type GetNamespace = (line: number, name: string) => string | undefined;
 
 // @ ID .action_class (" \w ")
-const classRegex = /^@[\w\d]+\.action_class(?:\("(\w+)"\))?/gm;
+const classRegex = /^@[\w\d]+\.action_class(?:\("(\w+)"\))?/gmu;
 // INDENT def WS NAME WS ( ANY ) -> TYPE :
 const actionRegex =
-    /^([ \t]+def\s+)([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:(\s+"{3}[\s\S]+?"{3})?/gm;
+    /^([ \t]+def\s+)([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:(\s+"{3}[\s\S]+?"{3})?/gmu;
 // @ ID .capture ( ANY ) WS def NAME ( ANY ) -> TYPE :
 const captureRegex =
-    /^(@\w+\.capture\([\s\S]*?\)\s+def\s+)([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:/gm;
+    /^(@\w+\.capture\([\s\S]*?\)\s+def\s+)([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:/gmu;
 // @ ID .dynamic_list ( NAME ) def NAME ( ANY ) -> TYPE :
 const dynamicListRegex =
-    /^(@\w+\.dynamic_list\(")([\w.]+)"\)\s+def\s+([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:/gm;
+    /^(@\w+\.dynamic_list\(")([\w.]+)"\)\s+def\s+([\w\d]+)\s*\([\s\S]*?\)[\s\S]*?:/gmu;
 // ID .lists [ NAME ] WS = WS ([...]|{...}|[\w.()])
 const listRegex =
-    /(\w+\.lists\[")([\w.]+)"\]\s*=\s*(?:(?:\{[\s\S]*?\})|(?:\[[\s\S]*?\])|[\w.()]+)/gm;
+    /(\w+\.lists\[")([\w.]+)"\]\s*=\s*(?:(?:\{[\s\S]*?\})|(?:\[[\s\S]*?\])|[\w.()]+)/gmu;
 // @ ANY (rule="NS.NAME"
-const captureNameRegex = /^@[\s\S]*?\((?:path=)?"([\w.]+)"/;
+const captureNameRegex = /^@[\s\S]*?\((?:path=)?"([\w.]+)"/u;
 
 export async function searchInWorkspace(
     workspace: WorkspaceFolder,
@@ -62,10 +62,10 @@ export async function searchInWorkspace(
         }
     })();
     if ("name" in match) {
-        const name = match.name.replace(/^self\./, "user.");
+        const name = match.name.replace(/^self\./u, "user.");
         return resultsForType.filter((r) => r.name === name);
     }
-    const prefix = match.prefix.replace(/^self\./, "user.");
+    const prefix = match.prefix.replace(/^self\./u, "user.");
     return resultsForType.filter((r) => r.name.startsWith(prefix));
 }
 
@@ -216,7 +216,7 @@ async function parseTalonListFile(
     absolutePath: string,
 ): Promise<SearchResult[]> {
     // list: WS NAME
-    const regex = /^(list:\s*)([\w.]+)/g;
+    const regex = /^(list:\s*)([\w.]+)/gu;
     const fileContent = await fs.readFile(absolutePath, "utf8");
     const matches = [...fileContent.matchAll(regex)];
     if (matches.length !== 1) {
@@ -269,11 +269,11 @@ function parsePythonMatches(
         );
 
         // Format name and target text for display
-        const name = match[2].replace(/^self\./, "user.");
+        const name = match[2].replace(/^self\./u, "user.");
         const fullName = ns ? `${ns === "self" ? "user" : ns}.${name}` : name;
-        const indentation = /^\s+/.exec(match[0])?.[0] ?? "";
+        const indentation = /^\s+/u.exec(match[0])?.[0] ?? "";
         const targetText = indentation
-            ? match[0].replaceAll(new RegExp(`^${indentation}`, "gm"), "")
+            ? match[0].replaceAll(new RegExp(`^${indentation}`, "gmu"), "")
             : match[0];
 
         results.push({
@@ -317,7 +317,7 @@ function parseTalonListMatch(
             targetRange,
             targetSelectionRange,
             targetText: fileContent,
-            name: match[2].replace(/^self\./, "user."),
+            name: match[2].replace(/^self\./u, "user."),
         },
     ];
 }

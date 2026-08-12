@@ -8,7 +8,7 @@ async function update(inc: boolean, value?: number): Promise<void> {
             const selectionText = editor.document.getText(selection);
 
             const updatedText = selectionText.replaceAll(
-                /-?\d+(\.\d+)?/g,
+                /-?\d+(\.\d+)?/gu,
                 (text) =>
                     text.includes(".")
                         ? updateFloat(inc, text, value).toString()
@@ -23,18 +23,18 @@ async function update(inc: boolean, value?: number): Promise<void> {
 }
 
 function updateInteger(inc: boolean, text: string, value?: number): number {
-    const original = Number.parseInt(text, 10);
+    const original = Math.trunc(Number(text));
     const diff = value ?? 1;
     return original + (inc ? diff : -diff);
 }
 
 function updateFloat(inc: boolean, text: string, value?: number): number {
-    const original = Number.parseFloat(text);
+    const original = Number(text);
     const isPercentage = Math.abs(original) <= 1;
     const diff = value ?? (isPercentage ? 0.1 : 1);
     const updated = original + (inc ? diff : -diff);
     // Remove precision problems that would add a lot of extra digits
-    return Number.parseFloat(updated.toPrecision(15)) / 1;
+    return Number(updated.toPrecision(15)) / 1;
 }
 
 export function increment(value?: number): Promise<void> {

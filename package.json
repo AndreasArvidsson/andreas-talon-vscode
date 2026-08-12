@@ -2,7 +2,7 @@
     "name": "andreas-talon",
     "displayName": "Andreas Talon",
     "description": "VSCode extension used by Talon Voice",
-    "version": "3.101.0",
+    "version": "3.102.0",
     "publisher": "AndreasArvidsson",
     "license": "MIT",
     "main": "./out/extension.js",
@@ -354,24 +354,24 @@
         "pokey.parse-tree"
     ],
     "dependencies": {
-        "@cursorless/talon-tools": "^0.11.0",
+        "@cursorless/talon-tools": "^0.12.0",
         "fast-glob": "^3.3.3",
-        "ignore": "^7.0.5"
+        "ignore": "^7.0.6"
     },
     "devDependencies": {
         "@types/fs-extra": "^11.0.4",
         "@types/mocha": "^10.0.10",
-        "@types/node": "^24.12.2",
+        "@types/node": "^24.13.3",
         "@types/vscode": "1.98.0",
-        "@vscode/test-electron": "^2.5.2",
-        "esbuild": "^0.28.0",
+        "@vscode/test-electron": "^3.1.0",
+        "esbuild": "^0.28.2",
         "file-updater": "^0.5.0",
-        "fs-extra": "^11.3.4",
-        "mocha": "^11.7.5",
-        "oxfmt": "^0.47.0",
-        "oxlint-tsgolint": "^0.22.1",
-        "oxlint": "^1.62.0",
-        "tsx": "^4.21.0",
-        "typescript": "^6.0.3"
+        "fs-extra": "^11.4.0",
+        "mocha": "^11.8.0",
+        "oxfmt": "^0.63.0",
+        "oxlint-tsgolint": "^7.0.2001",
+        "oxlint": "^1.78.0",
+        "tsx": "^4.23.12",
+        "typescript": "^7.0.2"
     }
 }
