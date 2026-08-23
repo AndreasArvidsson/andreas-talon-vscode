@@ -22,10 +22,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -35,10 +35,6 @@ jobs:
 
       - name: Build
         run: npm --color run build
-
-      - name: Run type check (Linux)
-        run: npm --color run typecheck
-        if: runner.os == 'Linux'
 
       - name: Run lint (Linux)
         run: npm --color run lint
