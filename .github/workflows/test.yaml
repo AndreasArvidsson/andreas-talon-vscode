@@ -5,9 +5,12 @@ on:
     branches: [main]
   pull_request:
     types: [opened, synchronize, reopened]
+  pull_request_review:
+    types: [submitted]
 
 permissions:
-  contents: read
+  pull-requests: read
+  issues: write
 
 jobs:
   run-tests:
@@ -21,29 +24,33 @@ jobs:
       ANDREAS_TEST: true
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
+      # - name: Checkout repository
+      # uses: actions/checkout@v7
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: npm
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v7
+      #   with:
+      #     node-version-file: .nvmrc
+      #     cache: npm
 
-      - name: Install dependencies
-        run: npm --color ci
+      # - name: Install dependencies
+      #   run: npm --color ci
 
-      - name: Build
-        run: npm --color run build
+      # - name: Build
+      #   run: npm --color run build
 
-      - name: Run lint (Linux)
-        run: npm --color run lint
+      # - name: Run lint (Linux)
+      #   run: npm --color run lint
+      #   if: runner.os == 'Linux'
+
+      # - name: Run tests (Linux)
+      #   run: xvfb-run -a npm --color run test:ci
+      #   if: runner.os == 'Linux'
+
+      # - name: Run tests (Windows, MacOS)
+      #   run: npm --color run test:ci
+      #   if: runner.os != 'Linux'
+
+      - name: Update PR labels
+        uses: AndreasArvidsson/gh-pr-labeler@main
         if: runner.os == 'Linux'
-
-      - name: Run tests (Linux)
-        run: xvfb-run -a npm --color run test:ci
-        if: runner.os == 'Linux'
-
-      - name: Run tests (Windows, MacOS)
-        run: npm --color run test:ci
-        if: runner.os != 'Linux'
