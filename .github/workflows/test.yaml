@@ -9,7 +9,7 @@ on:
     types: [submitted]
 
 permissions:
-  pull-requests: read
+  pull-requests: write
   issues: write
 
 jobs:
