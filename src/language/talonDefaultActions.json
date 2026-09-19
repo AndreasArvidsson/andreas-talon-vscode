@@ -80,6 +80,26 @@
         "docstr": "Switch to previous window for this app"
     },
     {
+        "name": "apps.focus",
+        "signature": "(app: str | talon.windows.ui.App) -> None",
+        "docstr": "focus a running app"
+    },
+    {
+        "name": "apps.launch",
+        "signature": "(app: str | pathlib.Path) -> None",
+        "docstr": "launch an app by path or id"
+    },
+    {
+        "name": "apps.list",
+        "signature": "() -> dict[str, str]",
+        "docstr": "get a list of launchable apps"
+    },
+    {
+        "name": "apps.running",
+        "signature": "() -> dict[str, talon.windows.ui.App]",
+        "docstr": "get a dict of running apps"
+    },
+    {
         "name": "auto_format",
         "signature": "(text: str) -> str",
         "docstr": "Apply text formatting, such as auto spacing, for the native language"
@@ -136,7 +156,7 @@
     },
     {
         "name": "clip.image",
-        "signature": "() -> Optional[skia.Image]",
+        "signature": "() -> skia.Image | None",
         "docstr": "Get clipboard image"
     },
     {
@@ -166,7 +186,7 @@
     },
     {
         "name": "code.language",
-        "signature": "() -> Union[str, set[str]]",
+        "signature": "() -> str | set[str]",
         "docstr": "Return the active programming language(s)"
     },
     {
@@ -196,12 +216,12 @@
     },
     {
         "name": "core.recent_commands",
-        "signature": "() -> Sequence[Sequence[tuple[talon.scripting.types.CommandImpl, talon.grammar.vm.Capture]]]",
+        "signature": "() -> collections.abc.Sequence[collections.abc.Sequence[tuple[talon.scripting.types.CommandImpl, talon.grammar.vm.Capture]]]",
         "docstr": "Return recently executed commands (grouped by phrase)"
     },
     {
         "name": "core.recent_phrases",
-        "signature": "() -> Sequence[talon.grammar.vm.Capture]",
+        "signature": "() -> collections.abc.Sequence[talon.grammar.vm.Capture]",
         "docstr": "Return recently-spoken phrases"
     },
     {
@@ -221,7 +241,7 @@
     },
     {
         "name": "core.replace_command",
-        "signature": "(commands: Sequence[tuple[talon.scripting.types.CommandImpl, talon.grammar.vm.Capture]])",
+        "signature": "(commands: collections.abc.Sequence[tuple[talon.scripting.types.CommandImpl, talon.grammar.vm.Capture]])",
         "docstr": "Replace the current command in history with one or more commands"
     },
     {
@@ -311,7 +331,7 @@
     },
     {
         "name": "dict.get",
-        "signature": "(d: dict, key: Any, default: Any = None) -> Any",
+        "signature": "(d: dict, key: Any, default: Any | None = None) -> Any",
         "docstr": "Get dict[key]"
     },
     {
@@ -331,7 +351,7 @@
     },
     {
         "name": "dictate.join_words",
-        "signature": "(words: Sequence[str], separator: str = ' ') -> str",
+        "signature": "(words: collections.abc.Sequence[str], separator: str = ' ') -> str",
         "docstr": "Join a list of words into a single string for insertion"
     },
     {
@@ -346,12 +366,12 @@
     },
     {
         "name": "dictate.parse_words",
-        "signature": "(p: talon.grammar.vm.Phrase) -> Sequence[str]",
+        "signature": "(p: talon.grammar.vm.Phrase) -> collections.abc.Sequence[str]",
         "docstr": "Extract words from a spoken Capture"
     },
     {
         "name": "dictate.replace_words",
-        "signature": "(words: Sequence[str]) -> Sequence[str]",
+        "signature": "(words: collections.abc.Sequence[str]) -> collections.abc.Sequence[str]",
         "docstr": "Replace words according to the dictate.word_map dictionary setting"
     },
     {
@@ -486,7 +506,7 @@
     },
     {
         "name": "edit.find",
-        "signature": "(text: str = '')",
+        "signature": "(text: str | None = '')",
         "docstr": "Open Find dialog, optionally searching for text"
     },
     {
@@ -606,7 +626,7 @@
     },
     {
         "name": "edit.select_line",
-        "signature": "(n: int = -1)",
+        "signature": "(n: int | None = None)",
         "docstr": "Select entire line <n>, or current line"
     },
     {
@@ -1001,7 +1021,7 @@
     },
     {
         "name": "math.perm",
-        "signature": "(n: int, k: Optional[int] = None) -> int",
+        "signature": "(n: int, k: int | None = None) -> int",
         "docstr": "Compute the ways to choose k items from n ordered"
     },
     {
@@ -1036,7 +1056,7 @@
     },
     {
         "name": "math.round",
-        "signature": "(n: float, precision: Optional[int] = None) -> float",
+        "signature": "(n: float, precision: int | None = None) -> float",
         "docstr": "Round to nearest, with optional precision"
     },
     {
@@ -1226,12 +1246,12 @@
     },
     {
         "name": "random.choice",
-        "signature": "(seq: Sequence[~T]) -> ~T",
+        "signature": "(seq: collections.abc.Sequence[~T]) -> ~T",
         "docstr": "Pick a random element from a sequence"
     },
     {
         "name": "random.choices",
-        "signature": "(seq: Sequence[~T], weights: Optional[Sequence[int]] = None, k: int = 1) -> list[~T]",
+        "signature": "(seq: collections.abc.Sequence[~T], weights: collections.abc.Sequence[int] | None = None, k: int = 1) -> list[~T]",
         "docstr": "Select k random elements from a sequence"
     },
     {
@@ -1251,12 +1271,12 @@
     },
     {
         "name": "random.sample",
-        "signature": "(seq: Sequence[~T], k: int, counts: Optional[Sequence[int]] = None) -> list[~T]",
+        "signature": "(seq: collections.abc.Sequence[~T], k: int, counts: collections.abc.Sequence[int] | None = None) -> list[~T]",
         "docstr": "Sample k random unique elements from a sequence"
     },
     {
         "name": "random.shuffle",
-        "signature": "(seq: MutableSequence[~T]) -> None",
+        "signature": "(seq: collections.abc.MutableSequence[~T]) -> None",
         "docstr": "Shuffle the elements of a sequence"
     },
     {
@@ -1346,7 +1366,7 @@
     },
     {
         "name": "settings.get",
-        "signature": "(path: str, default: Union[float, int, str, list[Any], talon.scripting.types.SettingDecl.NoValueType, NoneType] = NoValue) -> Union[float, int, str, list[Any], NoneType]",
+        "signature": "(path: str, default: SettingValue | talon.scripting.types.SettingDecl.NoValueType | None = NoValue) -> SettingValue | None",
         "docstr": "Get the value of a setting"
     },
     {
@@ -1356,7 +1376,7 @@
     },
     {
         "name": "sleep",
-        "signature": "(duration: Union[float, str])",
+        "signature": "(duration: float | str)",
         "docstr": "Pause for some duration.\nIf you use a number, it is seconds, e.g 1.5 seconds or 0.001 seconds.\nIf you use a string, it is a timespec, such as \"50ms\" or \"10s\"\nFor performance reasons, sleep() cannot be reimplemented by a Context."
     },
     {
@@ -1366,7 +1386,7 @@
     },
     {
         "name": "sound.microphones",
-        "signature": "() -> Sequence[str]",
+        "signature": "() -> collections.abc.Sequence[str]",
         "docstr": "Return a list of available microphone names"
     },
     {
@@ -1406,7 +1426,7 @@
     },
     {
         "name": "speech.toggle",
-        "signature": "(value: bool = None)",
+        "signature": "(value: bool | None = None)",
         "docstr": "Toggle speech recognition"
     },
     {
@@ -1436,7 +1456,7 @@
     },
     {
         "name": "string.count",
-        "signature": "(s: str, sub: str, start: Optional[int] = None, end: Optional[int] = None) -> int",
+        "signature": "(s: str, sub: str, start: int | None = None, end: int | None = None) -> int",
         "docstr": "Count the number of instances of sub in string, with optional start/end"
     },
     {
@@ -1456,12 +1476,12 @@
     },
     {
         "name": "string.find",
-        "signature": "(s: str, sub: str, start: Optional[int] = None, end: Optional[int] = None)",
+        "signature": "(s: str, sub: str, start: int | None = None, end: int | None = None)",
         "docstr": "Find sub in string, with optional start/end"
     },
     {
         "name": "string.index",
-        "signature": "(s: str, sub: str, start: Optional[int] = None, end: Optional[int] = None)",
+        "signature": "(s: str, sub: str, start: int | None = None, end: int | None = None)",
         "docstr": "Find sub in string, with optional start/end, raising an error if not found"
     },
     {
@@ -1516,7 +1536,7 @@
     },
     {
         "name": "string.join",
-        "signature": "(s: str, sequence: Sequence[str]) -> str",
+        "signature": "(s: str, sequence: collections.abc.Sequence[str]) -> str",
         "docstr": "Join a sequence using string"
     },
     {
@@ -1531,7 +1551,7 @@
     },
     {
         "name": "string.lstrip",
-        "signature": "(s: str, chars: Optional[str] = None) -> str",
+        "signature": "(s: str, chars: str | None = None) -> str",
         "docstr": "Strip characters from the left of string"
     },
     {
@@ -1556,12 +1576,12 @@
     },
     {
         "name": "string.rfind",
-        "signature": "(s: str, sub: str, start: Optional[int] = None, end: Optional[int] = None)",
+        "signature": "(s: str, sub: str, start: int | None = None, end: int | None = None)",
         "docstr": "Find sub in string (from the right), with optional start/end"
     },
     {
         "name": "string.rindex",
-        "signature": "(s: str, sub: str, start: Optional[int] = None, end: Optional[int] = None)",
+        "signature": "(s: str, sub: str, start: int | None = None, end: int | None = None)",
         "docstr": "Find sub in string (from the right), with optional start/end, raising an error if not found"
     },
     {
@@ -1571,22 +1591,22 @@
     },
     {
         "name": "string.rsplit",
-        "signature": "(s: str, sep: Optional[str] = None, maxsplit: int = -1) -> list[str]",
+        "signature": "(s: str, sep: str | None = None, maxsplit: int = -1) -> list[str]",
         "docstr": "Split using separator or whitespace [maxsplit] times from the right"
     },
     {
         "name": "string.rstrip",
-        "signature": "(s: str, chars: Optional[str] = None) -> str",
+        "signature": "(s: str, chars: str | None = None) -> str",
         "docstr": "Strip characters from the right of string"
     },
     {
         "name": "string.slice",
-        "signature": "(s: str, a: int, b: Optional[int] = None, c: Optional[int] = None)",
+        "signature": "(s: str, a: int, b: int | None = None, c: int | None = None)",
         "docstr": "Slice string, following python slicing rules [a:b:c]"
     },
     {
         "name": "string.split",
-        "signature": "(s: str, sep: Optional[str] = None, maxsplit: int = -1) -> list[str]",
+        "signature": "(s: str, sep: str | None = None, maxsplit: int = -1) -> list[str]",
         "docstr": "Split using separator or whitespace [maxsplit] times"
     },
     {
@@ -1601,7 +1621,7 @@
     },
     {
         "name": "string.strip",
-        "signature": "(s: str, chars: Optional[str] = None) -> str",
+        "signature": "(s: str, chars: str | None = None) -> str",
         "docstr": "Strip characters from both sides of string"
     },
     {
@@ -1721,17 +1741,17 @@
     },
     {
         "name": "tracking.control1_toggle",
-        "signature": "(state: bool = None) -> None",
+        "signature": "(state: bool | None = None) -> None",
         "docstr": "Toggle Control Mouse (Legacy)"
     },
     {
         "name": "tracking.control_always_on_toggle",
-        "signature": "(state: bool = None) -> None",
+        "signature": "(state: bool | None = None) -> None",
         "docstr": "Toggle Control Mouse (Always On)"
     },
     {
         "name": "tracking.control_debug_toggle",
-        "signature": "(state: bool = None) -> None",
+        "signature": "(state: bool | None = None) -> None",
         "docstr": "Toggle Control Mouse (Debug View)"
     },
     {
@@ -1741,32 +1761,32 @@
     },
     {
         "name": "tracking.control_gaze_focus_toggle",
-        "signature": "(state: bool = None) -> None",
+        "signature": "(state: bool | None = None) -> None",
         "docstr": "Toggle Control Mouse (Gaze Focus)"
     },
     {
         "name": "tracking.control_gaze_toggle",
-        "signature": "(state: bool = None) -> None",
+        "signature": "(state: bool | None = None) -> None",
         "docstr": "Toggle Control Mouse (Gaze Control)"
     },
     {
         "name": "tracking.control_head_jump_toggle",
-        "signature": "(state: bool = None) -> None",
+        "signature": "(state: bool | None = None) -> None",
         "docstr": "Toggle Control Mouse (Head Jump)"
     },
     {
         "name": "tracking.control_head_toggle",
-        "signature": "(state: bool = None) -> None",
+        "signature": "(state: bool | None = None) -> None",
         "docstr": "Toggle Control Mouse (Head Control)"
     },
     {
         "name": "tracking.control_mouse_jump_toggle",
-        "signature": "(state: bool = None) -> None",
+        "signature": "(state: bool | None = None) -> None",
         "docstr": "Toggle Control Mouse (Mouse Jump)"
     },
     {
         "name": "tracking.control_toggle",
-        "signature": "(state: bool = None) -> None",
+        "signature": "(state: bool | None = None) -> None",
         "docstr": "Toggle Control Mouse"
     },
     {
@@ -1776,7 +1796,7 @@
     },
     {
         "name": "tracking.control_zoom_toggle",
-        "signature": "(state: bool = None) -> None",
+        "signature": "(state: bool | None = None) -> None",
         "docstr": "Toggle Control Mouse (Zoom)"
     },
     {
@@ -1851,7 +1871,7 @@
     },
     {
         "name": "win.file_ext",
-        "signature": "() -> Union[str, set[str]]",
+        "signature": "() -> str | set[str]",
         "docstr": "Return the open file's extension"
     },
     {
@@ -1863,5 +1883,35 @@
         "name": "win.title",
         "signature": "() -> str",
         "docstr": "Get window title"
+    },
+    {
+        "name": "word.alternate",
+        "signature": "(word: str) -> str | None",
+        "docstr": "Spoken word's alternate form"
+    },
+    {
+        "name": "word.center_ts",
+        "signature": "(word: str | talon.grammar.vm.Capture | talon.grammar.vm.Phrase | talon.engines.WordMetaAttr) -> float",
+        "docstr": "Spoken word's center timestamp"
+    },
+    {
+        "name": "word.end_ts",
+        "signature": "(word: str | talon.grammar.vm.Capture | talon.grammar.vm.Phrase | talon.engines.WordMetaAttr) -> float",
+        "docstr": "Spoken word's end timestamp"
+    },
+    {
+        "name": "word.gaze",
+        "signature": "(word: str | talon.grammar.vm.Capture | talon.grammar.vm.Phrase | talon.engines.WordMetaAttr) -> skia.Point2d | None",
+        "docstr": "Spoken word's on-screen gaze position"
+    },
+    {
+        "name": "word.gaze_bounds",
+        "signature": "(word: str | talon.grammar.vm.Capture | talon.grammar.vm.Phrase | talon.engines.WordMetaAttr, padding: float = 0.0) -> skia.Rect | None",
+        "docstr": "Spoken word's on-screen gaze bounds"
+    },
+    {
+        "name": "word.start_ts",
+        "signature": "(word: str | talon.grammar.vm.Capture | talon.grammar.vm.Phrase | talon.engines.WordMetaAttr) -> float",
+        "docstr": "Spoken word's start timestamp"
     }
 ]
