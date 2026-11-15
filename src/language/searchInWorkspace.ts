@@ -188,7 +188,7 @@ function parsePythonFileInner(
         }
 
         getNamespace = (line: number, _name: string): string | undefined => {
-            let res = undefined;
+            let res: string | undefined;
             for (const ns of namespaces) {
                 if (ns.line >= line) {
                     break;

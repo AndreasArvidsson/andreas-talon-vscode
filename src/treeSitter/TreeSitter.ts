@@ -33,7 +33,7 @@ export class TreeSitter {
     ): Scope | undefined {
         const scopes = this.parse(document);
 
-        let smallest: Scope | undefined = undefined;
+        let smallest: Scope | undefined;
 
         for (const scope of scopes) {
             if (
